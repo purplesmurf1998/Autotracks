@@ -3,7 +3,7 @@ Autotracks is a web based platform used to manage and track your dealership's ve
 
 ## Technologies
 Using the MEVN stack, autotracks is built using the following technologies:
--MongoDB
--Express
--Vue
--Node
+- MongoDB
+- Express
+- Vue
+- Node
