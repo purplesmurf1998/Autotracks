@@ -1,0 +1,18 @@
+{
+  "name": "autotracks_api",
+  "version": "1.0.0",
+  "description": "Autotracks backend API for database queries",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "NODE_ENV=production node server",
+    "dev": "nodemon server"
+  },
+  "author": "Capstone 2021-22 Team Polaris",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.13"
+  }
+}
