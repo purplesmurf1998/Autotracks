@@ -1,4 +1,4 @@
-/*=========================
+/*===============================================================
 
 MAIN ENTRY POINT TO EXPRESS SERVER
 
@@ -7,9 +7,13 @@ set up the middleware and all other configs our server will
 have. The file should finish by running the server and listening
 on a certain PORT number.
 
-=========================*/
+=================================================================*/
 const express = require('express');
 const dotenv = require('dotenv');
+
+const authenticationRoutes = require('./routes/authentication');
+const usersRoutes = require('./routes/users');
+const dealershipsRoutes = require('./routes/dealerships');
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
@@ -20,6 +24,11 @@ const PORT = process.env.PORT || 5000;
 
 // create the server app
 const app = express();
+
+// mount the routes to the app
+app.use('/api/v1/authentication', authenticationRoutes);
+app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/dealerships', dealershipsRoutes);
 
 // launch server app by listening on the PORT
 app.listen(PORT, () => {
