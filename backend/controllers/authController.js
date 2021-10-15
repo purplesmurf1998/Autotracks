@@ -27,15 +27,21 @@ exports.logout = (req, res, next) => {
 // @route   POST /api/v1/auth/register
 // @route   Public
 exports.register = asyncHandler(async (req, res, next) => {
+    // create the new user
     const user = await User.create(req.body);
 
     if (!user) {
         return next(
-            new ErrorResponse('Something went wrong when registering new usre.', 500)
+            new ErrorResponse('Something went wrong when registering new user.', 500)
         );
     }
 
+    // create token for this user
+    const token = user.getSignedJwtToken();
+
     res.status(201).json({
-        success: true
+        success: true,
+        data: user,
+        token
     })
 });
