@@ -1,49 +1,103 @@
+const User = require('../models/User');
+const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require('../middleware/async');
+const advancedFilter = require('../utils/advancedFilter');
+
 // @desc    Create a new user
 // @route   POST /api/v1/users
 // @access  Public
-exports.createUser = (req, res, next) => {
+exports.createUser = asyncHandler(async (req, res, next) => {
+    // create new user with the data passed in the request body
+    const user = new User(req.body);
+
+    // send response
+    await user.save();
     res.status(200).json({
         success: true,
-        message: 'Create a new user'
+        user
     });
-}
+});
 
 // @desc    Get a a list of users based on query parameters
 // @route   GET /api/v1/users
 // @access  Authenticated
-exports.getUsers = (req, res, next) => {
+exports.getUsers = asyncHandler(async (req, res, next) => {
+    // get the formatted query based on the advnaced filtering
+    const query = advancedFilter(User, req.query);
+    
+    // run query in mongoose
+    const users = await query;
+
+    // send response
     res.status(200).json({
         success: true,
-        message: 'Get a a list of users based on query parameters'
+        data: users
     });
-}
+});
 
 // @desc    Get a specific user
 // @route   GET /api/v1/users/:userId
 // @access  Authenticated
-exports.getUser = (req, res, next) => {
+exports.getUser = asyncHandler(async (req, res, next) => {
+    // find the user with the id provided in the request params
+    const user = await User.findById(req.params.userId);
+
+    // if user not found, send an error response
+    if (!user) {
+        return next(
+            new ErrorResponse(`User with id ${req.params.userId} not found.`, 500)
+        );
+    }
+
+    // send response
     res.status(200).json({
         success: true,
-        message: `Get a specific user with ID: ${req.params.userId}`
-    });
-}
+        data: user
+    })
+});
 
 // @desc    Get a specific user
 // @route   PUT /api/v1/users/:userId
 // @access  Authenticated
-exports.updateUser = (req, res, next) => {
+exports.updateUser = asyncHandler(async (req, res, next) => {
+    // find the user with the id provided in the request params and update
+    // with the data passed in the body
+    const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
+        new: true,
+        runValidators: true
+    });
+
+    // if no user is returned, user was not found and send an error response
+    if (!user) {
+        return next(
+            new ErrorResponse(`User with id: ${req.params.userId} not found.`, 400)
+        );
+    }
+
+    // send response
     res.status(200).json({
         success: true,
-        message: `Update a specific user with ID: ${req.params.userId}`
+        data: user
     });
-}
+});
 
 // @desc    Delete a specific user
 // @route   DELETE /api/v1/users/:userId
 // @access  Authenticated
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = asyncHandler(async (req, res, next) => {
+    // find the user with the id provided in the request params and delete
+    const user = await User.findByIdAndDelete(req.params.userId);
+
+    // if no user is returned, user was not found and send an error response
+    if (!user) {
+        return next(
+            new ErrorResponse(`User with id: ${req.params.userId} not found.`, 401)
+        );
+    }
+
+    // send response
     res.status(200).json({
         success: true,
-        message: `Delete a specific user with ID: ${req.params.userId}`
+        data: {}
     });
-}
+});
