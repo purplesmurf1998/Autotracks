@@ -21,6 +21,7 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/dealerships
 // @access  Authenticated
 exports.getDealerships = asyncHandler(async (req, res, next) => {
+    console.log("test");
     // get the formatted query based on the advanced filtering
     const query = advancedFilter(Dealership, req.query);
     

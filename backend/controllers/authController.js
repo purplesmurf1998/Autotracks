@@ -36,14 +36,8 @@ exports.signIn = asyncHandler(async (req, res, next) => {
         );
     }
 
-    // create user token
-    const token = user.getSignedJwtToken();
-
-    // send response
-    res.status(200).json({
-        success: true,
-        token
-    });
+    // send response with token in cookies
+    sendTokenResponse(user, 200, res);
 });
 
 // @desc    Logout user and clear JWT from browser/cookies
@@ -69,12 +63,34 @@ exports.register = asyncHandler(async (req, res, next) => {
         );
     }
 
+    // send response with token in cookies
+    sendTokenResponse(user, 200, res);
+});
+
+// get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) => {
+    console.log("Test");
     // create token for this user
     const token = user.getSignedJwtToken();
 
-    res.status(201).json({
-        success: true,
-        data: user,
-        token
-    });
-});
+    // cookie options
+    const options = {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+        httpOnly: true
+    };
+
+    // if server running in production, add secure flag to cookie
+    if (process.env.NODE_ENV === 'production') {
+        options.secure = true;
+    }
+
+    // send response with cookie and token
+    res
+        .status(statusCode)
+        .cookie('autotracksAuthToken', token, options)
+        .json({
+            success: true,
+            data: user,
+            token
+        });
+}
