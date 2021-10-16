@@ -10,15 +10,18 @@ const {
     deleteDealership
 } = require('../controllers/dealershipsController');
 
+// get authentication middleware
+const { protect } = require('../middleware/auth');
+
 // attach methods to the proper routes
 router.route('/')
-    .get(getDealerships)
-    .post(createDealership);
+    .get(protect, getDealerships)
+    .post(protect, createDealership);
 
 router.route('/:dealershipId')
-    .get(getDealership)
-    .put(updateDealership)
-    .delete(deleteDealership);
+    .get(protect, getDealership)
+    .put(protect, updateDealership)
+    .delete(protect, deleteDealership);
 
 // export the router so it can be used in the server.js file
 module.exports = router;

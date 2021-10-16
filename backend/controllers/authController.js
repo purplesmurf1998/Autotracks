@@ -44,10 +44,19 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-    res.status(200).json({
-        success: true,
-        message: 'Logout user and clear JWT from browser/cookies'
-    });
+    if (!req.cookies.autotracksAuthToken) {
+        return next(
+            new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
+        )
+    }
+
+    res
+        .status(200)
+        .clearCookie('autotracksAuthToken')
+        .json({
+            success: true,
+            message: 'User logged out'
+        });
 }
 
 // @desc    Register a new user and return a valid JWT
@@ -69,7 +78,6 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
-    console.log("Test");
     // create token for this user
     const token = user.getSignedJwtToken();
 
