@@ -1,4 +1,6 @@
-const advancedFilter = (model, query) => {
+const asyncHandler = require('../middleware/async');
+
+const advancedFilter = asyncHandler(async (model, query) => {
   let queryResponse;
   
   // copy the query parameters from the request
@@ -14,22 +16,22 @@ const advancedFilter = (model, query) => {
   let queryStr = JSON.stringify(reqQuery);
 
   // convert the operators into mongoose operators ex. gt->$gt
-  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-  queryResponse = model.find(JSON.parse(queryStr));
+  queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+  queryResponse = model.find(JSON.parse(queryStr).query);
 
   // select specific fields if some have been entered
   if (query.select) {
-      const fields = query.select.split(',').join(' ');
-      queryResponse = queryResponse.select(fields);
+    const fields = query.select.split(',').join(' ');
+    queryResponse = queryResponse.select(fields);
   }
   
   // populate specific fields if some have been entered
   if (query.populate) {
-      const fields = query.populate.split(',').join(' ');
-      queryResponse = queryResponse.populate(fields);
+    const fields = query.populate.split(',').join(' ');
+    queryResponse = queryResponse.populate(fields);
   }
   
-  return queryResponse;
-}
+  return await queryResponse;
+});
 
 module.exports = advancedFilter;

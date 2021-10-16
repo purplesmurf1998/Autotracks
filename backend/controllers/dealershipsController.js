@@ -21,12 +21,8 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/dealerships
 // @access  Authenticated
 exports.getDealerships = asyncHandler(async (req, res, next) => {
-    console.log("test");
-    // get the formatted query based on the advanced filtering
-    const query = advancedFilter(Dealership, req.query);
-    
     // run query in mongoose
-    const dealerships = await query;
+    const dealerships = await advancedFilter(Dealership, req.query);
 
     // send response
     res.status(200).json({
