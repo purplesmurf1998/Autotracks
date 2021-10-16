@@ -12,6 +12,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const errorHandler = require('./middleware/error');
+const cookieParser = require('cookie-parser');
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -37,6 +38,9 @@ mongoose.connect(process.env.MONGODB_URL,
 
 // needed to be able to parse request body
 app.use(express.json());
+
+// needed to be able to parse request cookies
+app.use(cookieParser);
 
 // mount the routes to the app
 app.use('/api/v1/auth', authenticationRoutes);
