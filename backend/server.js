@@ -20,7 +20,7 @@ const dealershipsRoutes = require('./routes/dealerships');
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
-dotenv.config({ path: './api_config/config.env' });
+dotenv.config({ path: './config/config.env' });
 
 // set up PORT number from env. variables, 5000 by default
 const PORT = process.env.PORT || 5000;
