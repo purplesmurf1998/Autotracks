@@ -6,12 +6,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
+                echo 'Building backend...'
+                dir(backend){
+                    npm install
+                }
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
+                dir(backend){
+                    npm test
+                }
             }
         }
         stage('Deploy') {
