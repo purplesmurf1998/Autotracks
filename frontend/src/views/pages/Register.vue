@@ -3,55 +3,20 @@
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="6">
-          <CCard class="mx-4 mb-0">
-            <CCardBody class="p-4">
-              <CForm>
-                <h1>Register</h1>
-                <p class="text-muted">Create your account</p>
-                <CInput
-                  placeholder="Username"
-                  autocomplete="username"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
-                </CInput>
-                <CInput
-                  placeholder="Email"
-                  autocomplete="email"
-                  prepend="@"
-                />
-                <CInput
-                  placeholder="Password"
-                  type="password"
-                  autocomplete="new-password"
-                >
-                  <template #prepend-content><CIcon name="cil-lock-locked"/></template>
-                </CInput>
-                <CInput
-                  placeholder="Repeat password"
-                  type="password"
-                  autocomplete="new-password"
-                  class="mb-4"
-                >
-                  <template #prepend-content><CIcon name="cil-lock-locked"/></template>
-                </CInput>
-                <CButton color="success" block>Create Account</CButton>
-              </CForm>
-            </CCardBody>
-            <CCardFooter class="p-4">
-              <CRow>
-                <CCol col="6">
-                  <CButton block color="facebook">
-                    Facebook
-                  </CButton>
-                </CCol>
-                <CCol col="6">
-                  <CButton block color="twitter">
-                    Twitter
-                  </CButton>
-                </CCol>
-              </CRow>
-            </CCardFooter>
-          </CCard>
+          <CButton color="secondary" class="mx-4 mb-2" @click="goBack">
+            Back
+          </CButton>
+          <register-admin v-if="registerStep == 1" :adminUser.sync="adminUser"/>
+          <edit-dealership v-if="registerStep == 2" :dealershipAccount.sync="dealershipAccount"/>
+          <edit-users v-if="registerStep == 3" :users.sync="userList"/>
+          <CRow class="mt-2 d-flex justify-content-center">
+            <CButton color="primary" @click="nextStep" v-if="registerStep < 3">
+              Next Step
+            </CButton>
+            <CButton color="primary" @click="completeRegistration" v-if="registerStep == 3">
+              Complete Registration
+            </CButton>
+          </CRow>
         </CCol>
       </CRow>
     </CContainer>
@@ -59,7 +24,50 @@
 </template>
 
 <script>
+import RegisterAdmin from "../../modules/RegisterAdmin.vue";
+import EditDealership from "../../modules/EditDealership.vue";
+import EditUsers from "../../modules/EditUsers.vue";
+
 export default {
-  name: 'Register'
+  name: 'Register',
+  components: {
+    'register-admin': RegisterAdmin,
+    'edit-dealership': EditDealership,
+    'edit-users': EditUsers
+  },
+  data() {
+    return {
+      registerStep: 1,
+      // register admin field values
+      adminUser: {
+        adminFirstName: '',
+        adminLastName: '',
+        adminEmail: '',
+        adminPassword: '',
+        adminConfirmPassword: ''
+      },
+      // dealership field values
+      dealershipAccount: {
+        dealershipName: '',
+        dealershipDescription: ''
+      },
+      userList: []
+    }
+  },
+  methods: {
+    goBack () {
+      if (this.registerStep == 1) {
+        this.$router.push('/pages/login');
+      } else {
+        this.registerStep = this.registerStep - 1;
+      }
+    },
+    nextStep () {
+      this.registerStep = this.registerStep + 1;
+    },
+    completeRegistration () {
+      this.$router.push('/dashboard');
+    }
+  }
 }
 </script>
