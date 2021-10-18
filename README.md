@@ -7,3 +7,6 @@ Using the MEVN stack, autotracks is built using the following technologies:
 - Express
 - Vue
 - Node
+
+## DOCKER
+A docker image is included called autotracks-docker
