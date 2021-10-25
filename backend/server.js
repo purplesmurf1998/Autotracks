@@ -13,6 +13,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -35,6 +36,9 @@ mongoose.connect(process.env.MONGODB_URL,
     useUnifiedTopology: true
   }
 );
+
+// apply CORS to routes
+app.use(cors());
 
 // needed to be able to parse request body
 app.use(express.json());

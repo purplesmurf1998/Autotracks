@@ -69,6 +69,8 @@ const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
 const Register = () => import('@/views/pages/Register')
 
+const NewDealership = () => import('@/views/pages/dealerships/NewDealership')
+
 // Users
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
@@ -96,7 +98,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard',
+      redirect: '/pages/login',
       name: 'Home',
       component: TheContainer,
       children: [
@@ -104,6 +106,21 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'dealerships',
+          redirect: '/dealerships',
+          name: 'Dealerships',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'new',
+              name: 'NewDealership',
+              component: NewDealership
+            },
+          ]
         },
         {
           path: 'theme',
@@ -504,8 +521,8 @@ export default new Router({
           path: 'register',
           name: 'Register',
           component: Register
-        }
+        },
       ]
-    }
+    },
   ]
 })

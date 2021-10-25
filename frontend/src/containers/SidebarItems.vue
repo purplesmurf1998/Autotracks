@@ -37,6 +37,22 @@ export default {
           },
           {
             _name: 'CSidebarNavDropdown',
+            name: 'Dealerships',
+            to: '/dashboard',
+            icon: 'cil-notes',
+            items: [
+              {
+                name: 'New Dealership',
+                to: '/dealerships/new'
+              },
+              {
+                name: 'View Dealership',
+                to: '/dashboard'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavDropdown',
             name: 'Base',
             route: '/base',
             icon: 'cil-puzzle',
