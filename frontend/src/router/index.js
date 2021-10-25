@@ -92,7 +92,7 @@ const Message = () => import('@/views/apps/email/Message')
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
@@ -106,18 +106,26 @@ export default new Router({
         {
           path: 'dashboard',
           name: 'Dashboard',
+          meta: { authRequired: true },
           component: Dashboard
         },
         {
           path: 'pages/dealerships',
+          redirect: '/pages/dealerships/list',
           name: 'Dealerships',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
-              path: '/',
-              name: 'NewDealership',
+              path: 'list',
+              name: 'List',
+              meta: {
+                authRequired: true,
+                permissionsRequired: [
+                  'View Dealerships'
+                ]
+              },
               component: NewDealership
             },
           ]
@@ -127,7 +135,7 @@ export default new Router({
           redirect: '/theme/colors',
           name: 'Theme',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -152,7 +160,7 @@ export default new Router({
           redirect: '/tables/tables',
           name: 'Tables',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -174,9 +182,9 @@ export default new Router({
         },
         {
           path: 'users',
-          meta: { label: 'Users'},
+          meta: { label: 'Users' },
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -199,7 +207,7 @@ export default new Router({
           redirect: '/base/cards',
           name: 'Base',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -279,7 +287,7 @@ export default new Router({
           redirect: '/buttons/standard-buttons',
           name: 'Buttons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -314,7 +322,7 @@ export default new Router({
           redirect: '/editors/text-editors',
           name: 'Editors',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -334,7 +342,7 @@ export default new Router({
           redirect: '/forms/basic-forms',
           name: 'Forms',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -369,7 +377,7 @@ export default new Router({
           redirect: '/icons/font-awesome',
           name: 'Icons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -394,7 +402,7 @@ export default new Router({
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -424,7 +432,7 @@ export default new Router({
           redirect: '/plugins/draggable',
           name: 'Plugins',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -450,7 +458,7 @@ export default new Router({
           name: 'Apps',
           redirect: '/apps/invoicing/invoice',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -458,7 +466,7 @@ export default new Router({
               redirect: '/apps/invoicing/invoice',
               name: 'Invoicing',
               component: {
-                render (c) { return c('router-view') }
+                render(c) { return c('router-view') }
               },
               children: [
                 {
@@ -478,20 +486,20 @@ export default new Router({
       name: 'Email',
       component: EmailApp,
       children: [{
-          path: 'compose',
-          name: 'Compose',
-          component: Compose
-        },
-        {
-          path: 'inbox',
-          name: 'Inbox',
-          component: Inbox
-        },
-        {
-          path: 'message',
-          name: 'Message',
-          component: Message
-        }
+        path: 'compose',
+        name: 'Compose',
+        component: Compose
+      },
+      {
+        path: 'inbox',
+        name: 'Inbox',
+        component: Inbox
+      },
+      {
+        path: 'message',
+        name: 'Message',
+        component: Message
+      }
       ]
     },
     {
@@ -499,7 +507,7 @@ export default new Router({
       redirect: '/pages/404',
       name: 'Pages',
       component: {
-        render (c) { return c('router-view') }
+        render(c) { return c('router-view') }
       },
       children: [
         {
@@ -525,4 +533,34 @@ export default new Router({
       ]
     },
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  console.log(Store.state.auth.loggedIn);
+  console.log(Store.state.auth.userPermissions);
+  console.log(to.meta.permissionsRequired);
+
+  // add the meta tag "authRequired: true" to any routes you want protected
+  if (to.meta.authRequired && !Store.state.auth.loggedIn) {
+    next('/pages/login');
+  }
+
+  // add the meta tag "permissionsRequired: [permissions]" to any routes needing specific permissions
+  else if (to.meta.permissionsRequired) {
+    // go through the permissionsRequired list and verify they exist in the logged in user permissions
+    // if not, call next(false) to cancel the request
+    to.meta.permissionsRequired.forEach(permission => {
+      if (!Store.state.auth.userPermissions.includes(permission)) {
+        next('/pages/500');
+      }
+    });
+
+    // every permission required exists in user's permissions
+    next();
+  }
+  else {
+    next();
+  }
 })
+
+export default router;
