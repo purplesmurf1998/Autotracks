@@ -11,7 +11,7 @@ const DealershipSchema = new mongoose.Schema({
   admin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    require: 'Dealership must have an admin account connected.'
+    required: 'Dealership must have an admin account connected.'
   },
   created_at: {
     type: Date,

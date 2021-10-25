@@ -59,8 +59,8 @@
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
     </CDropdownItem>
-    <CDropdownItem>
-      <router-link to="/pages/login"><CIcon name="cil-lock-locked" /> Logout</router-link>
+    <CDropdownItem @click="logoutUser">
+      <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>
 </template>
@@ -71,6 +71,12 @@ export default {
   data () {
     return { 
       itemsCount: 42
+    }
+  },
+  methods: {
+    logoutUser() {
+      this.$store.commit('logoutUser');
+      this.$router.push('/pages/login');
     }
   }
 }

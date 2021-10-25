@@ -31,6 +31,12 @@ export default {
     TheHeader,
     TheFooter,
     TheAside
+  },
+  
+  beforeCreate() {
+    if (!this.$store.state.auth.loggedIn) {
+      this.$router.replace('/pages/login');
+    }
   }
 }
 </script>

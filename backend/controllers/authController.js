@@ -44,11 +44,11 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-    if (!req.cookies.autotracksAuthToken) {
-        return next(
-            new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
-        )
-    }
+    // if (!req.cookies.autotracksAuthToken) {
+    //     return next(
+    //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
+    //     )
+    // }
 
     res
         .status(200)
@@ -98,7 +98,7 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie('autotracksAuthToken', token, options)
         .json({
             success: true,
-            data: user,
+            payload: user,
             token
         });
 }

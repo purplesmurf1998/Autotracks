@@ -5,7 +5,8 @@ export default {
     sidebarItems () {
       return [{
         _name: 'CSidebarNav',
-        _children: [{
+        _children: [
+          {
             _name: 'CSidebarNavItem',
             name: this.$t('menu.dashboard'),
             to: '/dashboard',
@@ -17,20 +18,42 @@ export default {
           },
           {
             _name: 'CSidebarNavTitle',
-            _children: ['Theme']
+            _children: ['Pages']
           },
           {
             _name: 'CSidebarNavItem',
-            name: 'Colors',
-            to: '/theme/colors',
+            name: 'Dealerships',
+            to: '/pages/dealerships',
             icon: 'cil-drop'
           },
           {
             _name: 'CSidebarNavItem',
-            name: 'Typography',
-            to: '/theme/typography',
+            name: 'Vehicle Properties',
+            to: '/pages/vehicle/properties',
             icon: 'cil-pencil'
           },
+          {
+            _name: 'CSidebarNavItem',
+            name: 'Inventory',
+            to: '/pages/vehicle/inventory',
+            icon: 'cil-pencil'
+          },
+          // {
+          //   _name: 'CSidebarNavTitle',
+          //   _children: ['Theme']
+          // },
+          // {
+          //   _name: 'CSidebarNavItem',
+          //   name: 'Colors',
+          //   to: '/theme/colors',
+          //   icon: 'cil-drop'
+          // },
+          // {
+          //   _name: 'CSidebarNavItem',
+          //   name: 'Typography',
+          //   to: '/theme/typography',
+          //   icon: 'cil-pencil'
+          // },
           {
             _name: 'CSidebarNavTitle',
             _children: ['Components']

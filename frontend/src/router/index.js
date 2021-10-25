@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Store from './../store/index.js'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -98,7 +99,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/pages/login',
+      redirect: '/dashboard',
       name: 'Home',
       component: TheContainer,
       children: [
@@ -108,15 +109,14 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: 'dealerships',
-          redirect: '/dealerships',
+          path: 'pages/dealerships',
           name: 'Dealerships',
           component: {
             render (c) { return c('router-view') }
           },
           children: [
             {
-              path: 'new',
+              path: '/',
               name: 'NewDealership',
               component: NewDealership
             },

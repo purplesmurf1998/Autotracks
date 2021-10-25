@@ -97,7 +97,8 @@ export default {
         //   console.log(error);
         //   this.showError('Invalid credentials');
         // })
-        this.$router.push('/dashboard');
+        this.$store.commit('loginUser');
+        this.$router.push("/dashboard");
       }
     },
     showError (errorMsg) {

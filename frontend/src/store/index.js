@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import AuthModule from './modules/auth/index.js'
 Vue.use(Vuex)
 
-const state = {
+const coreuiState = {
   sidebarShow: 'responsive',
   sidebarMinimize: false,
   asideShow: false,
   darkMode: false
 }
 
-const mutations = {
+const coreuiMutations = {
   toggleSidebarDesktop (state) {
     const sidebarOpened = [true, 'responsive'].includes(state.sidebarShow)
     state.sidebarShow = sidebarOpened ? false : 'responsive'
@@ -27,6 +28,9 @@ const mutations = {
 }
 
 export default new Vuex.Store({
-  state,
-  mutations
+  modules: {
+    auth: AuthModule
+  },
+  state: coreuiState,
+  mutations: coreuiMutations
 })
