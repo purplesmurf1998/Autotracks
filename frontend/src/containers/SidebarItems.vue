@@ -23,7 +23,7 @@ export default {
           {
             _name: 'CSidebarNavItem',
             name: 'Dealerships',
-            to: '/pages/dealerships',
+            to: '/dealerships',
             icon: 'cil-user'
           },
           {

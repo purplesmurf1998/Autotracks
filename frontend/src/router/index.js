@@ -112,24 +112,16 @@ const router = new Router({
           component: Dashboard
         },
         {
-          path: 'pages/dealerships',
-          redirect: '/pages/dealerships/list',
+          path: 'dealerships',
           name: 'Dealerships',
-          component: {
-            render(c) { return c('router-view') }
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Dealerships'
+            ]
           },
+          component: Dealerships,
           children: [
-            {
-              path: 'list',
-              name: 'List',
-              meta: {
-                authRequired: true,
-                permissionsRequired: [
-                  'View Dealerships'
-                ]
-              },
-              component: Dealerships
-            },
             {
               path: 'add',
               name: 'Add',
@@ -547,11 +539,17 @@ const router = new Router({
         {
           path: 'login',
           name: 'Login',
+          meta: {
+            unAuthRequired: true
+          },
           component: Login
         },
         {
           path: 'register',
           name: 'Register',
+          meta: {
+            unAuthRequired: true
+          },
           component: Register
         },
       ]
@@ -560,24 +558,48 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(`unAuthRequired: ${to.meta.unAuthRequired}`);
+  console.log(`loggedIn: ${Store.state.auth.loggedIn}`);
+  console.log(`userId: ${Store.state.auth.userId}`);
+
   // add the meta tag "authRequired: true" to any routes you want protected
   if (to.meta.authRequired && !Store.state.auth.loggedIn) {
     next('/pages/login');
   }
 
+  // add the meta tage "unAuthRequired: true" to any routes which requires the user
+  // to be logged out to access
+  else if (to.meta.unAuthRequired && Store.state.auth.loggedIn) {
+    next('/dashboard');
+  }
+
   // add the meta tag "permissionsRequired: [permissions]" to any routes needing specific permissions
-  if (to.meta.permissionsRequired) {
+  else if (to.meta.permissionsRequired) {
     // go through the permissionsRequired list and verify they exist in the logged in user permissions
     // if not, call next(false) to cancel the request
-    to.meta.permissionsRequired.forEach(permission => {
-      if (!Store.state.auth.userPermissions.includes(permission)) {
-        next('/pages/500');
-      }
-    });
+
+    const BreakLoop = {};
+    let authorized = true;
+    try {
+      to.meta.permissionsRequired.forEach(permission => {
+        if (!Store.state.auth.userPermissions.includes(permission)) {
+          throw BreakLoop;
+        }
+      });
+    } catch(e) {
+      authorized = false;
+    }
+
+    if (authorized)
+      next();
+    else
+      next('/pages/500');
   }
-  
+
   // all checks validated, therefore continue with the request
-  next();
+  else {
+    next();
+  }
   
 })
 

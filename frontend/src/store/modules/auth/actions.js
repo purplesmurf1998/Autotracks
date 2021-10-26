@@ -1,8 +1,5 @@
 export default {
     async login(context, payload) {
-
-
-        console.log("Test");
         // login user and set user in the store
         const response = await fetch('http://localhost:5000/api/v1/auth/signin', {
             method: 'POST',
