@@ -558,10 +558,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(`unAuthRequired: ${to.meta.unAuthRequired}`);
-  console.log(`loggedIn: ${Store.state.auth.loggedIn}`);
-  console.log(`userId: ${Store.state.auth.userId}`);
-
+  console.log(Store.state.auth.loggedIn);
   // add the meta tag "authRequired: true" to any routes you want protected
   if (to.meta.authRequired && !Store.state.auth.loggedIn) {
     next('/pages/login');

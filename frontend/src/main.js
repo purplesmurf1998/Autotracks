@@ -12,16 +12,20 @@ import babelPolyfill from 'babel-polyfill'
 Vue.use(CoreuiVuePro)
 Vue.prototype.$log = console.log.bind(console)
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  //CIcon component documentation: https://coreui.io/vue/docs/components/icon
-  icons,
-  i18n,
-  babelPolyfill,
-  template: '<App/>',
-  components: {
-    App
-  }
-})
+store.dispatch('verify').then(() => {
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    //CIcon component documentation: https://coreui.io/vue/docs/components/icon
+    icons,
+    i18n,
+    babelPolyfill,
+    template: '<App/>',
+    components: {
+      App
+    }
+  });
+});
+
+
