@@ -7,6 +7,7 @@ const advancedFilter = require('../utils/advancedFilter');
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
+    console.log(req);
     // get email and password from the body
     const { email, password } = req.body;
 
