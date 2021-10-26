@@ -68,9 +68,11 @@ const Toaster = () => import('@/views/notifications/Toaster')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
-const Register = () => import('@/views/pages/Register')
+const Register = () => import('@/views/pages/authentication/Register')
 
-const NewDealership = () => import('@/views/pages/dealerships/NewDealership')
+const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
+const Dealership = () => import('@/views/pages/dealerships/Dealership')
+const Dealerships = () => import('@/views/pages/dealerships/Dealerships')
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -126,8 +128,30 @@ const router = new Router({
                   'View Dealerships'
                 ]
               },
-              component: NewDealership
+              component: Dealerships
             },
+            {
+              path: 'add',
+              name: 'Add',
+              meta: {
+                authRequired: true,
+                permissionsRequired: [
+                  'Add Dealerships'
+                ]
+              },
+              component: DealershipAdd
+            },
+            {
+              path: 'details',
+              name: 'Details',
+              meta: {
+                authRequired: true,
+                permissionsRequired: [
+                  'View Dealerships'
+                ]
+              },
+              component: Dealership
+            }
           ]
         },
         {
@@ -536,17 +560,13 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(Store.state.auth.loggedIn);
-  console.log(Store.state.auth.userPermissions);
-  console.log(to.meta.permissionsRequired);
-
   // add the meta tag "authRequired: true" to any routes you want protected
   if (to.meta.authRequired && !Store.state.auth.loggedIn) {
     next('/pages/login');
   }
 
   // add the meta tag "permissionsRequired: [permissions]" to any routes needing specific permissions
-  else if (to.meta.permissionsRequired) {
+  if (to.meta.permissionsRequired) {
     // go through the permissionsRequired list and verify they exist in the logged in user permissions
     // if not, call next(false) to cancel the request
     to.meta.permissionsRequired.forEach(permission => {
@@ -554,13 +574,11 @@ router.beforeEach((to, from, next) => {
         next('/pages/500');
       }
     });
-
-    // every permission required exists in user's permissions
-    next();
   }
-  else {
-    next();
-  }
+  
+  // all checks validated, therefore continue with the request
+  next();
+  
 })
 
 export default router;
