@@ -6,12 +6,7 @@ export default {
   state() {
     return {
       userId: null,
-      userRole: null,
-      userFirstName: null,
-      userLastName: null,
-      userPermissions: [
-        'View Dealerships'
-      ],
+      userPermissions: [],
       token: null,
       loggedIn: false
     }

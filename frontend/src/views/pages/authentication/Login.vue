@@ -74,34 +74,28 @@ export default {
     }
   },
   methods: {
-    submitForm () {
+    async submitForm () {
       if (this.email == '' || this.password == '') {
         this.showError('Invalid credentials');
       } else {
-        // fetch('http://localhost:5000/api/v1/auth/signin', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify({
-        //     email: this.email,
-        //     password: this.password
-        //   })
-        // }).then(response => {
-        //   if (response.statusText == 'Unauthorized') {
-        //     this.showError('Invalid credentials');
-        //   } else {
-        //     console.log(response);
-        //   }
-        // }).catch(error => {
-        //   console.log(error);
-        //   this.showError('Invalid credentials');
-        // })
-        this.$store.commit('loginUser');
-        this.$router.push("/dashboard");
+        // try to log the user in using the vuex store
+        const response = await this.$store.dispatch('login', {
+          email: this.email,
+          password: this.password
+        });
+        
+        // if not successful, show the error message
+        if (!response.success) {
+          this.showError(response.message);
+        } 
+        // if successful, redirect the user to the dashboad
+        else {
+          this.$router.push("/dashboard");
+        }
       }
     },
     showError (errorMsg) {
+      this.password = '';
       this.errorMsg = errorMsg;
       setTimeout(() => {
         this.errorMsg = null;

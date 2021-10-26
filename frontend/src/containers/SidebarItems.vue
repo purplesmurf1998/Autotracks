@@ -24,7 +24,7 @@ export default {
             _name: 'CSidebarNavItem',
             name: 'Dealerships',
             to: '/pages/dealerships',
-            icon: 'cil-drop'
+            icon: 'cil-user'
           },
           {
             _name: 'CSidebarNavItem',
@@ -36,7 +36,7 @@ export default {
             _name: 'CSidebarNavItem',
             name: 'Inventory',
             to: '/pages/vehicle/inventory',
-            icon: 'cil-pencil'
+            icon: 'cil-spreadsheet'
           }
         ]
       }]
