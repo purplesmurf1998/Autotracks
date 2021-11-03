@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import RegisterAdmin from "../../modules/RegisterAdmin.vue";
+import RegisterAdmin from "./../../../modules/RegisterAdmin.vue";
 
 export default {
   name: 'Register',

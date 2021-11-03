@@ -5,7 +5,8 @@ const router = express.Router();
 const {
     signIn,
     logout,
-    register
+    register,
+    verify
 } = require('../controllers/authController');
 
 // get authentication middleware
@@ -15,6 +16,7 @@ const { protect } = require('../middleware/auth');
 router.route('/signin').post(signIn);
 router.route('/register').post(register);
 router.route('/logout').get(protect, logout);
+router.route('/verify').post(verify)
 
 // export the router so it can be used in the server.js file
 module.exports = router;

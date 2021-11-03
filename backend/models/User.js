@@ -28,6 +28,26 @@ const UserSchema = new mongoose.Schema({
     enum: ['Administration', 'Management', 'Sales', 'Reception', 'Backshop'],
     required: 'User must have a role'
   },
+  permissions: {
+    type: [String],
+    enum: [
+      'Add Dealerships',
+      'View Dealerships',
+      'Edit Dealerships',
+      'Delete Dealerships',
+      'Add Staff Users',
+      'View Staff Users',
+      'Edit Staff Users',
+      'Delete Staff Users',
+      'Add Vehicles',
+      'View Vehicles',
+      'Edit Vehicle Properties',
+      'Edit Vehicle Locations',
+      'Sell Vehicles',
+      'Delete Vehicles'
+    ],
+    required: 'User must have a list of permissions, even if that list is empty.'
+  },
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"
@@ -52,12 +72,7 @@ UserSchema.pre('save', async function (next) {
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({
-    id: this._id,
-    first_name: this.first_name,
-    last_name: this.last_name,
-    role: this.role,
-    email: this.email,
-    dealership: this.dealership
+    userId: this._id
   }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE
   });
