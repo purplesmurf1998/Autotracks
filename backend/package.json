@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Autotracks backend API for database queries",
   "main": "server.js",
+  
   "scripts": {
-    "test": "mocha ./tests/*.js",
+    "test": "nyc --reporter=html mocha ./tests/*.js",
     "prod": "NODE_ENV=production node server",
     "dev": "nodemon server"
   },
@@ -22,7 +23,9 @@
     "nodemon": "^2.0.13"
   },
   "devDependencies": {
-    "mocha":"latest",
-    "chai": "latest"
+    "chai": "latest",
+    "chai-http": "latest",
+    "mocha": "latest",
+    "nyc": "^15.1.0"
   }
 }

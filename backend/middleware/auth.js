@@ -6,8 +6,6 @@ const User = require('../models/User');
 // middleware to protect routes (check if authorized)
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
-  //console.log(req.query);
-  // bearer token must be present for every protected API request
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
