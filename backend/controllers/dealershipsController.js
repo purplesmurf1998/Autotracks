@@ -8,15 +8,24 @@ const advancedFilter = require('../utils/advancedFilter');
 // @route   POST /api/v1/dealerships
 // @access  Public
 exports.createDealership = asyncHandler(async (req, res, next) => {
-    // grab the userId from the body and verify that the user is in fact an admin
-    const user = await User.findById(req.body.admin);
-    if (!user) {
+    // check that there is an admin user attached to the dealership
+    if (!req.body.admin) {
         return next(
-            new ErrorResponse('Admin user not found. Cannot create dealership', 404)
+            new ErrorResponse('Dealership must be connected to an admin account.', 400)
         );
     }
     
-    // user exists, verify that they are admin
+    // grab the userId from the body and verify that the user is in fact an admin
+    const user = await User.findById(req.body.admin);
+
+    // no user found
+    if (!user) {
+        return next(
+            new ErrorResponse('Admin user not found. Cannot create dealership.', 404)
+        );
+    }
+    
+    // user exists but isn't an admin
     if (user.role != 'Administration') {
         return next(
             new ErrorResponse('User creating the dealership is not an admin.', 400)
