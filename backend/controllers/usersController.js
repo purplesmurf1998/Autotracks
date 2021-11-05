@@ -9,7 +9,7 @@ const advancedFilter = require('../utils/advancedFilter');
 exports.createUser = asyncHandler(async (req, res, next) => {
     // create new user with the data passed in the request body
     const user = new User(req.body);
-
+    
     // send response
     await user.save();
     res.status(200).json({
