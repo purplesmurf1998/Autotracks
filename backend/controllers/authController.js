@@ -8,7 +8,6 @@ const jwt = require('jsonwebtoken');
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
-    console.log(req);
     // get email and password from the body
     const { email, password } = req.body;
 
@@ -46,12 +45,7 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-    // if (!req.cookies.autotracksAuthToken) {
-    //     return next(
-    //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
-    //     )
-    // }
-
+    // clear the token from the cookies
     res
         .status(200)
         .clearCookie('autotracksAuthToken')
@@ -65,16 +59,24 @@ exports.logout = (req, res, next) => {
 // @route   POST /api/v1/auth/register
 // @route   Public
 exports.register = asyncHandler(async (req, res, next) => {
-    // create the new user
+    // validate that the user being registered is admin
+    if (req.body.role != 'Administration') {
+        return next(
+            new ErrorResponse('Can only register an admin user from this route', 400)
+        );
+    }
+    
+    // create the new admin user
     const user = await User.create(req.body);
 
+    // make sure the user was created properly
     if (!user) {
         return next(
             new ErrorResponse('Something went wrong when registering new user.', 500)
         );
     }
 
-    // send response with token in cookies
+    // send token response
     sendTokenResponse(user, 200, res);
 });
 
@@ -119,6 +121,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
 
     // cookie options
+    // token expires in 30 days
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true

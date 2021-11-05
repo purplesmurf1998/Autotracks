@@ -57,6 +57,14 @@ const UserSchema = new mongoose.Schema({
     required: 'Password is required',
     select: false
   },
+  createDealershipTutorial: {
+    type: Boolean,
+    default: false
+  },
+  createUserTutorial: {
+    type: Boolean,
+    default: false
+  },
   created_at: {
     type: Date,
     default: Date.now
