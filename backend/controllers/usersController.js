@@ -7,6 +7,20 @@ const advancedFilter = require('../utils/advancedFilter');
 // @route   POST /api/v1/users
 // @access  Public
 exports.createUser = asyncHandler(async (req, res, next) => {
+    // make sure the user being created is not an admin
+    if (req.body.role == 'Administration') {
+        return next(
+            new ErrorResponse('Admin accounts can only be registered from the register page.', 400)
+        );
+    }
+
+    // make sure there is a dealership attached to this user
+    if (!req.body.dealership) {
+        return next(
+            new ErrorResponse('Staff users need to be associated to a dealership.', 400)
+        );
+    }
+
     // create new user with the data passed in the request body
     const user = new User(req.body);
 
