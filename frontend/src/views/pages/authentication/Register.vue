@@ -80,6 +80,18 @@ export default {
       // console.log(this.adminUser.adminEmail);
       // console.log(this.adminUser.adminPassword);
 
+      /**********************************************
+       * used axios since from the documentation axios() and fetch() are the most
+       * commonly used http request APIs for SPAs. 
+       * 
+       * I left the code used with got in case you wanted to fix it but I was getting
+       * an undefined error and couldn't figure out how to fix it. I think a problem
+       * with the import.
+       * 
+       * TODO: add some validation check (password = confirmPassword) and visual feedback
+       *       when a field is entered wrong or not entered at all.
+      ***********************************************/
+
       // send request to register new user
       axios({
         method: 'POST',
