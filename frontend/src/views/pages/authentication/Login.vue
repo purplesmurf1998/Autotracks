@@ -29,7 +29,7 @@
                     </CCol>
                     <CCol col="6" class="text-right">
                       <CButton color="link" class="px-0">Forgot password?</CButton>
-                      <CButton color="link" class="d-lg-none">Register now!</CButton>
+                      <router-link to="/pages/register"><CButton color="link" class="d-lg-none">Register now!</CButton></router-link>
                     </CCol>
                   </CRow>
                 </CForm>
