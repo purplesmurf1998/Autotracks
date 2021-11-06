@@ -51,32 +51,35 @@ export default {
     async verify(context) {
         const token = localStorage.getItem('autotracksAuthToken');
 
-        // verify the token is valid
-        const response = await fetch('http://localhost:5000/api/v1/auth/verify', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token })
-        });
+        // if there is a token
+        if (token) {
+            // verify the token is valid
+            const response = await fetch('http://localhost:5000/api/v1/auth/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token })
+            });
 
-        const responseData = await response.json();
-        console.log(responseData);
-        // token not valid or user not found
-        if (!response.ok) {
-            localStorage.clear('autotracksAuthToken');
-        } else {
-            const data = {
-                token: responseData.token,
-                userId: responseData.payload._id,
-                userPermissions: responseData.payload.permissions,
-                loggedIn: true
+            const responseData = await response.json();
+            console.log(responseData);
+            // token not valid or user not found
+            if (!response.ok) {
+                localStorage.clear('autotracksAuthToken');
+            } else {
+                const data = {
+                    token: responseData.token,
+                    userId: responseData.payload._id,
+                    userPermissions: responseData.payload.permissions,
+                    loggedIn: true
+                }
+        
+                // set the token in the local storage
+                localStorage.setItem('autotracksAuthToken', data.token);
+                // set the data in the store's state
+                context.commit('setUser', data);
             }
-    
-            // set the token in the local storage
-            localStorage.setItem('autotracksAuthToken', data.token);
-            // set the data in the store's state
-            context.commit('setUser', data);
         }
     },
     async register(context, payload) {

@@ -7,6 +7,7 @@
             Back
           </CButton>
           <register-admin :adminUser.sync="adminUser"/>
+          <CAlert show color="danger" v-if="errorMessage" class="mt-2">Invalid Credentials</CAlert>
           <CRow class="mt-2 d-flex justify-content-center">
             <CButton color="primary" @click="completeRegistration">
               Complete Registration
@@ -20,7 +21,8 @@
 
 <script>
 import RegisterAdmin from "./../../../modules/RegisterAdmin.vue";
-const got = require('got');
+//const got = require('got');
+const axios = require('axios');
 
 export default {
   name: 'Register',
@@ -37,6 +39,7 @@ export default {
         adminPassword: '',
         adminConfirmPassword: ''
       },
+      errorMessage: null
     }
   },
   methods: {
@@ -44,11 +47,47 @@ export default {
       this.$router.push('/pages/login');
     },
     async completeRegistration () {
-      const body = await got.post('http://localhost:5000/api/v1/auth/register', {
-        json: {
-          first_name: this.adminFirstName,
-          last_name: this.adminLastName,
-          email: this.adminEmail,
+      // const response = await got.post('http://localhost:5000/api/v1/auth/register', {
+      //   json: {
+      //     first_name: this.adminFirstName,
+      //     last_name: this.adminLastName,
+      //     email: this.adminEmail,
+      //     role: "Administration",
+      //     permissions: [
+      //       "Add Dealerships",
+      //       "View Dealerships",
+      //       "Edit Dealerships",
+      //       "Delete Dealerships",
+      //       "Add Staff Users",
+      //       "View Staff Users",
+      //       "Edit Staff Users",
+      //       "Delete Staff Users",
+      //       "Add Vehicles",
+      //       "View Vehicles",
+      //       "Edit Vehicle Properties",
+      //       "Edit Vehicle Locations",
+      //       "Sell Vehicles",
+      //       "Delete Vehicles"
+      //     ],
+      //     password: this.adminPassword
+      //   },
+      //   responseType: 'json'
+      // });
+      // console.log(response)
+      //await this.$router.push('/dashboard');
+      // console.log(this.adminUser.adminFirstName);
+      // console.log(this.adminUser.adminLastName);
+      // console.log(this.adminUser.adminEmail);
+      // console.log(this.adminUser.adminPassword);
+
+      // send request to register new user
+      axios({
+        method: 'POST',
+        url: 'http://localhost:5000/api/v1/auth/register',
+        data: {
+          first_name: this.adminUser.adminFirstName,
+          last_name: this.adminUser.adminLastName,
+          email: this.adminUser.adminEmail,
           role: "Administration",
           permissions: [
             "Add Dealerships",
@@ -66,13 +105,42 @@ export default {
             "Sell Vehicles",
             "Delete Vehicles"
           ],
-          password: this.adminPassword
-        },
-        responseType: 'json'
-      });
-      console.log(body)
-      await this.$router.push('/dashboard');
+          password: this.adminUser.adminPassword
+        }
+      }).then(async (response) => {
+        console.log(response);
+        //double check valid response
+        if (response.status == 200) {
+          // log the user in
+          const response = await this.$store.dispatch('login', {
+            email: this.adminUser.adminEmail,
+            password: this.adminUser.adminPassword
+          });
+
+          // if not successful, show the error message
+          if (!response.success) {
+            this.showErrorMessage(response.message);
+          } 
+          // if successful, redirect the user to the dashboad
+          else {
+            this.$router.push("/dashboard");
+          }
+        }
+      }).catch(err => {
+        console.log(err);
+        // send an invalid registration message
+        this.showErrorMessage('Invalid information or duplicate account.');
+        this.adminUser.adminPassword = '';
+        this.adminUser.adminConfirmPassword = '';
+      })
     },
+    showErrorMessage(msg) {
+      // show the error message for 5 seconds and then dissapear
+      this.errorMessage = msg;
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 5000)
+    }
   }
 }
 </script>
