@@ -21,8 +21,14 @@ exports.createUser = asyncHandler(async (req, res, next) => {
         );
     }
 
+    // set the tutorials completed for staff users so they don't
+    // get the notifications
+    const body = req.body;
+    body.createDealershipCompleted = true;
+    body.createUserCompleted = true;
+
     // create new user with the data passed in the request body
-    const user = new User(req.body);
+    const user = new User(body);
 
     // send response
     await user.save();
