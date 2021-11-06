@@ -20,6 +20,7 @@
 
 <script>
 import RegisterAdmin from "./../../../modules/RegisterAdmin.vue";
+const got = require('got');
 
 export default {
   name: 'Register',
@@ -42,9 +43,36 @@ export default {
     goBack () {
       this.$router.push('/pages/login');
     },
-    completeRegistration () {
-      this.$router.push('/dashboard');
-    }
+    async completeRegistration () {
+      const body = await got.post('http://localhost:5000/api/v1/auth/register', {
+        json: {
+          first_name: this.adminFirstName,
+          last_name: this.adminLastName,
+          email: this.adminEmail,
+          role: "Administration",
+          permissions: [
+            "Add Dealerships",
+            "View Dealerships",
+            "Edit Dealerships",
+            "Delete Dealerships",
+            "Add Staff Users",
+            "View Staff Users",
+            "Edit Staff Users",
+            "Delete Staff Users",
+            "Add Vehicles",
+            "View Vehicles",
+            "Edit Vehicle Properties",
+            "Edit Vehicle Locations",
+            "Sell Vehicles",
+            "Delete Vehicles"
+          ],
+          password: this.adminPassword
+        },
+        responseType: 'json'
+      });
+      console.log(body)
+      await this.$router.push('/dashboard');
+    },
   }
 }
 </script>
