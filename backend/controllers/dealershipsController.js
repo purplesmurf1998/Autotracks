@@ -60,8 +60,16 @@ exports.getDealerships = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/dealerships/:dealershipId
 // @access  Authenticated
 exports.getDealership = asyncHandler(async (req, res, next) => {
+    let queryResponse = Dealership.findById(req.params.dealershipId);
+
+    // populate specific fields if some have been entered
+    if (req.query.populate) {
+        const fields = req.query.populate.split(',').join(' ');
+        queryResponse = queryResponse.populate(fields);
+    }
+
     // find the dealership with the id provided in the request params
-    const dealership = await Dealership.findById(req.params.dealershipId);
+    const dealership = await queryResponse;
 
     // if dealership not found, send an error response
     if (!dealership) {
