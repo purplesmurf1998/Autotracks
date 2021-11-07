@@ -6,6 +6,7 @@
           <CCol>
             <CButton
               color="primary"
+              id = "add-new-dealership"
               @click="
                 () => {
                   addingDealership = true;

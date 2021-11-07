@@ -19,7 +19,7 @@
         rows="6"
       />
       <CRow class="justify-content-center">
-        <CButton color="primary" type="submit" :disabled="disableButtons">
+        <CButton color="primary" type="submit" id="save-dealership-changes" :disabled="disableButtons">
           Save
         </CButton>
         <CButton

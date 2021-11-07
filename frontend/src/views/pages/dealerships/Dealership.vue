@@ -19,6 +19,7 @@
             </router-link>
             <br />
             <CButton
+              id="edit-dealership"
               v-if="!editingDealership"
               color="secondary"
               class="mt-2"
@@ -48,6 +49,7 @@
                   tag="button"
                   v-for="user in staff"
                   :key="user._id"
+                  :id="user._id"
                   :active="
                     selectedStaffAccount && user._id == selectedStaffAccount
                   "
@@ -59,6 +61,7 @@
               <CButton
                 color="primary"
                 class="mt-2"
+                id="create-staff-acc"
                 @click="
                   () => {
                     addingStaffAccount = false;

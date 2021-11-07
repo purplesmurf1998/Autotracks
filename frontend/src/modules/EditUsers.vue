@@ -2,12 +2,14 @@
   <CForm @submit.prevent="submitUser">
     <CInput
       label="First Name"
+      id="first-name"
       horizontal
       v-model="currUser.first_name"
       size="sm"
     />
     <CInput
       label="Last Name"
+      id="last-name"
       horizontal
       v-model="currUser.last_name"
       size="sm"
@@ -29,7 +31,7 @@
       selectionType="tags"
     />
     <CRow class="d-flex justify-content-center mt-2">
-      <CButton color="success" class="mr-2" type="submit">Save</CButton>
+      <CButton color="success" class="mr-2" id="save-user-changes" type="submit">Save</CButton>
       <CButton color="secondary" @click="setEditingUser(false)">Cancel</CButton>
     </CRow>
   </CForm>
