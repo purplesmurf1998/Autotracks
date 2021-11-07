@@ -12,7 +12,9 @@ const email = "admin@account.com";
 const password = "adminpassword";
 let token = "";
 
+// The following tests test the entire Auth Controller Class
 describe('Testing Auth Controller Class', () => {
+    //The below test checks if we can sign users/admin in successfully
   describe('Admin/User Sign In API Test', () => {
     it('should return 200 when the admin/user is signed in', (done) => {
       chai.request(app)
@@ -31,6 +33,7 @@ describe('Testing Auth Controller Class', () => {
     });
   });
 
+  //The below test, checks if we can verify the admin/user's token successfully
   describe('Verify Admin/User Token API Test', () => {
     it('should return 200 when the admin/users token is valid', (done) => {
       chai.request(app)
@@ -46,7 +49,7 @@ describe('Testing Auth Controller Class', () => {
         });
     });
   });
-
+  //The below test checks if Admin/User can log out successfully
   describe('Admin/User Log Out API Test', () => {
     it('should return 200 when the admin/users is logged out', (done) => {
       chai.request(app)
