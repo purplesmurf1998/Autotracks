@@ -1,7 +1,7 @@
 
 describe('User Log in Test', () => {
 
-    it('Visits the login page and loging in successfully', () => {
+    it('Visits the login page and loging a user in successfully', () => {
       cy.visit('/#/pages/login')
       cy.contains('Login');
       cy.get("[placeholder='Email']")
@@ -18,15 +18,6 @@ describe('User Log in Test', () => {
       cy.url().should('include', '#/dashboard')
 
       cy.getLocalStorage('autotracksAuthToken').should('exist')
-
-      cy.get("#nav-dropdown")
-      .click()
-
-      cy.get("#log-out")
-      .click()
-
-
-      cy.url().should('include', '/#/pages/login')
  
     })
   })
