@@ -8,14 +8,29 @@
         <!--          src="https://www.fireglass.com/resources/design-ideas/case-studies/2018/audi-dealership/img/Audi.jpg"-->
         <!--        />-->
         <CCardBody>
-          <h1>{{ dealership.name }}</h1>
-          <h2 v-if="dealership.admin">
-            {{ dealership.admin.first_name }}'s dealership
-          </h2>
-          <p>{{ dealership.description }}</p>
-          <router-link to="/dealerships"
-            ><CButton color="primary"> Back to list </CButton></router-link
-          >
+          <div v-if="!editingDealership">
+            <h1>{{ dealership.name }}</h1>
+            <h2 v-if="dealership.admin">
+              {{ dealership.admin.first_name }}'s dealership
+            </h2>
+            <p>{{ dealership.description }}</p>
+            <router-link to="/dealerships">
+              <CButton color="primary"> Back to list </CButton>
+            </router-link>
+            <br />
+            <CButton
+              v-if="!editingDealership"
+              color="secondary"
+              class="mt-2"
+              @click="setEditingDealership(true)"
+              >Edit dealership details</CButton
+            >
+          </div>
+          <edit-dealership
+            v-if="editingDealership"
+            :dealership="dealership"
+            :setEditingDealership="setEditingDealership"
+          />
         </CCardBody>
         <CCardFooter>
           <small class="text-muted">
@@ -89,6 +104,7 @@
 import StaffAccountAdd from "./StaffAccountAdd.vue";
 import UserCard from "../../../modules/UserCard.vue";
 import ViewUser from "../../../modules/ViewUser.vue";
+import EditDealership from "./EditDealership.vue";
 
 const axios = require("axios");
 
@@ -101,6 +117,7 @@ export default {
       selectedStaffAccount: null,
       addingStaffAccount: false,
       editingUser: false,
+      editingDealership: false,
     };
   },
   methods: {
@@ -112,6 +129,9 @@ export default {
     },
     setAddingStaffAccount(value) {
       this.addingStaffAccount = value;
+    },
+    setEditingDealership(value) {
+      this.editingDealership = value;
     },
   },
   beforeCreate() {
@@ -152,6 +172,7 @@ export default {
   components: {
     "staff-account-add": StaffAccountAdd,
     "user-card": UserCard,
+    "edit-dealership": EditDealership,
     ViewUser,
   },
 };
