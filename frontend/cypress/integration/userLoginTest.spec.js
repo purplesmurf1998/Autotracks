@@ -1,3 +1,4 @@
+
 describe('User Log in Test', () => {
 
     it('Visits the login page and loging in successfully', () => {
@@ -15,6 +16,8 @@ describe('User Log in Test', () => {
       .click()
 
       cy.url().should('include', '#/dashboard')
+
+      cy.getLocalStorage('autotracksAuthToken').should('exist')
 
       cy.get("#nav-dropdown")
       .click()
