@@ -65,7 +65,7 @@ exports.register = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Can only register an admin user from this route', 400)
         );
     }
-    
+
     // create the new admin user
     const user = await User.create(req.body);
 
@@ -88,7 +88,7 @@ exports.verify = asyncHandler(async (req, res, next) => {
     try {
         // verify token
         const decoded = jwt.verify(req.body.token, process.env.JWT_SECRET);
-        
+
         // invalid token
         if (!decoded) {
             return next(
@@ -114,6 +114,33 @@ exports.verify = asyncHandler(async (req, res, next) => {
         );
     }
 });
+
+// @desc    Verify if the password is correct
+// @route   POST /api/v1/auth/password
+// @access  Private
+exports.verifyPassword = asyncHandler(async (req, res, next) => {
+    // find the user from the id passed in the req body
+    const user = await User.findById(req.body.userId);
+
+    if (!user) {
+        return next(
+            new ErrorResponse('User not found', 404)
+        );
+    }
+
+    // validate the entered password to the user password
+    const passwordMatch = await user.matchPassword(password);
+    if (!passwordMatch) {
+        return next(
+            new ErrorResponse('Invalid credentials.', 401)
+        );
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'Valid password'
+    })
+})
 
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {

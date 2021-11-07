@@ -1,19 +1,29 @@
 <template>
   <CForm @submit.prevent="submitUser">
-    <CInput label="First Name" horizontal v-model="user.first_name" size="sm" />
-    <CInput label="Last Name" horizontal v-model="user.last_name" size="sm" />
-    <CInput label="Email" horizontal v-model="user.email" size="sm" />
+    <CInput
+      label="First Name"
+      horizontal
+      v-model="currUser.first_name"
+      size="sm"
+    />
+    <CInput
+      label="Last Name"
+      horizontal
+      v-model="currUser.last_name"
+      size="sm"
+    />
+    <CInput label="Email" horizontal v-model="currUser.email" size="sm" />
     <CSelect
       label="Role"
       :options="roles"
       horizontal
-      :value.sync="user.role"
+      :value.sync="currUser.role"
       size="sm"
     />
     <CMultiSelect
       name="permissions"
       :options="permissionsList"
-      :selected="user.permissions"
+      :selected="currUser.permissions"
       search
       searchPlaceholder="..."
       selectionType="tags"
@@ -97,6 +107,13 @@ export default {
           text: "Delete Vehicles",
         },
       ],
+      currUser: {
+        first_name: this.user.first_name,
+        last_name: this.user.last_name,
+        email: this.user.email,
+        role: this.user.role,
+        permissions: this.user.permissions,
+      },
     };
   },
   props: ["setEditingUser", "user"],
@@ -104,13 +121,7 @@ export default {
     submitUser() {
       console.log(this.user);
       // send the put request using axios
-      const data = {
-        first_name: this.user.first_name,
-        last_name: this.user.last_name,
-        email: this.user.email,
-        role: this.user.role,
-        permissions: this.user.permissions,
-      };
+      const data = this.currUser;
       axios({
         method: "PUT",
         url: `http://localhost:5000/api/v1/users/${this.user._id}`,
@@ -122,6 +133,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.setEditingUser(false);
+            this.$router.go();
           } else {
             console.log(response);
           }
