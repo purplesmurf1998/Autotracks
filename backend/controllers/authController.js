@@ -3,6 +3,9 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const advancedFilter = require('../utils/advancedFilter');
 
+const jwt = require('jsonwebtoken');
+
+
 // @desc    Sign in user and return a valid JWT
 // @route   POST /api/v1/auth/signin
 // @access  Public
@@ -44,12 +47,8 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-    if (!req.cookies.autotracksAuthToken) {
-        return next(
-            new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
-        )
-    }
-
+  
+    // clear the token from the cookies
     res
         .status(200)
         .clearCookie('autotracksAuthToken')
@@ -63,17 +62,62 @@ exports.logout = (req, res, next) => {
 // @route   POST /api/v1/auth/register
 // @route   Public
 exports.register = asyncHandler(async (req, res, next) => {
-    // create the new user
+
+    // validate that the user being registered is admin
+    if (req.body.role != 'Administration') {
+        return next(
+            new ErrorResponse('Can only register an admin user from this route', 400)
+        );
+    }
+    
+    // create the new admin user
     const user = await User.create(req.body);
 
+    // make sure the user was created properly
     if (!user) {
         return next(
             new ErrorResponse('Something went wrong when registering new user.', 500)
         );
     }
 
-    // send response with token in cookies
+
+    // send token response
     sendTokenResponse(user, 200, res);
+});
+
+// @desc    Verify if the user is logged in
+// @route   POST /api/v1/auth/verify
+// @access  Public
+exports.verify = asyncHandler(async (req, res, next) => {
+    // try to verify the token passed in the body
+    try {
+        // verify token
+        const decoded = jwt.verify(req.body.token, process.env.JWT_SECRET);
+        
+        // invalid token
+        if (!decoded) {
+            return next(
+                new ErrorResponse('Invalid token', 500)
+            );
+        }
+
+        // valid token, find the user and return in the response
+        const user = await User.findById(decoded.userId);
+
+        // user not found
+        if (!user) {
+            return next(
+                new ErrorResponse('User not found', 404)
+            );
+        }
+
+        // user found
+        sendTokenResponse(user, 200, res);
+    } catch (err) {
+        return next(
+            new ErrorResponse(err)
+        );
+    }
 });
 
 // get token from model, create cookie and send response
@@ -82,6 +126,8 @@ const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
 
     // cookie options
+
+    // token expires in 30 days
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
@@ -98,7 +144,7 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie('autotracksAuthToken', token, options)
         .json({
             success: true,
-            data: user,
+            payload: user,
             token
         });
 }

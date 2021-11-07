@@ -8,6 +8,12 @@ const DealershipSchema = new mongoose.Schema({
     required: 'Name is required'
   },
   description: String,
+
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: 'Dealership must have an admin account connected.'
+  },
   created_at: {
     type: Date,
     default: Date.now
@@ -21,6 +27,7 @@ DealershipSchema.pre('remove', async function (next) {
   next();
 });
 
-const Dealership = mongoose.model("Dealership", DealershipSchema);
+
+const Dealership = mongoose.model('Dealership', DealershipSchema);
 
 module.exports = Dealership;
