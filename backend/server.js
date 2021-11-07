@@ -63,3 +63,5 @@ app.listen(PORT, () => {
 })
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
+
+module.exports = app;
