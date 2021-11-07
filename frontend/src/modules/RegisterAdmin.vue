@@ -33,7 +33,7 @@
         />
         <CLabel>Password</CLabel>
         <CInput
-          placeholder="ex. password1234"
+          placeholder="password"
           type="password"
           autocomplete="new-password"
           v-model="adminUser.adminPassword"
@@ -41,7 +41,7 @@
         />
         <CLabel>Confirm Password</CLabel>
         <CInput
-          placeholder="ex. password1234"
+          placeholder="confirm password"
           type="password"
           autocomplete="new-password"
           v-model="adminUser.adminConfirmPassword"
