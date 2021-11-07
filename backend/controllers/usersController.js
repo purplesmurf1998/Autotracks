@@ -26,6 +26,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
     const body = req.body;
     body.createDealershipCompleted = true;
     body.createUserCompleted = true;
+    body.promptPasswordChange = true;
 
     // create new user with the data passed in the request body
     const user = new User(body);
@@ -44,7 +45,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 exports.getUsers = asyncHandler(async (req, res, next) => {
     // get the formatted query based on the advnaced filtering
     const query = advancedFilter(User, req.query);
-    
+
     // run query in mongoose
     const users = await query;
 

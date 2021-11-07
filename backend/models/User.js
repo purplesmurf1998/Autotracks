@@ -73,6 +73,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  promptPasswordChange: {
+    type: Boolean,
+    default: false
+  },
   created_at: {
     type: Date,
     default: Date.now

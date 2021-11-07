@@ -13,7 +13,7 @@ export default {
         });
 
         const responseData = await response.json();
-        
+
         if (!response.ok) {
             console.log(responseData);
             return {
@@ -26,6 +26,7 @@ export default {
             token: responseData.token,
             userId: responseData.payload._id,
             userPermissions: responseData.payload.permissions,
+            promptPasswordChange: responseData.payload.promptPasswordChange,
             loggedIn: true
         }
 
@@ -45,7 +46,7 @@ export default {
         };
         // clear the cookie from the local storage
         localStorage.clear('autotracksAuthToken');
-        
+
         context.commit('setUser', data);
     },
     async verify(context) {
@@ -74,7 +75,7 @@ export default {
                     userPermissions: responseData.payload.permissions,
                     loggedIn: true
                 }
-        
+
                 // set the token in the local storage
                 localStorage.setItem('autotracksAuthToken', data.token);
                 // set the data in the store's state

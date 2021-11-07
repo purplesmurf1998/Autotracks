@@ -69,6 +69,7 @@ const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
 const Register = () => import('@/views/pages/authentication/Register')
+const ChangePassword = () => import('@/views/pages/authentication/ChangePassword')
 
 const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
 const Dealership = () => import('@/views/pages/dealerships/Dealership')
@@ -481,7 +482,7 @@ const router = new Router({
             }
           ]
         },
-       
+
         {
           path: 'apps',
           name: 'Apps',
@@ -562,6 +563,11 @@ const router = new Router({
           name: 'Register',
           component: Register
         },
+        {
+          path: 'changePassword',
+          name: 'Change Password',
+          component: ChangePassword
+        }
       ]
     },
   ]
@@ -573,8 +579,12 @@ router.beforeEach((to, from, next) => {
   console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
   console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
   console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
+  if (Store.state.auth.promptPasswordChange) {
+    next('/pages/changePassword');
+  }
+
   // add the meta tag "authRequired: true" to any routes you want protected
-  if (to.meta.authRequired && !Store.state.auth.loggedIn) {
+  else if (to.meta.authRequired && !Store.state.auth.loggedIn) {
     next('/pages/login');
   }
 
@@ -597,7 +607,7 @@ router.beforeEach((to, from, next) => {
           throw BreakLoop;
         }
       });
-    } catch(e) {
+    } catch (e) {
       authorized = false;
     }
 
@@ -611,7 +621,7 @@ router.beforeEach((to, from, next) => {
   else {
     next();
   }
-  
+
 })
 
 export default router;
