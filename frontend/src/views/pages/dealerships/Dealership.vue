@@ -28,15 +28,6 @@
           <CRow>
             <CCol>
               <h3>List of staff accounts</h3>
-              <CButton
-                color="primary"
-                @click="
-                  () => {
-                    addingStaffAccount = true;
-                  }
-                "
-                >Create a staff account</CButton
-              >
               <CListGroup class="mt-3" v-if="staff.length > 0">
                 <CListGroupItem
                   tag="button"
@@ -50,12 +41,27 @@
                   {{ user.first_name }} {{ user.last_name }}
                 </CListGroupItem>
               </CListGroup>
+              <CButton
+                color="primary"
+                class="mt-2"
+                @click="
+                  () => {
+                    addingStaffAccount = false;
+                    editingUser = false;
+                    addingStaffAccount = true;
+                  }
+                "
+              >
+                Create a staff account
+              </CButton>
             </CCol>
             <CCol>
               <h3>Selected staff account details</h3>
               <user-card
                 class="mt-2"
                 :user="selectedStaffAccount"
+                :editingUser="editingUser"
+                :setEditingUser="setEditingUser"
                 v-if="!!selectedStaffAccount"
               />
             </CCol>
@@ -94,11 +100,15 @@ export default {
       staff: [],
       selectedStaffAccount: null,
       addingStaffAccount: false,
+      editingUser: false,
     };
   },
   methods: {
     setActiveStaff(user) {
       this.selectedStaffAccount = user;
+    },
+    setEditingUser(value) {
+      this.editingUser = value;
     },
   },
   beforeCreate() {

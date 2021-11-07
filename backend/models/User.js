@@ -25,7 +25,15 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Administration', 'Management', 'Sales', 'Reception', 'Backshop'],
+    enum: [
+      "Administration",
+      "Management",
+      "Sales Rep",
+      "Sales Rep + Showroom",
+      "Sales Rep + Demoline",
+      "Sales Rep + Benefits",
+      "Reception"
+    ],
     required: 'User must have a role'
   },
   permissions: {
