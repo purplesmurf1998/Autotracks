@@ -28,13 +28,13 @@
         </CCard>
       </CCol>
     </CRow>
-    <CRow>
+    <!-- <CRow>
       <Dealership
         v-if="selectedDealership != null"
         :dealership="selectedDealership"
         :resetSelectedDealership="resetSelectedDealership"
       ></Dealership>
-    </CRow>
+    </CRow> -->
   </div>
 </template>
 
@@ -84,8 +84,10 @@ export default {
   },
   methods: {
     clickRow(dealership) {
-      this.selectedDealership = dealership
-      console.log(dealership)
+      //this.selectedDealership = dealership
+      //console.log(dealership)
+      const dealershipId = dealership._id;
+      this.$router.push(`/dealerships/${dealershipId}`);
     },
     resetSelectedDealership() {
       this.selectedDealership = null

@@ -121,7 +121,20 @@ const router = new Router({
             ]
           },
           component: Dealerships,
-          children: [
+        },
+        {
+          path: 'dealerships/:dealershipId',
+          name: 'Dealership Details',
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Dealerships'
+            ]
+          },
+          component: Dealership
+        },
+        /*
+        children: [
             {
               path: 'add',
               name: 'Add',
@@ -145,7 +158,7 @@ const router = new Router({
               component: Dealership
             }
           ]
-        },
+        */
         {
           path: 'theme',
           redirect: '/theme/colors',
