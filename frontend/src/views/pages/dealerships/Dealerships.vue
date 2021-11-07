@@ -2,6 +2,11 @@
   <div>
     <CRow v-if="!selectedDealership">
       <CCol>
+        <CRow class="mb-2">
+          <CCol>
+            <CButton color="primary" @click="() => {addingDealership = true}">Add New Dealership</CButton>
+          </CCol>
+        </CRow>
         <CCard>
           <CCardHeader>
             <slot name="header">
@@ -35,17 +40,43 @@
         :resetSelectedDealership="resetSelectedDealership"
       ></Dealership>
     </CRow> -->
+    <CModal
+      :show.sync="addingDealership"
+      :centered="true"
+      title="Modal title 2"
+      size="lg"
+    >
+      <dealership-add />
+      <template #header>
+        <h6 class="modal-title">Create a new dealership!</h6>
+        <CButtonClose @click="addingDealership = false"/>
+      </template>
+      <template #footer>
+        <!-- <CRow class="justify-content-center">
+        </CRow>
+        <CButton @click="addingDealership = false" color="danger">Discard</CButton>
+        <CButton @click="addingDealership = false" color="success">Accept</CButton> -->
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
 <script>
 import Dealership from './Dealership'
+import DealershipAdd from './DealershipAdd.vue'
+
 const axios = require ('axios');
+
 export default {
   name: 'Dealerships',
-  components: {Dealership},
+  components: {
+    Dealership,
+    'dealership-add': DealershipAdd
+  },
   data() {
     return {
+      addingDealership: false,
       selectedDealership: null,
       tableItems: [
         {
