@@ -70,16 +70,15 @@
       </CCard>
     </CCol>
     <CModal :show.sync="addingStaffAccount" :centered="true">
-      <staff-account-add v-if="addingStaffAccount" />
+      <staff-account-add
+        v-if="addingStaffAccount"
+        :setAddingStaffAccount="setAddingStaffAccount"
+      />
       <template #header>
         <h6 class="modal-title">Add a staff account to your dealership!</h6>
         <CButtonClose @click="addingStaffAccount = false" />
       </template>
       <template #footer>
-        <!-- <CRow class="justify-content-center">
-        </CRow>
-        <CButton @click="addingDealership = false" color="danger">Discard</CButton>
-        <CButton @click="addingDealership = false" color="success">Accept</CButton> -->
         <span></span>
       </template>
     </CModal>
@@ -89,6 +88,7 @@
 <script>
 import StaffAccountAdd from "./StaffAccountAdd.vue";
 import UserCard from "../../../modules/UserCard.vue";
+import ViewUser from "../../../modules/ViewUser.vue";
 
 const axios = require("axios");
 
@@ -109,6 +109,9 @@ export default {
     },
     setEditingUser(value) {
       this.editingUser = value;
+    },
+    setAddingStaffAccount(value) {
+      this.addingStaffAccount = value;
     },
   },
   beforeCreate() {
@@ -149,6 +152,7 @@ export default {
   components: {
     "staff-account-add": StaffAccountAdd,
     "user-card": UserCard,
+    ViewUser,
   },
 };
 </script>

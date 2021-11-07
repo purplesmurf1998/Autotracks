@@ -29,7 +29,7 @@
         @change="setSelected"
         placeholder="Please select a role"
       />
-      <label>Account Permissions</label>
+      <label v-if="role != ''">Account Permissions</label>
       <CMultiSelect
         v-if="role != ''"
         name="permissions"
@@ -39,11 +39,29 @@
         searchPlaceholder="..."
         selectionType="tags"
       />
+      <CRow>
+        <CCol>
+          <label>Account Password</label>
+        </CCol>
+        <CCol class="d-flex align-items-end flex-column">
+          <p style="color: red">password123</p>
+        </CCol>
+      </CRow>
+      <label
+        >Take note of the password and pass on to staff member. User will be
+        prompted to change password upon first login.</label
+      >
+
       <CRow class="justify-content-center mt-2">
         <CButton color="primary" type="submit" :disabled="disableButtons">
           Create
         </CButton>
-        <CButton class="ml-1" color="danger" :disabled="disableButtons">
+        <CButton
+          class="ml-1"
+          color="danger"
+          :disabled="disableButtons"
+          @click="setAddingStaffAccount(false)"
+        >
           Cancel
         </CButton>
       </CRow>
@@ -56,6 +74,7 @@ const axios = require("axios");
 
 export default {
   name: "StaffAccountAdd",
+  props: ["setAddingStaffAccount"],
   data() {
     return {
       disableButtons: false,
