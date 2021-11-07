@@ -4,6 +4,7 @@
     class="c-header-nav-items"
     placement="bottom-end"
     add-menu-classes="pt-0"
+    id = "nav-dropdown"
   >
     <template #toggler>
       <CHeaderNavLink>
@@ -59,7 +60,9 @@
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
     </CDropdownItem>
-    <CDropdownItem @click="logoutUser">
+    <CDropdownItem @click="logoutUser"
+    id = "log-out"
+    >
       <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>
