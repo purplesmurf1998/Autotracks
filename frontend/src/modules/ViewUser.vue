@@ -39,9 +39,32 @@
         >Edit account details</CButton
       >
     </CRow>
-    <a class="remove-link ml-1 mt-2" @click="removeUser(index)" href="#"
-      >Delete staff account</a
+    <CButton
+      color="danger"
+      @click="
+        () => {
+          deletingUser = true;
+        }
+      "
+      >Delete staff account</CButton
     >
+    <CModal :show.sync="deletingUser" :centered="true">
+      <p>Are you sure you want to delete this staff account?</p>
+      <template #header>
+        <h6 class="modal-title">Delete this staff user?</h6>
+        <CButtonClose
+          @click="
+            () => {
+              deletingUser = false;
+            }
+          "
+        />
+      </template>
+      <template #footer>
+        <CButton @click="deletingUser = false" color="danger">Cancel</CButton>
+        <CButton @click="removeUser" color="success">Confirm</CButton>
+      </template>
+    </CModal>
   </div>
 </template>
 
@@ -51,11 +74,28 @@ const axios = require("axios");
 export default {
   props: ["user", "setEditingUser"],
   data() {
-    return {};
+    return {
+      deletingUser: false,
+    };
   },
   methods: {
     removeUser() {
-      console.log("remove user" + user._id);
+      axios({
+        method: "DELETE",
+        url: `http://localhost:5000/api/v1/users/${this.user._id}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.data.success) {
+            this.$router.go();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
