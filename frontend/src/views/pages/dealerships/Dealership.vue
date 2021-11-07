@@ -30,7 +30,6 @@
               <h3>List of staff accounts</h3>
               <CButton
                 color="primary"
-                class="mt-2"
                 @click="
                   () => {
                     addingStaffAccount = true;
@@ -38,14 +37,15 @@
                 "
                 >Create a staff account</CButton
               >
-              <CListGroup class="mt-2" v-if="staff.length > 0">
+              <CListGroup class="mt-3" v-if="staff.length > 0">
                 <CListGroupItem
-                  component="button"
+                  tag="button"
                   v-for="user in staff"
                   :key="user._id"
                   :active="
                     selectedStaffAccount && user._id == selectedStaffAccount
                   "
+                  @click="setActiveStaff(user)"
                 >
                   {{ user.first_name }} {{ user.last_name }}
                 </CListGroupItem>
@@ -53,6 +53,11 @@
             </CCol>
             <CCol>
               <h3>Selected staff account details</h3>
+              <user-card
+                class="mt-2"
+                :user="selectedStaffAccount"
+                v-if="!!selectedStaffAccount"
+              />
             </CCol>
           </CRow>
         </CCardBody>
@@ -77,6 +82,7 @@
 
 <script>
 import StaffAccountAdd from "./StaffAccountAdd.vue";
+import UserCard from "../../../modules/UserCard.vue";
 
 const axios = require("axios");
 
@@ -89,6 +95,11 @@ export default {
       selectedStaffAccount: null,
       addingStaffAccount: false,
     };
+  },
+  methods: {
+    setActiveStaff(user) {
+      this.selectedStaffAccount = user;
+    },
   },
   beforeCreate() {
     // fetch dealership details
@@ -109,9 +120,25 @@ export default {
       });
 
     // fetch dealership staff users
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/api/v1/users/?dealership=${this.$route.params.dealershipId}`,
+      headers: {
+        Authorization: `Bearer ${this.$store.state.auth.token}`,
+      },
+    })
+      .then((response) => {
+        if (response.data.success) {
+          this.staff = response.data.data;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   components: {
     "staff-account-add": StaffAccountAdd,
+    "user-card": UserCard,
   },
 };
 </script>
