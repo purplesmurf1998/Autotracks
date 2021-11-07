@@ -579,7 +579,9 @@ router.beforeEach((to, from, next) => {
   console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
   console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
   console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
-  if (Store.state.auth.promptPasswordChange) {
+  console.log(`Password Change: ${Store.state.auth.promptPasswordChange}`);
+  if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
+    console.log(to);
     next('/pages/changePassword');
   }
 

@@ -142,6 +142,35 @@ exports.verifyPassword = asyncHandler(async (req, res, next) => {
     })
 })
 
+exports.changePassword = asyncHandler(async (req, res, next) => {
+    // protected route, therefore should get the user object from the req
+    // match the current password with the one in the user
+    // if match, set the new password in the user
+    const user = await User.findById(req.user._id).select('+password');
+
+    if (!user) {
+        return next(
+            new ErrorResponse('User not found', 404)
+        );
+    }
+    console.log(req.body);
+    // validate the entered password to the user password
+    const passwordMatch = await user.matchPassword(req.body.currentPassword);
+    if (!passwordMatch) {
+        return next(
+            new ErrorResponse('Invalid credentials.', 401)
+        );
+    }
+
+    user.changePassword(req.body.newPassword);
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Password changed successfully'
+    })
+})
+
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     // create token for this user

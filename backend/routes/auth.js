@@ -7,7 +7,8 @@ const {
     logout,
     register,
     verify,
-    verifyPassword
+    verifyPassword,
+    changePassword
 } = require('../controllers/authController');
 
 // get authentication middleware
@@ -19,6 +20,7 @@ router.route('/register').post(register);
 router.route('/logout').get(protect, logout);
 router.route('/verify').post(verify);
 router.route('/password').post(protect, verifyPassword);
+router.route('/password/change').post(protect, changePassword);
 
 // export the router so it can be used in the server.js file
 module.exports = router;

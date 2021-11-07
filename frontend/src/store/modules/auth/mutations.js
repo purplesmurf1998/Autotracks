@@ -3,6 +3,7 @@ export default {
     state.userId = payload.userId;
     state.token = payload.token;
     state.userPermissions = payload.userPermissions;
+    state.promptPasswordChange = payload.promptPasswordChange;
     state.loggedIn = payload.loggedIn;
   }
 }

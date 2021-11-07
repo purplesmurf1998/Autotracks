@@ -73,6 +73,7 @@ export default {
                     token: responseData.token,
                     userId: responseData.payload._id,
                     userPermissions: responseData.payload.permissions,
+                    promptPasswordChange: responseData.payload.promptPasswordChange,
                     loggedIn: true
                 }
 
