@@ -78,6 +78,7 @@
     "chromedriver": "latest",
     "core-js": "~3.8.0",
     "cypress": "^8.7.0",
+    "cypress-localstorage-commands": "^1.6.0",
     "eslint": "~7.14.0",
     "eslint-plugin-vue": "~6.2.2",
     "node-sass": "~4.14.1",
