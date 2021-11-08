@@ -19,8 +19,8 @@ describe('Create User Test', () => {
         .should('have.value', 'test')   
   
         cy.get("[placeholder='User email address']")
-        .type('test@gmail.com')
-        .should('have.value', 'test@gmail.com')
+        .type('test_test@gmail.com')
+        .should('have.value', 'test_test@gmail.com')
   
         cy.get("#role-select")
         .select("Management")
