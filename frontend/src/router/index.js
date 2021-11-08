@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-<<<<<<< HEAD
 import Store from './../store/index.js'
-=======
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -71,19 +68,12 @@ const Toaster = () => import('@/views/notifications/Toaster')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
 const Register = () => import('@/views/pages/authentication/Register')
 
 const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
 const Dealership = () => import('@/views/pages/dealerships/Dealership')
 const Dealerships = () => import('@/views/pages/dealerships/Dealerships')
-=======
-const Register = () => import('@/views/pages/Register')
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -105,15 +95,9 @@ const Message = () => import('@/views/apps/email/Message')
 
 Vue.use(Router)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-const router = new Router({
-=======
 export default new Router({
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
+
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
@@ -127,7 +111,6 @@ export default new Router({
         {
           path: 'dashboard',
           name: 'Dashboard',
-<<<<<<< HEAD
           meta: { authRequired: true },
           component: Dashboard
         },
@@ -167,20 +150,14 @@ export default new Router({
           ]
         },
         {
-=======
           component: Dashboard
         },
         {
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           path: 'theme',
           redirect: '/theme/colors',
           name: 'Theme',
           component: {
-<<<<<<< HEAD
             render(c) { return c('router-view') }
-=======
-            render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -205,11 +182,7 @@ export default new Router({
           redirect: '/tables/tables',
           name: 'Tables',
           component: {
-<<<<<<< HEAD
             render(c) { return c('router-view') }
-=======
-            render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -231,15 +204,9 @@ export default new Router({
         },
         {
           path: 'users',
-<<<<<<< HEAD
           meta: { label: 'Users' },
           component: {
             render(c) { return c('router-view') }
-=======
-          meta: { label: 'Users'},
-          component: {
-            render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -262,11 +229,7 @@ export default new Router({
           redirect: '/base/cards',
           name: 'Base',
           component: {
-<<<<<<< HEAD
             render(c) { return c('router-view') }
-=======
-            render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -346,11 +309,7 @@ export default new Router({
           redirect: '/buttons/standard-buttons',
           name: 'Buttons',
           component: {
-<<<<<<< HEAD
             render(c) { return c('router-view') }
-=======
-            render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -385,11 +344,7 @@ export default new Router({
           redirect: '/editors/text-editors',
           name: 'Editors',
           component: {
-<<<<<<< HEAD
             render(c) { return c('router-view') }
-=======
-            render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -409,15 +364,7 @@ export default new Router({
           redirect: '/forms/basic-forms',
           name: 'Forms',
           component: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-            render(c) { return c('router-view') }
-=======
             render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -452,15 +399,7 @@ export default new Router({
           redirect: '/icons/font-awesome',
           name: 'Icons',
           component: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-            render(c) { return c('router-view') }
-=======
             render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -485,15 +424,8 @@ export default new Router({
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-            render(c) { return c('router-view') }
-=======
             render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -523,15 +455,9 @@ export default new Router({
           redirect: '/plugins/draggable',
           name: 'Plugins',
           component: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-            render(c) { return c('router-view') }
-=======
+    
             render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -557,15 +483,7 @@ export default new Router({
           name: 'Apps',
           redirect: '/apps/invoicing/invoice',
           component: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-            render(c) { return c('router-view') }
-=======
             render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           },
           children: [
             {
@@ -573,15 +491,7 @@ export default new Router({
               redirect: '/apps/invoicing/invoice',
               name: 'Invoicing',
               component: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
-                render(c) { return c('router-view') }
-=======
                 render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
               },
               children: [
                 {
@@ -601,7 +511,6 @@ export default new Router({
       name: 'Email',
       component: EmailApp,
       children: [{
-<<<<<<< HEAD
         path: 'compose',
         name: 'Compose',
         component: Compose
@@ -616,22 +525,6 @@ export default new Router({
         name: 'Message',
         component: Message
       }
-=======
-          path: 'compose',
-          name: 'Compose',
-          component: Compose
-        },
-        {
-          path: 'inbox',
-          name: 'Inbox',
-          component: Inbox
-        },
-        {
-          path: 'message',
-          name: 'Message',
-          component: Message
-        }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
       ]
     },
     {
@@ -639,11 +532,7 @@ export default new Router({
       redirect: '/pages/404',
       name: 'Pages',
       component: {
-<<<<<<< HEAD
-        render(c) { return c('router-view') }
-=======
         render (c) { return c('router-view') }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
       },
       children: [
         {
@@ -659,23 +548,15 @@ export default new Router({
         {
           path: 'login',
           name: 'Login',
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
           meta: {
             unAuthRequired: true
           },
-=======
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
           component: Login
         },
         {
           path: 'register',
           name: 'Register',
           component: Register
-<<<<<<< HEAD
         },
       ]
     },
@@ -730,10 +611,8 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router;
-=======
         }
       ]
     }
   ]
 })
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
