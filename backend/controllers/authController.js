@@ -2,27 +2,14 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const advancedFilter = require('../utils/advancedFilter');
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
 const jwt = require('jsonwebtoken');
-=======
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
 
 // @desc    Sign in user and return a valid JWT
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
     console.log(req);
-=======
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
-=======
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
     // get email and password from the body
     const { email, password } = req.body;
 
@@ -60,25 +47,13 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
     // if (!req.cookies.autotracksAuthToken) {
     //     return next(
     //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
     //     )
     // }
-=======
-    if (!req.cookies.autotracksAuthToken) {
-        return next(
-            new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
-        )
-    }
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
-
-=======
   
     // clear the token from the cookies
->>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
     res
         .status(200)
         .clearCookie('autotracksAuthToken')
@@ -99,7 +74,7 @@ exports.register = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Can only register an admin user from this route', 400)
         );
     }
-    
+
     // create the new admin user
     const user = await User.create(req.body);
 
@@ -115,7 +90,6 @@ exports.register = asyncHandler(async (req, res, next) => {
     sendTokenResponse(user, 200, res);
 });
 
-<<<<<<< HEAD
 // @desc    Verify if the user is logged in
 // @route   POST /api/v1/auth/verify
 // @access  Public
@@ -124,7 +98,7 @@ exports.verify = asyncHandler(async (req, res, next) => {
     try {
         // verify token
         const decoded = jwt.verify(req.body.token, process.env.JWT_SECRET);
-        
+
         // invalid token
         if (!decoded) {
             return next(
@@ -151,8 +125,35 @@ exports.verify = asyncHandler(async (req, res, next) => {
     }
 });
 
-=======
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
+exports.changePassword = asyncHandler(async (req, res, next) => {
+    // protected route, therefore should get the user object from the req
+    // match the current password with the one in the user
+    // if match, set the new password in the user
+    const user = await User.findById(req.user._id).select('+password');
+
+    if (!user) {
+        return next(
+            new ErrorResponse('User not found', 404)
+        );
+    }
+    console.log(req.body);
+    // validate the entered password to the user password
+    const passwordMatch = await user.matchPassword(req.body.currentPassword);
+    if (!passwordMatch) {
+        return next(
+            new ErrorResponse('Invalid credentials.', 401)
+        );
+    }
+
+    user.changePassword(req.body.newPassword);
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Password changed successfully'
+    })
+})
+
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     // create token for this user
@@ -177,11 +178,7 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie('autotracksAuthToken', token, options)
         .json({
             success: true,
-<<<<<<< HEAD
             payload: user,
-=======
-            data: user,
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
             token
         });
 }

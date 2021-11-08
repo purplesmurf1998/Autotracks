@@ -25,7 +25,15 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Administration', 'Management', 'Sales', 'Reception', 'Backshop'],
+    enum: [
+      "Administration",
+      "Management",
+      "Sales Rep",
+      "Sales Rep + Showroom",
+      "Sales Rep + Demoline",
+      "Sales Rep + Benefits",
+      "Reception"
+    ],
     required: 'User must have a role'
   },
   permissions: {
@@ -51,10 +59,6 @@ const UserSchema = new mongoose.Schema({
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"
-  dealership: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Dealership",
-    required: 'User must be associated to a dealership'
   },
   password: {
     type: String,
@@ -67,6 +71,10 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
   createUserCompleted: {
+    type: Boolean,
+    default: false
+  },
+  promptPasswordChange: {
     type: Boolean,
     default: false
   },
@@ -99,6 +107,12 @@ UserSchema.methods.getSignedJwtToken = function () {
 // Math user entered password to hashed password in the database
 UserSchema.methods.matchPassword = async function (inputPassword) {
   return await bcrypt.compare(inputPassword, this.password);
+}
+
+// set a new password for the user
+UserSchema.methods.changePassword = async function (newPassword) {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(newPassword, salt);
 }
 
 const User = mongoose.model("User", UserSchema);

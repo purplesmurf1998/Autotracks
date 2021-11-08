@@ -68,8 +68,8 @@ const Toaster = () => import('@/views/notifications/Toaster')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
-
 const Register = () => import('@/views/pages/authentication/Register')
+const ChangePassword = () => import('@/views/pages/authentication/ChangePassword')
 
 const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
 const Dealership = () => import('@/views/pages/dealerships/Dealership')
@@ -95,9 +95,7 @@ const Message = () => import('@/views/apps/email/Message')
 
 Vue.use(Router)
 
-
-export default new Router({
-
+const router = new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
@@ -124,7 +122,20 @@ export default new Router({
             ]
           },
           component: Dealerships,
-          children: [
+        },
+        {
+          path: 'dealerships/:dealershipId',
+          name: 'Dealership Details',
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Dealerships'
+            ]
+          },
+          component: Dealership
+        },
+        /*
+        children: [
             {
               path: 'add',
               name: 'Add',
@@ -148,10 +159,7 @@ export default new Router({
               component: Dealership
             }
           ]
-        },
-        {
-          component: Dashboard
-        },
+        */
         {
           path: 'theme',
           redirect: '/theme/colors',
@@ -364,7 +372,7 @@ export default new Router({
           redirect: '/forms/basic-forms',
           name: 'Forms',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -399,7 +407,7 @@ export default new Router({
           redirect: '/icons/font-awesome',
           name: 'Icons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -424,8 +432,7 @@ export default new Router({
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -455,9 +462,7 @@ export default new Router({
           redirect: '/plugins/draggable',
           name: 'Plugins',
           component: {
-
-    
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -477,13 +482,13 @@ export default new Router({
             }
           ]
         },
-       
+
         {
           path: 'apps',
           name: 'Apps',
           redirect: '/apps/invoicing/invoice',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -491,7 +496,7 @@ export default new Router({
               redirect: '/apps/invoicing/invoice',
               name: 'Invoicing',
               component: {
-                render (c) { return c('router-view') }
+                render(c) { return c('router-view') }
               },
               children: [
                 {
@@ -532,7 +537,7 @@ export default new Router({
       redirect: '/pages/404',
       name: 'Pages',
       component: {
-        render (c) { return c('router-view') }
+        render(c) { return c('router-view') }
       },
       children: [
         {
@@ -558,6 +563,11 @@ export default new Router({
           name: 'Register',
           component: Register
         },
+        {
+          path: 'changePassword',
+          name: 'Change Password',
+          component: ChangePassword
+        }
       ]
     },
   ]
@@ -569,8 +579,14 @@ router.beforeEach((to, from, next) => {
   console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
   console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
   console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
+  console.log(`Password Change: ${Store.state.auth.promptPasswordChange}`);
+  if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
+    console.log(to);
+    next('/pages/changePassword');
+  }
+
   // add the meta tag "authRequired: true" to any routes you want protected
-  if (to.meta.authRequired && !Store.state.auth.loggedIn) {
+  else if (to.meta.authRequired && !Store.state.auth.loggedIn) {
     next('/pages/login');
   }
 
@@ -593,7 +609,7 @@ router.beforeEach((to, from, next) => {
           throw BreakLoop;
         }
       });
-    } catch(e) {
+    } catch (e) {
       authorized = false;
     }
 
@@ -607,12 +623,7 @@ router.beforeEach((to, from, next) => {
   else {
     next();
   }
-  
+
 })
 
 export default router;
-        }
-      ]
-    }
-  ]
-})

@@ -1,93 +1,152 @@
 <template>
-  <CCard class="mx-4 mb-0">
-    <CCardBody class="p-4">
-      <h1>Step 3: Register users!</h1>
-      <p class="text-muted">Register user account(s) with specific roles for your staff here.</p>
-      <CRow>
-        <CCol>
-          <CForm @submit.prevent="submitUser">
-            <p class="text-muted">**IMPORTANT: Passwords will be automatically generated. Users will be prompted to change their password upon first login.</p>
-            <CRow>
-              <CCol>
-                <CLabel>First Name</CLabel>
-                <CInput
-                  placeholder="ex. John"
-                  autocomplete="firstName"
-                  v-model="currFirstName"
-                />
-              </CCol>
-              <CCol>
-                <CLabel>Last Name</CLabel>
-                <CInput
-                  placeholder="ex. Doe"
-                  autocomplete="lastName"
-                  v-model="currLastName"
-                />
-              </CCol>
-            </CRow>
-            <CLabel>Email</CLabel>
-            <CInput
-              placeholder="ex. john.doe@mail.com"
-              autocomplete="email"
-              v-model="currEmail"
-            />
-            <CLabel>Account Role</CLabel>
-            <CSelect
-              :options="options"
-              placeholder="Select the account role"
-              v-model="currRole"
-            />
-            <CRow class="d-flex justify-content-center">
-              <CButton color="success" type="submit">Create Account</CButton>
-            </CRow>
-          </CForm>
-        </CCol>
-        <CCol v-if="users.length > 0">
-          <user-card v-for="(user, index) in users" :key="user.email" :user="user" :index="index" :removeUser="removeUser"/>
-        </CCol>
-        <CCol v-if="users.length == 0" class="d-flex align-items-center">
-          <p class="text-center text-muted" style="width: 100%">Created user will appear here</p>
-        </CCol>
-      </CRow>
-    </CCardBody>
-  </CCard>
+  <CForm @submit.prevent="submitUser">
+    <CInput
+      label="First Name"
+      id="first-name"
+      horizontal
+      v-model="currUser.first_name"
+      size="sm"
+    />
+    <CInput
+      label="Last Name"
+      id="last-name"
+      horizontal
+      v-model="currUser.last_name"
+      size="sm"
+    />
+    <CInput label="Email" horizontal v-model="currUser.email" size="sm" />
+    <CSelect
+      label="Role"
+      :options="roles"
+      horizontal
+      :value.sync="currUser.role"
+      size="sm"
+    />
+    <CMultiSelect
+      name="permissions"
+      :options="permissionsList"
+      :selected="currUser.permissions"
+      search
+      searchPlaceholder="..."
+      selectionType="tags"
+    />
+    <CRow class="d-flex justify-content-center mt-2">
+      <CButton color="success" class="mr-2" id="save-user-changes" type="submit">Save</CButton>
+      <CButton color="secondary" @click="setEditingUser(false)">Cancel</CButton>
+    </CRow>
+  </CForm>
 </template>
 
 <script>
-import UserCard from "./UserCard.vue"
+const axios = require("axios");
 
 export default {
   data() {
     return {
-      options: ['Management', 'Sales', 'Reception', 'Backshop'],
-      currFirstName: '',
-      currLastName: '',
-      currEmail: '',
-      currRole: ''
-    }
+      roles: [
+        "Management",
+        "Sales Rep",
+        "Sales Rep + Showroom",
+        "Sales Rep + Demoline",
+        "Sales Rep + Benefits",
+        "Reception",
+      ],
+      permissionsList: [
+        {
+          value: "Add Dealerships",
+          text: "Add Dealerships",
+        },
+        {
+          value: "View Dealerships",
+          text: "View Dealerships",
+        },
+        {
+          value: "Edit Dealerships",
+          text: "Edit Dealerships",
+        },
+        {
+          value: "Delete Dealerships",
+          text: "Delete Dealerships",
+        },
+        {
+          value: "Add Staff Users",
+          text: "Add Staff Users",
+        },
+        {
+          value: "View Staff Users",
+          text: "View Staff Users",
+        },
+        {
+          value: "Edit Staff Users",
+          text: "Edit Staff Users",
+        },
+        {
+          value: "Delete Staff Users",
+          text: "Delete Staff Users",
+        },
+        {
+          value: "Add Vehicles",
+          text: "Add Vehicles",
+        },
+        {
+          value: "View Vehicles",
+          text: "View Vehicles",
+        },
+        {
+          value: "Edit Vehicle Properties",
+          text: "Edit Vehicle Properties",
+        },
+        {
+          value: "Edit Vehicle Locations",
+          text: "Edit Vehicle Locations",
+        },
+        {
+          value: "Sell Vehicles",
+          text: "Sell Vehicles",
+        },
+        {
+          value: "Delete Vehicles",
+          text: "Delete Vehicles",
+        },
+      ],
+      currUser: {
+        first_name: this.user.first_name,
+        last_name: this.user.last_name,
+        email: this.user.email,
+        role: this.user.role,
+        permissions: this.user.permissions,
+      },
+    };
   },
-  props: ['users'],
-  components: {
-    'user-card': UserCard
-  },
+  props: ["setEditingUser", "user"],
   methods: {
-    submitUser () {
-      console.log(this.currRole.target.value);
-      const newUser = {
-        first_name: this.currFirstName,
-        last_name: this.currLastName,
-        email: this.currEmail,
-        role: this.currRole.target.value
-      }
-      this.users.push(newUser);
-      this.currFirstName = '';
-      this.currLastName = '';
-      this.currEmail = '';
-      this.currRole.target.value = ''
+    submitUser() {
+      console.log(this.user);
+      // send the put request using axios
+      const data = this.currUser;
+      axios({
+        method: "PUT",
+        url: `http://localhost:5000/api/v1/users/${this.user._id}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data,
+      })
+        .then((response) => {
+          if (response.data.success) {
+            this.setEditingUser(false);
+            this.$router.go();
+          } else {
+            console.log(response);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    removeUser (index) {
+    removeUser(index) {
       this.users.splice(index, 1);
-    }
-  }
-}
+    },
+  },
+};
 </script>

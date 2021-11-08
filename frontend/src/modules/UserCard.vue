@@ -1,18 +1,40 @@
 <template>
   <CCard>
     <CCardBody class="p-3">
-      <h6>{{ user.first_name }} {{ user.last_name }}</h6>
-      <p class="text-muted mb-0">Role: {{ user.role }}</p>
-      <p class="text-muted mb-0">Email: {{ user.email }}</p>
-      <CRow class="d-flex justify-content-start mt-3 px-3">
-        <CButton color="danger" @click="removeUser(index)">Remove</CButton>
-      </CRow>
+      <view-user
+        v-if="!editingUser"
+        :user="user"
+        :setEditingUser="setEditingUser"
+      />
+      <edit-user
+        v-if="editingUser"
+        :setEditingUser="setEditingUser"
+        :user="user"
+      />
     </CCardBody>
   </CCard>
 </template>
 
 <script>
+import ViewUser from "./ViewUser.vue";
+import EditUser from "./EditUsers.vue";
+
 export default {
-  props: ['user', 'index', 'removeUser']
-}
+  data() {
+    return {};
+  },
+  props: ["user", "editingUser", "setEditingUser"],
+  components: {
+    "view-user": ViewUser,
+    "edit-user": EditUser,
+  },
+  methods: {
+    removeUser() {
+      console.log("remove user" + user._id);
+    },
+  },
+};
 </script>
+
+<style scoped>
+</style>

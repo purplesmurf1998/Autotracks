@@ -47,47 +47,14 @@ export default {
       this.$router.push('/pages/login');
     },
     async completeRegistration () {
-      // const response = await got.post('http://localhost:5000/api/v1/auth/register', {
-      //   json: {
-      //     first_name: this.adminFirstName,
-      //     last_name: this.adminLastName,
-      //     email: this.adminEmail,
-      //     role: "Administration",
-      //     permissions: [
-      //       "Add Dealerships",
-      //       "View Dealerships",
-      //       "Edit Dealerships",
-      //       "Delete Dealerships",
-      //       "Add Staff Users",
-      //       "View Staff Users",
-      //       "Edit Staff Users",
-      //       "Delete Staff Users",
-      //       "Add Vehicles",
-      //       "View Vehicles",
-      //       "Edit Vehicle Properties",
-      //       "Edit Vehicle Locations",
-      //       "Sell Vehicles",
-      //       "Delete Vehicles"
-      //     ],
-      //     password: this.adminPassword
-      //   },
-      //   responseType: 'json'
-      // });
-      // console.log(response)
-      //await this.$router.push('/dashboard');
-      // console.log(this.adminUser.adminFirstName);
-      // console.log(this.adminUser.adminLastName);
-      // console.log(this.adminUser.adminEmail);
-      // console.log(this.adminUser.adminPassword);
-
       /**********************************************
        * used axios since from the documentation axios() and fetch() are the most
-       * commonly used http request APIs for SPAs. 
-       * 
+       * commonly used http request APIs for SPAs.
+       *
        * I left the code used with got in case you wanted to fix it but I was getting
        * an undefined error and couldn't figure out how to fix it. I think a problem
        * with the import.
-       * 
+       *
        * TODO: add some validation check (password = confirmPassword) and visual feedback
        *       when a field is entered wrong or not entered at all.
       ***********************************************/
@@ -132,7 +99,7 @@ export default {
           // if not successful, show the error message
           if (!response.success) {
             this.showErrorMessage(response.message);
-          } 
+          }
           // if successful, redirect the user to the dashboad
           else {
             this.$router.push("/dashboard");

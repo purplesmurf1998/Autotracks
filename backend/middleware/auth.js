@@ -12,7 +12,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   ) {
     // get the token from the headers
     token = req.headers.authorization.split(' ')[1];
-  } 
+  }
   // else if (
   //   req.cookies.autotracksAuthToken
   // ) {
