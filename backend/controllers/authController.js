@@ -2,12 +2,27 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const advancedFilter = require('../utils/advancedFilter');
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
 const jwt = require('jsonwebtoken');
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
+
 
 // @desc    Sign in user and return a valid JWT
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    console.log(req);
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
+=======
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
     // get email and password from the body
     const { email, password } = req.body;
 
@@ -45,7 +60,25 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    // if (!req.cookies.autotracksAuthToken) {
+    //     return next(
+    //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
+    //     )
+    // }
+=======
+    if (!req.cookies.autotracksAuthToken) {
+        return next(
+            new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
+        )
+    }
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
+
+=======
+  
     // clear the token from the cookies
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
     res
         .status(200)
         .clearCookie('autotracksAuthToken')
@@ -59,6 +92,7 @@ exports.logout = (req, res, next) => {
 // @route   POST /api/v1/auth/register
 // @route   Public
 exports.register = asyncHandler(async (req, res, next) => {
+
     // validate that the user being registered is admin
     if (req.body.role != 'Administration') {
         return next(
@@ -76,10 +110,12 @@ exports.register = asyncHandler(async (req, res, next) => {
         );
     }
 
+
     // send token response
     sendTokenResponse(user, 200, res);
 });
 
+<<<<<<< HEAD
 // @desc    Verify if the user is logged in
 // @route   POST /api/v1/auth/verify
 // @access  Public
@@ -115,12 +151,15 @@ exports.verify = asyncHandler(async (req, res, next) => {
     }
 });
 
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     // create token for this user
     const token = user.getSignedJwtToken();
 
     // cookie options
+
     // token expires in 30 days
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
@@ -138,7 +177,11 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie('autotracksAuthToken', token, options)
         .json({
             success: true,
+<<<<<<< HEAD
             payload: user,
+=======
+            data: user,
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
             token
         });
 }

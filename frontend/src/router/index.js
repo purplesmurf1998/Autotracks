@@ -68,6 +68,7 @@ const Toaster = () => import('@/views/notifications/Toaster')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
+
 const Register = () => import('@/views/pages/authentication/Register')
 
 const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
@@ -94,7 +95,9 @@ const Message = () => import('@/views/apps/email/Message')
 
 Vue.use(Router)
 
-const router = new Router({
+
+export default new Router({
+
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
@@ -145,6 +148,9 @@ const router = new Router({
               component: Dealership
             }
           ]
+        },
+        {
+          component: Dashboard
         },
         {
           path: 'theme',
@@ -358,7 +364,7 @@ const router = new Router({
           redirect: '/forms/basic-forms',
           name: 'Forms',
           component: {
-            render(c) { return c('router-view') }
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -393,7 +399,7 @@ const router = new Router({
           redirect: '/icons/font-awesome',
           name: 'Icons',
           component: {
-            render(c) { return c('router-view') }
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -418,7 +424,8 @@ const router = new Router({
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-            render(c) { return c('router-view') }
+
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -448,7 +455,9 @@ const router = new Router({
           redirect: '/plugins/draggable',
           name: 'Plugins',
           component: {
-            render(c) { return c('router-view') }
+
+    
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -474,7 +483,7 @@ const router = new Router({
           name: 'Apps',
           redirect: '/apps/invoicing/invoice',
           component: {
-            render(c) { return c('router-view') }
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -482,7 +491,7 @@ const router = new Router({
               redirect: '/apps/invoicing/invoice',
               name: 'Invoicing',
               component: {
-                render(c) { return c('router-view') }
+                render (c) { return c('router-view') }
               },
               children: [
                 {
@@ -523,7 +532,7 @@ const router = new Router({
       redirect: '/pages/404',
       name: 'Pages',
       component: {
-        render(c) { return c('router-view') }
+        render (c) { return c('router-view') }
       },
       children: [
         {
@@ -547,9 +556,6 @@ const router = new Router({
         {
           path: 'register',
           name: 'Register',
-          meta: {
-            unAuthRequired: true
-          },
           component: Register
         },
       ]
@@ -558,7 +564,11 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(Store.state.auth.loggedIn);
+  console.log(`Logged In: ${Store.state.auth.loggedIn}`);
+  console.log(`Auth Required: ${to.meta.authRequired}`);
+  console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
+  console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
+  console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
   // add the meta tag "authRequired: true" to any routes you want protected
   if (to.meta.authRequired && !Store.state.auth.loggedIn) {
     next('/pages/login');
@@ -601,3 +611,8 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router;
+        }
+      ]
+    }
+  ]
+})

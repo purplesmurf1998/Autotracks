@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Autotracks backend API for database queries",
   "main": "server.js",
-  
   "scripts": {
     "test": "nyc --reporter=html mocha ./tests/*.js",
     "prod": "NODE_ENV=production node server",

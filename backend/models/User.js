@@ -51,12 +51,17 @@ const UserSchema = new mongoose.Schema({
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"
+  dealership: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Dealership",
+    required: 'User must be associated to a dealership'
   },
   password: {
     type: String,
     required: 'Password is required',
     select: false
   },
+
   createDealershipCompleted: {
     type: Boolean,
     default: false
@@ -80,7 +85,12 @@ UserSchema.pre('save', async function (next) {
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({
-    userId: this._id
+    id: this._id,
+    first_name: this.first_name,
+    last_name: this.last_name,
+    role: this.role,
+    email: this.email,
+    dealership: this.dealership
   }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE
   });
