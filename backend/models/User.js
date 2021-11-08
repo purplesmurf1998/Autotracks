@@ -28,6 +28,7 @@ const UserSchema = new mongoose.Schema({
     enum: ['Administration', 'Management', 'Sales', 'Reception', 'Backshop'],
     required: 'User must have a role'
   },
+<<<<<<< HEAD
   permissions: {
     type: [String],
     enum: [
@@ -51,6 +52,12 @@ const UserSchema = new mongoose.Schema({
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"
+=======
+  dealership: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Dealership",
+    required: 'User must be associated to a dealership'
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
   },
   password: {
     type: String,
@@ -72,7 +79,16 @@ UserSchema.pre('save', async function (next) {
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({
+<<<<<<< HEAD
     userId: this._id
+=======
+    id: this._id,
+    first_name: this.first_name,
+    last_name: this.last_name,
+    role: this.role,
+    email: this.email,
+    dealership: this.dealership
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
   }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE
   });

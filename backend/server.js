@@ -13,7 +13,10 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
+<<<<<<< HEAD
 const cors = require('cors');
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -37,9 +40,12 @@ mongoose.connect(process.env.MONGODB_URL,
   }
 );
 
+<<<<<<< HEAD
 // apply CORS to routes
 app.use(cors());
 
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 // needed to be able to parse request body
 app.use(express.json());
 

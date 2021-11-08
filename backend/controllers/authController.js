@@ -2,13 +2,19 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const advancedFilter = require('../utils/advancedFilter');
+<<<<<<< HEAD
 const jwt = require('jsonwebtoken');
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
 // @desc    Sign in user and return a valid JWT
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
+<<<<<<< HEAD
     console.log(req);
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
     // get email and password from the body
     const { email, password } = req.body;
 
@@ -46,11 +52,19 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
+<<<<<<< HEAD
     // if (!req.cookies.autotracksAuthToken) {
     //     return next(
     //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
     //     )
     // }
+=======
+    if (!req.cookies.autotracksAuthToken) {
+        return next(
+            new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
+        )
+    }
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
     res
         .status(200)
@@ -78,6 +92,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     sendTokenResponse(user, 200, res);
 });
 
+<<<<<<< HEAD
 // @desc    Verify if the user is logged in
 // @route   POST /api/v1/auth/verify
 // @access  Public
@@ -113,6 +128,8 @@ exports.verify = asyncHandler(async (req, res, next) => {
     }
 });
 
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     // create token for this user
@@ -135,7 +152,11 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie('autotracksAuthToken', token, options)
         .json({
             success: true,
+<<<<<<< HEAD
             payload: user,
+=======
+            data: user,
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
             token
         });
 }

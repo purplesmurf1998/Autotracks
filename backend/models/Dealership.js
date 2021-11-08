@@ -8,11 +8,14 @@ const DealershipSchema = new mongoose.Schema({
     required: 'Name is required'
   },
   description: String,
+<<<<<<< HEAD
   admin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: 'Dealership must have an admin account connected.'
   },
+=======
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
   created_at: {
     type: Date,
     default: Date.now
@@ -26,6 +29,10 @@ DealershipSchema.pre('remove', async function (next) {
   next();
 });
 
+<<<<<<< HEAD
 const Dealership = mongoose.model('Dealership', DealershipSchema);
+=======
+const Dealership = mongoose.model("Dealership", DealershipSchema);
+>>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
 
 module.exports = Dealership;
