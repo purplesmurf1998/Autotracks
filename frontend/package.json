@@ -26,7 +26,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "cypress:open": "cypress open",
+    "test": "cypress open",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "clearCache": "jest --clearCache",
