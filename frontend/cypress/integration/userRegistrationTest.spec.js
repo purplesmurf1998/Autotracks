@@ -1,9 +1,10 @@
-
-
 describe('User Registration Test', () => {
     it('Visits the registration page and registers a new user successfully', () => {
+      //Visiting the registration page
       cy.visit('/#/pages/register')
       cy.contains('Register new account');
+
+      //Filling out the necessary fields to create a new user
       cy.get("[placeholder='ex. John']")
       .type('test')
       .should('have.value', 'test')
@@ -27,6 +28,7 @@ describe('User Registration Test', () => {
       cy.get("button.btn.btn-primary")
       .click()
 
+      //Validating that the page was redirected upon a successful registration of an admin
       cy.url().should('include', '#/dashboard')
  
     })
