@@ -24,6 +24,7 @@
       />
       <CSelect
         label="Account Role"
+        id="role-select"
         :options="roles"
         :value.sync="role"
         @change="setSelected"
@@ -53,11 +54,15 @@
       >
 
       <CRow class="justify-content-center mt-2">
-        <CButton color="primary" type="submit" :disabled="disableButtons">
+        <CButton color="primary" 
+        type="submit" 
+        :disabled="disableButtons"
+        id="create-staff">
           Create
         </CButton>
         <CButton
           class="ml-1"
+          
           color="danger"
           :disabled="disableButtons"
           @click="setAddingStaffAccount(false)"

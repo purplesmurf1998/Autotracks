@@ -20,6 +20,7 @@
         <CButton 
           color="primary"
           type="submit"
+          id = "create-dealership"
           :disabled="disableButtons"
         >
           Create
