@@ -7,7 +7,7 @@ const {
     logout,
     register,
     verifyPassword,
-    changePassword
+    changePassword,
     verify
 } = require('../controllers/authController');
 
@@ -19,7 +19,6 @@ router.route('/signin').post(signIn);
 router.route('/register').post(register);
 router.route('/logout').get(protect, logout);
 router.route('/verify').post(verify);
-router.route('/password').post(protect, verifyPassword);
 router.route('/password/change').post(protect, changePassword);
 
 // export the router so it can be used in the server.js file

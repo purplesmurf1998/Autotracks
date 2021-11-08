@@ -59,10 +59,6 @@ const UserSchema = new mongoose.Schema({
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"
-  dealership: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Dealership",
-    required: 'User must be associated to a dealership'
   },
   password: {
     type: String,

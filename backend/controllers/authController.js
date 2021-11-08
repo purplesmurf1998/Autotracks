@@ -125,33 +125,6 @@ exports.verify = asyncHandler(async (req, res, next) => {
     }
 });
 
-// @desc    Verify if the password is correct
-// @route   POST /api/v1/auth/password
-// @access  Private
-exports.verifyPassword = asyncHandler(async (req, res, next) => {
-    // find the user from the id passed in the req body
-    const user = await User.findById(req.body.userId);
-
-    if (!user) {
-        return next(
-            new ErrorResponse('User not found', 404)
-        );
-    }
-
-    // validate the entered password to the user password
-    const passwordMatch = await user.matchPassword(password);
-    if (!passwordMatch) {
-        return next(
-            new ErrorResponse('Invalid credentials.', 401)
-        );
-    }
-
-    res.status(200).json({
-        success: true,
-        message: 'Valid password'
-    })
-})
-
 exports.changePassword = asyncHandler(async (req, res, next) => {
     // protected route, therefore should get the user object from the req
     // match the current password with the one in the user
