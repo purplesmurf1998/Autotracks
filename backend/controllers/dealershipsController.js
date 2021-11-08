@@ -1,5 +1,7 @@
 const Dealership = require('../models/Dealership');
+
 const User = require('../models/User');
+
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const advancedFilter = require('../utils/advancedFilter');
@@ -8,6 +10,7 @@ const advancedFilter = require('../utils/advancedFilter');
 // @route   POST /api/v1/dealerships
 // @access  Public
 exports.createDealership = asyncHandler(async (req, res, next) => {
+
     // check that there is an admin user attached to the dealership
     if (!req.body.admin) {
         return next(
@@ -31,7 +34,6 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
             new ErrorResponse('User creating the dealership is not an admin.', 400)
         )
     }
-
     // create new dealership with the data passed in the request body
     const dealership = await Dealership.create(req.body);
 

@@ -62,7 +62,8 @@
     "vue-text-mask": "~6.1.2",
     "vue2-google-maps": "~0.10.7",
     "vuelidate": "~0.7.5",
-    "vuex": "~3.5.1"
+    "vuex": "~3.5.1",
+    "test": "./tests"
   },
   "devDependencies": {
     "@babel/core": "~7.12.9",
@@ -84,7 +85,8 @@
     "node-sass": "~4.14.1",
     "npm-run-all": "~4.1.5",
     "sass-loader": "~9.0.3",
-    "vue-template-compiler": "~2.6.12"
+    "vue-template-compiler": "~2.6.12",
+    "mocha":"latest"
   },
   "browserslist": [
     "> 1%",

@@ -13,8 +13,9 @@
                     placeholder="Email"
                     autocomplete="username email"
                     v-model="email"
-                    prepend="@"
-                  />
+                  >
+                    <template #prepend-content><CIcon name="cib-mail-ru"/></template>
+                  </CInput>
                   <CInput
                     placeholder="Password"
                     type="password"
@@ -33,7 +34,6 @@
                     </CCol>
                   </CRow>
                 </CForm>
-                <CAlert show color="danger" v-if="errorMsg" class="mt-2">Invalid Credentials</CAlert>
               </CCardBody>
             </CCard>
             <CCard
@@ -44,6 +44,7 @@
             >
               <CCardBody>
                 <h2>Sign up</h2>
+
                 <p>Sign up for an admin account and start tracking your inventory today! Get three users FREE when signing up for one year.</p>
                 <router-link to="/pages/register">
                   <CButton
@@ -54,6 +55,15 @@
                     Register Now!
                   </CButton>
                 </router-link>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <CButton
+                  color="light"
+                  variant="outline"
+                  size="lg"
+                >
+                  Register Now!
+                </CButton>
               </CCardBody>
             </CCard>
           </CCardGroup>
@@ -74,33 +84,33 @@ export default {
     }
   },
   methods: {
-    async submitForm () {
-      if (this.email == '' || this.password == '') {
-        this.showError('Invalid credentials');
+    submitForm () {
+      if (email == '' || password == '') {
+        this.showError('Please enter valid credentials');
       } else {
-        // try to log the user in using the vuex store
-        const response = await this.$store.dispatch('login', {
-          email: this.email,
-          password: this.password
-        });
-        
-        // if not successful, show the error message
-        if (!response.success) {
-          this.showError(response.message);
-        } 
-        // if successful, redirect the user to the dashboad
-        else {
-          this.$router.push("/dashboard");
-        }
+        fetch('http://localhost:5000/api/v1/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password
+          })
+        }).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log(error);
+        })
       }
     },
     showError (errorMsg) {
-      this.password = '';
       this.errorMsg = errorMsg;
       setTimeout(() => {
         this.errorMsg = null;
       }, 4000)
     },
+    }
   }
 }
 </script>

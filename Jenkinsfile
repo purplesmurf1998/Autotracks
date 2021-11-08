@@ -1,20 +1,40 @@
 pipeline {
-    agent any
-  
-    tools {nodejs "Node 14.8.1"}
-  
+    agent {
+        docker {
+            echo 'Building Docker...'
+            image 'node:lts-buster-slim'
+            args '-p 3000:3000'
+        }
+    }
+    environment { 
+        CI = 'true'
+    }
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
+                echo 'Building Backend...'
+                dir(backend){
+                    sh 'npm install'
+                }
+                echo 'Building Frontend...'
+                dir(frontend){
+                    sh 'npm install'
+                }
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo 'Testing Backend...'
+                dir(backend){
+                    sh 'npm test'
+                }
+                echo 'Testing Backend...'
+                dir(frontend){
+                    sh 'npm test'
+                }
             }
         }
-        stage('Deploy') {
+        stage('Deliver') { 
             steps {
                 echo 'Deploying....'
             }

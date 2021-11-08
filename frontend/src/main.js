@@ -28,4 +28,3 @@ store.dispatch('verify').then(() => {
   });
 });
 
-

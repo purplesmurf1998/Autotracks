@@ -68,6 +68,7 @@ const Toaster = () => import('@/views/notifications/Toaster')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
+
 const Register = () => import('@/views/pages/authentication/Register')
 const ChangePassword = () => import('@/views/pages/authentication/ChangePassword')
 
@@ -95,7 +96,9 @@ const Message = () => import('@/views/apps/email/Message')
 
 Vue.use(Router)
 
-const router = new Router({
+
+export default new Router({
+
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
@@ -160,6 +163,9 @@ const router = new Router({
             }
           ]
         */
+        {
+          component: Dashboard
+        },
         {
           path: 'theme',
           redirect: '/theme/colors',
@@ -372,7 +378,7 @@ const router = new Router({
           redirect: '/forms/basic-forms',
           name: 'Forms',
           component: {
-            render(c) { return c('router-view') }
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -407,7 +413,7 @@ const router = new Router({
           redirect: '/icons/font-awesome',
           name: 'Icons',
           component: {
-            render(c) { return c('router-view') }
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -432,7 +438,8 @@ const router = new Router({
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-            render(c) { return c('router-view') }
+
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -462,7 +469,9 @@ const router = new Router({
           redirect: '/plugins/draggable',
           name: 'Plugins',
           component: {
-            render(c) { return c('router-view') }
+
+    
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -488,7 +497,7 @@ const router = new Router({
           name: 'Apps',
           redirect: '/apps/invoicing/invoice',
           component: {
-            render(c) { return c('router-view') }
+            render (c) { return c('router-view') }
           },
           children: [
             {
@@ -496,7 +505,7 @@ const router = new Router({
               redirect: '/apps/invoicing/invoice',
               name: 'Invoicing',
               component: {
-                render(c) { return c('router-view') }
+                render (c) { return c('router-view') }
               },
               children: [
                 {
@@ -537,7 +546,7 @@ const router = new Router({
       redirect: '/pages/404',
       name: 'Pages',
       component: {
-        render(c) { return c('router-view') }
+        render (c) { return c('router-view') }
       },
       children: [
         {
@@ -627,3 +636,8 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router;
+        }
+      ]
+    }
+  ]
+})

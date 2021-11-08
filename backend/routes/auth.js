@@ -6,9 +6,9 @@ const {
     signIn,
     logout,
     register,
-    verify,
     verifyPassword,
     changePassword
+    verify
 } = require('../controllers/authController');
 
 // get authentication middleware
