@@ -59,11 +59,7 @@
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
     </CDropdownItem>
-<<<<<<< HEAD
     <CDropdownItem @click="logoutUser">
-=======
-    <CDropdownItem>
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
       <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>
@@ -76,15 +72,12 @@ export default {
     return { 
       itemsCount: 42
     }
-<<<<<<< HEAD
   },
   methods: {
     logoutUser() {
       this.$store.dispatch('logout');
       this.$router.push('/pages/login');
     }
-=======
->>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
   }
 }
 </script>
