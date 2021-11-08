@@ -1,4 +1,3 @@
-
 describe('User Log in Test', () => {
 
     it('Visits the login page and loging a user in successfully', () => {

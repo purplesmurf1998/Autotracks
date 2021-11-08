@@ -1,5 +1,5 @@
-describe('View Dealerships Test', () => {
-    it('Visits the dealerships page and view list of dealerships', () => {
+describe('Create Dealership Test', () => {
+    it('Visits the dealerships page and creating a new dealership', () => {
       cy.setLocalStorage('autotracksAuthToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTg3MWU2NmFjMzNjYmE1N2JmMWQ4MTEiLCJpYXQiOjE2MzYzMTYwMTAsImV4cCI6MTYzODkwODAxMH0.rXnYhgWxnX3koe04r0MV_iASdQ_qPW01wnYnNwZ3QAg')
       cy.visit('/#/dealerships')
 
