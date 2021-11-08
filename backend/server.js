@@ -41,6 +41,10 @@ mongoose.connect(process.env.MONGODB_URL,
 );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
 // apply CORS to routes
 app.use(cors());
 
@@ -68,4 +72,7 @@ app.listen(PORT, () => {
   });
 })
 
+
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
+
+module.exports = app;

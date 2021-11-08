@@ -72,6 +72,10 @@ const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
 const Register = () => import('@/views/pages/authentication/Register')
 
 const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
@@ -102,6 +106,10 @@ const Message = () => import('@/views/apps/email/Message')
 Vue.use(Router)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
 const router = new Router({
 =======
 export default new Router({
@@ -402,6 +410,10 @@ export default new Router({
           name: 'Forms',
           component: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
             render(c) { return c('router-view') }
 =======
             render (c) { return c('router-view') }
@@ -441,6 +453,10 @@ export default new Router({
           name: 'Icons',
           component: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
             render(c) { return c('router-view') }
 =======
             render (c) { return c('router-view') }
@@ -470,6 +486,10 @@ export default new Router({
           name: 'Notifications',
           component: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
             render(c) { return c('router-view') }
 =======
             render (c) { return c('router-view') }
@@ -504,6 +524,10 @@ export default new Router({
           name: 'Plugins',
           component: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
             render(c) { return c('router-view') }
 =======
             render (c) { return c('router-view') }
@@ -534,6 +558,10 @@ export default new Router({
           redirect: '/apps/invoicing/invoice',
           component: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
             render(c) { return c('router-view') }
 =======
             render (c) { return c('router-view') }
@@ -546,6 +574,10 @@ export default new Router({
               name: 'Invoicing',
               component: {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
                 render(c) { return c('router-view') }
 =======
                 render (c) { return c('router-view') }
@@ -628,6 +660,10 @@ export default new Router({
           path: 'login',
           name: 'Login',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
           meta: {
             unAuthRequired: true
           },

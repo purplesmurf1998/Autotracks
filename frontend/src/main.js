@@ -33,6 +33,7 @@ store.dispatch('verify').then(() => {
     }
   });
 });
+<<<<<<< HEAD
 
 
 =======
@@ -49,3 +50,5 @@ new Vue({
   }
 })
 >>>>>>> 0d32b0b ([AP-54] Jenkins and Docker setup complete)
+=======
+>>>>>>> f24cc698fcfc5fb83c658b7a0dad6fbcac0b4e1f
