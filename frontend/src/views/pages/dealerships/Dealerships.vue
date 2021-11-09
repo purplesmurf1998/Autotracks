@@ -87,10 +87,22 @@ export default {
       selectedDealership: null,
       tableItems: [],
       tableFields: [
-        { key: "name" },
-        { key: "description" },
-        { key: "admin" },
-        { key: "created_at" },
+        { 
+          key: "name",
+          label: "Name"
+        },
+        { 
+          key: "description" ,
+          label: "Description"
+        },
+        { 
+          key: "admin" ,
+          label: "Owner"
+        },
+        { 
+          key: "created_at_formatted",
+          label: "Date Created" 
+        },
       ],
       dName: "[Audi Saint Viateur]",
       dDescription: "[The only one that I could come up with!]",
