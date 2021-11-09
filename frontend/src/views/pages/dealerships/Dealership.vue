@@ -87,7 +87,7 @@
         </CCardBody>
       </CCard>
     </CCol>
-    <CModal :show.sync="addingStaffAccount" :centered="true">
+    <CModal :show.sync="addingStaffAccount" :centered="true" size="lg">
       <staff-account-add
         v-if="addingStaffAccount"
         :setAddingStaffAccount="setAddingStaffAccount"

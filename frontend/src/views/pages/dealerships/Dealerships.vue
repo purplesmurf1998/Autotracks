@@ -103,11 +103,7 @@ export default {
           key: "created_at_formatted",
           label: "Date Created" 
         },
-      ],
-      dName: "[Audi Saint Viateur]",
-      dDescription: "[The only one that I could come up with!]",
-      dAdmin: "[Qandeel]",
-      dCreated: "[1989/11/14]",
+      ]
     };
   },
   mounted() {
