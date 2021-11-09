@@ -628,7 +628,7 @@ router.beforeEach((to, from, next) => {
     if (authorized)
       next();
     else
-      next('/pages/500');
+      next('/dashboard');
   }
 
   // all checks validated, therefore continue with the request

@@ -22,9 +22,12 @@ export default {
           },
           {
             _name: 'CSidebarNavItem',
+            _attrs: {
+              hidden: !this.$store.state.auth.userPermissions.includes('View Dealerships')
+            },
             name: 'Dealerships',
             to: '/dealerships',
-            icon: 'cil-user'
+            icon: 'cil-user',
           },
           {
             _name: 'CSidebarNavItem',
