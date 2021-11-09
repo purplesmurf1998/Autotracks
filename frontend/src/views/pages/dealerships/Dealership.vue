@@ -47,13 +47,13 @@
               <CListGroup class="mt-3" v-if="staff.length > 0">
                 <CListGroupItem
                   tag="button"
-                  v-for="user in staff"
+                  v-for="(user, index) in staff"
                   :key="user._id"
                   :id="user._id"
                   :active="
                     selectedStaffAccount && user._id == selectedStaffAccount
                   "
-                  @click="setActiveStaff(user)"
+                  @click="setActiveStaff(user, index)"
                 >
                   {{ user.first_name }} {{ user.last_name }}
                 </CListGroupItem>
@@ -80,6 +80,8 @@
                 :user="selectedStaffAccount"
                 :editingUser="editingUser"
                 :setEditingUser="setEditingUser"
+                :updateUser="updateUser"
+                :index="selectedStaffIndex"
                 v-if="!!selectedStaffAccount"
               />
             </CCol>
@@ -118,14 +120,16 @@ export default {
       dealership: {},
       staff: [],
       selectedStaffAccount: null,
+      selectedStaffIndex: null,
       addingStaffAccount: false,
       editingUser: false,
       editingDealership: false,
     };
   },
   methods: {
-    setActiveStaff(user) {
+    setActiveStaff(user, index) {
       this.selectedStaffAccount = user;
+      this.selectedStaffIndex = index;
     },
     setEditingUser(value) {
       this.editingUser = value;
@@ -136,6 +140,12 @@ export default {
     setEditingDealership(value) {
       this.editingDealership = value;
     },
+    updateUser(newUser, index) {
+      let newStaff = this.staff;
+      newStaff[index] = newUser;
+      this.staff = newStaff;
+      this.selectedStaffAccount = newUser;
+    }
   },
   beforeCreate() {
     // fetch dealership details

@@ -98,7 +98,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: user
+        payload: user
     });
 });
 

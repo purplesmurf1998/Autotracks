@@ -10,6 +10,8 @@
         v-if="editingUser"
         :setEditingUser="setEditingUser"
         :user="user"
+        :index="index"
+        :updateUser="updateUser"
       />
     </CCardBody>
   </CCard>
@@ -23,7 +25,7 @@ export default {
   data() {
     return {};
   },
-  props: ["user", "editingUser", "setEditingUser"],
+  props: ["user", "editingUser", "setEditingUser", 'index', 'updateUser'],
   components: {
     "view-user": ViewUser,
     "edit-user": EditUser,
