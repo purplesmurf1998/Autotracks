@@ -8,7 +8,6 @@ export default {
       userId: null,
       userPermissions: [],
       token: null,
-      loggedIn: false,
       promptPasswordChange: false,
     }
   },

@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const advancedFilter = require('../utils/advancedFilter');
 const jwt = require('jsonwebtoken');
 
 
@@ -9,7 +8,6 @@ const jwt = require('jsonwebtoken');
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
-    console.log(req);
     // get email and password from the body
     const { email, password } = req.body;
 
@@ -47,12 +45,6 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-    // if (!req.cookies.autotracksAuthToken) {
-    //     return next(
-    //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
-    //     )
-    // }
-  
     // clear the token from the cookies
     res
         .status(200)
@@ -67,7 +59,6 @@ exports.logout = (req, res, next) => {
 // @route   POST /api/v1/auth/register
 // @route   Public
 exports.register = asyncHandler(async (req, res, next) => {
-
     // validate that the user being registered is admin
     if (req.body.role != 'Administration') {
         return next(
@@ -144,7 +135,8 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Invalid credentials.', 401)
         );
     }
-
+    
+    //TODO: method not working. Password is getting changed but not to the right value
     user.changePassword(req.body.newPassword);
     await user.save();
 

@@ -46,6 +46,8 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 export default {
   name: 'ChangePassword',
   data() {
@@ -63,6 +65,12 @@ export default {
       } else if (this.newPassword != this.confirmNewPassword) {
         this.showError('New password must match');
       } else {
+        // update the user through the api
+        axios({
+          method: 'PUT',
+          url: 'http://localhost:5000/api/v1/'
+        })
+
         // try to log the user in using the vuex store
         const response = await this.$store.dispatch('login', {
           email: this.email,
