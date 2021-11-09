@@ -1,6 +1,7 @@
 <template>
   <div>
     <CForm @submit.prevent="submitForm">
+      <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
       <CRow>
         <CCol>
           <CInput
@@ -74,7 +75,7 @@
           <label>Account Password</label>
         </CCol>
         <CCol class="d-flex align-items-end flex-column">
-          <p style="color: red">password123</p>
+          <p style="color: red">{{ password }}</p>
         </CCol>
       </CRow>
       <label
@@ -112,6 +113,7 @@ export default {
   data() {
     return {
       disableButtons: false,
+      errorMessage: null,
       roles: [
         "Management",
         "Sales Rep",
@@ -142,11 +144,23 @@ export default {
       last_name: "",
       email: "",
       role: "",
-      selected: [],
+      password: this.generateRandomPassword(),
       permissions: [],
     };
   },
   methods: {
+    generateRandomPassword() {
+      /*
+      Taken from stackoverflow post: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+      */
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < 12; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+    },
     isPermissionSelected(permission) {
       const index = this.permissions.indexOf(permission);
       return index >= 0;
@@ -213,7 +227,12 @@ export default {
         this.role != ""
       );
     },
-    showErrorMessage(message) {},
+    showErrorMessage(message) {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 5000);
+    },
     submitForm(form) {
       // console.log("####### STAFF USER FORM SUBMIT ########");
       // console.log(`First Name: ${this.first_name}`);
@@ -231,34 +250,31 @@ export default {
         role: this.role,
         dealership: this.$route.params.dealershipId,
         permissions: this.permissions,
-        password: "password1234",
+        password: this.password,
       };
 
-      console.log(data);
-
       // send post request to the API
-      // if (this.formIsValid()) {
-      //   axios({
-      //     method: "POST",
-      //     url: "http://localhost:5000/api/v1/users",
-      //     headers: {
-      //       Authorization: `Bearer ${this.$store.state.auth.token}`,
-      //     },
-      //     data,
-      //   })
-      //     .then((response) => {
-      //       console.log(response);
-      //       if (response.data.success) {
-      //         this.$router.go();
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
-      // } else {
-      //   console.log("invalid form");
-      //   this.showErrorMessage("Invalid form. Please verify the field entries.");
-      // }
+      if (this.formIsValid()) {
+        axios({
+          method: "POST",
+          url: "http://localhost:5000/api/v1/users",
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+          data,
+        })
+          .then((response) => {
+            if (response.data.success) {
+              this.$router.go();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            this.showErrorMessage('Failed to create staff account.');
+          });
+      } else {
+        this.showErrorMessage("Invalid form. Please verify the field entries.");
+      }
     },
   },
 };
