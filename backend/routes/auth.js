@@ -19,7 +19,7 @@ router.route('/signin').post(signIn);
 router.route('/register').post(register);
 router.route('/logout').get(protect, logout);
 router.route('/verify').post(verify);
-router.route('/password/change').post(protect, changePassword);
+router.route('/changepassword/:userId').put(protect, changePassword);
 
 // export the router so it can be used in the server.js file
 module.exports = router;

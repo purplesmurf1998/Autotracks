@@ -593,6 +593,10 @@ router.beforeEach((to, from, next) => {
     next('/pages/changePassword');
   }
 
+  if (!Store.state.auth.promptPasswordChange && to.path == '/pages/changePassword') {
+    next('/dashboard');
+  }
+
   // add the meta tag "authRequired: true" to any routes you want protected
   else if (to.meta.authRequired && !Store.state.auth.token) {
     next('/pages/login');

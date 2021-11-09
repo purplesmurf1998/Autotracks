@@ -103,12 +103,6 @@ UserSchema.methods.matchPassword = async function (inputPassword) {
   return await bcrypt.compare(inputPassword, this.password);
 }
 
-// set a new password for the user
-UserSchema.methods.changePassword = async function (newPassword) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(newPassword, salt);
-}
-
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;

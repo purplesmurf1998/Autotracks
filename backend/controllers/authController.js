@@ -2,6 +2,7 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 
 // @desc    Sign in user and return a valid JWT
@@ -117,11 +118,23 @@ exports.verify = asyncHandler(async (req, res, next) => {
     }
 });
 
+// @desc    Change user password
+// @route   PUT /api/v1/auth/changepassword/:userId
+// @access  Private
 exports.changePassword = asyncHandler(async (req, res, next) => {
     // protected route, therefore should get the user object from the req
     // match the current password with the one in the user
     // if match, set the new password in the user
-    const user = await User.findById(req.user._id).select('+password');
+
+    // make sure the user in the authorization token is the same user as in the route params
+    if (req.user._id != req.params.userId) {
+        return next(
+            new ErrorResponse('Wrong user', 400)
+        );
+    }
+
+    // get the user object
+    const user = await User.findById(req.params.userId).select('+password');
 
     if (!user) {
         return next(
@@ -137,8 +150,8 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
         );
     }
 
-    //TODO: method not working. Password is getting changed but not to the right value
-    user.changePassword(req.body.newPassword);
+    user.password = req.body.newPassword;
+    user.promptPasswordChange = false;
     await user.save();
 
     res.status(200).json({

@@ -66,25 +66,33 @@ export default {
         this.showError('New password must match');
       } else {
         // update the user through the api
+        console.log(this.$store.state.auth.userId);
         axios({
           method: 'PUT',
-          url: 'http://localhost:5000/api/v1/'
-        })
-
-        // try to log the user in using the vuex store
-        const response = await this.$store.dispatch('login', {
-          email: this.email,
-          password: this.password
+          url: `http://localhost:5000/api/v1/auth/changepassword/${this.$store.state.auth.userId}`,
+          headers: {
+            'Authorization': `Bearer ${this.$store.state.auth.token}`
+          },
+          data: {
+            currentPassword: this.currentPassword,
+            newPassword: this.newPassword
+          }
+        }).then(res => {
+          if (res.data.success) {
+            // password was changed successfully
+            // change the promptPasswordChange value in the store for this session
+            // change is reflected in the backend and will persist next time the user
+            // logs in
+            this.$store.commit('setProperty', false);
+            // redirect to the dashboard
+            this.$router.replace('/dashboard');
+          } else {
+            this.showError('Error changing password.');
+          }
+        }).catch(err => {
+          console.log(err);
+          this.showError('Error changing password.');
         });
-        
-        // if not successful, show the error message
-        if (!response.success) {
-          this.showError(response.message);
-        } 
-        // if successful, redirect the user to the dashboad
-        else {
-          this.$router.push("/dashboard");
-        }
       }
     },
     logoutUser() {
