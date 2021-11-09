@@ -97,6 +97,7 @@ exports.verify = asyncHandler(async (req, res, next) => {
             );
         }
 
+        console.log(decoded);
         // valid token, find the user and return in the response
         const user = await User.findById(decoded.userId);
 
@@ -135,7 +136,7 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Invalid credentials.', 401)
         );
     }
-    
+
     //TODO: method not working. Password is getting changed but not to the right value
     user.changePassword(req.body.newPassword);
     await user.save();

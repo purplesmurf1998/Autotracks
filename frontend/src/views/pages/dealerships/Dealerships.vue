@@ -32,7 +32,7 @@
             >
               <template #admin="{ item }">
                 <td>
-                  {{ item.admin.first_name }}
+                  {{ item.admin.first_name }} {{ item.admin.last_name }}
                 </td>
               </template>
             </CDataTable>
@@ -85,30 +85,11 @@ export default {
     return {
       addingDealership: false,
       selectedDealership: null,
-      tableItems: [
-        {
-          name: "Audi Saint Viateur",
-          description: "The only one that I could come up with!",
-          admin: "Qandeel",
-          created: "1989/11/14",
-        },
-        {
-          name: "Audi Saint Viateur",
-          description: "The only one that I could come up with!",
-          admin: "Qandeel",
-          created: "1989/11/14",
-        },
-        {
-          name: "Audi Saint Viateur",
-          description: "The only one that I could come up with!",
-          admin: "Qandeel",
-          created: "1989/11/14",
-        },
-      ],
+      tableItems: [],
       tableFields: [
         { key: "name" },
         { key: "description" },
-        { key: "admin.first_name" },
+        { key: "admin" },
         { key: "created_at" },
       ],
       dName: "[Audi Saint Viateur]",

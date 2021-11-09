@@ -65,7 +65,6 @@ const UserSchema = new mongoose.Schema({
     required: 'Password is required',
     select: false
   },
-
   createDealershipCompleted: {
     type: Boolean,
     default: false
@@ -93,12 +92,7 @@ UserSchema.pre('save', async function (next) {
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({
-    id: this._id,
-    first_name: this.first_name,
-    last_name: this.last_name,
-    role: this.role,
-    email: this.email,
-    dealership: this.dealership
+    userId: this._id
   }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE
   });
