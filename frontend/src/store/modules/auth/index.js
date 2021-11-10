@@ -8,6 +8,8 @@ export default {
       userId: null,
       userPermissions: [],
       token: null,
+      role: null,
+      dealership: null,
       promptPasswordChange: false,
       createDealershipCompleted: false,
       createUserCompleted: false

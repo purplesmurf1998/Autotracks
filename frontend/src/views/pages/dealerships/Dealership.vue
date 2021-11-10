@@ -139,6 +139,7 @@ export default {
     setActiveStaff(user, index) {
       this.selectedStaffAccount = user;
       this.selectedStaffIndex = index;
+      this.setEditingUser(false);
     },
     setEditingUser(value) {
       this.editingUser = value;

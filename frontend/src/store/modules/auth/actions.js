@@ -26,6 +26,8 @@ export default {
             token: responseData.token,
             userId: responseData.payload._id,
             userPermissions: responseData.payload.permissions,
+            role: responseData.payload.role,
+            dealership: responseData.payload.dealership,
             createDealershipCompleted: responseData.payload.createDealershipCompleted,
             createUserCompleted: responseData.payload.createUserCompleted,
             promptPasswordChange: responseData.payload.promptPasswordChange
@@ -73,6 +75,8 @@ export default {
                     token: responseData.token,
                     userId: responseData.payload._id,
                     userPermissions: responseData.payload.permissions,
+                    role: responseData.payload.role,
+                    dealership: responseData.payload.dealership,
                     promptPasswordChange: responseData.payload.promptPasswordChange,
                     createDealershipCompleted: responseData.payload.createDealershipCompleted,
                     createUserCompleted: responseData.payload.createUserCompleted

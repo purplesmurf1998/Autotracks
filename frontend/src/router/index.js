@@ -594,7 +594,11 @@ router.beforeEach((to, from, next) => {
     next('/pages/changePassword');
   }
 
-  if (!Store.state.auth.promptPasswordChange && to.path == '/pages/changePassword') {
+  else if (Store.state.auth.role != "Administration" && to.name == 'Dealerships') {
+    next(`/dealerships/${Store.state.auth.dealership}`);
+  }
+
+  else if (!Store.state.auth.promptPasswordChange && to.path == '/pages/changePassword') {
     next('/dashboard');
   }
 

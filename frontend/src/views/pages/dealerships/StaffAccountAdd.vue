@@ -271,6 +271,7 @@ export default {
         })
           .then((response) => {
             if (response.data.success) {
+              this.$store.commit("setProperty", ["createUserCompleted", true]);
               this.addNewStaffAccount(response.data.payload);
               this.setAddingStaffAccount(false);
             }

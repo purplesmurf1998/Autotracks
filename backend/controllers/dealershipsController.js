@@ -17,7 +17,7 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Dealership must be connected to an admin account.', 400)
         );
     }
-    
+
     // grab the userId from the body and verify that the user is in fact an admin
     const user = await User.findById(req.body.admin);
 
@@ -27,7 +27,7 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Admin user not found. Cannot create dealership.', 404)
         );
     }
-    
+
     // user exists but isn't an admin
     if (user.role != 'Administration') {
         return next(
@@ -63,7 +63,7 @@ exports.getDealerships = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: dealerships
+        payload: dealerships
     });
 });
 
