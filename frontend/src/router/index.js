@@ -585,7 +585,8 @@ router.beforeEach((to, from, next) => {
   // console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
   // console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
   // console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
-  // console.log(`Password Change: ${Store.state.auth.promptPasswordChange}`);
+  // console.log(`Password Change: ${Store.state.auth.createUserCompleted}`);
+  // console.log(`Password Change: ${Store.state.auth.createDealershipCompleted}`);
 
   // if the promptPasswordChange flag is true and we're not already going to the 
   // change password page, redirect to change password page

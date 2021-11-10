@@ -3,7 +3,7 @@
     <CRow v-if="!selectedDealership">
       <CCol>
         <CRow class="mb-2">
-          <CCol>
+          <div class="col-sm-auto">
             <CButton
               color="primary"
               id = "add-new-dealership"
@@ -14,7 +14,10 @@
               "
               >Add New Dealership</CButton
             >
-          </CCol>
+          </div>
+          <div class="col-sm-auto">
+            
+          </div>
         </CRow>
         <CCard>
           <CCardHeader>
@@ -85,6 +88,7 @@ export default {
     return {
       addingDealership: false,
       selectedDealership: null,
+      toast: { contant: 'static', title: 'Toast Title' },
       tableItems: [],
       tableFields: [
         { 

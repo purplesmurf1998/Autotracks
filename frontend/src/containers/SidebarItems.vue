@@ -10,11 +10,7 @@ export default {
             _name: 'CSidebarNavItem',
             name: this.$t('menu.dashboard'),
             to: '/dashboard',
-            icon: 'cil-speedometer',
-            badge: {
-              color: 'primary',
-              text: 'NEW'
-            }
+            icon: 'cil-speedometer'
           },
           {
             _name: 'CSidebarNavTitle',
@@ -28,6 +24,12 @@ export default {
             name: 'Dealerships',
             to: '/dealerships',
             icon: 'cil-user',
+            ...(!this.$store.state.auth.createDealershipCompleted) ? {
+              badge: {
+                color: 'danger',
+                text: 'NEW!'
+              }
+            } : null
           },
           {
             _name: 'CSidebarNavItem',

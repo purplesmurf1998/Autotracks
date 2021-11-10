@@ -71,7 +71,9 @@ export default {
                     token: responseData.token,
                     userId: responseData.payload._id,
                     userPermissions: responseData.payload.permissions,
-                    promptPasswordChange: responseData.payload.promptPasswordChange
+                    promptPasswordChange: responseData.payload.promptPasswordChange,
+                    createDealershipCompleted: responseData.payload.createDealershipCompleted,
+                    createUserCompleted: responseData.payload.createUserCompleted
                 }
 
                 // set the token in the local storage

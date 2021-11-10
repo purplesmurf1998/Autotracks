@@ -9,6 +9,8 @@ export default {
       userPermissions: [],
       token: null,
       promptPasswordChange: false,
+      createDealershipCompleted: false,
+      createUserCompleted: false
     }
   },
   mutations,
