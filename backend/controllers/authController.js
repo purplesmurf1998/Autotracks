@@ -98,7 +98,6 @@ exports.verify = asyncHandler(async (req, res, next) => {
             );
         }
 
-        console.log(decoded);
         // valid token, find the user and return in the response
         const user = await User.findById(decoded.userId);
 

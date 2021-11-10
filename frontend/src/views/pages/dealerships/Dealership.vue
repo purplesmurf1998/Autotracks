@@ -41,7 +41,10 @@
       </CCard>
       <CRow>
         <div class="col-md-4">
-          <CAlert v-if="!$store.state.auth.createUserCompleted" color="success">Begin by creating your staff by clicking the <b>"Create a staff account"</b> button below.</CAlert>
+          <CAlert v-if="!$store.state.auth.createUserCompleted" color="success"
+            >Begin by creating your staff by clicking the
+            <b>"Create a staff account"</b> button below.</CAlert
+          >
         </div>
       </CRow>
       <CCard class="mt-2">
@@ -98,6 +101,7 @@
       <staff-account-add
         v-if="addingStaffAccount"
         :setAddingStaffAccount="setAddingStaffAccount"
+        :addNewStaffAccount="addNewStaffAccount"
       />
       <template #header>
         <h6 class="modal-title">Add a staff account to your dealership!</h6>
@@ -150,7 +154,12 @@ export default {
       newStaff[index] = newUser;
       this.staff = newStaff;
       this.selectedStaffAccount = newUser;
-    }
+    },
+    addNewStaffAccount(user) {
+      let newStaff = this.staff;
+      newStaff.push(user);
+      this.staff = newStaff;
+    },
   },
   beforeCreate() {
     // fetch dealership details

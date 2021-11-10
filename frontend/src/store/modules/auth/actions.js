@@ -26,6 +26,8 @@ export default {
             token: responseData.token,
             userId: responseData.payload._id,
             userPermissions: responseData.payload.permissions,
+            createDealershipCompleted: responseData.payload.createDealershipCompleted,
+            createUserCompleted: responseData.payload.createUserCompleted,
             promptPasswordChange: responseData.payload.promptPasswordChange
         }
 

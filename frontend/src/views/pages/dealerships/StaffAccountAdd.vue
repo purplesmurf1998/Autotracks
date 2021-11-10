@@ -52,7 +52,10 @@
           </CRow>
         </CCol>
         <CCol>
-          <CRow v-for="(permission, index) in permissionsListRight" :key="index">
+          <CRow
+            v-for="(permission, index) in permissionsListRight"
+            :key="index"
+          >
             <CCol>
               <label>{{ permission }}</label>
             </CCol>
@@ -84,15 +87,16 @@
       >
 
       <CRow class="justify-content-center mt-2">
-        <CButton color="primary" 
-        type="submit" 
-        :disabled="disableButtons"
-        id="create-staff">
+        <CButton
+          color="primary"
+          type="submit"
+          :disabled="disableButtons"
+          id="create-staff"
+        >
           Create
         </CButton>
         <CButton
           class="ml-1"
-          
           color="danger"
           :disabled="disableButtons"
           @click="setAddingStaffAccount(false)"
@@ -109,7 +113,7 @@ const axios = require("axios");
 
 export default {
   name: "StaffAccountAdd",
-  props: ["setAddingStaffAccount"],
+  props: ["setAddingStaffAccount", "addNewStaffAccount"],
   data() {
     return {
       disableButtons: false,
@@ -123,22 +127,22 @@ export default {
         "Reception",
       ],
       permissionsListLeft: [
-        'Add Dealerships',
-        'View Dealerships',
-        'Edit Dealerships',
-        'Delete Dealerships',
-        'Add Staff Users',
-        'View Staff Users',
-        'Edit Staff Users',
+        "Add Dealerships",
+        "View Dealerships",
+        "Edit Dealerships",
+        "Delete Dealerships",
+        "Add Staff Users",
+        "View Staff Users",
+        "Edit Staff Users",
       ],
       permissionsListRight: [
-        'Delete Staff Users',
-        'Add Vehicles',
-        'View Vehicles',
-        'Edit Vehicle Properties',
-        'Edit Vehicle Locations',
-        'Sell Vehicles',
-        'Delete Vehicles'
+        "Delete Staff Users",
+        "Add Vehicles",
+        "View Vehicles",
+        "Edit Vehicle Properties",
+        "Edit Vehicle Locations",
+        "Sell Vehicles",
+        "Delete Vehicles",
       ],
       first_name: "",
       last_name: "",
@@ -153,11 +157,13 @@ export default {
       /*
       Taken from stackoverflow post: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
       */
-      var result           = '';
-      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
+      var result = "";
+      var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
       var charactersLength = characters.length;
-      for ( var i = 0; i < 12; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      for (var i = 0; i < 12; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
       }
       return result;
     },
@@ -265,12 +271,13 @@ export default {
         })
           .then((response) => {
             if (response.data.success) {
-              this.$router.go();
+              this.addNewStaffAccount(response.data.payload);
+              this.setAddingStaffAccount(false);
             }
           })
           .catch((err) => {
             console.log(err);
-            this.showErrorMessage('Failed to create staff account.');
+            this.showErrorMessage("Failed to create staff account.");
           });
       } else {
         this.showErrorMessage("Invalid form. Please verify the field entries.");
