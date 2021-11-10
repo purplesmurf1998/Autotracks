@@ -37,6 +37,15 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
     // create new dealership with the data passed in the request body
     const dealership = await Dealership.create(req.body);
 
+    // if creating the first dealership, set tutorial to completed
+    console.log(user);
+    if (!user.createDealershipCompleted) {
+        await User.findByIdAndUpdate(user._id, { createDealershipCompleted: true }, {
+            new: true,
+            runValidators: true
+        });
+    }
+
     // send response
     res.status(201).json({
         success: true,

@@ -2,7 +2,13 @@
   <div>
     <CRow v-if="!selectedDealership">
       <CCol>
-        <CRow class="mb-2">
+        <CRow>
+          <div class="col-lg-auto">
+            <CAlert v-if="!$store.state.auth.createDealershipCompleted" color="success">Welcome to your <b>Dealerships</b> page! Here you can see all your dealerships which each contain their very own <u>inventory</u>, <u>vehicle</u> properties and <u>staff</u>. Start your experience by creating your very first dealership by click the button below.</CAlert>
+            <CAlert v-if="$store.state.auth.createDealershipCompleted && !$store.state.auth.createUserCompleted" color="primary">Good job on creating your very first dealership! Now to get your team started, select your dealership and start building your staff.</CAlert>
+          </div>
+        </CRow>
+        <CRow class="mb-3">
           <div class="col-sm-auto">
             <CButton
               color="primary"
@@ -36,6 +42,11 @@
               <template #admin="{ item }">
                 <td>
                   {{ item.admin.first_name }} {{ item.admin.last_name }}
+                </td>
+              </template>
+              <template #name="{ item }">
+                <td>
+                  {{ item.name }} <CBadge color="primary" :style="{'vertical-align': 'middle', 'margin-top': '-0.5em'}">NEW!</CBadge>
                 </td>
               </template>
             </CDataTable>
@@ -147,7 +158,7 @@ export default {
           console.log(err);
         });
     },
-  },
+  }
 };
 </script>
 

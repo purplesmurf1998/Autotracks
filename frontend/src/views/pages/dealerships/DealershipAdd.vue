@@ -71,17 +71,23 @@ export default {
           }
         }).then(response => {
           if (response.data.success) {
+            // if (!this.$store.state.auth.createDealershipCompleted) {
+            //   this.$store.commit('setProperty', 'createDealershipCompleted', true);
+            // }
             this.$router.go();
           } else {
             console.log(response);
             this.showErrorMessage("Unable to create the new dealership.")
+            this.disableButtons = false;
           }
         }).catch(err => {
           console.log(err);
           this.showErrorMessage("Unable to create the new dealership.")
+          this.disableButtons = false;
         })
       } else {
         this.showErrorMessage('Must have a proper dealership name.');
+        this.disableButtons = false;
       }
     },
     getEmptyForm () {

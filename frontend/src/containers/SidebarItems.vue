@@ -24,7 +24,7 @@ export default {
             name: 'Dealerships',
             to: '/dealerships',
             icon: 'cil-user',
-            ...(!this.$store.state.auth.createDealershipCompleted) ? {
+            ...(!this.$store.state.auth.createDealershipCompleted || !this.$store.state.auth.createUserCompleted) ? {
               badge: {
                 color: 'danger',
                 text: 'NEW!'
