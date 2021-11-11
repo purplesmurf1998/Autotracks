@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CAlert v-if="!!errorMessage" color="danger" >{{ errorMessage }}</CAlert>
+    <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
     <CForm @submit.prevent="submitUser">
       <CInput
         label="First Name"
@@ -14,7 +14,12 @@
         horizontal
         v-model="currUser.last_name"
       />
-      <CInput label="Email" horizontal v-model="currUser.email" disabled="true"/>
+      <CInput
+        label="Email"
+        horizontal
+        v-model="currUser.email"
+        disabled="true"
+      />
       <CSelect
         label="Role"
         :options="roles"
@@ -43,7 +48,10 @@
           </CRow>
         </CCol>
         <CCol>
-          <CRow v-for="(permission, index) in permissionsListRight" :key="index">
+          <CRow
+            v-for="(permission, index) in permissionsListRight"
+            :key="index"
+          >
             <CCol>
               <label>{{ permission }}</label>
             </CCol>
@@ -62,7 +70,13 @@
       </CRow>
       <hr />
       <CRow class="d-flex justify-content-center mt-2">
-        <CButton color="success" class="mr-2" id="save-user-changes" type="submit">Save</CButton>
+        <CButton
+          color="success"
+          class="mr-2"
+          id="save-user-changes"
+          type="submit"
+          >Save</CButton
+        >
         <CButton color="secondary" @click="cancelUpdate">Cancel</CButton>
       </CRow>
     </CForm>
@@ -86,22 +100,22 @@ export default {
         "Reception",
       ],
       permissionsListLeft: [
-        'Add Dealerships',
-        'View Dealerships',
-        'Edit Dealerships',
-        'Delete Dealerships',
-        'Add Staff Users',
-        'View Staff Users',
-        'Edit Staff Users',
+        "Add Dealerships",
+        "View Dealerships",
+        "Edit Dealerships",
+        "Delete Dealerships",
+        "Add Staff Users",
+        "View Staff Users",
+        "Edit Staff Users",
       ],
       permissionsListRight: [
-        'Delete Staff Users',
-        'Add Vehicles',
-        'View Vehicles',
-        'Edit Vehicle Properties',
-        'Edit Vehicle Locations',
-        'Sell Vehicles',
-        'Delete Vehicles'
+        "Delete Staff Users",
+        "Add Vehicles",
+        "View Vehicles",
+        "Edit Vehicle Properties",
+        "Edit Vehicle Locations",
+        "Sell Vehicles",
+        "Delete Vehicles",
       ],
       currUser: {
         first_name: this.user.first_name,
@@ -110,10 +124,10 @@ export default {
         role: this.user.role,
         permissions: this.user.permissions,
       },
-      newPermissions: []
+      newPermissions: [],
     };
   },
-  props: ["setEditingUser", "user", 'updateUser', 'index'],
+  props: ["setEditingUser", "user", "updateUser", "index"],
   methods: {
     cancelUpdate() {
       this.updateUser(this.user, this.index);
@@ -121,8 +135,8 @@ export default {
     },
     submitUser() {
       // simple validation checks
-      if (this.currUser.first_name == '' || this.currUser.last_name == '') {
-        this.showError('Staff account must have a valid first and last name.');
+      if (this.currUser.first_name == "" || this.currUser.last_name == "") {
+        this.showError("Staff account must have a valid first and last name.");
       } else {
         // send the put request using axios
         const data = this.currUser;
@@ -134,19 +148,19 @@ export default {
           },
           data,
         })
-        .then((response) => {
-          if (response.data.success) {
-            this.updateUser(response.data.payload, this.index);
-            this.setEditingUser(false);
-          } else {
-            console.log(response);
-            this.showError('Incomplete or invalid fields.')
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          this.showError('Error updating staff account information.')
-        });
+          .then((response) => {
+            if (response.data.success) {
+              this.updateUser(response.data.payload, this.index);
+              this.setEditingUser(false);
+            } else {
+              console.log(response);
+              this.showError("Incomplete or invalid fields.");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            this.showError("Error updating staff account information.");
+          });
       }
     },
     isPermissionSelected(permission) {
@@ -211,8 +225,8 @@ export default {
       this.errorMessage = message;
       setTimeout(() => {
         this.errorMessage = null;
-      }, 5000)
-    }
+      }, 5000);
+    },
   },
 };
 </script>

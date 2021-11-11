@@ -15,7 +15,12 @@
             </h2>
             <p>{{ dealership.description }}</p>
             <router-link to="/dealerships">
-              <CButton color="primary"> Back to list </CButton>
+              <CButton
+                color="primary"
+                v-if="$store.state.auth.role == 'Administration'"
+              >
+                Back to list
+              </CButton>
             </router-link>
             <br />
             <CButton

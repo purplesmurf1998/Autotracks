@@ -68,7 +68,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: users
+        payload: users
     });
 });
 
@@ -143,6 +143,6 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: {}
+        payload: {}
     });
 });
