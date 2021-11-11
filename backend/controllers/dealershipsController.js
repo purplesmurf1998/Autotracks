@@ -17,7 +17,7 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Dealership must be connected to an admin account.', 400)
         );
     }
-    
+
     // grab the userId from the body and verify that the user is in fact an admin
     const user = await User.findById(req.body.admin);
 
@@ -27,7 +27,7 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
             new ErrorResponse('Admin user not found. Cannot create dealership.', 404)
         );
     }
-    
+
     // user exists but isn't an admin
     if (user.role != 'Administration') {
         return next(
@@ -37,10 +37,19 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
     // create new dealership with the data passed in the request body
     const dealership = await Dealership.create(req.body);
 
+    // if creating the first dealership, set tutorial to completed
+    console.log(user);
+    if (!user.createDealershipCompleted) {
+        await User.findByIdAndUpdate(user._id, { createDealershipCompleted: true }, {
+            new: true,
+            runValidators: true
+        });
+    }
+
     // send response
-    res.status(201).json({
+    res.status(200).json({
         success: true,
-        dealership
+        payload: dealership
     });
 });
 
@@ -54,7 +63,7 @@ exports.getDealerships = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: dealerships
+        payload: dealerships
     });
 });
 
@@ -83,7 +92,7 @@ exports.getDealership = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: dealership
+        payload: dealership
     });
 });
 
@@ -108,7 +117,7 @@ exports.updateDealership = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: dealership
+        payload: dealership
     });
 });
 
@@ -122,13 +131,13 @@ exports.deleteDealership = asyncHandler(async (req, res, next) => {
     // if no dealership is returned, dealership was not found and send an error response
     if (!dealership) {
         return next(
-            new ErrorResponse(`Dealership with id: ${req.params.dealershipId} not found.`, 401)
+            new ErrorResponse(`Dealership with id: ${req.params.dealershipId} not found.`, 404)
         );
     }
 
     // send response
     res.status(200).json({
         success: true,
-        data: {}
+        payload: {}
     });
 });

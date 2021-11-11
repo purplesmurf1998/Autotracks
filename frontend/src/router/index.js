@@ -561,11 +561,17 @@ const router = new Router({
         {
           path: 'register',
           name: 'Register',
+          meta: {
+            unAuthRequired: true
+          },
           component: Register
         },
         {
           path: 'changePassword',
           name: 'Change Password',
+          meta: {
+            authRequired: true
+          },
           component: ChangePassword
         }
       ]
@@ -574,25 +580,36 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(`Logged In: ${Store.state.auth.loggedIn}`);
-  console.log(`Auth Required: ${to.meta.authRequired}`);
-  console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
-  console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
-  console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
-  console.log(`Password Change: ${Store.state.auth.promptPasswordChange}`);
+  // console.log(`Logged In: ${Store.state.auth.loggedIn}`);
+  // console.log(`Auth Required: ${to.meta.authRequired}`);
+  // console.log(`UnAuth Required: ${to.meta.unAuthRequired}`);
+  // console.log(`Permissions Required: ${to.meta.permissionsRequired}`);
+  // console.log(`Permissions: ${!Store.state.auth.userPermissions}`);
+  // console.log(`Password Change: ${Store.state.auth.createUserCompleted}`);
+  // console.log(`Password Change: ${Store.state.auth.createDealershipCompleted}`);
+
+  // if the promptPasswordChange flag is true and we're not already going to the 
+  // change password page, redirect to change password page
   if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
-    console.log(to);
     next('/pages/changePassword');
   }
 
+  else if (Store.state.auth.role != "Administration" && to.name == 'Dealerships') {
+    next(`/dealerships/${Store.state.auth.dealership}`);
+  }
+
+  else if (!Store.state.auth.promptPasswordChange && to.path == '/pages/changePassword') {
+    next('/dashboard');
+  }
+
   // add the meta tag "authRequired: true" to any routes you want protected
-  else if (to.meta.authRequired && !Store.state.auth.loggedIn) {
+  else if (to.meta.authRequired && !Store.state.auth.token) {
     next('/pages/login');
   }
 
   // add the meta tage "unAuthRequired: true" to any routes which requires the user
   // to be logged out to access
-  else if (to.meta.unAuthRequired && Store.state.auth.loggedIn) {
+  else if (to.meta.unAuthRequired && !!Store.state.auth.token) {
     next('/dashboard');
   }
 
@@ -612,11 +629,11 @@ router.beforeEach((to, from, next) => {
     } catch (e) {
       authorized = false;
     }
-
+    // user has the correct permissions, therefore continue with the request
     if (authorized)
       next();
     else
-      next('/pages/500');
+      next('/dashboard');
   }
 
   // all checks validated, therefore continue with the request

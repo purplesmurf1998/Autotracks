@@ -1,6 +1,7 @@
 <template>
   <div>
     <CForm @submit.prevent="submitForm">
+      <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
       <CRow>
         <CCol>
           <CInput
@@ -27,25 +28,57 @@
         id="role-select"
         :options="roles"
         :value.sync="role"
-        @change="setSelected"
+        @change="setDefaultSelected"
         placeholder="Please select a role"
       />
-      <label v-if="role != ''">Account Permissions</label>
-      <CMultiSelect
-        v-if="role != ''"
-        name="permissions"
-        :options="permissionsList"
-        :selected="selected"
-        search
-        searchPlaceholder="..."
-        selectionType="tags"
-      />
+      <label class="mb-0">Account permissions</label>
+      <hr />
+      <CRow>
+        <CCol>
+          <CRow v-for="(permission, index) in permissionsListLeft" :key="index">
+            <CCol>
+              <label>{{ permission }}</label>
+            </CCol>
+            <CCol class="d-flex justify-content-end">
+              <CSwitch
+                :id="permission"
+                class="mr-1"
+                color="success"
+                :checked="isPermissionSelected(permission)"
+                @change.native="togglePermissionChange"
+                shape="pill"
+              />
+            </CCol>
+          </CRow>
+        </CCol>
+        <CCol>
+          <CRow
+            v-for="(permission, index) in permissionsListRight"
+            :key="index"
+          >
+            <CCol>
+              <label>{{ permission }}</label>
+            </CCol>
+            <CCol class="d-flex justify-content-end">
+              <CSwitch
+                :id="permission"
+                class="mr-1"
+                color="success"
+                :checked="isPermissionSelected(permission)"
+                @change.native="togglePermissionChange"
+                shape="pill"
+              />
+            </CCol>
+          </CRow>
+        </CCol>
+      </CRow>
+      <hr />
       <CRow>
         <CCol>
           <label>Account Password</label>
         </CCol>
         <CCol class="d-flex align-items-end flex-column">
-          <p style="color: red">password123</p>
+          <p style="color: red">{{ password }}</p>
         </CCol>
       </CRow>
       <label
@@ -54,15 +87,16 @@
       >
 
       <CRow class="justify-content-center mt-2">
-        <CButton color="primary" 
-        type="submit" 
-        :disabled="disableButtons"
-        id="create-staff">
+        <CButton
+          color="primary"
+          type="submit"
+          :disabled="disableButtons"
+          id="create-staff"
+        >
           Create
         </CButton>
         <CButton
           class="ml-1"
-          
           color="danger"
           :disabled="disableButtons"
           @click="setAddingStaffAccount(false)"
@@ -79,10 +113,11 @@ const axios = require("axios");
 
 export default {
   name: "StaffAccountAdd",
-  props: ["setAddingStaffAccount"],
+  props: ["setAddingStaffAccount", "addNewStaffAccount"],
   data() {
     return {
       disableButtons: false,
+      errorMessage: null,
       roles: [
         "Management",
         "Sales Rep",
@@ -91,105 +126,74 @@ export default {
         "Sales Rep + Benefits",
         "Reception",
       ],
-      permissionsList: [
-        {
-          value: "Add Dealerships",
-          text: "Add Dealerships",
-        },
-        {
-          value: "View Dealerships",
-          text: "View Dealerships",
-        },
-        {
-          value: "Edit Dealerships",
-          text: "Edit Dealerships",
-        },
-        {
-          value: "Delete Dealerships",
-          text: "Delete Dealerships",
-        },
-        {
-          value: "Add Staff Users",
-          text: "Add Staff Users",
-        },
-        {
-          value: "View Staff Users",
-          text: "View Staff Users",
-        },
-        {
-          value: "Edit Staff Users",
-          text: "Edit Staff Users",
-        },
-        {
-          value: "Delete Staff Users",
-          text: "Delete Staff Users",
-        },
-        {
-          value: "Add Vehicles",
-          text: "Add Vehicles",
-        },
-        {
-          value: "View Vehicles",
-          text: "View Vehicles",
-        },
-        {
-          value: "Edit Vehicle Properties",
-          text: "Edit Vehicle Properties",
-        },
-        {
-          value: "Edit Vehicle Locations",
-          text: "Edit Vehicle Locations",
-        },
-        {
-          value: "Sell Vehicles",
-          text: "Sell Vehicles",
-        },
-        {
-          value: "Delete Vehicles",
-          text: "Delete Vehicles",
-        },
+      permissionsListLeft: [
+        "Add Dealerships",
+        "View Dealerships",
+        "Edit Dealerships",
+        "Delete Dealerships",
+        "Add Staff Users",
+        "View Staff Users",
+        "Edit Staff Users",
+      ],
+      permissionsListRight: [
+        "Delete Staff Users",
+        "Add Vehicles",
+        "View Vehicles",
+        "Edit Vehicle Properties",
+        "Edit Vehicle Locations",
+        "Sell Vehicles",
+        "Delete Vehicles",
       ],
       first_name: "",
       last_name: "",
       email: "",
       role: "",
-      selected: [],
+      password: this.generateRandomPassword(),
       permissions: [],
     };
   },
   methods: {
-    test(control) {
-      console.log("test");
-    },
-    setSelected() {
-      this.selected = this.getSelected();
-      console.log(this.selected);
-    },
-    getSelected() {
+    generateRandomPassword() {
       /*
-        "Management",
-        "Sales Rep",
-        "Sales Rep + Showroom",
-        "Sales Rep + Demoline",
-        "Sales Rep + Benefits",
-        "Reception"
+      Taken from stackoverflow post: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
       */
-      /*
-      'Add Dealerships',
-      'View Dealerships',
-      'Edit Dealerships',
-      'Delete Dealerships',
-      'Add Staff Users',
-      'View Staff Users',
-      'Edit Staff Users',
-      'Delete Staff Users',
-      'Add Vehicles',
-      'View Vehicles',
-      'Edit Vehicle Properties',
-      'Edit Vehicle Locations',
-      'Sell Vehicles',
-      'Delete Vehicles'
-     */
+      var result = "";
+      var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+      var charactersLength = characters.length;
+      for (var i = 0; i < 12; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
+      }
+      return result;
+    },
+    isPermissionSelected(permission) {
+      const index = this.permissions.indexOf(permission);
+      return index >= 0;
+    },
+    togglePermissionChange(element) {
+      const checked = element.target.checked;
+      const permission = element.target.id;
+
+      if (checked) {
+        // add the permission to the list
+        this.addPermission(permission);
+      } else {
+        this.removePermission(permission);
+      }
+    },
+    addPermission(permission) {
+      this.permissions.push(permission);
+    },
+    removePermission(permission) {
+      const index = this.permissions.indexOf(permission);
+      this.permissions.splice(index, 1);
+    },
+    setDefaultSelected() {
+      this.permissions = [];
+      this.permissions = this.getDefaultSelected();
+    },
+    getDefaultSelected() {
       switch (this.role) {
         case "Management":
           return [
@@ -229,7 +233,12 @@ export default {
         this.role != ""
       );
     },
-    showErrorMessage(message) {},
+    showErrorMessage(message) {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 5000);
+    },
     submitForm(form) {
       // console.log("####### STAFF USER FORM SUBMIT ########");
       // console.log(`First Name: ${this.first_name}`);
@@ -246,11 +255,9 @@ export default {
         email: this.email,
         role: this.role,
         dealership: this.$route.params.dealershipId,
-        permissions: this.selected,
-        password: "password1234",
+        permissions: this.permissions,
+        password: this.password,
       };
-
-      console.log(data);
 
       // send post request to the API
       if (this.formIsValid()) {
@@ -263,16 +270,17 @@ export default {
           data,
         })
           .then((response) => {
-            console.log(response);
             if (response.data.success) {
-              this.$router.go();
+              this.$store.commit("setProperty", ["createUserCompleted", true]);
+              this.addNewStaffAccount(response.data.payload);
+              this.setAddingStaffAccount(false);
             }
           })
           .catch((err) => {
             console.log(err);
+            this.showErrorMessage("Failed to create staff account.");
           });
       } else {
-        console.log("invalid form");
         this.showErrorMessage("Invalid form. Please verify the field entries.");
       }
     },

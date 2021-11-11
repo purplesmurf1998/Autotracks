@@ -1,15 +1,14 @@
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const advancedFilter = require('../utils/advancedFilter');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 
 // @desc    Sign in user and return a valid JWT
 // @route   POST /api/v1/auth/signin
 // @access  Public
 exports.signIn = asyncHandler(async (req, res, next) => {
-    console.log(req);
     // get email and password from the body
     const { email, password } = req.body;
 
@@ -47,12 +46,6 @@ exports.signIn = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/auth/logout
 // @access  Authenticated
 exports.logout = (req, res, next) => {
-    // if (!req.cookies.autotracksAuthToken) {
-    //     return next(
-    //         new ErrorResponse('No token set in cookies. Shouldn\'t need to log out.', 401)
-    //     )
-    // }
-  
     // clear the token from the cookies
     res
         .status(200)
@@ -67,7 +60,6 @@ exports.logout = (req, res, next) => {
 // @route   POST /api/v1/auth/register
 // @route   Public
 exports.register = asyncHandler(async (req, res, next) => {
-
     // validate that the user being registered is admin
     if (req.body.role != 'Administration') {
         return next(
@@ -125,11 +117,23 @@ exports.verify = asyncHandler(async (req, res, next) => {
     }
 });
 
+// @desc    Change user password
+// @route   PUT /api/v1/auth/changepassword/:userId
+// @access  Private
 exports.changePassword = asyncHandler(async (req, res, next) => {
     // protected route, therefore should get the user object from the req
     // match the current password with the one in the user
     // if match, set the new password in the user
-    const user = await User.findById(req.user._id).select('+password');
+
+    // make sure the user in the authorization token is the same user as in the route params
+    if (req.user._id != req.params.userId) {
+        return next(
+            new ErrorResponse('Wrong user', 400)
+        );
+    }
+
+    // get the user object
+    const user = await User.findById(req.params.userId).select('+password');
 
     if (!user) {
         return next(
@@ -141,11 +145,12 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
     const passwordMatch = await user.matchPassword(req.body.currentPassword);
     if (!passwordMatch) {
         return next(
-            new ErrorResponse('Invalid credentials.', 401)
+            new ErrorResponse('Invalid credentials.', 400)
         );
     }
 
-    user.changePassword(req.body.newPassword);
+    user.password = req.body.newPassword;
+    user.promptPasswordChange = false;
     await user.save();
 
     res.status(200).json({

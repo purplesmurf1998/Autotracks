@@ -21,6 +21,14 @@ exports.createUser = asyncHandler(async (req, res, next) => {
         );
     }
 
+    // grab the user passed in the auth token and make sure they are admin
+    const adminUser = req.user;
+    if (!adminUser || adminUser.role != 'Administration') {
+        return next(
+            new ErrorResponse('Unauthorized to make these changes', 401)
+        );
+    }
+
     // set the tutorials completed for staff users so they don't
     // get the notifications
     const body = req.body;
@@ -31,11 +39,19 @@ exports.createUser = asyncHandler(async (req, res, next) => {
     // create new user with the data passed in the request body
     const user = new User(body);
 
+    // if the admin is creating their first staff account, set the tutorial flag to completed
+    if (!adminUser.createUserCompleted) {
+        await User.findByIdAndUpdate(adminUser._id, { createUserCompleted: true }, {
+            new: true,
+            runValidators: true
+        });
+    }
+
     // send response
     await user.save();
     res.status(200).json({
         success: true,
-        user
+        payload: user
     });
 });
 
@@ -52,7 +68,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: users
+        payload: users
     });
 });
 
@@ -60,8 +76,16 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/users/:userId
 // @access  Authenticated
 exports.getUser = asyncHandler(async (req, res, next) => {
-    // find the user with the id provided in the request params
-    const user = await User.findById(req.params.userId);
+    let queryResponse = User.findById(req.params.userId);
+
+    // populate specific fields if some have been entered
+    if (req.query.populate) {
+        const fields = req.query.populate.split(',').join(' ');
+        queryResponse = queryResponse.populate(fields);
+    }
+
+    // find the dealership with the id provided in the request params
+    const user = await queryResponse;
 
     // if user not found, send an error response
     if (!user) {
@@ -73,7 +97,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: user
+        payload: user
     })
 });
 
@@ -98,7 +122,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: user
+        payload: user
     });
 });
 
@@ -119,6 +143,6 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: {}
+        payload: {}
     });
 });

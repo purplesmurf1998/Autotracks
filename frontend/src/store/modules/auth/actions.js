@@ -26,8 +26,11 @@ export default {
             token: responseData.token,
             userId: responseData.payload._id,
             userPermissions: responseData.payload.permissions,
-            promptPasswordChange: responseData.payload.promptPasswordChange,
-            loggedIn: true
+            role: responseData.payload.role,
+            dealership: responseData.payload.dealership,
+            createDealershipCompleted: responseData.payload.createDealershipCompleted,
+            createUserCompleted: responseData.payload.createUserCompleted,
+            promptPasswordChange: responseData.payload.promptPasswordChange
         }
 
         // set the token in the local storage
@@ -42,9 +45,9 @@ export default {
             token: null,
             userId: null,
             userPermissions: [],
-            loggedIn: false
+            promptPasswordChange: false
         };
-        // clear the cookie from the local storage
+        // clear the token from the local storage
         localStorage.clear('autotracksAuthToken');
 
         context.commit('setUser', data);
@@ -64,7 +67,6 @@ export default {
             });
 
             const responseData = await response.json();
-            console.log(responseData);
             // token not valid or user not found
             if (!response.ok) {
                 localStorage.clear('autotracksAuthToken');
@@ -73,9 +75,11 @@ export default {
                     token: responseData.token,
                     userId: responseData.payload._id,
                     userPermissions: responseData.payload.permissions,
-
+                    role: responseData.payload.role,
+                    dealership: responseData.payload.dealership,
                     promptPasswordChange: responseData.payload.promptPasswordChange,
-                    loggedIn: true
+                    createDealershipCompleted: responseData.payload.createDealershipCompleted,
+                    createUserCompleted: responseData.payload.createUserCompleted
                 }
 
                 // set the token in the local storage
@@ -84,8 +88,5 @@ export default {
                 context.commit('setUser', data);
             }
         }
-    },
-    async register(context, payload) {
-        // register new admin user
     }
 }

@@ -8,8 +8,11 @@ export default {
       userId: null,
       userPermissions: [],
       token: null,
-      loggedIn: false,
+      role: null,
+      dealership: null,
       promptPasswordChange: false,
+      createDealershipCompleted: false,
+      createUserCompleted: false
     }
   },
   mutations,

@@ -6,7 +6,63 @@
           <CButton color="secondary" class="mx-4 mb-2" @click="goBack">
             Back
           </CButton>
-          <register-admin :adminUser.sync="adminUser"/>
+          <!-- Register admin component -->
+          <CCard class="mx-4 mb-0">
+            <CCardBody class="p-4">
+              <CForm>
+                <h1>Step 1: Register new account!</h1>
+                <p class="text-muted">This account will be the admin account to the dealership.</p>
+                <CRow>
+                  <CCol>
+                    <CInput
+                      id="first-name-txt-field"
+                      label="First Name"
+                      placeholder="ex. John"
+                      autocomplete="username"
+                      v-model="adminUser.adminFirstName"
+                    />
+                  </CCol>
+                  <CCol>
+                    <CInput
+                      id="last-name-txt-field"
+                      label="Last Name"
+                      placeholder="ex. Doe"
+                      autocomplete="username"
+                      v-model="adminUser.adminLastName"
+                    />
+                  </CCol>
+                </CRow>
+                <CInput
+                  id="email-txt-field"
+                  label="email"
+                  placeholder="ex. john.doe@mail.com"
+                  autocomplete="email"
+                  v-model="adminUser.adminEmail"
+                />
+                <CInput
+                  id="password-txt-field"
+                  label="Password"
+                  placeholder="password"
+                  type="password"
+                  autocomplete="new-password"
+                  v-model="adminUser.adminPassword"
+                />
+                <CInput
+                  id="confirm-password-txt-field"
+                  label="Confirm Password"
+                  placeholder="confirm password"
+                  type="password"
+                  autocomplete="new-password"
+                  v-model="adminUser.adminConfirmPassword"
+                />
+                <CInput
+                  label="Account Role"
+                  value="Administration"
+                  disabled
+                />
+              </CForm>
+            </CCardBody>
+          </CCard>
           <CAlert show color="danger" v-if="errorMessage" class="mt-2">Invalid Credentials</CAlert>
           <CRow class="mt-2 d-flex justify-content-center">
             <CButton color="primary" @click="completeRegistration">
@@ -20,15 +76,10 @@
 </template>
 
 <script>
-import RegisterAdmin from "./../../../modules/RegisterAdmin.vue";
-//const got = require('got');
 const axios = require('axios');
 
 export default {
   name: 'Register',
-  components: {
-    'register-admin': RegisterAdmin,
-  },
   data() {
     return {
       // register admin field values

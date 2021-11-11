@@ -10,6 +10,7 @@
                   <h1>Login</h1>
                   <p class="text-muted">Sign In to your account</p>
                   <CInput
+                    id="email-txt-field"
                     placeholder="Email"
                     autocomplete="username email"
                     v-model="email"
@@ -17,6 +18,7 @@
                     <template #prepend-content><CIcon name="cib-mail-ru"/></template>
                   </CInput>
                   <CInput
+                    id="password-txt-field"
                     placeholder="Password"
                     type="password"
                     autocomplete="curent-password"
@@ -26,13 +28,13 @@
                   </CInput>
                   <CRow>
                     <CCol col="6" class="text-left">
-                      <CButton color="primary" class="px-4" type="submit">Login</CButton>
+                      <CButton color="primary" class="px-4" type="submit" id="login-btn">Login</CButton>
                     </CCol>
                     <CCol col="6" class="text-right">
-                      <CButton color="link" class="px-0">Forgot password?</CButton>
-                      <router-link to="/pages/register"><CButton color="link" class="d-lg-none">Register now!</CButton></router-link>
+                      <CButton color="link" class="px-0" id="forgot-pswrd-btn">Forgot password?</CButton>
                     </CCol>
                   </CRow>
+                  <CAlert v-if="errorMessage" color="danger" class="mt-2">{{ errorMessage }}</CAlert>
                 </CForm>
               </CCardBody>
             </CCard>
@@ -55,15 +57,6 @@
                     Register Now!
                   </CButton>
                 </router-link>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                <CButton
-                  color="light"
-                  variant="outline"
-                  size="lg"
-                >
-                  Register Now!
-                </CButton>
               </CCardBody>
             </CCard>
           </CCardGroup>
@@ -74,43 +67,43 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 export default {
   name: 'Login',
   data() {
     return {
       email: '',
       password: '',
-      errorMsg: null
+      errorMessage: null
     }
   },
   methods: {
-    submitForm () {
-      if (email == '' || password == '') {
-        this.showError('Please enter valid credentials');
+    async submitForm () {
+      // try submitting the info after basic validatio procedures
+      if (this.email == '' || this.password == '') {
+        this.showError('Please enter valid credentials.');
       } else {
-        fetch('http://localhost:5000/api/v1/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: this.email,
-            password: this.password
-          })
-        }).then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log(error);
-        })
+        // log user in using the vuex store
+        const payload = {
+          email: this.email,
+          password: this.password
+        }
+
+        const res = await this.$store.dispatch('login', payload);
+        if (res.success) {
+          this.$router.push('/dashboard');
+        } else {
+          this.showError(res.message);
+        }
       }
     },
-    showError (errorMsg) {
-      this.errorMsg = errorMsg;
+    showError (error) {
+      this.errorMessage = error;
       setTimeout(() => {
-        this.errorMsg = null;
-      }, 4000)
+        this.errorMessage = null;
+      }, 5000)
     },
     }
   }
-}
 </script>

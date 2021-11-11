@@ -2,11 +2,34 @@
   <div>
     <CRow v-if="!selectedDealership">
       <CCol>
-        <CRow class="mb-2">
-          <CCol>
+        <CRow>
+          <div class="col-lg-auto">
+            <CAlert
+              v-if="!$store.state.auth.createDealershipCompleted"
+              color="success"
+              >Welcome to your <b>Dealerships</b> page! Here you can see all
+              your dealerships which each contain their very own
+              <u>inventory</u>, <u>vehicle</u> properties and <u>staff</u>.
+              Start your experience by creating your very first dealership by
+              click the button below.</CAlert
+            >
+            <CAlert
+              v-if="
+                $store.state.auth.createDealershipCompleted &&
+                !$store.state.auth.createUserCompleted
+              "
+              color="primary"
+              >Good job on creating your very first dealership! Now to get your
+              team started, select your dealership and start building your
+              staff.</CAlert
+            >
+          </div>
+        </CRow>
+        <CRow class="mb-3">
+          <div class="col-sm-auto">
             <CButton
               color="primary"
-              id = "add-new-dealership"
+              id="add-new-dealership"
               @click="
                 () => {
                   addingDealership = true;
@@ -14,7 +37,8 @@
               "
               >Add New Dealership</CButton
             >
-          </CCol>
+          </div>
+          <div class="col-sm-auto"></div>
         </CRow>
         <CCard>
           <CCardHeader>
@@ -31,8 +55,23 @@
               @row-clicked="clickRow"
             >
               <template #admin="{ item }">
+                <td>{{ item.admin.first_name }} {{ item.admin.last_name }}</td>
+              </template>
+              <template #name="{ item }">
                 <td>
-                  {{ item.admin.first_name }}
+                  {{ item.name }}
+                  <CBadge
+                    color="primary"
+                    v-if="
+                      $store.state.auth.createDealershipCompleted &&
+                      !$store.state.auth.createUserCompleted
+                    "
+                    :style="{
+                      'vertical-align': 'middle',
+                      'margin-top': '-0.5em',
+                    }"
+                    >NEW!</CBadge
+                  >
                 </td>
               </template>
             </CDataTable>
@@ -85,36 +124,26 @@ export default {
     return {
       addingDealership: false,
       selectedDealership: null,
-      tableItems: [
-        {
-          name: "Audi Saint Viateur",
-          description: "The only one that I could come up with!",
-          admin: "Qandeel",
-          created: "1989/11/14",
-        },
-        {
-          name: "Audi Saint Viateur",
-          description: "The only one that I could come up with!",
-          admin: "Qandeel",
-          created: "1989/11/14",
-        },
-        {
-          name: "Audi Saint Viateur",
-          description: "The only one that I could come up with!",
-          admin: "Qandeel",
-          created: "1989/11/14",
-        },
-      ],
+      toast: { contant: "static", title: "Toast Title" },
+      tableItems: [],
       tableFields: [
-        { key: "name" },
-        { key: "description" },
-        { key: "admin.first_name" },
-        { key: "created_at" },
+        {
+          key: "name",
+          label: "Name",
+        },
+        {
+          key: "description",
+          label: "Description",
+        },
+        {
+          key: "admin",
+          label: "Owner",
+        },
+        {
+          key: "created_at_formatted",
+          label: "Date Created",
+        },
       ],
-      dName: "[Audi Saint Viateur]",
-      dDescription: "[The only one that I could come up with!]",
-      dAdmin: "[Qandeel]",
-      dCreated: "[1989/11/14]",
     };
   },
   mounted() {
@@ -132,23 +161,15 @@ export default {
       console.log("Selected Dealership has been reset");
     },
     fetchDealerships() {
-      console.log(
-        this.$store.state.auth.userId + "\n" + this.$store.state.auth.token
-      );
-
       axios({
         method: "GET",
-        url:
-          "http://localhost:5000/api/v1/dealerships/?admin=" +
-          this.$store.state.auth.userId +
-          "&populate=admin",
+        url: `http://localhost:5000/api/v1/dealerships/?admin=${this.$store.state.auth.userId}&populate=admin`,
         headers: {
           Authorization: "Bearer " + this.$store.state.auth.token,
         },
       })
         .then((response) => {
-          this.tableItems = response.data.data;
-          console.log(response);
+          this.tableItems = response.data.payload;
         })
         .catch((err) => {
           console.log(err);

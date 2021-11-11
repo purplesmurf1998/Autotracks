@@ -15,7 +15,12 @@
             </h2>
             <p>{{ dealership.description }}</p>
             <router-link to="/dealerships">
-              <CButton color="primary"> Back to list </CButton>
+              <CButton
+                color="primary"
+                v-if="$store.state.auth.role == 'Administration'"
+              >
+                Back to list
+              </CButton>
             </router-link>
             <br />
             <CButton
@@ -39,6 +44,14 @@
           </small>
         </CCardFooter>
       </CCard>
+      <CRow>
+        <div class="col-md-4">
+          <CAlert v-if="!$store.state.auth.createUserCompleted" color="success"
+            >Begin by creating your staff by clicking the
+            <b>"Create a staff account"</b> button below.</CAlert
+          >
+        </div>
+      </CRow>
       <CCard class="mt-2">
         <CCardBody>
           <CRow>
@@ -47,13 +60,13 @@
               <CListGroup class="mt-3" v-if="staff.length > 0">
                 <CListGroupItem
                   tag="button"
-                  v-for="user in staff"
+                  v-for="(user, index) in staff"
                   :key="user._id"
                   :id="user._id"
                   :active="
                     selectedStaffAccount && user._id == selectedStaffAccount
                   "
-                  @click="setActiveStaff(user)"
+                  @click="setActiveStaff(user, index)"
                 >
                   {{ user.first_name }} {{ user.last_name }}
                 </CListGroupItem>
@@ -80,6 +93,8 @@
                 :user="selectedStaffAccount"
                 :editingUser="editingUser"
                 :setEditingUser="setEditingUser"
+                :updateUser="updateUser"
+                :index="selectedStaffIndex"
                 v-if="!!selectedStaffAccount"
               />
             </CCol>
@@ -87,10 +102,11 @@
         </CCardBody>
       </CCard>
     </CCol>
-    <CModal :show.sync="addingStaffAccount" :centered="true">
+    <CModal :show.sync="addingStaffAccount" :centered="true" size="lg">
       <staff-account-add
         v-if="addingStaffAccount"
         :setAddingStaffAccount="setAddingStaffAccount"
+        :addNewStaffAccount="addNewStaffAccount"
       />
       <template #header>
         <h6 class="modal-title">Add a staff account to your dealership!</h6>
@@ -118,14 +134,17 @@ export default {
       dealership: {},
       staff: [],
       selectedStaffAccount: null,
+      selectedStaffIndex: null,
       addingStaffAccount: false,
       editingUser: false,
       editingDealership: false,
     };
   },
   methods: {
-    setActiveStaff(user) {
+    setActiveStaff(user, index) {
       this.selectedStaffAccount = user;
+      this.selectedStaffIndex = index;
+      this.setEditingUser(false);
     },
     setEditingUser(value) {
       this.editingUser = value;
@@ -135,6 +154,17 @@ export default {
     },
     setEditingDealership(value) {
       this.editingDealership = value;
+    },
+    updateUser(newUser, index) {
+      let newStaff = this.staff;
+      newStaff[index] = newUser;
+      this.staff = newStaff;
+      this.selectedStaffAccount = newUser;
+    },
+    addNewStaffAccount(user) {
+      let newStaff = this.staff;
+      newStaff.push(user);
+      this.staff = newStaff;
     },
   },
   beforeCreate() {

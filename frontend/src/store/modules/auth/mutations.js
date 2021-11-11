@@ -3,7 +3,13 @@ export default {
     state.userId = payload.userId;
     state.token = payload.token;
     state.userPermissions = payload.userPermissions;
+    state.role = payload.role;
+    state.dealership = payload.dealership;
     state.promptPasswordChange = payload.promptPasswordChange;
-    state.loggedIn = payload.loggedIn;
-  }
+    state.createDealershipCompleted = payload.createDealershipCompleted;
+    state.createUserCompleted = payload.createUserCompleted;
+  },
+  setProperty(state, [variable, value]) {
+    state[variable] = value
+  },
 }
