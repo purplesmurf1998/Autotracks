@@ -47,9 +47,9 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
     }
 
     // send response
-    res.status(200).json({
+    res.status(201).json({
         success: true,
-        payload: dealership
+        dealership
     });
 });
 
@@ -92,7 +92,7 @@ exports.getDealership = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        payload: dealership
+        data: dealership
     });
 });
 
@@ -117,7 +117,7 @@ exports.updateDealership = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        payload: dealership
+        data: dealership
     });
 });
 
@@ -131,13 +131,13 @@ exports.deleteDealership = asyncHandler(async (req, res, next) => {
     // if no dealership is returned, dealership was not found and send an error response
     if (!dealership) {
         return next(
-            new ErrorResponse(`Dealership with id: ${req.params.dealershipId} not found.`, 404)
+            new ErrorResponse(`Dealership with id: ${req.params.dealershipId} not found.`, 401)
         );
     }
 
     // send response
     res.status(200).json({
         success: true,
-        payload: {}
+        data: {}
     });
 });

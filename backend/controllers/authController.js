@@ -145,7 +145,7 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
     const passwordMatch = await user.matchPassword(req.body.currentPassword);
     if (!passwordMatch) {
         return next(
-            new ErrorResponse('Invalid credentials.', 400)
+            new ErrorResponse('Invalid credentials.', 401)
         );
     }
 

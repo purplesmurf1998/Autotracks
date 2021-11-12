@@ -35,18 +35,12 @@
       </CCol>
     </CRow>
     <CRow class="d-flex justify-content-start mt-3 px-3 mb-2">
-      <CButton
-        color="secondary"
-        class="mr-2"
-        id="edit-user-acc"
-        @click="setEditingUser(true)"
-        v-if="user._id != $store.state.auth.userId"
+      <CButton color="secondary" class="mr-2" id="edit-user-acc" @click="setEditingUser(true)"
         >Edit account details</CButton
       >
     </CRow>
     <CButton
       color="danger"
-      v-if="user._id != $store.state.auth.userId"
       @click="
         () => {
           deletingUser = true;

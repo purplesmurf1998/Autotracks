@@ -55,7 +55,7 @@ app.use('/api/v1/dealerships', dealershipsRoutes);
 app.use(errorHandler);
 
 // launch server app by listening on the PORT
-var server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   mongoose.connection.once("open", function () {
     console.log("Connected successfully to MongoDB");
@@ -65,4 +65,4 @@ var server = app.listen(PORT, () => {
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
 
-module.exports = server;
+module.exports = app;
