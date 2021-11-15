@@ -1,7 +1,7 @@
 pipeline {
     agent {
+		echo 'Building Docker...'
         docker {
-            echo 'Building Docker...'
             image 'node:lts-buster-slim'
             args '-p 3000:3000'
         }
