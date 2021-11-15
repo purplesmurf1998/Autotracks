@@ -11,6 +11,7 @@ pipeline {
         }
 
         sh 'cd backend'
+        tool(name: 'nodejs', type: 'nodejs')
       }
     }
 
