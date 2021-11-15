@@ -4,10 +4,7 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building Backend...'
-        dir(path: Autotracks/backend) {
-          sh 'npm install'
-        }
-
+        sh 'cd backend && npm install'
         echo 'Building Frontend...'
         dir(path: frontend) {
           sh 'npm install'
