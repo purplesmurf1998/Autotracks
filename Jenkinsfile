@@ -4,7 +4,7 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building Backend...'
-        sh 'cd backend && npm install'
+        sh 'cd backend && ls && npm install'
         echo 'Building Frontend...'
         dir(path: frontend) {
           sh 'npm install'
