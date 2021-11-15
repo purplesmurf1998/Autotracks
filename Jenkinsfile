@@ -13,6 +13,7 @@ pipeline {
           sh 'npm install'
         }
 
+        sh 'cd backend'
       }
     }
 
