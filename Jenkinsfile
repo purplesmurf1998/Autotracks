@@ -1,42 +1,44 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        echo 'Building Backend...'
+        dir(path: backend) {
+          sh 'npm install'
         }
+
+        echo 'Building Frontend...'
+        dir(path: frontend) {
+          sh 'npm install'
+        }
+
+      }
     }
-    environment { 
-        CI = 'true'
+
+    stage('Test') {
+      steps {
+        echo 'Testing Backend...'
+        dir(path: backend) {
+          sh 'npm test'
+        }
+
+        echo 'Testing Backend...'
+        dir(path: frontend) {
+          sh 'npm test'
+        }
+
+      }
     }
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building Backend...'
-                dir(backend){
-                    sh 'npm install'
-                }
-                echo 'Building Frontend...'
-                dir(frontend){
-                    sh 'npm install'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing Backend...'
-                dir(backend){
-                    sh 'npm test'
-                }
-                echo 'Testing Backend...'
-                dir(frontend){
-                    sh 'npm test'
-                }
-            }
-        }
-        stage('Deliver') { 
-            steps {
-                echo 'Deploying....'
-            }
-        }
+
+    stage('Deliver') {
+      steps {
+        echo 'Deploying....'
+      }
     }
+
+  }
+  environment {
+    CI = 'true'
+  }
 }
