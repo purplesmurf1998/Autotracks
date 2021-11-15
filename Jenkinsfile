@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
+        tool(name: 'nodejs', type: 'nodejs')
         echo 'Building Backend...'
         sh 'cd backend && ls && npm install'
         echo 'Building Frontend...'
@@ -11,7 +12,6 @@ pipeline {
         }
 
         sh 'cd backend'
-        tool(name: 'nodejs', type: 'nodejs')
       }
     }
 
