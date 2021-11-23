@@ -5,12 +5,14 @@ const {
   getVehicleProperties,
   createVehicleProperty,
   updateVehicleProperty,
-  deleteVehicleProperty
+  deleteVehicleProperty,
+  updateVehiclePropertyPositions
 } = require('../controllers/vehiclePropertyController');
 
 router.route('/')
   .post(createVehicleProperty)
-  .get(getVehicleProperties);
+  .get(getVehicleProperties)
+  .put(updateVehiclePropertyPositions);
 
 router.route('/:propertyId')
   .put(updateVehicleProperty)

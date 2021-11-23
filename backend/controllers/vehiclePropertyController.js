@@ -89,3 +89,33 @@ exports.deleteVehicleProperty = asyncHandler(async (req, res, next) => {
   // return data
   res.status(200).json({ success: true, payload: {} });
 });
+
+// @desc        Update the position of all vehicle properties in batch
+// @route       PUT /api/v1/dealerships/:dealershipId/vehicles/properties/positions
+// @access      Private
+exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => {
+  // body of the request should have the list of vehicle properties in the new order
+  // go through the list and change the positions in the backend to their new index
+  
+  const vehicleProperties = req.body.properties;
+  vehicleProperties.forEach(async (prop, index) => {
+    // find the vehicle property
+    console.log(prop._id);
+    const property = await VehicleProperty.findByIdAndUpdate(
+      prop._id,
+      {
+        position: index + 1
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (!property) {
+      return next(new ErrorResponse(`Vehicle property not found with id ${prop._id}`, 404));
+    }
+  });
+
+  res.status(200).json({ success: true, message: 'Vehicle properties positions updated successfully.' });
+});

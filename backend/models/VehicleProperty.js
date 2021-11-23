@@ -44,11 +44,13 @@ VehiclePropertySchema.pre('save', async function (next) {
 // Update the field from the headerName
 VehiclePropertySchema.pre('findOneAndUpdate', async function (next) {
   // create field
-  console.log(this);
-  this._update.field = this._update.headerName.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-    return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });;
+  //console.log(this._update);
+  if (this._update.headerName) {
+    this._update.field = this._update.headerName.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+      if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+      return index === 0 ? match.toLowerCase() : match.toUpperCase();
+    });;
+  }
   next();
 });
 
