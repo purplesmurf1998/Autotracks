@@ -43,6 +43,7 @@
         </div>
       </CRow>
       <dealership-accounts />
+      <dealership-vehicle-properties />
     </CCol>
     
   </div>
@@ -51,6 +52,7 @@
 <script>
 import EditDealership from "./EditDealership.vue";
 import DealershipAccounts from "../../../modules/DealershipAccounts.vue"
+import DealershipVehicleProperties from "../../../modules/DealershipVehicleProperties.vue"
 
 const axios = require("axios");
 
@@ -87,7 +89,8 @@ export default {
   },
   components: {
     "edit-dealership": EditDealership,
-    "dealership-accounts": DealershipAccounts
+    "dealership-accounts": DealershipAccounts,
+    "dealership-vehicle-properties": DealershipVehicleProperties
   },
 };
 </script>

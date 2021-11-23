@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <CCard class="mt-2">
+      <CCardBody>
+        <CRow>
+          <CCol>
+            <CRow class="m-0">
+              <h3>List of vehicle properties</h3>
+              <CButton color="success" class="ml-3" v-if="showSavePositions" @click="savePositions">Save Positions</CButton>
+            </CRow>
+            <draggable 
+              class="list-group mt-3"
+              :list="vehicleProperties" 
+              group="properties" 
+              @start="onDragStart" 
+              @end="onDragEnd">             
+              <CListGroupItem 
+                v-for="(element, index) in vehicleProperties" 
+                :key="element._id" 
+                :id="index" 
+                @click="onChoose(index)" 
+                tag="button"
+                :active="
+                  selectedVehicleProperty && element._id == selectedVehicleProperty._id
+                ">
+                <CRow class="d-flex justify-content-between m-0">
+                  {{ element.headerName }}
+                  <CBadge color="secondary" class="align-middle"><b>{{ element.position }}</b></CBadge>
+                </CRow>
+              </CListGroupItem>
+            </draggable>
+          </CCol>
+          <CCol>
+            <h3>Selected vehicle property details</h3>
+          </CCol>
+        </CRow>
+      </CCardBody>
+    </CCard>
+  </div>
+</template>
+
+<script>
+import draggable from 'vuedraggable'
+const axios = require('axios');
+
+export default {
+  name: 'DealershipVehicleProperties',
+  data() {
+    return {
+      vehicleProperties: [],
+      drag: false,
+      selectedVehicleProperty: null,
+      showSavePositions: false,
+      togglePropertyUpdate: false
+    }
+  },
+  methods: {
+    onDragStart(element) {
+      const property = this.vehicleProperties[element.item.id];
+      this.selectedVehicleProperty = property;
+      this.drag = true;
+    },
+    onDragEnd() {
+      this.showSavePositions = this.savePositionsChanged();
+      this.drag = false;
+    },
+    onChoose(index) {
+      const property = this.vehicleProperties[index];
+      this.selectedVehicleProperty = property;
+    },
+    savePositionsChanged() {
+      let positionChanged = false;
+      this.vehicleProperties.forEach((prop, index) => {
+        if ((prop.position - 1) != index) {
+          positionChanged = true;
+        }
+      })
+      return positionChanged;
+    },
+    savePositions() {
+      const tempVehicleProperties = this.vehicleProperties
+      tempVehicleProperties.forEach((prop, index) => {
+        prop.position = index + 1;
+      })
+      this.vehicleProperties = tempVehicleProperties;
+      this.showSavePositions = false;
+    }
+  },
+  beforeCreate() {
+    // get the list of vehicle properties for the dealership
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/api/v1/dealerships/${this.$route.params.dealershipId}/vehicles/properties`,
+      headers: {
+        Authorization: `Bearer ${this.$store.state.auth.token}`,
+      },
+    })
+    .then((response) => {
+      if (response.data.success) {
+        console.log(response.data.payload);
+        this.vehicleProperties = response.data.payload;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  },
+  components: {
+    'draggable': draggable
+  }
+}
+</script>
+
+<style>
+
+</style>

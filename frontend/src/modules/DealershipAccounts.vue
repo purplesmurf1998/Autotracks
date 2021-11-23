@@ -12,7 +12,7 @@
                 :key="user._id"
                 :id="user._id"
                 :active="
-                  selectedStaffAccount && user._id == selectedStaffAccount
+                  selectedStaffAccount && user._id == selectedStaffAccount._id
                 "
                 @click="setActiveStaff(user, index)"
               >
@@ -21,7 +21,7 @@
             </CListGroup>
             <CButton
               color="primary"
-              class="mt-2"
+              class="mt-3"
               id="create-staff-acc"
               @click="
                 () => {

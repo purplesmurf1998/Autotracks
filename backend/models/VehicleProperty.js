@@ -10,10 +10,7 @@ const VehiclePropertySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Vehicle property must have a header name']
   },
-  field: {
-    type: String,
-    unique: [true, 'Vehicle property data field must be unique']
-  },
+  field: String,
   inputType: {
     type: String,
     enum: ['Text','Number', 'Currency', 'Date', 'Options', 'List'],
