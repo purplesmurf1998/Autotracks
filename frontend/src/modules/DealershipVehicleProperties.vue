@@ -5,7 +5,7 @@
         <CRow>
           <CCol>
             <CRow class="m-0">
-              <h3>List of vehicle properties</h3>
+              <h3>List of custom vehicle properties</h3>
               <CButton color="success" class="ml-3" v-if="showSavePositions" @click="savePositions">Save Positions</CButton>
             </CRow>
             <draggable 
@@ -25,13 +25,22 @@
                 ">
                 <CRow class="d-flex justify-content-between m-0">
                   {{ element.headerName }}
-                  <CBadge color="secondary" class="align-middle"><b>{{ element.position }}</b></CBadge>
+                  <CBadge :color="element.visible ? 'success' : 'secondary'" class="align-middle"><b>{{ element.position }}</b></CBadge>
                 </CRow>
               </CListGroupItem>
             </draggable>
           </CCol>
           <CCol>
             <h3>Selected vehicle property details</h3>
+            <vehicle-property-card
+              class="mt-2"
+              :property="selectedVehicleProperty"
+              :editingProperty="editingVehicleProperty"
+              :setEditingProperty="setEditingVehicleProperty"
+              :updateProperty="updateVehicleProperty"
+              :index="selectedVehiclePropertyIndex"
+              v-if="!!selectedVehicleProperty"
+            />
           </CCol>
         </CRow>
       </CCardBody>
@@ -41,6 +50,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import VehiclePropertyCard from './VehiclePropertyCard.vue'
 const axios = require('axios');
 
 export default {
@@ -51,7 +61,12 @@ export default {
       drag: false,
       selectedVehicleProperty: null,
       showSavePositions: false,
-      togglePropertyUpdate: false
+      editingVehicleProperty: false
+    }
+  },
+  computed: {
+    selectedVehiclePropertyIndex() {
+      return this.vehicleProperties.map(prop => { return prop._id}).indexOf(this.selectedVehicleProperty._id);
     }
   },
   methods: {
@@ -77,13 +92,36 @@ export default {
       })
       return positionChanged;
     },
+    setEditingVehicleProperty(value) {
+      this.editingVehicleProperty = value;
+    },
+    updateVehicleProperty(newProperty, index) {
+      let newVehicleProperties = this.vehicleProperties;
+      newVehicleProperties[index] = newProperty;
+      this.vehicleProperties = newVehicleProperties;
+      this.selectedVehicleProperty = newProperty;
+    },
     savePositions() {
-      const tempVehicleProperties = this.vehicleProperties
-      tempVehicleProperties.forEach((prop, index) => {
-        prop.position = index + 1;
+      // update vehicle positions in the backend
+      axios({
+        method: "PUT",
+        url: `http://localhost:5000/api/v1/dealerships/${this.$route.params.dealershipId}/vehicles/properties`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {
+          properties: this.vehicleProperties
+        }
       })
-      this.vehicleProperties = tempVehicleProperties;
-      this.showSavePositions = false;
+      .then((response) => {
+        if (response.data.success) {
+          this.vehicleProperties = response.data.payload;
+          this.showSavePositions = false;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     }
   },
   beforeCreate() {
@@ -106,7 +144,8 @@ export default {
     });
   },
   components: {
-    'draggable': draggable
+    'draggable': draggable,
+    'vehicle-property-card': VehiclePropertyCard
   }
 }
 </script>

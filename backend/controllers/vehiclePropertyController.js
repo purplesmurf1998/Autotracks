@@ -98,13 +98,14 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
   // go through the list and change the positions in the backend to their new index
   
   const vehicleProperties = req.body.properties;
-  vehicleProperties.forEach(async (prop, index) => {
+  let newProperties = [];
+
+  for (let i = 0; i < vehicleProperties.length; i++) {
     // find the vehicle property
-    console.log(prop._id);
     const property = await VehicleProperty.findByIdAndUpdate(
-      prop._id,
+      vehicleProperties[i]._id,
       {
-        position: index + 1
+        position: i + 1
       },
       {
         new: true,
@@ -113,9 +114,12 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
     );
 
     if (!property) {
-      return next(new ErrorResponse(`Vehicle property not found with id ${prop._id}`, 404));
+      return next(new ErrorResponse(`Vehicle property not found with id ${vehicleProperties[i]._id}`, 404));
     }
-  });
 
-  res.status(200).json({ success: true, message: 'Vehicle properties positions updated successfully.' });
+    // add the property to the new list
+    newProperties.push(property);
+  }
+
+  res.status(200).json({ success: true, payload: newProperties });
 });
