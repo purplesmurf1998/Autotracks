@@ -47,7 +47,7 @@ export default {
             {
               _name: "CSidebarNavItem",
               name: "Inventory",
-              to: "/pages/vehicle/inventory",
+              to: "/inventory",
               icon: "cil-spreadsheet",
             },
           ],

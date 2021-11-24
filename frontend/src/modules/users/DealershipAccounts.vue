@@ -20,12 +20,11 @@
               </CListGroupItem>
             </CListGroup>
             <CButton
-              color="primary"
+              color="secondary"
               class="mt-3"
               id="create-staff-acc"
               @click="
                 () => {
-                  addingStaffAccount = false;
                   editingUser = false;
                   addingStaffAccount = true;
                 }
@@ -67,8 +66,8 @@
 </template>
 
 <script>
-import StaffAccountAdd from "./StaffAccountAdd.vue";
-import UserCard from "./UserCard.vue";
+import StaffAccountAdd from "../users/StaffAccountAdd.vue";
+import UserCard from "../users/UserCard.vue";
 const axios = require('axios');
 
 export default {

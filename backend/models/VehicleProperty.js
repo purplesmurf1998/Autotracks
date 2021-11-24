@@ -28,7 +28,8 @@ const VehiclePropertySchema = new mongoose.Schema({
   isRequired: {
     type: Boolean,
     default: true
-  }
+  },
+  description: String
 });
 
 // Create the field from the headerName

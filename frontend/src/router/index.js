@@ -71,9 +71,13 @@ const Login = () => import('@/views/pages/authentication/Login')
 const Register = () => import('@/views/pages/authentication/Register')
 const ChangePassword = () => import('@/views/pages/authentication/ChangePassword')
 
+// Views - Pages - Dealership
 const DealershipAdd = () => import('@/views/pages/dealerships/DealershipAdd')
 const Dealership = () => import('@/views/pages/dealerships/Dealership')
 const Dealerships = () => import('@/views/pages/dealerships/Dealerships')
+
+// Views - Pages - Inventory
+const Inventory = () => import('@/views/pages/inventory/Inventory')
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -133,6 +137,17 @@ const router = new Router({
             ]
           },
           component: Dealership
+        },
+        {
+          path: 'inventory',
+          name: 'Vehicle Inventory',
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Vehicles'
+            ]
+          },
+          component: Inventory
         },
         /*
         children: [

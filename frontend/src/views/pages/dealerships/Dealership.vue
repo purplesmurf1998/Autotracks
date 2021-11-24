@@ -51,8 +51,8 @@
 
 <script>
 import EditDealership from "./EditDealership.vue";
-import DealershipAccounts from "../../../modules/DealershipAccounts.vue"
-import DealershipVehicleProperties from "../../../modules/DealershipVehicleProperties.vue"
+import DealershipAccounts from "../../../modules/users/DealershipAccounts.vue"
+import DealershipVehicleProperties from "../../../modules/vehicleProperties/DealershipVehicleProperties.vue"
 
 const axios = require("axios");
 

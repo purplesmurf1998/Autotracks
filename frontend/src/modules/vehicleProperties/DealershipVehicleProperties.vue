@@ -22,13 +22,26 @@
                 tag="button"
                 :active="
                   selectedVehicleProperty && element._id == selectedVehicleProperty._id
-                ">
-                <CRow class="d-flex justify-content-between m-0">
+                "
+                class="d-flex justify-content-between align-items-center"
+                >
                   {{ element.headerName }}
-                  <CBadge :color="element.visible ? 'success' : 'secondary'" class="align-middle"><b>{{ element.position }}</b></CBadge>
-                </CRow>
+                  <CBadge :color="element.visible ? 'success' : 'secondary'" shape="pill"><b>{{ element.position }}</b></CBadge>
               </CListGroupItem>
             </draggable>
+            <CButton
+              color="secondary"
+              class="mt-3"
+              id="create-vehicle-property"
+              @click="
+                () => {
+                  editingVehicleProperty = false;
+                  addingVehicleProperty = true;
+                }
+              "
+            >
+              Create a custom vehicle property
+            </CButton>
           </CCol>
           <CCol>
             <h3>Selected vehicle property details</h3>
@@ -45,12 +58,27 @@
         </CRow>
       </CCardBody>
     </CCard>
+    <CModal :show.sync="addingVehicleProperty" :centered="true">
+      <vehicle-property-add
+        v-if="addingVehicleProperty"
+        :setAddingVehicleProperty="setAddingVehicleProperty"
+        :addNewVehicleProperty="addNewVehicleProperty"
+      />
+      <template #header>
+        <h6 class="modal-title">Add a new custom property for your vehicles!</h6>
+        <CButtonClose @click="addingVehicleProperty = false" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
-import VehiclePropertyCard from './VehiclePropertyCard.vue'
+import VehiclePropertyCard from '../vehicleProperties/VehiclePropertyCard.vue'
+import VehiclePropertyAdd from './VehiclePropertyAdd.vue'
 const axios = require('axios');
 
 export default {
@@ -61,7 +89,8 @@ export default {
       drag: false,
       selectedVehicleProperty: null,
       showSavePositions: false,
-      editingVehicleProperty: false
+      editingVehicleProperty: false,
+      addingVehicleProperty: false
     }
   },
   computed: {
@@ -94,6 +123,14 @@ export default {
     },
     setEditingVehicleProperty(value) {
       this.editingVehicleProperty = value;
+    },
+    setAddingVehicleProperty(value) {
+      this.addingVehicleProperty = value;
+    },
+    addNewVehicleProperty(property) {
+      let newProperties = this.vehicleProperties;
+      newProperties.push(property);
+      this.vehicleProperties = newProperties;
     },
     updateVehicleProperty(newProperty, index) {
       let newVehicleProperties = this.vehicleProperties;
@@ -145,7 +182,8 @@ export default {
   },
   components: {
     'draggable': draggable,
-    'vehicle-property-card': VehiclePropertyCard
+    'vehicle-property-card': VehiclePropertyCard,
+    'vehicle-property-add': VehiclePropertyAdd
   }
 }
 </script>
