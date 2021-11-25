@@ -103,10 +103,10 @@ export default {
         description: this.currProperty.description,
         options
       };
-      console.log(`http://localhost:5000/api/v1/dealerships/${this.$route.params.dealershipId}/vehicles/properties/${this.property._id}`);
+      
       axios({
         method: "PUT",
-        url: `http://localhost:5000/api/v1/dealerships/${this.$route.params.dealershipId}/vehicles/properties/${this.property._id}`,
+        url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/vehicles/properties/${this.property._id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },

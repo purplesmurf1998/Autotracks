@@ -60,7 +60,7 @@ export default {
         // post request to API to create the new dealership
         axios({
           method: 'POST',
-          url: 'http://localhost:5000/api/v1/dealerships',
+          url: `${this.$store.state.api}/dealerships`,
           headers: {
             'Authorization': `Bearer ${this.$store.state.auth.token}`
           },

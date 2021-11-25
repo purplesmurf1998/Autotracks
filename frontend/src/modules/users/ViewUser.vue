@@ -82,7 +82,7 @@ export default {
     removeUser() {
       axios({
         method: "DELETE",
-        url: `http://localhost:5000/api/v1/users/${this.user._id}`,
+        url: `${this.$store.state.api}/users/${this.user._id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },

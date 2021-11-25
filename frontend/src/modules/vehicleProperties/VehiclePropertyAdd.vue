@@ -116,7 +116,7 @@ export default {
       // post the the new property to the API
       axios({
         method: 'POST',
-        url: `http://localhost:5000/api/v1/dealerships/${this.$route.params.dealershipId}/vehicles/properties`,
+        url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/vehicles/properties`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },

@@ -263,7 +263,7 @@ export default {
       if (this.formIsValid()) {
         axios({
           method: "POST",
-          url: "http://localhost:5000/api/v1/users",
+          url: `${this.$store.state.api}/users`,
           headers: {
             Authorization: `Bearer ${this.$store.state.auth.token}`,
           },

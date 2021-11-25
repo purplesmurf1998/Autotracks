@@ -113,7 +113,7 @@ export default {
       // send request to register new user
       axios({
         method: 'POST',
-        url: 'http://localhost:5000/api/v1/auth/register',
+        url: `${this.$store.state.api}/auth/register`,
         data: {
           first_name: this.adminUser.adminFirstName,
           last_name: this.adminUser.adminLastName,

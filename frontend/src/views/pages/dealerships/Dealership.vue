@@ -73,7 +73,7 @@ export default {
     // fetch dealership details
     axios({
       method: "GET",
-      url: `http://localhost:5000/api/v1/dealerships/${this.$route.params.dealershipId}/?populate=admin`,
+      url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/?populate=admin`,
       headers: {
         Authorization: `Bearer ${this.$store.state.auth.token}`,
       },
