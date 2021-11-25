@@ -18,7 +18,7 @@
                 v-for="(element, index) in vehicleProperties" 
                 :key="element._id" 
                 :id="index" 
-                @click="onChoose(index)" 
+                @click="setActiveProperty(element, index)" 
                 tag="button"
                 :active="
                   selectedVehicleProperty && element._id == selectedVehicleProperty._id
@@ -26,7 +26,7 @@
                 class="d-flex justify-content-between align-items-center"
                 >
                   {{ element.headerName }}
-                  <CBadge :color="element.visible ? 'success' : 'secondary'" shape="pill"><b>{{ element.position }}</b></CBadge>
+                  <CBadge :color="element.visible ? 'info' : 'secondary'" shape="pill"><b>{{ element.position }}</b></CBadge>
               </CListGroupItem>
             </draggable>
             <CButton
@@ -88,14 +88,10 @@ export default {
       vehicleProperties: [],
       drag: false,
       selectedVehicleProperty: null,
+      selectedVehiclePropertyIndex: null,
       showSavePositions: false,
       editingVehicleProperty: false,
       addingVehicleProperty: false
-    }
-  },
-  computed: {
-    selectedVehiclePropertyIndex() {
-      return this.vehicleProperties.map(prop => { return prop._id}).indexOf(this.selectedVehicleProperty._id);
     }
   },
   methods: {
@@ -108,9 +104,10 @@ export default {
       this.showSavePositions = this.savePositionsChanged();
       this.drag = false;
     },
-    onChoose(index) {
-      const property = this.vehicleProperties[index];
+    setActiveProperty(property, index) {
       this.selectedVehicleProperty = property;
+      this.selectedVehiclePropertyIndex = index;
+      this.setEditingVehicleProperty(false);
     },
     savePositionsChanged() {
       let positionChanged = false;
