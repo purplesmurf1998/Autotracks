@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CRow v-if="!selectedDealership">
+    <CRow>
       <CCol>
         <CRow>
           <div class="col-lg-auto">
@@ -79,13 +79,6 @@
         </CCard>
       </CCol>
     </CRow>
-    <!-- <CRow>
-      <Dealership
-        v-if="selectedDealership != null"
-        :dealership="selectedDealership"
-        :resetSelectedDealership="resetSelectedDealership"
-      ></Dealership>
-    </CRow> -->
     <CModal
       :show.sync="addingDealership"
       :centered="true"

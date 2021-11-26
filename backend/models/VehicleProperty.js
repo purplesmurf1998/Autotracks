@@ -6,14 +6,14 @@ const VehiclePropertySchema = new mongoose.Schema({
     ref: 'Dealership',
     required: [true, 'Vehicle property model must be associated to a dealership']
   },
-  headerName: {
+  label: {
     type: String,
     required: [true, 'Vehicle property must have a header name']
   },
-  field: String,
+  key: String,
   inputType: {
     type: String,
-    enum: ['Text','Number', 'Currency', 'Date', 'Options', 'List'],
+    enum: ['Text', 'Number', 'Currency', 'Date', 'Options', 'List'],
     required: [true, 'Vehicle property must have an input type']
   },
   options: [String],
@@ -32,22 +32,22 @@ const VehiclePropertySchema = new mongoose.Schema({
   description: String
 });
 
-// Create the field from the headerName
+// Create the key from the label
 VehiclePropertySchema.pre('save', async function (next) {
-  // create field
-  this.field = this.headerName.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+  // create key
+  this.key = this.label.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
     if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
     return index === 0 ? match.toLowerCase() : match.toUpperCase();
   });;
   next();
 });
 
-// Update the field from the headerName
+// Update the key from the label
 VehiclePropertySchema.pre('findOneAndUpdate', async function (next) {
-  // create field
+  // create key
   //console.log(this._update);
-  if (this._update.headerName) {
-    this._update.field = this._update.headerName.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+  if (this._update.label) {
+    this._update.key = this._update.label.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
       if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
       return index === 0 ? match.toLowerCase() : match.toUpperCase();
     });;

@@ -6,27 +6,39 @@
           <CCol>
             <CRow class="m-0">
               <h3>List of custom vehicle properties</h3>
-              <CButton color="success" class="ml-3" v-if="showSavePositions" @click="savePositions">Save Positions</CButton>
+              <CButton
+                color="success"
+                class="ml-3"
+                v-if="showSavePositions"
+                @click="savePositions"
+                >Save Positions</CButton
+              >
             </CRow>
-            <draggable 
+            <draggable
               class="list-group mt-3"
-              :list="vehicleProperties" 
-              group="properties" 
-              @start="onDragStart" 
-              @end="onDragEnd">             
-              <CListGroupItem 
-                v-for="(element, index) in vehicleProperties" 
-                :key="element._id" 
-                :id="index" 
-                @click="setActiveProperty(element, index)" 
+              :list="vehicleProperties"
+              group="properties"
+              @start="onDragStart"
+              @end="onDragEnd"
+            >
+              <CListGroupItem
+                v-for="(element, index) in vehicleProperties"
+                :key="element._id"
+                :id="index"
+                @click="setActiveProperty(element, index)"
                 tag="button"
                 :active="
-                  selectedVehicleProperty && element._id == selectedVehicleProperty._id
+                  selectedVehicleProperty &&
+                  element._id == selectedVehicleProperty._id
                 "
                 class="d-flex justify-content-between align-items-center"
+              >
+                {{ element.label }}
+                <CBadge
+                  :color="element.visible ? 'success' : 'secondary'"
+                  shape="pill"
+                  ><b>{{ element.position }}</b></CBadge
                 >
-                  {{ element.headerName }}
-                  <CBadge :color="element.visible ? 'info' : 'secondary'" shape="pill"><b>{{ element.position }}</b></CBadge>
               </CListGroupItem>
             </draggable>
             <CButton
@@ -65,7 +77,9 @@
         :addNewVehicleProperty="addNewVehicleProperty"
       />
       <template #header>
-        <h6 class="modal-title">Add a new custom property for your vehicles!</h6>
+        <h6 class="modal-title">
+          Add a new custom property for your vehicles!
+        </h6>
         <CButtonClose @click="addingVehicleProperty = false" />
       </template>
       <template #footer>
@@ -76,13 +90,13 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
-import VehiclePropertyCard from '../vehicleProperties/VehiclePropertyCard.vue'
-import VehiclePropertyAdd from './VehiclePropertyAdd.vue'
-const axios = require('axios');
+import draggable from "vuedraggable";
+import VehiclePropertyCard from "../vehicleProperties/VehiclePropertyCard.vue";
+import VehiclePropertyAdd from "./VehiclePropertyAdd.vue";
+const axios = require("axios");
 
 export default {
-  name: 'DealershipVehicleProperties',
+  name: "DealershipVehicleProperties",
   data() {
     return {
       vehicleProperties: [],
@@ -91,8 +105,8 @@ export default {
       selectedVehiclePropertyIndex: null,
       showSavePositions: false,
       editingVehicleProperty: false,
-      addingVehicleProperty: false
-    }
+      addingVehicleProperty: false,
+    };
   },
   methods: {
     onDragStart(element) {
@@ -112,10 +126,10 @@ export default {
     savePositionsChanged() {
       let positionChanged = false;
       this.vehicleProperties.forEach((prop, index) => {
-        if ((prop.position - 1) != index) {
+        if (prop.position - 1 != index) {
           positionChanged = true;
         }
-      })
+      });
       return positionChanged;
     },
     setEditingVehicleProperty(value) {
@@ -144,19 +158,19 @@ export default {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
         data: {
-          properties: this.vehicleProperties
-        }
+          properties: this.vehicleProperties,
+        },
       })
-      .then((response) => {
-        if (response.data.success) {
-          this.vehicleProperties = response.data.payload;
-          this.showSavePositions = false;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
+        .then((response) => {
+          if (response.data.success) {
+            this.vehicleProperties = response.data.payload;
+            this.showSavePositions = false;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   beforeCreate() {
     // get the list of vehicle properties for the dealership
@@ -167,24 +181,23 @@ export default {
         Authorization: `Bearer ${this.$store.state.auth.token}`,
       },
     })
-    .then((response) => {
-      if (response.data.success) {
-        console.log(response.data.payload);
-        this.vehicleProperties = response.data.payload;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((response) => {
+        if (response.data.success) {
+          console.log(response.data.payload);
+          this.vehicleProperties = response.data.payload;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   components: {
-    'draggable': draggable,
-    'vehicle-property-card': VehiclePropertyCard,
-    'vehicle-property-add': VehiclePropertyAdd
-  }
-}
+    draggable: draggable,
+    "vehicle-property-card": VehiclePropertyCard,
+    "vehicle-property-add": VehiclePropertyAdd,
+  },
+};
 </script>
 
 <style>
-
 </style>
