@@ -37,22 +37,30 @@
       <CCol>
         <p class="text-muted mb-0">Options:</p>
       </CCol>
-      <CCol class="d-flex align-items-end flex-column" v-if="property.inputType == 'Options'">
-        <CRow
-          v-for="option in property.options"
-          :key="option"
-          class="mr-0"
+      <CCol
+        class="d-flex align-items-end flex-column"
+        v-if="property.inputType == 'Options'"
+      >
+        <CRow v-for="option in property.options" :key="option" class="mr-0"
           ><p class="text-muted mb-0">
             {{ option }}
           </p></CRow
         >
       </CCol>
-      <CCol class="d-flex flex-row-reverse" v-if="property.inputType != 'Options'">
+      <CCol
+        class="d-flex flex-row-reverse"
+        v-if="property.inputType != 'Options'"
+      >
         <p class="text-muted mb-0">No value options for this input type.</p>
       </CCol>
     </CRow>
     <CRow class="d-flex justify-content-start mt-3 px-3 mb-2">
-      <CButton color="secondary" class="mr-2" id="edit-user-acc" @click="setEditingProperty(true)"
+      <CButton
+        color="secondary"
+        class="mr-2"
+        id="edit-user-acc"
+        @click="setEditingProperty(true)"
+        v-if="userHasPermissions('Edit Vehicle Properties')"
         >Edit custom vehicle property</CButton
       >
     </CRow>
@@ -63,10 +71,14 @@
           deletingProperty = true;
         }
       "
+      v-if="userHasPermissions('Delete Vehicle Properties')"
       >Delete custom vehicle property</CButton
     >
     <CModal :show.sync="deletingProperty" :centered="true">
-      <p>Are you sure you want to delete this custom vehicle property? This could have an effect on existing vehicles in the inventory.</p>
+      <p>
+        Are you sure you want to delete this custom vehicle property? This could
+        have an effect on existing vehicles in the inventory.
+      </p>
       <template #header>
         <h6 class="modal-title">Delete custom vehicle property?</h6>
         <CButtonClose
@@ -78,7 +90,9 @@
         />
       </template>
       <template #footer>
-        <CButton @click="deletingProperty = false" color="secondary">Cancel</CButton>
+        <CButton @click="deletingProperty = false" color="secondary"
+          >Cancel</CButton
+        >
         <CButton @click="removeProperty" color="danger">Confirm</CButton>
       </template>
     </CModal>
@@ -87,9 +101,10 @@
 
 <script>
 const axios = require("axios");
+const { containsPermissions } = require("../../utils/index");
 
 export default {
-  name: 'ViewVehicleProperty',
+  name: "ViewVehicleProperty",
   props: ["property", "setEditingProperty"],
   data() {
     return {
@@ -97,6 +112,9 @@ export default {
     };
   },
   methods: {
+    userHasPermissions(...permissions) {
+      return containsPermissions(permissions);
+    },
     removeProperty() {
       axios({
         method: "DELETE",

@@ -149,49 +149,49 @@ const router = new Router({
           },
           component: Inventory
         },
+      ]
+    },
+    {
+      path: '/pages',
+      redirect: '/pages/404',
+      name: 'Pages',
+      component: {
+        render(c) { return c('router-view') }
+      },
+      children: [
         {
-          path: '/pages',
-          redirect: '/pages/404',
-          name: 'Pages',
-          component: {
-            render(c) { return c('router-view') }
+          path: '404',
+          name: 'Page404',
+          component: Page404
+        },
+        {
+          path: '500',
+          name: 'Page500',
+          component: Page500
+        },
+        {
+          path: 'login',
+          name: 'Login',
+          meta: {
+            unAuthRequired: true
           },
-          children: [
-            {
-              path: '404',
-              name: 'Page404',
-              component: Page404
-            },
-            {
-              path: '500',
-              name: 'Page500',
-              component: Page500
-            },
-            {
-              path: 'login',
-              name: 'Login',
-              meta: {
-                unAuthRequired: true
-              },
-              component: Login
-            },
-            {
-              path: 'register',
-              name: 'Register',
-              meta: {
-                unAuthRequired: true
-              },
-              component: Register
-            },
-            {
-              path: 'changePassword',
-              name: 'Change Password',
-              meta: {
-                authRequired: true
-              },
-              component: ChangePassword
-            }
-          ]
+          component: Login
+        },
+        {
+          path: 'register',
+          name: 'Register',
+          meta: {
+            unAuthRequired: true
+          },
+          component: Register
+        },
+        {
+          path: 'changePassword',
+          name: 'Change Password',
+          meta: {
+            authRequired: true
+          },
+          component: ChangePassword
         }
       ]
     }
