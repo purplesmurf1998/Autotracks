@@ -21,9 +21,18 @@ exports.createUser = asyncHandler(async (req, res, next) => {
         );
     }
 
-    // grab the user passed in the auth token and make sure they are admin
-    const adminUser = req.user;
-    if (!adminUser || adminUser.role != 'Administration') {
+    // grab the user passed in the auth token and make sure they have "Add Staff Users" permission
+    const loggedUser = req.user;
+    var flag = false;
+    for (var i=0; i<loggedUser.permissions.length; i++)
+    {
+        if (loggedUser.permissions[i] == 'Add Staff Users')
+        {
+            flag = true;
+            break;
+        }
+    }
+    if (!loggedUser || flag==false) {
         return next(
             new ErrorResponse('Unauthorized to make these changes', 401)
         );
@@ -40,7 +49,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
     const user = new User(body);
 
     // if the admin is creating their first staff account, set the tutorial flag to completed
-    if (!adminUser.createUserCompleted) {
+    if (!loggedUser.createUserCompleted) {
         await User.findByIdAndUpdate(adminUser._id, { createUserCompleted: true }, {
             new: true,
             runValidators: true
