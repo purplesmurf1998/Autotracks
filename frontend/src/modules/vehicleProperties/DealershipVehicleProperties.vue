@@ -52,7 +52,7 @@
                   addingVehicleProperty = true;
                 }
               "
-              v-if="userHasPermissions('Add Vehicle Property')"
+              v-if="userHasPermissions('Add Vehicle Properties')"
             >
               Create a custom vehicle property
             </CButton>

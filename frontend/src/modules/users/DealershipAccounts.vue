@@ -29,6 +29,7 @@
                   addingStaffAccount = true;
                 }
               "
+              v-if="userHasPermissions('Add Staff Users')"
             >
               Create a staff account
             </CButton>
@@ -69,6 +70,7 @@
 import StaffAccountAdd from "../users/StaffAccountAdd.vue";
 import UserCard from "../users/UserCard.vue";
 const axios = require("axios");
+const { containsPermissions } = require("../../utils/index");
 
 export default {
   name: "DealershipAccounts",
@@ -82,6 +84,11 @@ export default {
     };
   },
   methods: {
+    userHasPermissions(...permissions) {
+      // console.log(permissions);
+      // console.log(containsPermissions(permissions));
+      return containsPermissions(permissions);
+    },
     setActiveStaff(user, index) {
       this.selectedStaffAccount = user;
       this.selectedStaffIndex = index;
