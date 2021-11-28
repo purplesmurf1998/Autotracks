@@ -105,6 +105,7 @@ export default {
         options = this.currProperty.options.split(";");
       }
 
+      // create the new edited property object
       const newProperty = {
         label: this.currProperty.label,
         inputType: this.currProperty.inputType,
@@ -114,6 +115,10 @@ export default {
         options,
       };
 
+      // update the property
+      this.updateProperty(newProperty);
+    },
+    updateProperty(newProperty) {
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/vehicles/properties/${this.property._id}`,

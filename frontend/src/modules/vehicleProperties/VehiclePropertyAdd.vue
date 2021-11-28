@@ -105,6 +105,7 @@ export default {
         options = this.options.split(";");
       }
 
+      // create the new property object
       const newProperty = {
         label: this.label,
         inputType: this.inputType,
@@ -115,6 +116,9 @@ export default {
       };
 
       // post the the new property to the API
+      this.createNewProperty(newProperty);
+    },
+    createNewProperty(newProperty) {
       axios({
         method: "POST",
         url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/vehicles/properties`,
