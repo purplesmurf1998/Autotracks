@@ -116,9 +116,9 @@ export default {
       };
 
       // update the property
-      this.updateProperty(newProperty);
+      this.updateNewProperty(newProperty);
     },
-    updateProperty(newProperty) {
+    updateNewProperty(newProperty) {
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/vehicles/properties/${this.property._id}`,
