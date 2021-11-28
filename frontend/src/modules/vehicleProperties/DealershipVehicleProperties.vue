@@ -20,10 +20,7 @@
               group="properties"
               @start="onDragStart"
               @end="onDragEnd"
-<<<<<<< sprint-4-inventory-view
-=======
               :disabled="!userHasPermissions('Edit Vehicle Properties')"
->>>>>>> sprint-4-vehicle-properties
             >
               <CListGroupItem
                 v-for="(element, index) in vehicleProperties"
@@ -37,15 +34,9 @@
                 "
                 class="d-flex justify-content-between align-items-center"
               >
-<<<<<<< sprint-4-inventory-view
                 {{ element.label }}
                 <CBadge
                   :color="element.visible ? 'success' : 'secondary'"
-=======
-                {{ element.headerName }}
-                <CBadge
-                  :color="element.visible ? 'info' : 'secondary'"
->>>>>>> sprint-4-vehicle-properties
                   shape="pill"
                   ><b>{{ element.position }}</b></CBadge
                 >
@@ -105,10 +96,7 @@ import draggable from "vuedraggable";
 import VehiclePropertyCard from "../vehicleProperties/VehiclePropertyCard.vue";
 import VehiclePropertyAdd from "./VehiclePropertyAdd.vue";
 const axios = require("axios");
-<<<<<<< sprint-4-inventory-view
-=======
 const { containsPermissions } = require("../../utils/index");
->>>>>>> sprint-4-vehicle-properties
 
 export default {
   name: "DealershipVehicleProperties",
@@ -203,11 +191,6 @@ export default {
     })
       .then((response) => {
         if (response.data.success) {
-<<<<<<< sprint-4-inventory-view
-          console.log(response.data.payload);
-=======
-          //console.log(response.data.payload);
->>>>>>> sprint-4-vehicle-properties
           this.vehicleProperties = response.data.payload;
         }
       })
