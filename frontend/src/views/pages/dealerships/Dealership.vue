@@ -42,19 +42,21 @@
           >
         </div>
       </CRow>
-      <dealership-accounts />
-      <dealership-vehicle-properties />
+      <dealership-accounts v-if="userHasPermissions('View Staff Users')" />
+      <dealership-vehicle-properties
+        v-if="userHasPermissions('View Vehicle Properties')"
+      />
     </CCol>
-    
   </div>
 </template>
 
 <script>
 import EditDealership from "./EditDealership.vue";
-import DealershipAccounts from "../../../modules/users/DealershipAccounts.vue"
-import DealershipVehicleProperties from "../../../modules/vehicleProperties/DealershipVehicleProperties.vue"
+import DealershipAccounts from "../../../modules/users/DealershipAccounts.vue";
+import DealershipVehicleProperties from "../../../modules/vehicleProperties/DealershipVehicleProperties.vue";
 
 const axios = require("axios");
+const { containsPermissions } = require("../../../utils/index");
 
 export default {
   name: "Dealership",
@@ -67,7 +69,12 @@ export default {
   methods: {
     setEditingDealership(value) {
       this.editingDealership = value;
-    }
+    },
+    userHasPermissions(...permissions) {
+      // console.log(permissions);
+      // console.log(containsPermissions(permissions));
+      return containsPermissions(permissions);
+    },
   },
   beforeCreate() {
     // fetch dealership details
@@ -90,7 +97,7 @@ export default {
   components: {
     "edit-dealership": EditDealership,
     "dealership-accounts": DealershipAccounts,
-    "dealership-vehicle-properties": DealershipVehicleProperties
+    "dealership-vehicle-properties": DealershipVehicleProperties,
   },
 };
 </script>
