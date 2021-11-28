@@ -65,17 +65,32 @@ describe('Testing User Controller Class', () => {
         .send({
           "first_name": "test_staff",
           "last_name": "test_staff",
-          "email": "test_staff@gmail.com",
+          "email": "test_staff@autotracks.com",
           "role": "Management",
+          "permissions": [
+            "Add Dealerships",
+            "View Dealerships",
+            "Edit Dealerships",
+            "Delete Dealerships",
+            "Add Staff Users",
+            "View Staff Users",
+            "Edit Staff Users",
+            "Delete Staff Users",
+            "Add Vehicles",
+            "View Vehicles",
+            "Edit Vehicle Properties",
+            "Edit Vehicle Locations",
+            "Sell Vehicles",
+            "Delete Vehicles"
+        ],
           "password": "password123",
-          "dealership": "6186d06df44c867a394801dc"
+          "dealership": "618b3bf134f07d9a91c32a1b" 
         })
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
         //Need to have the token to be able to create users
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
         .end( (err, response) => {
           response.should.have.status(200);
-          user_id = response.body.user._id;
-          response.body.should.be.a('object');
+          user_id = response.body.payload._id;
           done();
         });
     });
@@ -85,13 +100,11 @@ describe('Testing User Controller Class', () => {
   describe('Get User API Test', () => {
     it('should return 200 when the user is present: ' + admin_id, (done) => {
       chai.request(app)
-        .get("/api/v1/users/" + admin_id)
+        .get("/api/v1/users/618aacf45cdc75b8288eb9b5") // + admin_id)
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         //pass the authorization token
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.data.should.be.a('object');
-          response.body.should.be.a('object');
           done();
         });
     });
@@ -103,7 +116,7 @@ describe('Testing User Controller Class', () => {
       chai.request(app)
         .get("/api/v1/users")
         //pass the authorization token
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('array');
@@ -119,16 +132,15 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is present: ' + admin_id, (done) => {
       chai.request(app)
         .put("/api/v1/users/" + admin_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         //It is a put request and we pass the new first_name that needs to be changed
         .send({
           "first_name": "test_update",
         })       
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.data.should.be.a('object');
-          response.body.should.be.a('object');
-          response.body.data.first_name.should.be.equal("test_update");
+          response.body.payload.should.be.a('object');
+          response.body.payload.first_name.should.be.equal("test_update");
           done();
         });
     });
@@ -139,7 +151,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when it returns users array', (done) => {
       chai.request(app)
         .get("/api/v1/users/?role=Administration&select=first_name")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('array');
@@ -156,7 +168,7 @@ describe('Testing User Controller Class', () => {
       chai.request(app)
         //The qs below represents the populate filter
         .get("/api/v1/users/?role=Administration&populate=dealership")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         .end( (err, response) => {
           response.should.have.status(200);
           //the response data should be an array of users
@@ -172,7 +184,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + admin_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + admin_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -186,10 +198,10 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + user_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + user_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.should.be.a('object');
+          response.body.success.should.be.true;
           done();
         });
     });

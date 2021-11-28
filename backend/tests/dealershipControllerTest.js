@@ -22,7 +22,7 @@ describe('Testing Dealership Controller Class', () => {
         .send({
             "name": "Dealership #1",
             "description": "This is a simple test dealership.",
-            "admin": "6176c48f825fbc6aac712b62"
+            "admin": "618aacf45cdc75b8288eb9b5"
         })
         .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
         .end( (err, response) => {
@@ -59,7 +59,7 @@ describe('Testing Dealership Controller Class', () => {
         .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.data.should.be.a('array');
+          response.body.payload.should.be.a('array');
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           done();
