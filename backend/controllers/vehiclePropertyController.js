@@ -6,15 +6,7 @@ const VehicleProperty = require('../models/VehicleProperty')
 // @route       GET /api/v1/dealerships/:dealershipId/vehicles/properties
 // @access      Private
 exports.getVehicleProperties = asyncHandler(async (req, res, next) => {
-  console.log('*****GET VEHICLE PROPERTIES*****');
-  // // copy req.query
-  // const reqQuery = { ...req.query };
-  // // fields to exclude from filtering;
-  // const removeFields = ['select', 'sort'];
-  // // loop over fields to remove them from reqQuery
-  // removeFields.forEach(param => delete reqQuery[param]);
-  console.log(req);
-  let query = VehicleProperty.find({dealership: req.params.dealershipId});
+  let query = VehicleProperty.find({ dealership: req.params.dealershipId });
   // sort results
   if (req.query.sort) {
     const sortBy = req.query.sort.split(',').join(' ');
@@ -102,7 +94,7 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
   // body of the request should have the list of vehicle properties in the new order
   // go through the list and change the positions in the backend to their new index
   console.log('*****UPDATE VEHICLE PROPERTY POSITIONS*****');
-  
+
   const vehicleProperties = req.body.properties;
   let newProperties = [];
 

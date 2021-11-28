@@ -68,10 +68,10 @@
 <script>
 import StaffAccountAdd from "../users/StaffAccountAdd.vue";
 import UserCard from "../users/UserCard.vue";
-const axios = require('axios');
+const axios = require("axios");
 
 export default {
-  name: 'DealershipAccounts',
+  name: "DealershipAccounts",
   data() {
     return {
       staff: [],
@@ -79,7 +79,7 @@ export default {
       selectedStaffIndex: null,
       addingStaffAccount: false,
       editingUser: false,
-    }
+    };
   },
   methods: {
     setActiveStaff(user, index) {
@@ -109,23 +109,23 @@ export default {
     // fetch dealership staff users
     axios({
       method: "GET",
-      url: `${this.$store.state.api}/users/?dealership=${this.$route.params.dealershipId}`,
+      url: `${this.$store.state.api}/users/?dealership=${this.$route.params.dealershipId}&role[ne]=Administration`,
       headers: {
         Authorization: `Bearer ${this.$store.state.auth.token}`,
       },
     })
-    .then((response) => {
-      if (response.data.success) {
-        this.staff = response.data.data;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((response) => {
+        if (response.data.success) {
+          this.staff = response.data.data;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   components: {
-    'staff-account-add': StaffAccountAdd,
-    'user-card': UserCard
-  }
-}
+    "staff-account-add": StaffAccountAdd,
+    "user-card": UserCard,
+  },
+};
 </script>

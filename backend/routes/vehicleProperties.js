@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router({ mergeParams : true });
+const router = express.Router({ mergeParams: true });
 
 const {
   getVehicleProperties,
@@ -9,13 +9,16 @@ const {
   updateVehiclePropertyPositions
 } = require('../controllers/vehiclePropertyController');
 
+// get authentication middleware
+const { protect } = require('../middleware/auth');
+
 router.route('/')
-  .post(createVehicleProperty)
-  .get(getVehicleProperties)
-  .put(updateVehiclePropertyPositions);
+  .post(protect, createVehicleProperty)
+  .get(protect, getVehicleProperties)
+  .put(protect, updateVehiclePropertyPositions);
 
 router.route('/:propertyId')
-  .put(updateVehicleProperty)
-  .delete(deleteVehicleProperty);
+  .put(protect, updateVehicleProperty)
+  .delete(protect, deleteVehicleProperty);
 
 module.exports = router;

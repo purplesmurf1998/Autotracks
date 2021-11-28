@@ -5,7 +5,7 @@
         <p class="text-muted mb-0">Header Name:</p>
       </CCol>
       <CCol class="d-flex flex-row-reverse">
-        <p class="text-muted mb-0">{{ property.headerName }}</p>
+        <p class="text-muted mb-0">{{ property.label }}</p>
       </CCol>
     </CRow>
     <CRow>
