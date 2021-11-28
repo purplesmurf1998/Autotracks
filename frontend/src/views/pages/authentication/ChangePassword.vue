@@ -88,7 +88,7 @@ export default {
         console.log(this.$store.state.auth.userId);
         axios({
           method: "PUT",
-          url: `http://localhost:5000/api/v1/auth/changepassword/${this.$store.state.auth.userId}`,
+          url: `${this.$store.state.api}/auth/changepassword/${this.$store.state.auth.userId}`,
           headers: {
             Authorization: `Bearer ${this.$store.state.auth.token}`,
           },

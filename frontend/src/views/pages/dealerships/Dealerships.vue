@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CRow v-if="!selectedDealership">
+    <CRow>
       <CCol>
         <CRow>
           <div class="col-lg-auto">
@@ -79,13 +79,6 @@
         </CCard>
       </CCol>
     </CRow>
-    <!-- <CRow>
-      <Dealership
-        v-if="selectedDealership != null"
-        :dealership="selectedDealership"
-        :resetSelectedDealership="resetSelectedDealership"
-      ></Dealership>
-    </CRow> -->
     <CModal
       :show.sync="addingDealership"
       :centered="true"
@@ -163,7 +156,7 @@ export default {
     fetchDealerships() {
       axios({
         method: "GET",
-        url: `http://localhost:5000/api/v1/dealerships/?admin=${this.$store.state.auth.userId}&populate=admin`,
+        url: `${this.$store.state.api}/dealerships/?admin=${this.$store.state.auth.userId}&populate=admin`,
         headers: {
           Authorization: "Bearer " + this.$store.state.auth.token,
         },
