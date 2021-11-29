@@ -1,7 +1,7 @@
 describe('Edit Dealership Test', () => {
     it('Visits the dealerships page and modifying a selected dealership', () => {
         //Setting the token in the local storage to be able to access dealerships page
-        cy.setLocalStorage('autotracksAuthToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTg3MWU2NmFjMzNjYmE1N2JmMWQ4MTEiLCJpYXQiOjE2MzYzMTYwMTAsImV4cCI6MTYzODkwODAxMH0.rXnYhgWxnX3koe04r0MV_iASdQ_qPW01wnYnNwZ3QAg')
+        cy.setLocalStorage('autotracksAuthToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
         cy.visit('/#/dealerships')
         //Selecting a dealership
         cy.get("tr").eq(3)
@@ -21,7 +21,7 @@ describe('Edit Dealership Test', () => {
         .clear()
         .type("new dealership description")
         .should('have.value', 'new dealership description')
-        
+
         cy.get("#save-dealership-changes")
         .click()
         //Verifying that the modified name is displayed and visible
