@@ -12,6 +12,8 @@ let vehicle_prop_1_id = ''
 let vehicle_prop_2_id = ''
 let vehicle_prop_1 = {}
 let vehicle_prop_2 = {}
+const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340';
+
 
 // The following tests test the entire Vehicle Property Controller Class
 describe('Testing Vehicle Property Controller Class', () => {
@@ -26,7 +28,7 @@ describe('Testing Vehicle Property Controller Class', () => {
             'inputType': 'Text',
             'visible': false
         })
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -49,7 +51,7 @@ describe('Testing Vehicle Property Controller Class', () => {
             'inputType': 'Text',
             'visible': false,
         })
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -66,7 +68,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when vehicle properties are returned', (done) => {
       chai.request(app)
         .get("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -81,7 +83,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when a vehicle property is updated', (done) => {
       chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/" + vehicle_prop_1_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .send({
             'label': 'test_updated'
         })
@@ -103,7 +105,7 @@ describe('Testing Vehicle Property Controller Class', () => {
         newProperties.push(vehicle_prop_1);
         chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .send({
             'properties': newProperties
         })
@@ -121,7 +123,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when a vehicle property is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/" + vehicle_prop_1_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -136,7 +138,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when a vehicle property is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/" + vehicle_prop_2_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');

@@ -10,6 +10,7 @@ chai.use(chaiHttp);
 
 let admin_id = "";
 let user_id = "";
+const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340';
 
 // The following tests test the entire User Controller Class
 describe('Testing User Controller Class', () => {
@@ -85,7 +86,7 @@ describe('Testing User Controller Class', () => {
           "password": "password123",
           "dealership": "618b3bf134f07d9a91c32a1b" 
         })
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')
+        .set('authorization', token)
         //Need to have the token to be able to create users
         .end( (err, response) => {
           response.should.have.status(200);
@@ -100,7 +101,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is present: ' + admin_id, (done) => {
       chai.request(app)
         .get("/api/v1/users/618aacf45cdc75b8288eb9b5") // + admin_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         //pass the authorization token
         .end( (err, response) => {
           response.should.have.status(200);
@@ -115,7 +116,7 @@ describe('Testing User Controller Class', () => {
       chai.request(app)
         .get("/api/v1/users")
         //pass the authorization token
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('array');
@@ -131,7 +132,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is present: ' + admin_id, (done) => {
       chai.request(app)
         .put("/api/v1/users/" + admin_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         //It is a put request and we pass the new first_name that needs to be changed
         .send({
           "first_name": "test_update",
@@ -150,7 +151,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when it returns users array', (done) => {
       chai.request(app)
         .get("/api/v1/users/?role=Administration&select=first_name")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('array');
@@ -167,7 +168,7 @@ describe('Testing User Controller Class', () => {
       chai.request(app)
         //The qs below represents the populate filter
         .get("/api/v1/users/?role=Administration&populate=dealership")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           //the response data should be an array of users
@@ -183,7 +184,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + admin_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + admin_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -197,7 +198,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + user_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + user_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMjkxMzAsImV4cCI6MTY0MDcyMTEzMH0.dJTD0ZWeL9Y6okiFwB4r5g7cbugVAmW6IU_BbKCGmIg')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.success.should.be.true;

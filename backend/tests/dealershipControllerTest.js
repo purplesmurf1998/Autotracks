@@ -11,6 +11,7 @@ chai.use(chaiHttp);
 
 let dealership_id = "";
 
+const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340';
 // The following tests test the entire Dealership Controller Class
 describe('Testing Dealership Controller Class', () => {
 //The below test, checks if we can create a dealership successfully
@@ -24,7 +25,7 @@ describe('Testing Dealership Controller Class', () => {
             "description": "This is a simple test dealership.",
             "admin": "618aacf45cdc75b8288eb9b5"
         })
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(201);
           //We store the dealership_id that we created so we can delete it later
@@ -40,7 +41,7 @@ describe('Testing Dealership Controller Class', () => {
     it('should return 200 when the dealership is present: ' + dealership_id, (done) => {
       chai.request(app)
         .get("/api/v1/dealerships/" + dealership_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('object');
@@ -56,7 +57,7 @@ describe('Testing Dealership Controller Class', () => {
     it('should return 200 when it returns dealerships array', (done) => {
       chai.request(app)
         .get("/api/v1/dealerships")
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.payload.should.be.a('array');
@@ -76,7 +77,7 @@ describe('Testing Dealership Controller Class', () => {
         .send({
             "name": "Dealership #2",
         })
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -91,7 +92,7 @@ describe('Testing Dealership Controller Class', () => {
     it('should return 200 when the dealership is deleted: ' + dealership_id, (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/" + dealership_id)
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzcxOTgsImV4cCI6MTYzODY2OTE5OH0.uJkO3U2Wx16cCUO-9vhphVzx34MbO4sEOJNeOXj3dD8')
+        .set('authorization', token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
