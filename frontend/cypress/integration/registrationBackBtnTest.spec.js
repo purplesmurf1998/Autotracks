@@ -1,5 +1,5 @@
 describe('Confirm Registration Back Button Test', () => {
-    it('Verifies the confirm password text field component', () => {
+    it('Verifies the back button component', () => {
       //Visiting the registration page
       cy.visit('/#/pages/register')
       cy.contains('Register new account');
