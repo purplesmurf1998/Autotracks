@@ -101,8 +101,6 @@ describe('Testing Vehicle Property Controller Class', () => {
         let newProperties = [];
         newProperties.push(vehicle_prop_2);
         newProperties.push(vehicle_prop_1);
-        console.log(vehicle_prop_2._id);
-        console.log(vehicle_prop_1._id);
         chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
         .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340')

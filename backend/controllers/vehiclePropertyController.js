@@ -35,7 +35,6 @@ exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
   const position = numProperties.length + 1;
   newProperty.position = position;
   newProperty.dealership = req.params.dealershipId;
-  //console.log(req);
 
   console.log(newProperty);
   const newVehicleProperty = await VehicleProperty.create(newProperty);
@@ -97,7 +96,6 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
 
   const vehicleProperties = req.body.properties;
   let newProperties = [];
-  console.log("IM HERE")
   for (let i = 0; i < vehicleProperties.length; i++) {
     // find the vehicle property
     const property = await VehicleProperty.findByIdAndUpdate(
