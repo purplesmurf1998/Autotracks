@@ -7,6 +7,7 @@ const { protect } = require('../middleware/auth');
 
 chai.should();
 chai.use(chaiHttp);
+var expect = require('chai').expect
 
 let vehicle_prop_1_id = ''
 let vehicle_prop_2_id = ''
@@ -73,6 +74,7 @@ describe('Testing Vehicle Property Controller Class', () => {
           response.should.have.status(200);
           response.body.should.be.a('object');
           response.body.success.should.be.true;
+          expect(response.body.payload).to.have.lengthOf.above(0);
           done();
         });
     });
@@ -112,6 +114,8 @@ describe('Testing Vehicle Property Controller Class', () => {
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
+          response.body.payload[0].position.should.be.equal(1)
+          response.body.payload[1].position.should.be.equal(2)
           response.body.success.should.be.true;
           done();
         });
