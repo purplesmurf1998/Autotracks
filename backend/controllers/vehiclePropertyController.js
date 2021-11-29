@@ -35,7 +35,6 @@ exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
   const position = numProperties.length + 1;
   newProperty.position = position;
   newProperty.dealership = req.params.dealershipId;
-  //console.log(req);
 
   console.log(newProperty);
   const newVehicleProperty = await VehicleProperty.create(newProperty);
@@ -88,7 +87,7 @@ exports.deleteVehicleProperty = asyncHandler(async (req, res, next) => {
 });
 
 // @desc        Update the position of all vehicle properties in batch
-// @route       PUT /api/v1/dealerships/:dealershipId/vehicles/properties/positions
+// @route       PUT /api/v1/dealerships/:dealershipId/vehicles/properties
 // @access      Private
 exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => {
   // body of the request should have the list of vehicle properties in the new order
@@ -97,7 +96,6 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
 
   const vehicleProperties = req.body.properties;
   let newProperties = [];
-
   for (let i = 0; i < vehicleProperties.length; i++) {
     // find the vehicle property
     const property = await VehicleProperty.findByIdAndUpdate(
@@ -110,7 +108,7 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
         runValidators: true
       }
     );
-
+    console.log(property)
     if (!property) {
       return next(new ErrorResponse(`Vehicle property not found with id ${vehicleProperties[i]._id}`, 404));
     }

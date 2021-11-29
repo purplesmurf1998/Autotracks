@@ -9,7 +9,7 @@ chai.should();
 chai.use(chaiHttp);
 
 const email = "admin@account.com";
-const password = "adminpassword";
+const password = "password";
 let token = "";
 
 // The following tests test the entire Auth Controller Class
