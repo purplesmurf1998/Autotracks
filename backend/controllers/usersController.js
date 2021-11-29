@@ -23,15 +23,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 
     // grab the user passed in the auth token and make sure they have "Add Staff Users" permission
     const loggedUser = req.user;
-    var flag = false;
-    for (var i=0; i<loggedUser.permissions.length; i++)
-    {
-        if (loggedUser.permissions[i] == 'Add Staff Users')
-        {
-            flag = true;
-            break;
-        }
-    }
+    var flag = loggedUser.permissions.includes("Add Staff Users");
     if (!loggedUser || flag==false) {
         return next(
             new ErrorResponse('Unauthorized to make these changes', 401)
