@@ -6,7 +6,12 @@
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="6">
-          <CButton id="registration-back-btn" color="secondary" class="mx-4 mb-2" @click="goBack">
+          <CButton
+            id="registration-back-btn"
+            color="secondary"
+            class="mx-4 mb-2"
+            @click="goBack"
+          >
             Back
           </CButton>
           <!-- Register admin component -->
@@ -68,7 +73,11 @@
             >Invalid Credentials</CAlert
           >
           <CRow class="mt-2 d-flex justify-content-center">
-            <CButton id="complete-registration-btn" color="primary" @click="completeRegistration">
+            <CButton
+              id="complete-registration-btn"
+              color="primary"
+              @click="completeRegistration"
+            >
               Complete Registration
             </CButton>
           </CRow>
@@ -137,7 +146,7 @@ export default {
             "Edit Vehicle Locations",
             "Sell Vehicles",
             "Delete Vehicles",
-            "Add Vehicle Properties",
+            "Add Vehicle Property",
             "Edit Vehicle Properties",
             "View Vehicle Properties",
             "Delete Vehicle Properties",

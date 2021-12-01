@@ -42,7 +42,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 
     // if the admin is creating their first staff account, set the tutorial flag to completed
     if (!loggedUser.createUserCompleted) {
-        await User.findByIdAndUpdate(adminUser._id, { createUserCompleted: true }, {
+        await User.findByIdAndUpdate(loggedUser._id, { createUserCompleted: true }, {
             new: true,
             runValidators: true
         });
