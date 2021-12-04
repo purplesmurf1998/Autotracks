@@ -36,6 +36,27 @@ describe('Testing User Controller Class', () => {
     });
   });
 
+  //The below test, checks if the app refuses to create a user (Not admin) from the registration page
+  describe('Create Admin API (Not Admin) Test', () => {
+    it('should return 400 when because user is not an admin', (done) => {
+      chai.request(app)
+        .post("/api/v1/auth/register")
+        .send({
+          "first_name": "test",
+          "last_name": "test",
+          "email": "test_user@gmail.com",
+          "role": "Management",
+          "password": "password123"
+        })
+        .end( (err, response) => {
+          //Checks if the status code is 200
+          response.should.have.status(400);
+          response.body.should.be.a('object');
+          done();
+        });
+    });
+  });
+
   //The below test, ensures that we cannot create an admin that is already been created
   describe('Create Duplicate Admin API Test', () => {
     it('should return 400 when the admin already exists', (done) => {
@@ -91,6 +112,57 @@ describe('Testing User Controller Class', () => {
         .end( (err, response) => {
           response.should.have.status(200);
           user_id = response.body.payload._id;
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if the app refuses to create a user that is not attached to a dealership from the registration page
+  describe('Refuse Creating a User That is not Attached to a Dealership API Test', () => {
+    it('should return 400 when because dealership does not exist', (done) => {
+      chai.request(app)
+        .post("/api/v1/users")
+        .send({
+          "first_name": "test_staff",
+          "last_name": "test_staff",
+          "email": "test_staff_no_dealership@autotracks.com",
+          "role": "Management",
+          "permissions": [
+            "Add Dealerships",
+            "View Dealerships",
+            "Delete Vehicles"
+          ],
+          "password": "password123",
+        })
+        .set('authorization', token)
+        //Need to have the token to be able to create users
+        .end( (err, response) => {
+          response.should.have.status(400);
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if the app refuses to create a staff account if the creator is not an admin
+  describe('Create User API Test', () => {
+    it('should return 200 when the user is created', (done) => {
+      chai.request(app)
+        .post("/api/v1/users")
+        .send({
+          "first_name": "test_staff",
+          "last_name": "test_staff",
+          "email": "test_staff_not_admin@autotracks.com",
+          "role": "Management",
+          "permissions": [
+            "Add Dealerships",
+          ],
+          "password": "password123",
+          "dealership": "618b3bf134f07d9a91c32a1b" 
+        })
+        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWEyOTA3ZDA1NmQ2ZDY3ZTYwM2UxZWMiLCJpYXQiOjE2Mzg2NTU4MzYsImV4cCI6MTY0MTI0NzgzNn0.m8wq9bNU7bbak2A9y8id88Zvtwc_dEaWtZNFNWlr7q8')
+        //Need to have the token to be able to create users
+        .end( (err, response) => {
+          response.should.have.status(401);
           done();
         });
     });
