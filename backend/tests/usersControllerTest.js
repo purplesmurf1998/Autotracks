@@ -182,6 +182,20 @@ describe('Testing User Controller Class', () => {
     });
   });
 
+  //The below test, checks if the app returns an error when trying to fetch an invalid user id
+  describe('Get User API Error Test', () => {
+    it('should return 500 when the user is not present: ', (done) => {
+      chai.request(app)
+        .get("/api/v1/users/718aacf45cdc75b8288eb9b5")
+        .set('authorization', token)
+        //pass the authorization token
+        .end( (err, response) => {
+          response.should.have.status(500);
+          done();
+        });
+    });
+  });
+
   //The below test, checks if the app can return a list of users successfully
   describe('Get Users API Test', () => {
     it('should return 200 when it returns users array', (done) => {
@@ -213,6 +227,23 @@ describe('Testing User Controller Class', () => {
           response.should.have.status(200);
           response.body.payload.should.be.a('object');
           response.body.payload.first_name.should.be.equal("test_update");
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if the app returns an error when attempting to update an invalid user id 
+  describe('Update User API Error Test', () => {
+    it('should return 400 when the user is present: ', (done) => {
+      chai.request(app)
+        .put("/api/v1/users/718aacf45cdc75b8288eb9b5")
+        .set('authorization', token)
+        //It is a put request and we pass the new first_name that needs to be changed
+        .send({
+          "first_name": "test_update",
+        })       
+        .end( (err, response) => {
+          response.should.have.status(400);
           done();
         });
     });
@@ -251,6 +282,7 @@ describe('Testing User Controller Class', () => {
         });
     });
   });
+
   //The below test, checks if the app can delete admins successfully
   describe('Delete Admin API Test' + admin_id, () => {
     it('should return 200 when the user is deleted: ' + admin_id, (done) => {
@@ -274,6 +306,19 @@ describe('Testing User Controller Class', () => {
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.success.should.be.true;
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if the app returns an error when attempting to delete a nonexistent user
+  describe('Delete User API Error Test' + user_id, () => {
+    it('should return 200 when the user is deleted: ' + user_id, (done) => {
+      chai.request(app)
+        .delete("/api/v1/users/" + user_id)
+        .set('authorization', token)
+        .end( (err, response) => {
+          response.should.have.status(401);
           done();
         });
     });
