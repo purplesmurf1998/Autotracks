@@ -99,6 +99,22 @@ describe('Testing Vehicle Property Controller Class', () => {
     });
   });
 
+  //The below test checks if we return 404 error when the vehicle property id is wrong
+  describe('Update Vehicle Property API Error (Wrong ID) Test', () => {
+    it('should return 404 when a vehicle property is updated', (done) => {
+      chai.request(app)
+        .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/71a1106490f3350549ffa54e")
+        .set('authorization', token)
+        .send({
+            'label': 'test_updated'
+        })
+        .end( (err, response) => {
+          response.should.have.status(404);
+          done();
+        });
+    });
+  });
+
   //The below test checks if we can update the position of all vehicle properties successfully
   describe('Update Vehicle Property Positions API Test', () => {
     it('should return 200 when vehicle properties positions are updated successfully', (done) => {
@@ -117,6 +133,28 @@ describe('Testing Vehicle Property Controller Class', () => {
           response.body.payload[0].position.should.be.equal(1)
           response.body.payload[1].position.should.be.equal(2)
           response.body.success.should.be.true;
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we return a 404 error when attempting to update vehicle prop position with the wrong ID
+  describe('Update Vehicle Property Positions API Test', () => {
+    it('should return 404 when vehicle properties positions are updated successfully', (done) => {
+        let newProperties = [];
+        var vehicle_prop_3 = vehicle_prop_2;
+        vehicle_prop_3._id= '71a1106490f3350549ffa54e';
+        newProperties.push(vehicle_prop_3);
+        newProperties.push(vehicle_prop_1);
+        chai.request(app)
+        .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
+        .set('authorization', token)
+        .send({
+            'properties': newProperties
+        })
+        .end( (err, response) => {
+          response.should.have.status(404);
+          response.body.should.be.a('object');
           done();
         });
     });
@@ -147,6 +185,19 @@ describe('Testing Vehicle Property Controller Class', () => {
           response.should.have.status(200);
           response.body.should.be.a('object');
           response.body.success.should.be.true;
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we return a 404 error when attempting to delete a nonexistent ID
+  describe('Delete Vehicle Property API Error (Wrong ID) Test', () => {
+    it('should return 404 when a vehicle property ID does not exist', (done) => {
+      chai.request(app)
+        .delete("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/71a1106490f3350549ffa54e")
+        .set('authorization', token)
+        .end( (err, response) => {
+          response.should.have.status(404);
           done();
         });
     });
