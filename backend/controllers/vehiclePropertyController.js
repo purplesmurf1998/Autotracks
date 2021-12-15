@@ -28,7 +28,6 @@ exports.getVehicleProperties = asyncHandler(async (req, res, next) => {
 // @route       POST /api/v1/dealerships/:dealershipId/vehicles/properties
 // @access      Private
 exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
-  console.log('*****CREATE VEHICLE PROPERTY*****');
   const newProperty = req.body;
 
   const numProperties = await VehicleProperty.find({ dealership: req.params.dealershipId });
