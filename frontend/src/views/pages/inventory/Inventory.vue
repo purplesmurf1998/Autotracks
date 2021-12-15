@@ -6,9 +6,11 @@
           {{ successMessage }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
-          <CButton color="primary" id="add-new-vehicle">
-            Add vehicle(s) to the inventory
-          </CButton>
+          <router-link :to="`/inventory/add/${selectedDealership}`">
+            <CButton color="primary" id="add-new-vehicle">
+              Add vehicle(s) to the inventory
+            </CButton>
+          </router-link>
           <CButton
             color="secondary"
             id="set-dealership-default"
