@@ -3,10 +3,18 @@ const asyncHandler = require('../middleware/async');
 const Vehicle = require('../models/Vehicle')
 
 // @desc        Get all vehicles for a specific dealership
-// @route       GET /api/v1/inventory/:dealershipId
+// @route       GET /api/v1/inventory/dealership/:dealershipId
 // @access      Private
 exports.getVehicles = asyncHandler(async (req, res, next) => {
-  
+  let query = Vehicle.find({ dealership: req.params.dealershipId });
+  // run query
+  const vehicles = await query;
+
+  res.status(200).json({
+    success: true,
+    count: vehicles.length,
+    payload: vehicles
+  });
 });
 
 // @desc        Get a specific vehicle
