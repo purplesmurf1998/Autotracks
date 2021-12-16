@@ -93,7 +93,6 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            //console.log(response.data.payload);
             this.defaultAdminDealership = this.selectedDealership;
             this.$store.commit("setProperty", [
               "dealership",

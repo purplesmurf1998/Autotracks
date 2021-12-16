@@ -71,8 +71,6 @@ export default {
       this.editingDealership = value;
     },
     userHasPermissions(...permissions) {
-      // console.log(permissions);
-      // console.log(containsPermissions(permissions));
       return containsPermissions(permissions);
     },
   },
@@ -101,6 +99,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

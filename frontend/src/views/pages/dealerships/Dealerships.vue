@@ -91,10 +91,6 @@
         <CButtonClose @click="addingDealership = false" />
       </template>
       <template #footer>
-        <!-- <CRow class="justify-content-center">
-        </CRow>
-        <CButton @click="addingDealership = false" color="danger">Discard</CButton>
-        <CButton @click="addingDealership = false" color="success">Accept</CButton> -->
         <span></span>
       </template>
     </CModal>
@@ -144,8 +140,6 @@ export default {
   },
   methods: {
     clickRow(dealership) {
-      //this.selectedDealership = dealership
-      //console.log(dealership)
       const dealershipId = dealership._id;
       this.$router.push(`/dealerships/${dealershipId}`);
     },
@@ -171,6 +165,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>
