@@ -30,6 +30,9 @@ const PORT = process.env.PORT || 5000;
 // create the server app
 const app = express();
 
+// disable x-powered-by header
+app.disable('x-powered-by');
+
 // connect to mongoose
 mongoose.connect(process.env.MONGODB_URL,
   {

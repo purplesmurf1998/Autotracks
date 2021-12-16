@@ -7,7 +7,7 @@
             <CAlert
               v-if="!$store.state.auth.createDealershipCompleted"
               color="success"
-              >Welcome to your <b>Dealerships</b> page! Here you can see all
+              >Welcome to your <strong>Dealerships</strong> page! Here you can see all
               your dealerships which each contain their very own
               <u>inventory</u>, <u>vehicle</u> properties and <u>staff</u>.
               Start your experience by creating your very first dealership by
