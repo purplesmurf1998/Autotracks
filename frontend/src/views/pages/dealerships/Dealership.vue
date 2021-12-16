@@ -38,7 +38,7 @@
         <div class="col-md-4">
           <CAlert v-if="!$store.state.auth.createUserCompleted" color="success"
             >Begin by creating your staff by clicking the
-            <b>"Create a staff account"</b> button below.</CAlert
+            <strong>"Create a staff account"</strong> button below.</CAlert
           >
         </div>
       </CRow>
