@@ -64,6 +64,7 @@ app.listen(PORT, () => {
   });
 })
 
+// test commit for sonarcloud scan
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
 
