@@ -155,18 +155,17 @@ export default {
         },
       })
         .then(async (response) => {
-          console.log(response);
           //double check valid response
           if (response.status == 200) {
             // log the user in
-            const response = await this.$store.dispatch("login", {
+            const loggedInResponse = await this.$store.dispatch("login", {
               email: this.adminUser.adminEmail,
               password: this.adminUser.adminPassword,
             });
 
             // if not successful, show the error message
-            if (!response.success) {
-              this.showErrorMessage(response.message);
+            if (!loggedInResponse.success) {
+              this.showErrorMessage(loggedInResponse.message);
             }
             // if successful, redirect the user to the dashboad
             else {
