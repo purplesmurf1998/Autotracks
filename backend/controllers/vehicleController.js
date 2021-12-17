@@ -21,7 +21,18 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
 // @route       GET /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
 exports.getVehicle = asyncHandler(async (req, res, next) => {
+  let vehicle = await Vehicle.findById(req.params.vehicleId);
 
+  if (!vehicle) {
+    return next(
+      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`)
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    payload: vehicle
+  });
 });
 
 // @desc        Update a specific vehicle

@@ -79,6 +79,7 @@ const Dealerships = () => import('@/views/pages/dealerships/Dealerships')
 // Views - Pages - Inventory
 const Inventory = () => import('@/views/pages/inventory/Inventory')
 const InventoryAdd = () => import('@/views/pages/inventory/InventoryAdd')
+const Vehicle = () => import('@/views/pages/vehicle/Vehicle')
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -149,6 +150,17 @@ const router = new Router({
             ]
           },
           component: Inventory
+        },
+        {
+          path: 'inventory/details/:vehicleId',
+          name: 'Vehicle',
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Vehicles'
+            ]
+          },
+          component: Vehicle
         },
         {
           path: 'inventory/add/:dealershipId',

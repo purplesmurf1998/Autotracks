@@ -12,6 +12,7 @@
           :items-per-page="10"
           :fixed="true"
           :clickable-rows="true"
+          @row-clicked="rowClicked"
           table-filter
           sorter
           size="sm"
@@ -36,6 +37,9 @@ export default {
     };
   },
   methods: {
+    rowClicked(vehicle) {
+      this.$router.push(`/inventory/details/${vehicle._id}`);
+    },
     switchDealerships(dealership) {
       this.dealership = dealership;
       this.fetchVehicleProperties();
@@ -55,7 +59,6 @@ export default {
             const fields = [];
             payload.forEach((property) => {
               if (property.visible) {
-                property._style = "20%";
                 fields.push(property);
               }
             });
@@ -79,7 +82,9 @@ export default {
             const payload = response.data.payload;
             let tableItems = [];
             payload.forEach((vehicle) => {
-              tableItems.push(vehicle.properties);
+              let properties = vehicle.properties;
+              properties._id = vehicle._id;
+              tableItems.push(properties);
             });
             this.tableItems = tableItems;
           }
