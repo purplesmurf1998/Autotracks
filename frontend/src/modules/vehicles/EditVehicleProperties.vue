@@ -4,8 +4,12 @@
       <CCardBody>
         <CRow class="ml-0 mr-0">
           <h4 class="mr-3">Vehicle Properties</h4>
-          <CButton color="success" @click="submitNewProperties" class="mr-2">Save changes</CButton>
-          <CButton color="secondary" @click="setEditingProperties(false)">Cancel</CButton>
+          <CButton color="success" @click="submitNewProperties" class="mr-2"
+            >Save changes</CButton
+          >
+          <CButton color="secondary" @click="setEditingProperties(false)"
+            >Cancel</CButton
+          >
         </CRow>
         <hr />
         <CRow v-if="!!editedVehicle">
@@ -15,7 +19,7 @@
               :key="property._id"
               class="mb-2"
             >
-              <CInput 
+              <CInput
                 v-if="property.inputType == 'Text'"
                 :name="property.key"
                 :label="property.label"
@@ -23,7 +27,7 @@
                 horizontal
                 class="mb-0"
               />
-              <CInput 
+              <CInput
                 v-if="property.inputType == 'List'"
                 :name="property.key"
                 :label="property.label"
@@ -56,7 +60,7 @@
               :key="property._id"
               class="mb-2"
             >
-              <CInput 
+              <CInput
                 v-if="property.inputType == 'Text'"
                 :name="property.key"
                 :label="property.label"
@@ -64,7 +68,7 @@
                 horizontal
                 class="mb-0"
               />
-              <CInput 
+              <CInput
                 v-if="property.inputType == 'List'"
                 :name="property.key"
                 :label="property.label"
@@ -98,60 +102,31 @@
 </template>
 
 <script>
-const axios = require('axios');
+const axios = require("axios");
+
+const { getFormattedProperties } = require("../../utils/index");
 
 export default {
-  props: ['vehicle', 'leftProperties', 'rightProperties', 'setEditingProperties', 'setNewVehicle'],
+  props: [
+    "vehicle",
+    "leftProperties",
+    "rightProperties",
+    "setEditingProperties",
+    "setNewVehicle",
+  ],
   data() {
     return {
-      editedVehicle: null
-    }
+      editedVehicle: null,
+    };
   },
   methods: {
     submitNewProperties() {
       // save the new information
-      console.log(this.editedVehicle);
-      let formattedProperties = {};
-
-      this.leftProperties.forEach(property => {
-        if (!this.editedVehicle[property.key]) {
-          formattedProperties[property.key] = null;
-        } else {
-          if (property.inputType == "List") {
-            const itemString = this.editedVehicle[property.key];
-            const items = itemString.split(";");
-            formattedProperties[property.key] = items;
-          } else if (property.inputType == "Date") {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          } else if (property.inputType == "Number") {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          } else if (property.inputType == "Currency") {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          } else {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          }
-        }
-      });
-
-      this.rightProperties.forEach(property => {
-        if (!this.editedVehicle[property.key]) {
-          formattedProperties[property.key] = null;
-        } else {
-          if (property.inputType == "List") {
-            const itemString = this.editedVehicle[property.key];
-            const items = itemString.split(";");
-            formattedProperties[property.key] = items;
-          } else if (property.inputType == "Date") {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          } else if (property.inputType == "Number") {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          } else if (property.inputType == "Currency") {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          } else {
-            formattedProperties[property.key] = this.editedVehicle[property.key]
-          }
-        }
-      });
+      let properties = this.leftProperties.concat(this.rightProperties);
+      let formattedProperties = getFormattedProperties(
+        properties,
+        this.editedVehicle
+      );
 
       console.log(formattedProperties);
       // create the request body
@@ -167,7 +142,7 @@ export default {
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
-        data: body
+        data: body,
       })
         .then((response) => {
           if (response.data.success) {
@@ -179,13 +154,13 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    }
+    },
   },
   mounted() {
     // get the values of the properties and add to the editedVehicle field
-    const editedVehicle = {}
+    const editedVehicle = {};
     if (!!this.leftProperties && !!this.rightProperties) {
-      this.leftProperties.forEach(property => {
+      this.leftProperties.forEach((property) => {
         if (property.inputType == "List") {
           let value = "";
           let items = this.vehicle.properties[property.key];
@@ -201,7 +176,7 @@ export default {
           editedVehicle[property.key] = this.vehicle.properties[property.key];
         }
       });
-      this.rightProperties.forEach(property => {
+      this.rightProperties.forEach((property) => {
         if (property.inputType == "List") {
           let value = "";
           let items = this.vehicle.properties[property.key];
@@ -216,14 +191,13 @@ export default {
         } else {
           editedVehicle[property.key] = this.vehicle.properties[property.key];
         }
-      }); 
+      });
       this.editedVehicle = editedVehicle;
     }
   },
-  components: {}
-}
+  components: {},
+};
 </script>
 
 <style>
-
 </style>

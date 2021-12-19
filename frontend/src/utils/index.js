@@ -28,3 +28,27 @@ export function containsPermissions(...permissions) {
   console.log(value);
   return value;
 }
+
+export function getFormattedProperties(properties, values) {
+  let formattedProperties = {};
+  properties.forEach(property => {
+    if (!values[property.key]) {
+      formattedProperties[property.key] = null;
+    } else {
+      if (property.inputType == "List") {
+        const itemString = values[property.key];
+        const items = itemString.split(";");
+        formattedProperties[property.key] = items;
+      } else if (property.inputType == "Date") {
+        formattedProperties[property.key] = values[property.key]
+      } else if (property.inputType == "Number") {
+        formattedProperties[property.key] = values[property.key]
+      } else if (property.inputType == "Currency") {
+        formattedProperties[property.key] = values[property.key]
+      } else {
+        formattedProperties[property.key] = values[property.key]
+      }
+    }
+  });
+  return formattedProperties;
+}
