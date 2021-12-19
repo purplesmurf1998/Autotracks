@@ -4,7 +4,14 @@
       <CCardBody>
         <CRow class="ml-0 mr-0">
           <h4 class="mr-3">Vehicle Properties</h4>
-          <CButton color="primary" @click="setEditingProperties(true)" v-if="!editingProperties && userHasPermissions('Edit Vehicles')">Edit</CButton>
+          <CButton
+            color="primary"
+            @click="setEditingProperties(true)"
+            v-if="!editingProperties && userHasPermissions('Edit Vehicles')"
+            :disabled="!!vehicle.soldBy"
+          >
+            Edit
+          </CButton>
         </CRow>
         <hr />
         <CRow>
@@ -51,10 +58,10 @@
         </CRow>
       </CCardBody>
     </CCard>
-    <edit-properties 
-      v-if="editingProperties" 
-      :vehicle="vehicle" 
-      :leftProperties="leftProperties" 
+    <edit-properties
+      v-if="editingProperties"
+      :vehicle="vehicle"
+      :leftProperties="leftProperties"
       :rightProperties="rightProperties"
       :setEditingProperties="setEditingProperties"
       :setNewVehicle="setNewVehicle"
@@ -66,7 +73,7 @@
 const axios = require("axios");
 const { containsPermissions } = require("../../utils/index");
 
-import EditVehicleProperties from "./EditVehicleProperties.vue"
+import EditVehicleProperties from "./EditVehicleProperties.vue";
 
 export default {
   name: "VehicleProperties",
@@ -76,7 +83,7 @@ export default {
       vehicleProperties: null,
       leftProperties: null,
       rightProperties: null,
-      editingProperties: false
+      editingProperties: false,
     };
   },
   methods: {
@@ -90,35 +97,47 @@ export default {
       this.vehicle.properties = properties;
     },
     getFormattedProperty(property) {
-      switch(property.inputType) {
-        case "Text": {
-          return this.vehicle.properties[property.key];
-        } break;
-        case "Number": {
-          return this.vehicle.properties[property.key];
-        } break;
-        case "Currency": {
-          let num = this.vehicle.properties[property.key];
-          return num.toFixed(2) + "$"
-        } break;
-        case "Date": {
-          return this.vehicle.properties[property.key];
-        } break;
-        case "Options": {
-          return this.vehicle.properties[property.key];
-        } break;
-        case "List": {
-          let items = this.vehicle.properties[property.key];
-          let output = ""
-          items.forEach((item, index) => {
-            if (index < items.length -1) {
-              output += item + ", "
-            } else {
-              output += item
-            }
-          });
-          return output.trim();
-        } break;
+      switch (property.inputType) {
+        case "Text":
+          {
+            return this.vehicle.properties[property.key];
+          }
+          break;
+        case "Number":
+          {
+            return this.vehicle.properties[property.key];
+          }
+          break;
+        case "Currency":
+          {
+            let num = this.vehicle.properties[property.key];
+            return num.toFixed(2) + "$";
+          }
+          break;
+        case "Date":
+          {
+            return this.vehicle.properties[property.key];
+          }
+          break;
+        case "Options":
+          {
+            return this.vehicle.properties[property.key];
+          }
+          break;
+        case "List":
+          {
+            let items = this.vehicle.properties[property.key];
+            let output = "";
+            items.forEach((item, index) => {
+              if (index < items.length - 1) {
+                output += item + ", ";
+              } else {
+                output += item;
+              }
+            });
+            return output.trim();
+          }
+          break;
       }
     },
     fetchDealershipProperties() {
@@ -159,8 +178,8 @@ export default {
     this.fetchDealershipProperties();
   },
   components: {
-    'edit-properties': EditVehicleProperties
-  }
+    "edit-properties": EditVehicleProperties,
+  },
 };
 </script>
 
