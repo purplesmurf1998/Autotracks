@@ -18,6 +18,9 @@
           size="sm"
           hover
         >
+        <template #missing="{item}">
+          <td><CIcon name="cil-warning" class="icon" v-if="item.missing" /></td>
+        </template>
         </CDataTable>
       </CCardBody>
     </CCard>
@@ -56,7 +59,12 @@ export default {
         .then((response) => {
           if (response.data.success) {
             const payload = response.data.payload;
-            const fields = [];
+            const fields = [
+              {
+                key: 'missing',
+                label: ''
+              }
+            ];
             payload.forEach((property) => {
               if (property.visible) {
                 fields.push(property);
@@ -84,6 +92,7 @@ export default {
             payload.forEach((vehicle) => {
               let properties = vehicle.properties;
               properties._id = vehicle._id;
+              properties.missing = vehicle.missing;
               tableItems.push(properties);
             });
             this.tableItems = tableItems;
@@ -104,5 +113,14 @@ export default {
 <style scoped>
 #inventory-datatable {
   white-space: nowrap;
+}
+.icon {
+  color: rgb(255, 106, 20);
+}
+.icon-td {
+  display: flex; 
+  align-items: center;
+  /* margin-top: -3%;
+  padding-top: 20%; */
 }
 </style>

@@ -13,7 +13,7 @@
     </CNav>
     <hr />
 
-    <vehicle v-if="tab == 0 && vehicle" :vehicle="vehicle" />
+    <vehicle v-if="tab == 0 && vehicle" :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
     <vehicle-history v-if="tab == 1 && vehicle" :vehicle="vehicle" />
   </div>
 </template>
@@ -40,6 +40,9 @@ export default {
     setTab(tab) {
       console.log(tab);
       this.tab = tab;
+    },
+    setNewVehicle(newVehicle) {
+      this.vehicle = newVehicle;
     },
     fetchVehicle() {
       axios({

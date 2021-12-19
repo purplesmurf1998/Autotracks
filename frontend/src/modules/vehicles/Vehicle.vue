@@ -2,13 +2,13 @@
   <div>
     <CRow>
       <CCol>
-        <vehicle-details :vehicle="vehicle" />
+        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>
       <CCol>
         <vehicle-location :vehicle="vehicle" />
       </CCol>
     </CRow>
-    <vehicle-properties :vehicle="vehicle" />
+    <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ import VehicleLocation from "./VehicleLocation.vue";
 import VehicleProperties from "./VehicleProperties.vue";
 
 export default {
-  props: ["vehicle"],
+  props: ["vehicle", "setNewVehicle"],
   components: {
     "vehicle-details": VehicleDetails,
     "vehicle-location": VehicleLocation,

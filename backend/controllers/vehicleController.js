@@ -39,7 +39,17 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 // @route       PUT /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
 exports.updateVehicle = asyncHandler(async (req, res, next) => {
-
+  // find vehicle property model to update
+  const vehicle = await Vehicle.findByIdAndUpdate(req.params.vehicleId, req.body, {
+    new: true,
+    runValidators: true
+  });
+  // return error if no vehicle found
+  if (!vehicle) {
+    return next(new ErrorResponse(`Vehicle property not found with id ${req.params.vehicleId}`, 404));
+  }
+  // return data
+  res.status(200).json({ success: true, payload: vehicle });
 });
 
 // @desc        Create a specific vehicle
@@ -69,5 +79,17 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
 // @route       DELETE /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
 exports.deleteVehicle = asyncHandler(async (req, res, next) => {
+  // find vehicle property to delete
+  const vehicle = await Vehicle.findById(req.params.vehicleId);
+  // return error if no vehicle found
+  if (!vehicle) {
+    return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
+  }
+  //TODO: Delete anything related to the vehicle. This can be done in the Vehicle model using middleware.
+  vehicle.remove();
 
+  res.status(200).json({
+    success: true,
+    payload: {}
+  })
 });

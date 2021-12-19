@@ -22,20 +22,30 @@
                   v-if="property.inputType == 'Text'"
                   :label="property.label"
                   :name="property.key"
+                  :required="property.isRequired"
                 />
                 <CInput 
                   v-if="property.inputType == 'List'"
                   :label="property.label"
                   :name="property.key"
                   description="Separate list item by semi-colons ';'"
+                  :required="property.isRequired"
                 />
                 <CSelect
                   v-if="property.inputType == 'Options'"
                   :label="property.label"
                   :options="property.options"
                   :name="property.key"
+                  :required="property.isRequired"
                 />
-                <CFormGroup
+                <CInput 
+                  v-if="property.inputType == 'Date'"
+                  type="date"
+                  :label="property.label"
+                  :name="property.key"
+                  :required="property.isRequired"
+                />
+                <!-- <CFormGroup
                   wrapperClasses="input-group pt-2 pb-3"
                   v-if="property.inputType == 'Date'"
                 >
@@ -55,9 +65,10 @@
                       placeholderChar="_"
                       :showMask="true"
                       :keepCharPositions="true"
+                      :required="property.isRequired"
                     />
                   </template>
-                </CFormGroup>
+                </CFormGroup> -->
               </div>
               <CButton color="primary" type="submit">Add vehicle to the inventory</CButton>
             </CForm>
@@ -105,7 +116,19 @@ export default {
         if (!form.target.elements[property.key]) {
           properties[property.key] = null;
         } else {
-          properties[property.key] = form.target.elements[property.key].value
+          if (property.inputType == "List") {
+            const itemString = form.target.elements[property.key].value;
+            const items = itemString.split(";");
+            properties[property.key] = items;
+          } else if (property.inputType == "Date") {
+            properties[property.key] = form.target.elements[property.key].value
+          } else if (property.inputType == "Number") {
+            properties[property.key] = form.target.elements[property.key].value
+          } else if (property.inputType == "Currency") {
+            properties[property.key] = form.target.elements[property.key].value
+          } else {
+            properties[property.key] = form.target.elements[property.key].value
+          }
         }
       })
       

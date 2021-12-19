@@ -19,6 +19,10 @@ const VehicleSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  missing: {
+    type: Boolean,
+    default: false
+  },
   properties: Object
 })
 

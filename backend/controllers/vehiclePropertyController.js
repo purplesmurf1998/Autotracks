@@ -45,9 +45,7 @@ exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
 // @route       PUT /api/v1/dealerships/:dealershipId/vehicles/properties/:propertyId
 // @access      Private
 exports.updateVehicleProperty = asyncHandler(async (req, res, next) => {
-  console.log('*****UPDATE VEHICLE PROPERTY*****');
   // find vehicle property model to update
-  console.log(req.body);
   const vehicleProperty = await VehicleProperty.findByIdAndUpdate(req.params.propertyId, req.body, {
     new: true,
     runValidators: true
@@ -64,7 +62,6 @@ exports.updateVehicleProperty = asyncHandler(async (req, res, next) => {
 // @route       DELETE /api/v1/dealerships/:dealershipId/vehicles/properties/:propertyId
 // @access      Private
 exports.deleteVehicleProperty = asyncHandler(async (req, res, next) => {
-  console.log('*****DELETE VEHICLE PROPERTY*****');
   // find vehicle property to delete
   const vehicleProperty = await VehicleProperty.findById(req.params.propertyId);
   // return error if no vehicle found

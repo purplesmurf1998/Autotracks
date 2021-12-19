@@ -71,9 +71,6 @@ export default {
           }
         }).then(response => {
           if (response.data.success) {
-            // if (!this.$store.state.auth.createDealershipCompleted) {
-            //   this.$store.commit('setProperty', 'createDealershipCompleted', true);
-            // }
             this.$router.go();
           } else {
             console.log(response);
@@ -106,7 +103,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
