@@ -114,7 +114,10 @@
 
 <script>
 const axios = require("axios");
-const { containsPermissions } = require("../../../utils/index");
+const {
+  containsPermissions,
+  getFormattedProperties,
+} = require("../../../utils/index");
 import MaskedInput from "vue-text-mask";
 
 export default {
@@ -130,28 +133,11 @@ export default {
   },
   methods: {
     submitForm(form) {
-      let properties = {};
-      this.vehicleProperties.forEach((property) => {
-        if (!this.properties[property.key]) {
-          this.properties[property.key] = null;
-        } else {
-          if (property.inputType == "List") {
-            const itemString = this.properties[property.key];
-            const items = itemString.split(";");
-            properties[property.key] = items;
-          } else if (property.inputType == "Date") {
-            properties[property.key] = this.properties[property.key];
-          } else if (property.inputType == "Number") {
-            properties[property.key] = this.properties[property.key];
-          } else if (property.inputType == "Currency") {
-            properties[property.key] = this.properties[property.key];
-          } else {
-            properties[property.key] = this.properties[property.key];
-          }
-        }
-      });
+      let properties = getFormattedProperties(
+        this.vehicleProperties,
+        this.properties
+      );
 
-      //console.log(properties);
       // submit the vehicle
       this.submitVehicle(properties);
     },
