@@ -126,7 +126,7 @@ export default {
         last_name: this.user.last_name,
         email: this.user.email,
         role: this.user.role,
-        permissions: this.user.permissions,
+        permissions: null,
       },
       newPermissions: [],
     };
@@ -134,6 +134,7 @@ export default {
   props: ["setEditingUser", "user", "updateUser", "index"],
   methods: {
     cancelUpdate() {
+      console.log(this.user);
       this.updateUser(this.user, this.index);
       this.setEditingUser(false);
     },
@@ -231,6 +232,15 @@ export default {
         this.errorMessage = null;
       }, 5000);
     },
+  },
+  mounted() {
+    if (!!this.user) {
+      let permissions = [];
+      this.user.permissions.forEach((permission) => {
+        permissions.push(permission);
+      });
+      this.currUser.permissions = permissions;
+    }
   },
 };
 </script>
