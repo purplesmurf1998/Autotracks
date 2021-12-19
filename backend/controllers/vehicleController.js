@@ -10,6 +10,12 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   // run query
   const vehicles = await query;
 
+  if (!vehicles) {
+    return next(
+      new ErrorResponse(`No vehicles found with dealership id ${req.params.dealershipId}.`)
+    );
+  }
+
   res.status(200).json({
     success: true,
     count: vehicles.length,
