@@ -8,6 +8,7 @@ const { protect } = require('../middleware/auth');
 chai.should();
 chai.use(chaiHttp);
 
+//creds
 const email = "admin@account.com";
 const password = "password";
 let token = "";
