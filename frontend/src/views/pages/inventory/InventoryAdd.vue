@@ -17,13 +17,15 @@
         </p>
       </CCardBody>
     </CCard>
-    <CAlert color="danger" v-if="vehicleProperties.length == 0"
+    <CAlert
+      color="danger"
+      v-if="vehicleProperties && vehicleProperties.length == 0"
       >You must create vehicle properties inside the dealership details page
       before creating vehicles.</CAlert
     >
     <CRow>
       <CCol>
-        <CCard v-if="vehicleProperties.length > 0">
+        <CCard v-if="vehicleProperties && vehicleProperties.length > 0">
           <CCardBody>
             <h3>Vehicle Properties</h3>
             <hr />
@@ -33,12 +35,14 @@
                   v-if="property.inputType == 'Text'"
                   :label="property.label"
                   :name="property.key"
+                  v-model="properties[property.key]"
                   :required="property.isRequired"
                 />
                 <CInput
                   v-if="property.inputType == 'List'"
                   :label="property.label"
                   :name="property.key"
+                  v-model="properties[property.key]"
                   description="Separate list item by semi-colons ';'"
                   :required="property.isRequired"
                 />
@@ -47,6 +51,7 @@
                   :label="property.label"
                   :options="property.options"
                   :name="property.key"
+                  :value.sync="properties[property.key]"
                   :required="property.isRequired"
                 />
                 <CInput
@@ -54,6 +59,7 @@
                   type="date"
                   :label="property.label"
                   :name="property.key"
+                  v-model="properties[property.key]"
                   :required="property.isRequired"
                 />
                 <!-- <CFormGroup
@@ -119,33 +125,40 @@ export default {
       vehicleProperties: null,
       errorMessage: null,
       showingModal: false,
+      properties: null,
     };
   },
   methods: {
     submitForm(form) {
       let properties = {};
       this.vehicleProperties.forEach((property) => {
-        if (!form.target.elements[property.key]) {
-          properties[property.key] = null;
+        if (!this.properties[property.key]) {
+          this.properties[property.key] = null;
         } else {
           if (property.inputType == "List") {
-            const itemString = form.target.elements[property.key].value;
+            const itemString = this.properties[property.key];
             const items = itemString.split(";");
             properties[property.key] = items;
           } else if (property.inputType == "Date") {
-            properties[property.key] = form.target.elements[property.key].value;
+            properties[property.key] = this.properties[property.key];
           } else if (property.inputType == "Number") {
-            properties[property.key] = form.target.elements[property.key].value;
+            properties[property.key] = this.properties[property.key];
           } else if (property.inputType == "Currency") {
-            properties[property.key] = form.target.elements[property.key].value;
+            properties[property.key] = this.properties[property.key];
           } else {
-            properties[property.key] = form.target.elements[property.key].value;
+            properties[property.key] = this.properties[property.key];
           }
         }
       });
 
+      //console.log(properties);
       // submit the vehicle
       this.submitVehicle(properties);
+    },
+    resetForm() {
+      this.vehicleProperties.forEach((property) => {
+        this.properties[property.key] = "";
+      });
     },
     submitVehicle(properties) {
       const body = {
@@ -165,7 +178,7 @@ export default {
           if (response.data.success) {
             //TODO: show modal asking to enter a new vehicle or go back to the inventory
             // for now, just refresh the page
-            this.$refs.vehicleForm.reset();
+            this.resetForm();
             this.showingModal = true;
           }
         })
@@ -218,6 +231,16 @@ export default {
           if (response.data.success) {
             // set the payload to the dealership
             this.vehicleProperties = response.data.payload;
+            let properties = {};
+            this.vehicleProperties.forEach((property) => {
+              if (property.inputType == "Options") {
+                properties[property.key] = property.options[0];
+              } else {
+                properties[property.key] = null;
+              }
+            });
+            this.properties = properties;
+            console.log(this.properties);
           }
         })
         .catch((error) => {
