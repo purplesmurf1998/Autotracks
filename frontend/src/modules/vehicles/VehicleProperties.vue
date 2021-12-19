@@ -174,7 +174,7 @@ export default {
       this.rightProperties = rightProperties;
     },
   },
-  mounted() {
+  beforeMount() {
     this.fetchDealershipProperties();
   },
   components: {

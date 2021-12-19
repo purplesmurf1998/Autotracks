@@ -267,7 +267,7 @@ export default {
       }
     },
   },
-  mounted() {
+  beforeMount() {
     this.fetchDealershipUsers();
   },
 };
