@@ -18,9 +18,11 @@
           size="sm"
           hover
         >
-        <template #missing="{item}">
-          <td><CIcon name="cil-warning" class="icon" v-if="item.missing" /></td>
-        </template>
+          <template #missing="{ item }">
+            <td>
+              <CIcon name="cil-warning" class="icon" v-if="item.missing" />
+            </td>
+          </template>
         </CDataTable>
       </CCardBody>
     </CCard>
@@ -61,9 +63,9 @@ export default {
             const payload = response.data.payload;
             const fields = [
               {
-                key: 'missing',
-                label: ''
-              }
+                key: "missing",
+                label: "",
+              },
             ];
             payload.forEach((property) => {
               if (property.visible) {
@@ -71,6 +73,11 @@ export default {
               }
             });
             this.tableFields = fields;
+            if (this.tableFields.length == 1) {
+              this.tableItems = [];
+            } else {
+              this.fetchVehicles();
+            }
           }
         })
         .catch((error) => {
@@ -105,7 +112,6 @@ export default {
   },
   mounted() {
     this.fetchVehicleProperties();
-    this.fetchVehicles();
   },
 };
 </script>
@@ -118,7 +124,7 @@ export default {
   color: rgb(255, 106, 20);
 }
 .icon-td {
-  display: flex; 
+  display: flex;
   align-items: center;
   /* margin-top: -3%;
   padding-top: 20%; */

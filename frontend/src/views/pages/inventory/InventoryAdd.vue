@@ -4,27 +4,38 @@
       <CCardBody>
         <h1>Adding New Vehicle</h1>
         <h5>Dealership: {{ dealership.name }}</h5>
-        <p>In this page you can add a new vehicle to the inventory of the specified dealership. 
-          Vehicle model is defined in the dealership's parameters 
-          <router-link v-if="userHasPermissions('View Dealerships')" :to="`/dealerships/${dealership._id}`">here</router-link> 
-          under "Vehicle Properties"</p>
+        <p>
+          In this page you can add a new vehicle to the inventory of the
+          specified dealership. Vehicle model is defined in the dealership's
+          parameters
+          <router-link
+            v-if="userHasPermissions('View Dealerships')"
+            :to="`/dealerships/${dealership._id}`"
+            >here</router-link
+          >
+          under "Vehicle Properties"
+        </p>
       </CCardBody>
     </CCard>
+    <CAlert color="danger" v-if="vehicleProperties.length == 0"
+      >You must create vehicle properties inside the dealership details page
+      before creating vehicles.</CAlert
+    >
     <CRow>
       <CCol>
-        <CCard v-if="vehicleProperties">
+        <CCard v-if="vehicleProperties.length > 0">
           <CCardBody>
             <h3>Vehicle Properties</h3>
-            <hr>
+            <hr />
             <CForm ref="vehicleForm" @submit.prevent="submitForm">
               <div v-for="property in vehicleProperties" :key="property._id">
-                <CInput 
+                <CInput
                   v-if="property.inputType == 'Text'"
                   :label="property.label"
                   :name="property.key"
                   :required="property.isRequired"
                 />
-                <CInput 
+                <CInput
                   v-if="property.inputType == 'List'"
                   :label="property.label"
                   :name="property.key"
@@ -38,7 +49,7 @@
                   :name="property.key"
                   :required="property.isRequired"
                 />
-                <CInput 
+                <CInput
                   v-if="property.inputType == 'Date'"
                   type="date"
                   :label="property.label"
@@ -70,17 +81,16 @@
                   </template>
                 </CFormGroup> -->
               </div>
-              <CButton color="primary" type="submit">Add vehicle to the inventory</CButton>
+              <CButton color="primary" type="submit"
+                >Add vehicle to the inventory</CButton
+              >
             </CForm>
           </CCardBody>
         </CCard>
       </CCol>
       <CCol></CCol>
     </CRow>
-    <CModal
-      :show.sync="showingModal"
-      :centered="true"
-    >
+    <CModal :show.sync="showingModal" :centered="true">
       <p>Do you wish to add another vehicle?</p>
       <template #header>
         <h6 class="modal-title">Vehicle added successfully!</h6>
@@ -88,31 +98,33 @@
       </template>
       <template #footer>
         <CButton @click="showingModal = false" color="success">Yes</CButton>
-        <router-link to="/inventory"><CButton color="danger">No</CButton></router-link>
+        <router-link to="/inventory"
+          ><CButton color="danger">No</CButton></router-link
+        >
       </template>
     </CModal>
   </div>
 </template>
 
 <script>
-const axios = require('axios');
+const axios = require("axios");
 const { containsPermissions } = require("../../../utils/index");
-import MaskedInput from 'vue-text-mask'
+import MaskedInput from "vue-text-mask";
 
 export default {
-  name: 'InventoryAdd',
+  name: "InventoryAdd",
   data() {
     return {
       dealership: null,
       vehicleProperties: null,
       errorMessage: null,
-      showingModal: false
-    }
+      showingModal: false,
+    };
   },
   methods: {
     submitForm(form) {
       let properties = {};
-      this.vehicleProperties.forEach(property => {
+      this.vehicleProperties.forEach((property) => {
         if (!form.target.elements[property.key]) {
           properties[property.key] = null;
         } else {
@@ -121,24 +133,24 @@ export default {
             const items = itemString.split(";");
             properties[property.key] = items;
           } else if (property.inputType == "Date") {
-            properties[property.key] = form.target.elements[property.key].value
+            properties[property.key] = form.target.elements[property.key].value;
           } else if (property.inputType == "Number") {
-            properties[property.key] = form.target.elements[property.key].value
+            properties[property.key] = form.target.elements[property.key].value;
           } else if (property.inputType == "Currency") {
-            properties[property.key] = form.target.elements[property.key].value
+            properties[property.key] = form.target.elements[property.key].value;
           } else {
-            properties[property.key] = form.target.elements[property.key].value
+            properties[property.key] = form.target.elements[property.key].value;
           }
         }
-      })
-      
+      });
+
       // submit the vehicle
       this.submitVehicle(properties);
     },
     submitVehicle(properties) {
       const body = {
         dealership: this.$route.params.dealershipId,
-        properties
+        properties,
       };
       console.log(body);
       axios({
@@ -147,26 +159,28 @@ export default {
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
-        data: body
+        data: body,
       })
-      .then((response) => {
-        if (response.data.success) {
-          //TODO: show modal asking to enter a new vehicle or go back to the inventory
-          // for now, just refresh the page
-          this.$refs.vehicleForm.reset();
-          this.showingModal = true;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        this.showErrorMessage('Unable to create the vehicle. Make sure the information was entered correctly.');
-      });
+        .then((response) => {
+          if (response.data.success) {
+            //TODO: show modal asking to enter a new vehicle or go back to the inventory
+            // for now, just refresh the page
+            this.$refs.vehicleForm.reset();
+            this.showingModal = true;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.showErrorMessage(
+            "Unable to create the vehicle. Make sure the information was entered correctly."
+          );
+        });
     },
     showErrorMessage(message) {
       this.errorMessage = message;
       setTimeout(() => {
         this.errorMessage = null;
-      }, 5000)
+      }, 5000);
     },
     userHasPermissions(...permissions) {
       // console.log(permissions);
@@ -180,17 +194,17 @@ export default {
         url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
-        }
+        },
       })
-      .then((response) => {
-        if (response.data.success) {
-          // set the payload to the dealership
-          this.dealership = response.data.data;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          if (response.data.success) {
+            // set the payload to the dealership
+            this.dealership = response.data.data;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     fetchVehicleProperties() {
       axios({
@@ -198,29 +212,28 @@ export default {
         url: `${this.$store.state.api}/dealerships/${this.$route.params.dealershipId}/vehicles/properties`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
-        }
+        },
       })
-      .then((response) => {
-        if (response.data.success) {
-          // set the payload to the dealership
-          this.vehicleProperties = response.data.payload;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }
+        .then((response) => {
+          if (response.data.success) {
+            // set the payload to the dealership
+            this.vehicleProperties = response.data.payload;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   components: {
-    MaskedInput
+    MaskedInput,
   },
   mounted() {
     this.fetchDealership();
     this.fetchVehicleProperties();
-  }
-}
+  },
+};
 </script>
 
 <style>
-
 </style>
