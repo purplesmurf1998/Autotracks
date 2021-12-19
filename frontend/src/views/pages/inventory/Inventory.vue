@@ -6,9 +6,11 @@
           {{ successMessage }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
-          <CButton color="primary" id="add-new-vehicle">
-            Add vehicle(s) to the inventory
-          </CButton>
+          <router-link :to="`/inventory/add/${selectedDealership}`">
+            <CButton color="primary" id="add-new-vehicle">
+              Add vehicle(s) to the inventory
+            </CButton>
+          </router-link>
           <CButton
             color="secondary"
             id="set-dealership-default"
@@ -28,25 +30,13 @@
           :options="adminDealerships"
           :value.sync="selectedDealership"
           placeholder="Select a dealership to view their inventory"
-          @change="selectDealership"
+          @change="$refs.inventoryTable.switchDealerships(selectedDealership)"
         />
-        <CCard v-if="tableFields.length > 0">
-          <CCardHeader>
-            <slot name="header">Inventory list of vehicles</slot>
-          </CCardHeader>
-          <CCardBody>
-            <CDataTable
-              :fields="tableFields"
-              :items="tableItems"
-              :striped="true"
-              :items-per-page="10"
-              :fixed="true"
-              :clickable-rows="true"
-              @row-clicked="clickRow"
-            >
-            </CDataTable>
-          </CCardBody>
-        </CCard>
+        <inventory-table
+          v-if="selectedDealership"
+          :dealership="selectedDealership"
+          ref="inventoryTable"
+        />
       </CCol>
     </CRow>
   </div>
@@ -54,6 +44,7 @@
 
 <script>
 const axios = require("axios");
+import InventoryTable from "./InventoryTable.vue";
 
 export default {
   name: "Inventory",
@@ -68,12 +59,6 @@ export default {
     };
   },
   methods: {
-    clickRow(row) {
-      console.log(row);
-    },
-    selectDealership() {
-      this.fetchVehicleProperties(this.selectedDealership);
-    },
     showSuccessMessage(message) {
       this.successMessage = message;
       setTimeout(() => {
@@ -111,30 +96,6 @@ export default {
           console.log(error);
         });
     },
-    fetchVehicleProperties(dealership) {
-      axios({
-        method: "GET",
-        url: `${this.$store.state.api}/dealerships/${dealership}/vehicles/properties`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-      })
-        .then((response) => {
-          if (response.data.success) {
-            const payload = response.data.payload;
-            const fields = [];
-            payload.forEach((property) => {
-              if (property.visible) {
-                fields.push(property);
-              }
-            });
-            this.tableFields = fields;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
     fetchAdminDealerships() {
       axios({
         method: "GET",
@@ -165,15 +126,18 @@ export default {
         });
     },
   },
+  components: {
+    "inventory-table": InventoryTable,
+  },
   mounted() {
     /* 
     Get the dealership being viewed. If the user is an administrator, offer a dropdown so they can select
     which dealership to view. If not an administrator, use the dealership associated to the account.
     */
-    if (!this.$store.state.auth.role == "Administration") {
+    if (this.$store.state.auth.role != "Administration") {
       // administrators will have no dealership associated to their account
       // fetch the properties associated to the dealership
-      this.fetchVehicleProperties(this.$store.state.auth.dealership);
+      this.selectedDealership = this.$store.state.auth.dealership;
     } else {
       // fetch the dealerships associated to the admin
       this.fetchAdminDealerships();
@@ -181,7 +145,6 @@ export default {
       //if the admin has a default dealership selected, show its inventory
       if (this.$store.state.auth.dealership) {
         this.selectedDealership = this.$store.state.auth.dealership;
-        this.fetchVehicleProperties(this.selectedDealership);
       }
     }
   },

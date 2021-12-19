@@ -41,6 +41,7 @@
         id="edit-user-acc"
         @click="setEditingUser(true)"
         v-if="userHasPermissions('Edit Staff Users')"
+        :disabled="$store.state.auth.userId == user._id"
         >Edit account details</CButton
       >
     </CRow>
