@@ -159,7 +159,7 @@ export default {
           this.tableItems = response.data.payload;
         })
         .catch((err) => {
-          console.log(err);
+          this.$router.replace("/pages/404");
         });
     },
   },
