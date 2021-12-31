@@ -72,14 +72,10 @@ export default {
         }).then(response => {
           if (response.data.success) {
             this.$router.go();
-          } else {
-            console.log(response);
-            this.showErrorMessage("Unable to create the new dealership.")
-            this.disableButtons = false;
           }
         }).catch(err => {
           console.log(err);
-          this.showErrorMessage("Unable to create the new dealership.")
+          this.showErrorMessage(err.response.data.error);
           this.disableButtons = false;
         })
       } else {
