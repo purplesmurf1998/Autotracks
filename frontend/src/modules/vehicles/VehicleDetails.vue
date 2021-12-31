@@ -58,6 +58,7 @@
             >
           </CDropdown>
         </CRow>
+        <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
         <hr />
         <CRow>
           <CCol>
@@ -164,9 +165,16 @@ export default {
       showingDeleteModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
+      errorMessage: null
     };
   },
   methods: {
+    showError(message) {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 5000);
+    },
     userHasPermissions(...permissions) {
       return containsPermissions(permissions);
     },
@@ -191,6 +199,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.showError("Error occured while setting vehicle sale status");
         });
     },
     deleteVehicle() {
@@ -208,7 +217,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.$router.replace("/pages/404");
         });
     },
     toggleVehicleMissing() {
@@ -229,6 +238,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.showError("Error occured while updating vehicle location");
         });
     },
     fetchDealershipUsers() {
@@ -254,7 +264,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.$router.replace("/pages/404");
         });
     },
   },

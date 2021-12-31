@@ -11,6 +11,7 @@
             >Cancel</CButton
           >
         </CRow>
+        <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
         <hr />
         <CRow v-if="!!editedVehicle">
           <CCol>
@@ -117,9 +118,16 @@ export default {
   data() {
     return {
       editedVehicle: null,
+      errorMessage: null
     };
   },
   methods: {
+    showError(message) {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 5000);
+    },
     submitNewProperties() {
       // save the new information
       let properties = this.leftProperties.concat(this.rightProperties);
@@ -153,6 +161,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.showError("Error occured while editing vehicle property.");
         });
     },
   },

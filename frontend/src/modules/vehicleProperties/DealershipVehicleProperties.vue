@@ -6,6 +6,7 @@
           <CCol>
             <CRow class="m-0">
               <h3>List of custom vehicle properties</h3>
+              <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
               <CButton
                 color="success"
                 class="ml-3"
@@ -109,6 +110,7 @@ export default {
       showSavePositions: false,
       editingVehicleProperty: false,
       addingVehicleProperty: false,
+      errorMessage: null
     };
   },
   methods: {
@@ -157,6 +159,12 @@ export default {
       this.vehicleProperties = newVehicleProperties;
       this.selectedVehicleProperty = newProperty;
     },
+    showError(message) {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 5000);
+    },
     savePositions() {
       // update vehicle positions in the backend
       axios({
@@ -177,6 +185,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.showError("Error occured while updating vehicle property position.");
         });
     },
   },
@@ -195,7 +204,7 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err);
+        this.$router.replace("/pages/404");
       });
   },
   components: {
