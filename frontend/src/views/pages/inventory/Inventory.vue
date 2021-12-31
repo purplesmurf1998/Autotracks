@@ -2,8 +2,8 @@
   <div>
     <CRow>
       <CCol>
-        <CAlert show color="success" v-if="successMessage" class="mb-2">
-          {{ successMessage }}
+        <CAlert show :color="MessageType" v-if="Message" class="mb-2">
+          {{ Message }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
           <router-link :to="`/inventory/add/${selectedDealership}`">
@@ -55,14 +55,20 @@ export default {
       adminDealerships: [],
       selectedDealership: null,
       defaultAdminDealership: null,
-      successMessage: null,
+      Message: null,
+      MessageType: null,
     };
   },
   methods: {
-    showSuccessMessage(message) {
-      this.successMessage = message;
+    showMessage(message) {
+      this.Message = message;
+      if (message.includes('error'))
+        this.MessageType = 'danger';
+      else
+        this.MessageType = 'success';
       setTimeout(() => {
-        this.successMessage = null;
+        this.Message = null;
+        this.MessageType = null;
       }, 5000);
     },
     setDefaultDealership() {
@@ -87,13 +93,15 @@ export default {
             const index = this.adminDealerships.findIndex(
               (dealership) => dealership.value == this.selectedDealership
             );
-            this.showSuccessMessage(
+            this.showMessage(
               `${this.adminDealerships[index].label} successfully set as your default dealership`
             );
           }
         })
         .catch((error) => {
-          console.log(error);
+          this.showMessage(
+              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`
+            );
         });
     },
     fetchAdminDealerships() {
@@ -122,7 +130,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
   },
