@@ -85,7 +85,10 @@
       title="Modal title 2"
       size="lg"
     >
-      <dealership-add />
+      <dealership-add 
+        v-if="addingDealership"
+        :setAddingDealership="setAddingDealership"
+      />
       <template #header>
         <h6 class="modal-title">Create a new dealership!</h6>
         <CButtonClose @click="addingDealership = false" />
@@ -139,6 +142,9 @@ export default {
     this.fetchDealerships();
   },
   methods: {
+    setAddingDealership(value) {
+      this.addingDealership = value;
+    },
     clickRow(dealership) {
       const dealershipId = dealership._id;
       this.$router.push(`/dealerships/${dealershipId}`);

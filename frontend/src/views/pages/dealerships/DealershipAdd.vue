@@ -29,6 +29,7 @@
           class="ml-1"
           color="danger"
           :disabled="disableButtons"
+          @click="setAddingDealership(false)"
         >
           Cancel
         </CButton>
@@ -42,6 +43,7 @@ const axios = require('axios');
 
 export default {
   name: 'DealershipAdd',
+  props: ["setAddingDealership"],
   data() {
     return {
       form: this.getEmptyForm(),
