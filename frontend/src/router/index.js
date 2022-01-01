@@ -101,21 +101,6 @@ const Message = () => import('@/views/apps/email/Message')
 
 Vue.use(Router)
 
-const validPathNames = [
-  'Home',
-  'Dashboard',
-  'Dealerships',
-  'Dealership Details',
-  'Vehicle Inventory',
-  'Vehicle',
-  'Add Vehicle Inventory',
-  'Page404',
-  'Page500',
-  'Login',
-  'Register',
-  'Change Password'
-]
-
 const router = new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
@@ -238,10 +223,10 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-
   //If path name is invalid, redirect to 404 page.
-  if (!validPathNames.includes(to.name))
+  if (!to.name) {
     router.replace('/pages/404');
+  }
   // if the promptPasswordChange flag is true and we're not already going to the 
   // change password page, redirect to change password page
   else if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
