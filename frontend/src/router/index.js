@@ -223,10 +223,13 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-
+  //If path name is invalid, redirect to 404 page.
+  if (!to.name) {
+    router.replace('/pages/404');
+  }
   // if the promptPasswordChange flag is true and we're not already going to the 
   // change password page, redirect to change password page
-  if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
+  else if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
     next('/pages/changePassword');
   }
 
