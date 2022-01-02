@@ -10,10 +10,33 @@ chai.use(chaiHttp);
 
 let admin_id = "";
 let user_id = "";
-const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340';
 
+//creds
+const email = "admin@account.com";
+const password = "password";
+let token = "";
 // The following tests test the entire User Controller Class
 describe('Testing User Controller Class', () => {
+
+  //The below test checks if we can sign users/admin in successfully
+  describe('Admin/User Sign In API Test', () => {
+    it('should return 200 when the admin/user is signed in', (done) => {
+      chai.request(app)
+        .post("/api/v1/auth/signin")
+        .send({
+            email,
+            password
+        })
+        .end( (err, response) => {
+          response.should.have.status(200);
+          admin_id = response.body.payload._id;
+          response.body.should.be.a('object');
+          token = response.body.token;
+          done();
+        });
+    });
+  });
+
   //The below test, checks if the app can create an Admin successfully
   describe('Create Admin API Test', () => {
     it('should return 200 when the admin is created', (done) => {
@@ -107,7 +130,7 @@ describe('Testing User Controller Class', () => {
           "password": "password123",
           "dealership": "618b3bf134f07d9a91c32a1b" 
         })
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         //Need to have the token to be able to create users
         .end( (err, response) => {
           response.should.have.status(200);
@@ -134,7 +157,7 @@ describe('Testing User Controller Class', () => {
           ],
           "password": "password123",
         })
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         //Need to have the token to be able to create users
         .end( (err, response) => {
           response.should.have.status(400);
@@ -173,7 +196,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is present: ' + admin_id, (done) => {
       chai.request(app)
         .get("/api/v1/users/618aacf45cdc75b8288eb9b5") // + admin_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         //pass the authorization token
         .end( (err, response) => {
           response.should.have.status(200);
@@ -187,7 +210,7 @@ describe('Testing User Controller Class', () => {
     it('should return 500 when the user is not present: ', (done) => {
       chai.request(app)
         .get("/api/v1/users/718aacf45cdc75b8288eb9b5")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         //pass the authorization token
         .end( (err, response) => {
           response.should.have.status(500);
@@ -202,7 +225,7 @@ describe('Testing User Controller Class', () => {
       chai.request(app)
         .get("/api/v1/users")
         //pass the authorization token
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('array');
@@ -218,7 +241,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is present: ' + admin_id, (done) => {
       chai.request(app)
         .put("/api/v1/users/" + admin_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         //It is a put request and we pass the new first_name that needs to be changed
         .send({
           "first_name": "test_update",
@@ -237,7 +260,7 @@ describe('Testing User Controller Class', () => {
     it('should return 400 when the user is present: ', (done) => {
       chai.request(app)
         .put("/api/v1/users/718aacf45cdc75b8288eb9b5")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         //It is a put request and we pass the new first_name that needs to be changed
         .send({
           "first_name": "test_update",
@@ -254,7 +277,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when it returns users array', (done) => {
       chai.request(app)
         .get("/api/v1/users/?role=Administration&select=first_name")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.data.should.be.a('array');
@@ -271,7 +294,7 @@ describe('Testing User Controller Class', () => {
       chai.request(app)
         //The qs below represents the populate filter
         .get("/api/v1/users/?role=Administration&populate=dealership")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           //the response data should be an array of users
@@ -288,7 +311,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + admin_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + admin_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -302,7 +325,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + user_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + user_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.success.should.be.true;
@@ -316,7 +339,7 @@ describe('Testing User Controller Class', () => {
     it('should return 200 when the user is deleted: ' + user_id, (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + user_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(401);
           done();
