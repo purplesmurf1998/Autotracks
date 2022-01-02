@@ -162,8 +162,7 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            //TODO: show modal asking to enter a new vehicle or go back to the inventory
-            // for now, just refresh the page
+            //Show modal asking to enter a new vehicle or go back to the inventory
             this.resetForm();
             this.showingModal = true;
           }
@@ -202,7 +201,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
     fetchVehicleProperties() {
@@ -230,7 +229,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
   },

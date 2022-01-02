@@ -81,7 +81,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
     fetchVehicles() {
@@ -106,7 +106,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
   },
@@ -126,7 +126,5 @@ export default {
 .icon-td {
   display: flex;
   align-items: center;
-  /* margin-top: -3%;
-  padding-top: 20%; */
 }
 </style>
