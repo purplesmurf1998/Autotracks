@@ -124,6 +124,21 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
+  //The below test refuses to return a vehicle because of invalid vehicle_id
+  describe('Get Vehicle API Error Test (Invalid vehicle_id)', () => {
+    it('should return 404 because vehicle_id is invalid', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/vehicle/61d140fe1813f5b6f78b087c")
+        //We need to send in the admin id because we cannot create a dealership without an admin
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(404);
+          response.body.success.should.be.false;
+          done();
+        });
+    });
+  });
+
   //The below test checks if we can update a vehicle successfully
   describe('Update Vehicle API Test', () => {
     it('should return 200 when a vehicle is updated', (done) => {
