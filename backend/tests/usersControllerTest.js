@@ -167,8 +167,8 @@ describe('Testing User Controller Class', () => {
   });
 
   //The below test, checks if the app refuses to create a staff account if the creator is not an admin
-  describe('Create User API Test', () => {
-    it('should return 200 when the user is created', (done) => {
+  describe('Create User API Test Error Test (Not an admin)', () => {
+    it('should return 400 because the user is not an admin', (done) => {
       chai.request(app)
         .post("/api/v1/users")
         .send({
@@ -185,7 +185,7 @@ describe('Testing User Controller Class', () => {
         //Need to have the token to be able to create users
         .set('authorization', 'Bearer ' + token)        
         .end( (err, response) => {
-          response.should.have.status(401);
+          response.should.have.status(400);
           done();
         });
     });

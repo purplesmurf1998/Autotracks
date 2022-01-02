@@ -51,8 +51,21 @@ describe('Testing Vehicle Controller Class', () => {
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
-          //vehicle_id = 
-          console.log(response);
+          vehicle_id = response.body.payload._id;
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if we can delete a vehicle successfully
+  describe('Delete Vehicle API Test', () => {
+    it('should return 200 when a vehicle is deleted', (done) => {
+      chai.request(app)
+        .delete("/api/v1/inventory/vehicle/" + vehicle_id)
+        //We need to send in the admin id because we cannot create a dealership without an admin
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(200);
           done();
         });
     });
