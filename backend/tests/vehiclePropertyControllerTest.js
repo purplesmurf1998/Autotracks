@@ -33,7 +33,6 @@ describe('Testing Vehicle Property Controller Class', () => {
         })
         .end( (err, response) => {
           response.should.have.status(200);
-          admin_id = response.body.payload._id;
           response.body.should.be.a('object');
           token = response.body.token;
           done();
