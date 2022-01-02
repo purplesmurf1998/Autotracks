@@ -66,7 +66,7 @@ describe('Testing Vehicle Property Controller Class', () => {
   });
 
   describe('Create 2nd Vehicle Property API Test', () => {
-    it('should return 200 when a vehicle property is created', (done) => {
+    it('should return 200 when the 2nd vehicle property is created', (done) => {
       chai.request(app)
         .post("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
         .send({
@@ -124,7 +124,7 @@ describe('Testing Vehicle Property Controller Class', () => {
 
   //The below test checks if we return 404 error when the vehicle property id is wrong
   describe('Update Vehicle Property API Error (Wrong ID) Test', () => {
-    it('should return 404 when a vehicle property is updated', (done) => {
+    it('should return 404 because of the wrong vehicle property ID', (done) => {
       chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/71a1106490f3350549ffa54e")
         .set('authorization', 'Bearer ' + token)

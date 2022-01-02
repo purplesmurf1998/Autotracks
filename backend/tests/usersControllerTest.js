@@ -60,7 +60,7 @@ describe('Testing User Controller Class', () => {
   });
 
   //The below test, checks if the app refuses to create a user (Not admin) from the registration page
-  describe('Create Admin API (Not Admin) Test', () => {
+  describe('Create Admin API Error Test (Not Admin)', () => {
     it('should return 400 when because user is not an admin', (done) => {
       chai.request(app)
         .post("/api/v1/auth/register")
@@ -142,7 +142,7 @@ describe('Testing User Controller Class', () => {
 
   //The below test, checks if the app refuses to create a user that is not attached to a dealership from the registration page
   describe('Refuse Creating a User That is not Attached to a Dealership API Test', () => {
-    it('should return 400 when because dealership does not exist', (done) => {
+    it('should return 400 when because the user is not attached to a dealership', (done) => {
       chai.request(app)
         .post("/api/v1/users")
         .send({
@@ -182,8 +182,8 @@ describe('Testing User Controller Class', () => {
           "password": "password123",
           "dealership": "618b3bf134f07d9a91c32a1b" 
         })
-        .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWEyOTA3ZDA1NmQ2ZDY3ZTYwM2UxZWMiLCJpYXQiOjE2Mzg2NTU4MzYsImV4cCI6MTY0MTI0NzgzNn0.m8wq9bNU7bbak2A9y8id88Zvtwc_dEaWtZNFNWlr7q8')
         //Need to have the token to be able to create users
+        .set('authorization', 'Bearer ' + token)        
         .end( (err, response) => {
           response.should.have.status(401);
           done();
@@ -193,7 +193,7 @@ describe('Testing User Controller Class', () => {
 
   //The below test, checks if the app can return a user successfully
   describe('Get User API Test', () => {
-    it('should return 200 when the user is present: ' + admin_id, (done) => {
+    it('should return 200 when the user is present', (done) => {
       chai.request(app)
         .get("/api/v1/users/618aacf45cdc75b8288eb9b5") // + admin_id)
         .set('authorization', 'Bearer ' + token)
@@ -206,8 +206,8 @@ describe('Testing User Controller Class', () => {
   });
 
   //The below test, checks if the app returns an error when trying to fetch an invalid user id
-  describe('Get User API Error Test', () => {
-    it('should return 500 when the user is not present: ', (done) => {
+  describe('Get User API Error Test (Invalid User ID)', () => {
+    it('should return 500 when the user is not present', (done) => {
       chai.request(app)
         .get("/api/v1/users/718aacf45cdc75b8288eb9b5")
         .set('authorization', 'Bearer ' + token)
@@ -238,7 +238,7 @@ describe('Testing User Controller Class', () => {
 
   //The below test, checks if the app can update a user's first name successfully 
   describe('Update User API Test', () => {
-    it('should return 200 when the user is present: ' + admin_id, (done) => {
+    it('should return 200 when the user information is updated', (done) => {
       chai.request(app)
         .put("/api/v1/users/" + admin_id)
         .set('authorization', 'Bearer ' + token)
@@ -256,8 +256,8 @@ describe('Testing User Controller Class', () => {
   });
 
   //The below test, checks if the app returns an error when attempting to update an invalid user id 
-  describe('Update User API Error Test', () => {
-    it('should return 400 when the user is present: ', (done) => {
+  describe('Update User API Error Test (Invalid User ID)', () => {
+    it('should return 400 because of invalid user ID', (done) => {
       chai.request(app)
         .put("/api/v1/users/718aacf45cdc75b8288eb9b5")
         .set('authorization', 'Bearer ' + token)
@@ -335,8 +335,8 @@ describe('Testing User Controller Class', () => {
   });
 
   //The below test, checks if the app returns an error when attempting to delete a nonexistent user
-  describe('Delete User API Error Test' + user_id, () => {
-    it('should return 200 when the user is deleted: ' + user_id, (done) => {
+  describe('Delete User API Error Test (Invalid User ID)' + user_id, () => {
+    it('should return 200 when the user is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + user_id)
         .set('authorization', 'Bearer ' + token)
