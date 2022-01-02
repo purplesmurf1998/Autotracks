@@ -113,7 +113,6 @@ describe('Testing Vehicle Controller Class', () => {
     it('should return 200 when a vehicle is returned', (done) => {
       chai.request(app)
         .get("/api/v1/inventory/vehicle/" + vehicle_id)
-        //We need to send in the admin id because we cannot create a dealership without an admin
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
@@ -129,7 +128,6 @@ describe('Testing Vehicle Controller Class', () => {
     it('should return 404 because vehicle_id is invalid', (done) => {
       chai.request(app)
         .get("/api/v1/inventory/vehicle/61d140fe1813f5b6f78b087c")
-        //We need to send in the admin id because we cannot create a dealership without an admin
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(404);
@@ -144,7 +142,6 @@ describe('Testing Vehicle Controller Class', () => {
     it('should return 200 when a vehicle is updated', (done) => {
       chai.request(app)
         .put("/api/v1/inventory/vehicle/" + vehicle_id)
-        //We need to send in the admin id because we cannot create a dealership without an admin
         .set('authorization', 'Bearer ' + token)
         .send({
             "deposit": 500,
@@ -158,15 +155,45 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
+  //The below test refuses to update a vehicle due to invalid vehicle_id
+  describe('Update Vehicle API Error Test (Invalid vehicle_id)', () => {
+    it('should return 404 because vehicle was not updated', (done) => {
+      chai.request(app)
+        .put("/api/v1/inventory/vehicle/61d140fe1813f5b6f78b087c")
+        .set('authorization', 'Bearer ' + token)
+        .send({
+            "deposit": 500,
+          })
+        .end( (err, response) => {
+          response.should.have.status(404);
+          response.body.success.should.be.false;
+          done();
+        });
+    });
+  });
+
   //The below test checks if we can delete a vehicle successfully
   describe('Delete Vehicle API Test', () => {
     it('should return 200 when a vehicle is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/inventory/vehicle/" + vehicle_id)
-        //We need to send in the admin id because we cannot create a dealership without an admin
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+  //The below test refuses to delete a vehicle because of invalid vehicle_id
+  describe('Delete Vehicle API Error Test (Invalid vehicle_id)', () => {
+    it('should return 404 when a vehicle is deleted', (done) => {
+      chai.request(app)
+        .delete("/api/v1/inventory/vehicle/" + vehicle_id)
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(404);
+          response.body.success.should.be.false;
           done();
         });
     });
