@@ -12,7 +12,7 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
 
   if (!vehicles) {
     return next(
-      new ErrorResponse(`No vehicles found with dealership id ${req.params.dealershipId}.`)
+      new ErrorResponse(`No vehicles found with dealership id ${req.params.dealershipId}.`, 404)
     );
   }
 
@@ -31,7 +31,7 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 
   if (!vehicle) {
     return next(
-      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`)
+      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`, 404)
     );
   }
 
@@ -70,7 +70,7 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
   // return an error response if no vehicle was created
   if (!newVehicle) {
     return next(
-      new ErrorResponse("Vehicle was not created. Please validate your input.")
+      new ErrorResponse("Vehicle was not created. Please validate your input." , 400)
     );
   }
 
