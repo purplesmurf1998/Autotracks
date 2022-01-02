@@ -57,6 +57,22 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
+  //The below test, checks if we can return a list of vehicles successfully
+  describe('Get Vehicles API Test', () => {
+    it('should return 200 when a vehicles are returned', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1b")
+        //We need to send in the admin id because we cannot create a dealership without an admin
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(200);
+          //the response data should be an array of users
+          response.body.payload.should.be.a('array');
+          done();
+        });
+    });
+  });
+
   //The below test, checks if we can delete a vehicle successfully
   describe('Delete Vehicle API Test', () => {
     it('should return 200 when a vehicle is deleted', (done) => {
