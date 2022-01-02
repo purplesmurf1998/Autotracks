@@ -15,9 +15,9 @@ let user_id = "";
 const email = "admin@account.com";
 const password = "password";
 let token = "";
-
 // The following tests test the entire User Controller Class
 describe('Testing Vehicle Controller Class', () => {
+
   //The below test checks if we can sign users/admin in successfully
   describe('Admin/User Sign In API Test', () => {
     it('should return 200 when the admin/user is signed in', (done) => {
