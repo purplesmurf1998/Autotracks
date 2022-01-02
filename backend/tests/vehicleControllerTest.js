@@ -59,7 +59,7 @@ describe('Testing Vehicle Controller Class', () => {
 
   //The below test, checks if we can return a list of vehicles successfully
   describe('Get Vehicles API Test', () => {
-    it('should return 200 when a vehicles are returned', (done) => {
+    it('should return 200 when vehicles are returned', (done) => {
       chai.request(app)
         .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1b")
         //We need to send in the admin id because we cannot create a dealership without an admin
@@ -68,6 +68,41 @@ describe('Testing Vehicle Controller Class', () => {
           response.should.have.status(200);
           //the response data should be an array of users
           response.body.payload.should.be.a('array');
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if we can return a vehicle successfully
+  describe('Get Vehicle API Test', () => {
+    it('should return 200 when a vehicle is returned', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/vehicle/" + vehicle_id)
+        //We need to send in the admin id because we cannot create a dealership without an admin
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(200);
+          //the response data should be an array of users
+          response.body.payload.should.be.a('object');
+          done();
+        });
+    });
+  });
+
+  //The below test, checks if we can update a vehicle successfully
+  describe('Update Vehicle API Test', () => {
+    it('should return 200 when a vehicle is updated', (done) => {
+      chai.request(app)
+        .put("/api/v1/inventory/vehicle/" + vehicle_id)
+        //We need to send in the admin id because we cannot create a dealership without an admin
+        .set('authorization', 'Bearer ' + token)
+        .send({
+            "deposit": 500,
+          })
+        .end( (err, response) => {
+          response.should.have.status(200);
+          //the response data should be an array of users
+          response.body.payload.should.be.a('object');
           done();
         });
     });
