@@ -15,9 +15,9 @@ let user_id = "";
 const email = "admin@account.com";
 const password = "password";
 let token = "";
+
 // The following tests test the entire User Controller Class
 describe('Testing Vehicle Controller Class', () => {
-
   //The below test checks if we can sign users/admin in successfully
   describe('Admin/User Sign In API Test', () => {
     it('should return 200 when the admin/user is signed in', (done) => {
@@ -36,12 +36,12 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
-  //The below test, checks if we can create a vehicle successfully
+  //The below test checks if we can create a vehicle successfully
   describe('Create Vehicle API Test', () => {
     it('should return 200 when a vehicle is created', (done) => {
       chai.request(app)
         .post("/api/v1/inventory")
-        //We need to send in the admin id because we cannot create a dealership without an admin
+        //We need to send in the dealership id because we cannot create a vehicle without a dealership
         .send({
             'dealership': '618b3bf134f07d9a91c32a1b',
             'properties': {
@@ -57,12 +57,32 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
-  //The below test, checks if we can return a list of vehicles successfully
+  //The below test refuses to create a vehicle because of invalid dealership ID
+  describe('Create Vehicle API Error Test (Invalid dealership_id)', () => {
+    it('should return 400 because vehicle is not created', (done) => {
+      chai.request(app)
+        .post("/api/v1/inventory")
+        //The dealership ID is invalid, hence the error.
+        .send({
+            'dealership': '618b3bf134f07d9a91c32a1c',
+            'properties': {
+                'test1': 'testing',
+              }
+        })
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(400);
+          response.body.success.should.be.false;
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we can return a list of vehicles successfully
   describe('Get Vehicles API Test', () => {
     it('should return 200 when vehicles are returned', (done) => {
       chai.request(app)
         .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1b")
-        //We need to send in the admin id because we cannot create a dealership without an admin
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
@@ -73,7 +93,22 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
-  //The below test, checks if we can return a vehicle successfully
+  //The below test refuses to return a list vehicles because of invalid dealership ID
+  describe('Get Vehicles API Error Test (invalid dealership_id)', () => {
+    it('should return 404 when vehicles are not returned', (done) => {
+      chai.request(app)
+        //invalid dealership ID in the get request
+        .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1c")
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(404);
+          response.body.success.should.be.false;
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we can return a vehicle successfully
   describe('Get Vehicle API Test', () => {
     it('should return 200 when a vehicle is returned', (done) => {
       chai.request(app)
@@ -89,7 +124,7 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
-  //The below test, checks if we can update a vehicle successfully
+  //The below test checks if we can update a vehicle successfully
   describe('Update Vehicle API Test', () => {
     it('should return 200 when a vehicle is updated', (done) => {
       chai.request(app)
@@ -108,7 +143,7 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
-  //The below test, checks if we can delete a vehicle successfully
+  //The below test checks if we can delete a vehicle successfully
   describe('Delete Vehicle API Test', () => {
     it('should return 200 when a vehicle is deleted', (done) => {
       chai.request(app)
