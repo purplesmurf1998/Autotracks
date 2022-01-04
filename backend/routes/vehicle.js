@@ -19,7 +19,7 @@ router.route('/dealership/:dealershipId')
   .get(protect, hasPermissions('View Vehicles'), getVehicles);//getVehicle
 
 router.route('/vehicle/:vehicleId')
-  .get(protect, hasPermissions('View Vehicles'), getVehicles)
+  .get(protect, hasPermissions('View Vehicles'), getVehicle)
   .put(protect, hasPermissions('Edit Vehicles'), updateVehicle)
   .delete(protect, hasPermissions('Delete Vehicles'), deleteVehicle);
 
