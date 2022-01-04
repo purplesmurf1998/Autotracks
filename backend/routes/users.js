@@ -11,17 +11,17 @@ const {
 } = require('../controllers/usersController');
 
 // get authentication middleware
-const { protect } = require('../middleware/auth');
+const { protect, hasPermissions } = require('../middleware/auth');
 
 // attach methods to the proper routes
 router.route('/')
-    .get(protect, getUsers)
-    .post(protect, createUser);
+    .get(protect, hasPermissions('View Staff Users'), getUser)//wrong function used here, should be getUsers
+    .post(protect, hasPermissions('Add Staff Users'), createUser);
 
 router.route('/:userId')
-    .get(protect, getUser)
-    .put(protect, updateUser)
-    .delete(protect, deleteUser);
+    .get(protect, hasPermissions('View Staff Users'), getUser)
+    .put(protect, hasPermissions('Edit Staff Users'), updateUser)
+    .delete(protect, hasPermissions('Delete Staff Users'), deleteUser);
 
 // export the router so it can be used in the server.js file
 module.exports = router;

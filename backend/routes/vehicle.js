@@ -10,17 +10,17 @@ const {
 } = require('../controllers/vehicleController');
 
 // get authentication middleware
-const { protect } = require('../middleware/auth');
+const { protect, hasPermissions } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, createVehicle);
+  .post(protect, hasPermissions('Add Vehicles'), createVehicle);
 
 router.route('/dealership/:dealershipId')
-  .get(protect, getVehicles);
+  .get(protect, hasPermissions('View Vehicles'), getVehicles);//getVehicle
 
 router.route('/vehicle/:vehicleId')
-  .get(protect, getVehicle)
-  .put(protect, updateVehicle)
-  .delete(protect, deleteVehicle);
+  .get(protect, hasPermissions('View Vehicles'), getVehicles)
+  .put(protect, hasPermissions('Edit Vehicles'), updateVehicle)
+  .delete(protect, hasPermissions('Delete Vehicles'), deleteVehicle);
 
 module.exports = router;
