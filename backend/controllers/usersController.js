@@ -10,7 +10,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
     // make sure the user being created is not an admin
     if (req.body.role == 'Administration') {
         return next(
-            new ErrorResponse('Admin accounts can only be registered from the register page.', 400)
+            new ErrorResponse('Admin accounts can only be registered from the register page.', 401)
         );
     }
 
@@ -69,7 +69,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     // send response
     res.status(200).json({
         success: true,
-        data: users
+        payload: users
     });
 });
 
@@ -91,7 +91,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     // if user not found, send an error response
     if (!user) {
         return next(
-            new ErrorResponse(`User with id ${req.params.userId} not found.`, 500)
+            new ErrorResponse(`User with id ${req.params.userId} not found.`, 404)
         );
     }
 
@@ -116,7 +116,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     // if no user is returned, user was not found and send an error response
     if (!user) {
         return next(
-            new ErrorResponse(`User with id: ${req.params.userId} not found.`, 400)
+            new ErrorResponse(`User with id: ${req.params.userId} not found.`, 404)
         );
     }
 
@@ -137,13 +137,13 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
     // if no user is returned, user was not found and send an error response
     if (!user) {
         return next(
-            new ErrorResponse(`User with id: ${req.params.userId} not found.`, 401)
+            new ErrorResponse(`User with id: ${req.params.userId} not found.`, 404)
         );
     }
 
     // send response
     res.status(200).json({
         success: true,
-        data: {}
+        payload: {}
     });
 });
