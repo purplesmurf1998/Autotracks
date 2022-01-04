@@ -53,7 +53,7 @@ exports.hasPermissions = (...permissions) => {
     permissions.forEach(permission => {
       if (!user.permissions.includes(permission)) {
         userAllowed = false;
-        break;
+        return;
       }
     })
 

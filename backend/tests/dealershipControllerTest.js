@@ -51,7 +51,7 @@ describe('Testing Dealership Controller Class', () => {
         .end( (err, response) => {
           response.should.have.status(201);
           //We store the dealership_id that we created so we can delete it later
-          dealership_id = response.body.dealership._id;
+          dealership_id = response.body.payload._id;
           response.body.should.be.a('object');
           done();
         });
@@ -95,9 +95,9 @@ describe('Testing Dealership Controller Class', () => {
     });
   });
 
-  //The below test, checks if we return 400 error when an user id is not an admin
+  //The below test, checks if we return 401 error when an user id is not an admin
   describe('Create Dealership API Error Test (User ID not Admin)', () => {
-    it('should return 400 because admin ID does not exist', (done) => {
+    it('should return 401 because admin ID does not exist', (done) => {
       chai.request(app)
         .post("/api/v1/dealerships")
         //We need to send in the admin id because we cannot create a dealership without an admin
@@ -108,7 +108,7 @@ describe('Testing Dealership Controller Class', () => {
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(400);
+          response.should.have.status(401);
           done();
         });
     });
@@ -122,8 +122,8 @@ describe('Testing Dealership Controller Class', () => {
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.data.should.be.a('object');
-          response.body.data._id.should.be.equal(dealership_id);
+          response.body.payload.should.be.a('object');
+          response.body.payload._id.should.be.equal(dealership_id);
           response.body.should.be.a('object');
           done();
         });
@@ -172,7 +172,7 @@ describe('Testing Dealership Controller Class', () => {
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
-          response.body.data.name.should.be.equal("Dealership #2");
+          response.body.payload.name.should.be.equal("Dealership #2");
           done();
         });
     });
@@ -211,12 +211,12 @@ describe('Testing Dealership Controller Class', () => {
 
   //The below test checks if we return an error when attempting to delete a nonexistent dealership
   describe('Delete Dealership API Error Test (dealership id not found)', () => {
-    it('should return 401 when the dealership is deleted', (done) => {
+    it('should return 404 when the dealership is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/718b3bf134f07d9a91c32a1b")
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(401);
+          response.should.have.status(404);
           done();
         });
     });
