@@ -1,20 +1,26 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const Vehicle = require('../models/Vehicle')
+const Vehicle = require('../models/Vehicle');
+const Dealership = require('../models/Dealership');
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId
 // @access      Private
 exports.getVehicles = asyncHandler(async (req, res, next) => {
+
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.params.dealershipId);
+
+  // no dealership found
+  if (!dealership) {
+      return next(
+          new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+      );
+  }
+  
   let query = Vehicle.find({ dealership: req.params.dealershipId });
   // run query
   const vehicles = await query;
-
-  if (!vehicles) {
-    return next(
-      new ErrorResponse(`No vehicles found with dealership id ${req.params.dealershipId}.`)
-    );
-  }
 
   res.status(200).json({
     success: true,
@@ -31,7 +37,7 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 
   if (!vehicle) {
     return next(
-      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`)
+      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`, 404)
     );
   }
 
@@ -64,15 +70,18 @@ exports.updateVehicle = asyncHandler(async (req, res, next) => {
 exports.createVehicle = asyncHandler(async (req, res, next) => {
   const reqBody = req.body;
 
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.body.dealership);
+
+  // no dealership found
+  if (!dealership) {
+      return next(
+          new ErrorResponse(`This is dealership ID ${req.body.dealership} was not found. Cannot create a vehicle without a valid dealership.`, 400)
+      );
+  }
+
   // try to create the new vehicle
   const newVehicle = await Vehicle.create(reqBody);
-
-  // return an error response if no vehicle was created
-  if (!newVehicle) {
-    return next(
-      new ErrorResponse("Vehicle was not created. Please validate your input.")
-    );
-  }
 
   // return a success response
   res.status(200).json({
