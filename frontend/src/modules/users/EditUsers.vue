@@ -162,8 +162,8 @@ export default {
               this.showError("Incomplete or invalid fields.");
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch((error) => {
+            console.log(error);
             this.showError("Error updating staff account information.");
           });
       }

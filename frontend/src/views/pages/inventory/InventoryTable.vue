@@ -59,25 +59,23 @@ export default {
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            const payload = response.data.payload;
-            const fields = [
-              {
-                key: "missing",
-                label: "",
-              },
-            ];
-            payload.forEach((property) => {
-              if (property.visible) {
-                fields.push(property);
-              }
-            });
-            this.tableFields = fields;
-            if (this.tableFields.length == 1) {
-              this.tableItems = [];
-            } else {
-              this.fetchVehicles();
+          const payload = response.data.payload;
+          const fields = [
+            {
+              key: "missing",
+              label: "",
+            },
+          ];
+          payload.forEach((property) => {
+            if (property.visible) {
+              fields.push(property);
             }
+          });
+          this.tableFields = fields;
+          if (this.tableFields.length == 1) {
+            this.tableItems = [];
+          } else {
+            this.fetchVehicles();
           }
         })
         .catch((error) => {
@@ -93,17 +91,15 @@ export default {
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            const payload = response.data.payload;
-            let tableItems = [];
-            payload.forEach((vehicle) => {
-              let properties = vehicle.properties;
-              properties._id = vehicle._id;
-              properties.missing = vehicle.missing;
-              tableItems.push(properties);
-            });
-            this.tableItems = tableItems;
-          }
+          const payload = response.data.payload;
+          let tableItems = [];
+          payload.forEach((vehicle) => {
+            let properties = vehicle.properties;
+            properties._id = vehicle._id;
+            properties.missing = vehicle.missing;
+            tableItems.push(properties);
+          });
+          this.tableItems = tableItems;
         })
         .catch((error) => {
           this.$router.replace("/pages/404");

@@ -101,7 +101,6 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response);
           if (response.data.success) {
             this.$router.go();
           }

@@ -164,7 +164,7 @@ export default {
         .then((response) => {
           this.tableItems = response.data.payload;
         })
-        .catch((err) => {
+        .catch((error) => {
           this.$router.replace("/pages/404");
         });
     },

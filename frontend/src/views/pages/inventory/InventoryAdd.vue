@@ -213,20 +213,17 @@ export default {
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            // set the payload to the dealership
-            this.vehicleProperties = response.data.payload;
-            let properties = {};
-            this.vehicleProperties.forEach((property) => {
-              if (property.inputType == "Options") {
-                properties[property.key] = property.options[0];
-              } else {
-                properties[property.key] = null;
-              }
-            });
-            this.properties = properties;
-            console.log(this.properties);
-          }
+          // set the payload to the dealership
+          this.vehicleProperties = response.data.payload;
+          let properties = {};
+          this.vehicleProperties.forEach((property) => {
+            if (property.inputType == "Options") {
+              properties[property.key] = property.options[0];
+            } else {
+              properties[property.key] = null;
+            }
+          });
+          this.properties = properties;
         })
         .catch((error) => {
           this.$router.replace("/pages/404");

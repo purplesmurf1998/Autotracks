@@ -155,26 +155,24 @@ export default {
         },
       })
         .then(async (response) => {
-          //double check valid response
-          if (response.status == 200) {
-            // log the user in
-            const loggedInResponse = await this.$store.dispatch("login", {
-              email: this.adminUser.adminEmail,
-              password: this.adminUser.adminPassword,
-            });
+          // log the user in
+          const loggedInResponse = await this.$store.dispatch("login", {
+            email: this.adminUser.adminEmail,
+            password: this.adminUser.adminPassword,
+          });
 
-            // if not successful, show the error message
-            if (!loggedInResponse.success) {
-              this.showErrorMessage(loggedInResponse.message);
-            }
-            // if successful, redirect the user to the dashboad
-            else {
-              this.$router.push("/dashboard");
-            }
+          // if not successful, show the error message
+          if (!loggedInResponse.success) {
+            this.showErrorMessage(loggedInResponse.message);
           }
+          // if successful, redirect the user to the dashboad
+          else {
+            this.$router.push("/dashboard");
+          }
+          
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
           // send an invalid registration message
           this.showErrorMessage("Invalid information or duplicate account.");
           this.adminUser.adminPassword = "";

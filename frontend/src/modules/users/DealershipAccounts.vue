@@ -122,11 +122,9 @@ export default {
       },
     })
       .then((response) => {
-        if (response.data.success) {
-          this.staff = response.data.data;
-        }
+        this.staff = response.data.payload;
       })
-      .catch((err) => {
+      .catch((error) => {
         this.$router.replace("/pages/404");
       });
   },

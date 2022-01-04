@@ -62,15 +62,9 @@ export default {
         data,
       })
         .then((response) => {
-          if (response.data.success) {
-            this.$router.go();
-          } else {
-            console.log(response.data);
-            this.showErrorMessage(response.data.message);
-          }
+          this.$router.go();
         })
-        .catch((err) => {
-          console.log(err.data);
+        .catch((error) => {
           this.showErrorMessage(
             "Invalid field inputs. Dealership must have a name."
           );

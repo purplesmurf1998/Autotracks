@@ -53,9 +53,7 @@ export default {
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            this.vehicle = response.data.payload;
-          }
+          this.vehicle = response.data.payload;
         })
         .catch((error) => {
           this.$router.replace("/pages/404");
