@@ -67,7 +67,7 @@ describe('Testing Auth Controller Class', () => {
 
   //The below test checks if the app refuse signin attempts with wrong pwd
   describe('Admin/User Sign In API Invalid Password Test', () => {
-    it('should return 400 because of invalid pwd', (done) => {
+    it('should return 401 because of invalid pwd', (done) => {
       chai.request(app)
         .post("/api/v1/auth/signin")
         .send({
@@ -99,7 +99,7 @@ describe('Testing Auth Controller Class', () => {
   });
 
   //The below test, checks if we can reject invalid tokens
-  describe('Verify Admin/User Token API Test', () => {
+  describe('Verify Admin/User Token API Error Test', () => {
     it('should return 500 because token is invalid', (done) => {
       chai.request(app)
         .post("/api/v1/auth/verify")
