@@ -42,3 +42,27 @@ exports.protect = asyncHandler(async (req, res, next) => {
     )
   }
 });
+
+exports.hasPermissions = (...permissions) => {
+
+  return asyncHandler(async (req, res, next) => {
+    // 1. get the user passed through the request from the protect middleware
+    const user = req.user;
+    // 2. verify that the user has all the necessary permissions
+    let userAllowed = true;
+    permissions.forEach(permission => {
+      if (!user.permissions.includes(permission)) {
+        userAllowed = false;
+        break;
+      }
+    })
+
+    if (!userAllowed) {
+      return next(
+        new ErrorResponse('Forbidden access to this endpoint', 403)
+      )
+    }
+    
+    next();
+  });
+}
