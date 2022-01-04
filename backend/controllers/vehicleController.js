@@ -14,18 +14,13 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
       return next(
-          new ErrorResponse('dealership not found. Cannot return a list of vehicls without a valid dealership.', 404)
+          new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
       );
   }
   
   let query = Vehicle.find({ dealership: req.params.dealershipId });
   // run query
   const vehicles = await query;
-  // if (!vehicles) {
-  //   return next(
-  //     new ErrorResponse(`No vehicles found with dealership id ${req.params.dealershipId}.`, 404)
-  //   );
-  // }
 
   res.status(200).json({
     success: true,
@@ -81,7 +76,7 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
       return next(
-          new ErrorResponse('dealership not found. Cannot create a vehicle without a valid dealership.', 400)
+          new ErrorResponse(`This is dealership ID ${req.params.dealershipId} was not found. Cannot create a vehicle without a valid dealership.`, 400)
       );
   }
 
