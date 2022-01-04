@@ -76,19 +76,12 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
       return next(
-          new ErrorResponse(`This is dealership ID ${req.params.dealershipId} was not found. Cannot create a vehicle without a valid dealership.`, 400)
+          new ErrorResponse(`This is dealership ID ${req.body.dealership} was not found. Cannot create a vehicle without a valid dealership.`, 400)
       );
   }
 
   // try to create the new vehicle
   const newVehicle = await Vehicle.create(reqBody);
-
-  // return an error response if no vehicle was created
-  // if (!newVehicle) {
-  //   return next(
-  //     new ErrorResponse("Vehicle was not created. Please validate your input." , 400)
-  //   );
-  // }
 
   // return a success response
   res.status(200).json({
