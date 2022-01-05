@@ -3,6 +3,8 @@ export default {
     state.userId = payload.userId;
     state.token = payload.token;
     state.userPermissions = payload.userPermissions;
+    state.firstName = payload.firstName;
+    state.lastName = payload.lastName;
     state.role = payload.role;
     state.dealership = payload.dealership;
     state.promptPasswordChange = payload.promptPasswordChange;

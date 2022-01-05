@@ -8,12 +8,13 @@
   >
     <template #toggler>
       <CHeaderNavLink>
-        <div class="c-avatar">
+        <!-- <div class="c-avatar">
           <img
             src="img/avatars/6.jpg"
             class="c-avatar-img "
           />
-        </div>
+        </div> -->
+        <strong>{{ $store.state.auth.firstName }} {{ $store.state.auth.lastName }}</strong>
       </CHeaderNavLink>
     </template>
     <CDropdownHeader tag="div" class="text-center" color="light">
