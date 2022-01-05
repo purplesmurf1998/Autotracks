@@ -76,7 +76,7 @@ export default {
             this.$router.go();
           }
         }).catch(error => {
-          this.showErrorMessage(err.response.data.error);
+          this.showErrorMessage(error.response.data.error);
           this.disableButtons = false;
         })
       } else {
