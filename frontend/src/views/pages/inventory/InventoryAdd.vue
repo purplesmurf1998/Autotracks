@@ -62,30 +62,6 @@
                   v-model="properties[property.key]"
                   :required="property.isRequired"
                 />
-                <!-- <CFormGroup
-                  wrapperClasses="input-group pt-2 pb-3"
-                  v-if="property.inputType == 'Date'"
-                >
-                  <template #prepend-content>
-                    <CIcon name="cil-calendar"/>
-                  </template>
-                  <template #label>
-                    {{ property.label }}
-                  </template>
-                  <template #input>
-                    <masked-input
-                      type="text"
-                      :name="property.key"
-                      class="form-control"
-                      :mask="[/0|1|2|3/, /\d/, '-', /0|1|2|3/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]"
-                      :guide="true"
-                      placeholderChar="_"
-                      :showMask="true"
-                      :keepCharPositions="true"
-                      :required="property.isRequired"
-                    />
-                  </template>
-                </CFormGroup> -->
               </div>
               <CButton color="primary" type="submit"
                 >Add vehicle to the inventory</CButton
@@ -151,7 +127,6 @@ export default {
         dealership: this.$route.params.dealershipId,
         properties,
       };
-      console.log(body);
       axios({
         method: "POST",
         url: `${this.$store.state.api}/inventory`,
@@ -181,8 +156,6 @@ export default {
       }, 5000);
     },
     userHasPermissions(...permissions) {
-      // console.log(permissions);
-      // console.log(containsPermissions(permissions));
       return containsPermissions(permissions);
     },
     fetchDealership() {
@@ -201,6 +174,7 @@ export default {
           }
         })
         .catch((error) => {
+          console.log(error);
           this.$router.replace("/pages/404");
         });
     },
@@ -226,6 +200,7 @@ export default {
           this.properties = properties;
         })
         .catch((error) => {
+          console.log(error);
           this.$router.replace("/pages/404");
         });
     },

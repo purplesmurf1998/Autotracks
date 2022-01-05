@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     setTab(tab) {
-      console.log(tab);
       this.tab = tab;
     },
     setNewVehicle(newVehicle) {
@@ -56,6 +55,7 @@ export default {
           this.vehicle = response.data.payload;
         })
         .catch((error) => {
+          console.log(error);
           this.$router.replace("/pages/404");
         });
     },

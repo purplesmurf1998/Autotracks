@@ -65,6 +65,7 @@ export default {
           this.$router.go();
         })
         .catch((error) => {
+          console.log(error);
           this.showErrorMessage(
             "Invalid field inputs. Dealership must have a name."
           );

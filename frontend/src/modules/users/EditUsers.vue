@@ -134,7 +134,6 @@ export default {
   props: ["setEditingUser", "user", "updateUser", "index"],
   methods: {
     cancelUpdate() {
-      console.log(this.user);
       this.updateUser(this.user, this.index);
       this.setEditingUser(false);
     },
@@ -158,7 +157,6 @@ export default {
               this.updateUser(response.data.payload, this.index);
               this.setEditingUser(false);
             } else {
-              console.log(response);
               this.showError("Incomplete or invalid fields.");
             }
           })

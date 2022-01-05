@@ -182,7 +182,6 @@ export default {
       let body = {
         soldBy: state ? this.selectedStaffAccount : null,
       };
-      console.log(body);
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
@@ -217,6 +216,7 @@ export default {
           }
         })
         .catch((err) => {
+          console.log(err);
           this.$router.replace("/pages/404");
         });
     },
@@ -252,18 +252,17 @@ export default {
         .then((response) => {
           if (response.data.success) {
             let dealershipStaff = [];
-            console.log(response.data);
             response.data.payload.forEach((user) => {
               dealershipStaff.push({
                 value: user._id,
                 label: user.first_name + " " + user.last_name,
               });
             });
-            console.log(dealershipStaff);
             this.dealershipStaff = dealershipStaff;
           }
         })
         .catch((err) => {
+          console.log(err);
           this.$router.replace("/pages/404");
         });
     },

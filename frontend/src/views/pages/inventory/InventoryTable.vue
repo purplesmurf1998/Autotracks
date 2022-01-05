@@ -102,6 +102,7 @@ export default {
           this.tableItems = tableItems;
         })
         .catch((error) => {
+          console.log(error);
           this.$router.replace("/pages/404");
         });
     },

@@ -85,8 +85,6 @@ export default {
   },
   methods: {
     userHasPermissions(...permissions) {
-      // console.log(permissions);
-      // console.log(containsPermissions(permissions));
       return containsPermissions(permissions);
     },
     setActiveStaff(user, index) {
@@ -125,6 +123,7 @@ export default {
         this.staff = response.data.payload;
       })
       .catch((error) => {
+        console.log(error);
         this.$router.replace("/pages/404");
       });
   },
