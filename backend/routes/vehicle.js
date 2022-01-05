@@ -16,7 +16,7 @@ router.route('/')
   .post(protect, hasPermissions('Add Vehicles'), createVehicle);
 
 router.route('/dealership/:dealershipId')
-  .get(protect, hasPermissions('View Vehicles'), getVehicles);//getVehicle
+  .get(protect, hasPermissions('View Vehicles'), getVehicles);
 
 router.route('/vehicle/:vehicleId')
   .get(protect, hasPermissions('View Vehicles'), getVehicle)
