@@ -29,7 +29,6 @@ describe('Testing User Controller Class', () => {
         })
         .end( (err, response) => {
           response.should.have.status(200);
-          admin_id = response.body.payload._id;
           response.body.should.be.a('object');
           token = response.body.token;
           done();
@@ -50,7 +49,7 @@ describe('Testing User Controller Class', () => {
           "password": "password123"
         })
         .end( (err, response) => {
-          //Checks if the status code is 200
+          //Checks if the status code is 201
           response.should.have.status(201);
           admin_id = response.body.payload._id;
           response.body.should.be.a('object');
@@ -72,7 +71,7 @@ describe('Testing User Controller Class', () => {
           "password": "password123"
         })
         .end( (err, response) => {
-          //Checks if the status code is 200
+          //Checks if the status code is 401
           response.should.have.status(401);
           response.body.should.be.a('object');
           done();
@@ -133,7 +132,7 @@ describe('Testing User Controller Class', () => {
         .set('authorization', 'Bearer ' + token)
         //Need to have the token to be able to create users
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           user_id = response.body.payload._id;
           done();
         });
@@ -175,7 +174,7 @@ describe('Testing User Controller Class', () => {
           "first_name": "test_staff",
           "last_name": "test_staff",
           "email": "test_staff_not_admin@autotracks.com",
-          "role": "Management",
+          "role": "Administration",
           "permissions": [
             "Add Dealerships",
           ],
@@ -195,7 +194,7 @@ describe('Testing User Controller Class', () => {
   describe('Get User API Test', () => {
     it('should return 200 when the user is present', (done) => {
       chai.request(app)
-        .get("/api/v1/users/618aacf45cdc75b8288eb9b5") // + admin_id)
+        .get("/api/v1/users/" + admin_id)
         .set('authorization', 'Bearer ' + token)
         //pass the authorization token
         .end( (err, response) => {
@@ -266,7 +265,7 @@ describe('Testing User Controller Class', () => {
           "first_name": "test_update",
         })       
         .end( (err, response) => {
-          response.should.have.status(400);
+          response.should.have.status(404);
           done();
         });
     });
@@ -341,7 +340,7 @@ describe('Testing User Controller Class', () => {
         .delete("/api/v1/users/" + user_id)
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(400);
+          response.should.have.status(404);
           done();
         });
     });

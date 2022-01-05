@@ -28,7 +28,6 @@ describe('Testing Dealership Controller Class', () => {
         })
         .end( (err, response) => {
           response.should.have.status(200);
-          admin_id = response.body.payload._id;
           response.body.should.be.a('object');
           token = response.body.token;
           done();
@@ -45,7 +44,7 @@ describe('Testing Dealership Controller Class', () => {
         .send({
             "name": "Dealership #1",
             "description": "This is a simple test dealership.",
-            "admin": "618aacf45cdc75b8288eb9b5"
+            "admin": "61d4e5bb12d6b3b54a70e4dd"
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
@@ -116,7 +115,7 @@ describe('Testing Dealership Controller Class', () => {
 
   //The below test checks if we can return a dealership successfully
   describe('Get Dealership API Test', () => {
-    it('should return 200 when the dealership is present: ' + dealership_id, (done) => {
+    it('should return 200 when the dealership is present', (done) => {
       chai.request(app)
         .get("/api/v1/dealerships/" + dealership_id)
         .set('authorization', 'Bearer ' + token)

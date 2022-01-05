@@ -10,7 +10,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
     // make sure the user being created is not an admin
     if (req.body.role == 'Administration') {
         return next(
-            new ErrorResponse('Admin accounts can only be registered from the register page.', 401)
+            new ErrorResponse('Admin accounts can only be registered from the register page.', 400)
         );
     }
 
@@ -50,7 +50,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 
     // send response
     await user.save();
-    res.status(200).json({
+    res.status(201).json({
         success: true,
         payload: user
     });
