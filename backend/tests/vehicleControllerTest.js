@@ -38,7 +38,7 @@ describe('Testing Vehicle Controller Class', () => {
 
   //The below test checks if we can create a vehicle successfully
   describe('Create Vehicle API Test', () => {
-    it('should return 200 when a vehicle is created', (done) => {
+    it('should return 201 when a vehicle is created', (done) => {
       chai.request(app)
         .post("/api/v1/inventory")
         //We need to send in the dealership id because we cannot create a vehicle without a dealership
@@ -50,7 +50,7 @@ describe('Testing Vehicle Controller Class', () => {
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           vehicle_id = response.body.payload._id;
           done();
         });

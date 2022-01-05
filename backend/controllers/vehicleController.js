@@ -84,7 +84,7 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
   const newVehicle = await Vehicle.create(reqBody);
 
   // return a success response
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     payload: newVehicle
   })
