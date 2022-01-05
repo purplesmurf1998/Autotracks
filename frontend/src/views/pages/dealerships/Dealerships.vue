@@ -151,7 +151,6 @@ export default {
     },
     resetSelectedDealership() {
       this.selectedDealership = null;
-      console.log("Selected Dealership has been reset");
     },
     fetchDealerships() {
       axios({
@@ -164,7 +163,8 @@ export default {
         .then((response) => {
           this.tableItems = response.data.payload;
         })
-        .catch((err) => {
+        .catch((error) => {
+          console.log(error);
           this.$router.replace("/pages/404");
         });
     },

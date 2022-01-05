@@ -38,7 +38,7 @@ exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
   console.log(newProperty);
   const newVehicleProperty = await VehicleProperty.create(newProperty);
 
-  res.status(200).json({ success: true, payload: newVehicleProperty })
+  res.status(201).json({ success: true, payload: newVehicleProperty })
 });
 
 // @desc        Update a specific vehicle property model

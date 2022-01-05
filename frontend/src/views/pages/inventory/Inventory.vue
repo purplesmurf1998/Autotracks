@@ -83,20 +83,18 @@ export default {
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            this.defaultAdminDealership = this.selectedDealership;
-            this.$store.commit("setProperty", [
-              "dealership",
-              this.selectedDealership,
-            ]);
-            // find the dealership's name
-            const index = this.adminDealerships.findIndex(
-              (dealership) => dealership.value == this.selectedDealership
-            );
-            this.showMessage(
-              `${this.adminDealerships[index].label} successfully set as your default dealership`
-            );
-          }
+          this.defaultAdminDealership = this.selectedDealership;
+          this.$store.commit("setProperty", [
+            "dealership",
+            this.selectedDealership,
+          ]);
+          // find the dealership's name
+          const index = this.adminDealerships.findIndex(
+            (dealership) => dealership.value == this.selectedDealership
+          );
+          this.showMessage(
+            `${this.adminDealerships[index].label} successfully set as your default dealership`
+          );
         })
         .catch((error) => {
           this.showMessage(
@@ -130,6 +128,7 @@ export default {
           }
         })
         .catch((error) => {
+          console.log(error);
           this.$router.replace("/pages/404");
         });
     },

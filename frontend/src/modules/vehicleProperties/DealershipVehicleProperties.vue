@@ -115,8 +115,6 @@ export default {
   },
   methods: {
     userHasPermissions(...permissions) {
-      // console.log(permissions);
-      // console.log(containsPermissions(permissions));
       return containsPermissions(permissions);
     },
     onDragStart(element) {
@@ -204,6 +202,7 @@ export default {
         }
       })
       .catch((err) => {
+        console.log(err);
         this.$router.replace("/pages/404");
       });
   },

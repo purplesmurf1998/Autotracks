@@ -29,7 +29,6 @@ describe('Testing User Controller Class', () => {
         })
         .end( (err, response) => {
           response.should.have.status(200);
-          admin_id = response.body.payload._id;
           response.body.should.be.a('object');
           token = response.body.token;
           done();
@@ -39,7 +38,7 @@ describe('Testing User Controller Class', () => {
 
   //The below test, checks if the app can create an Admin successfully
   describe('Create Admin API Test', () => {
-    it('should return 200 when the admin is created', (done) => {
+    it('should return 201 when the admin is created', (done) => {
       chai.request(app)
         .post("/api/v1/auth/register")
         .send({
@@ -50,8 +49,8 @@ describe('Testing User Controller Class', () => {
           "password": "password123"
         })
         .end( (err, response) => {
-          //Checks if the status code is 200
-          response.should.have.status(200);
+          //Checks if the status code is 201
+          response.should.have.status(201);
           admin_id = response.body.payload._id;
           response.body.should.be.a('object');
           done();
@@ -72,8 +71,8 @@ describe('Testing User Controller Class', () => {
           "password": "password123"
         })
         .end( (err, response) => {
-          //Checks if the status code is 200
-          response.should.have.status(400);
+          //Checks if the status code is 401
+          response.should.have.status(401);
           response.body.should.be.a('object');
           done();
         });
@@ -133,7 +132,7 @@ describe('Testing User Controller Class', () => {
         .set('authorization', 'Bearer ' + token)
         //Need to have the token to be able to create users
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           user_id = response.body.payload._id;
           done();
         });
@@ -175,7 +174,7 @@ describe('Testing User Controller Class', () => {
           "first_name": "test_staff",
           "last_name": "test_staff",
           "email": "test_staff_not_admin@autotracks.com",
-          "role": "Management",
+          "role": "Administration",
           "permissions": [
             "Add Dealerships",
           ],
@@ -195,7 +194,7 @@ describe('Testing User Controller Class', () => {
   describe('Get User API Test', () => {
     it('should return 200 when the user is present', (done) => {
       chai.request(app)
-        .get("/api/v1/users/618aacf45cdc75b8288eb9b5") // + admin_id)
+        .get("/api/v1/users/" + admin_id)
         .set('authorization', 'Bearer ' + token)
         //pass the authorization token
         .end( (err, response) => {
@@ -207,13 +206,13 @@ describe('Testing User Controller Class', () => {
 
   //The below test, checks if the app returns an error when trying to fetch an invalid user id
   describe('Get User API Error Test (Invalid User ID)', () => {
-    it('should return 500 when the user is not present', (done) => {
+    it('should return 404 when the user is not present', (done) => {
       chai.request(app)
         .get("/api/v1/users/718aacf45cdc75b8288eb9b5")
         .set('authorization', 'Bearer ' + token)
         //pass the authorization token
         .end( (err, response) => {
-          response.should.have.status(500);
+          response.should.have.status(404);
           done();
         });
     });
@@ -228,7 +227,7 @@ describe('Testing User Controller Class', () => {
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.data.should.be.a('array');
+          response.body.payload.should.be.a('array');
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           done();
@@ -266,7 +265,7 @@ describe('Testing User Controller Class', () => {
           "first_name": "test_update",
         })       
         .end( (err, response) => {
-          response.should.have.status(400);
+          response.should.have.status(404);
           done();
         });
     });
@@ -280,7 +279,7 @@ describe('Testing User Controller Class', () => {
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
-          response.body.data.should.be.a('array');
+          response.body.payload.should.be.a('array');
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           done();
@@ -298,7 +297,7 @@ describe('Testing User Controller Class', () => {
         .end( (err, response) => {
           response.should.have.status(200);
           //the response data should be an array of users
-          response.body.data.should.be.a('array');
+          response.body.payload.should.be.a('array');
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           done();
@@ -336,12 +335,12 @@ describe('Testing User Controller Class', () => {
 
   //The below test, checks if the app returns an error when attempting to delete a nonexistent user
   describe('Delete User API Error Test (Invalid User ID)' + user_id, () => {
-    it('should return 200 when the user is deleted', (done) => {
+    it('should return 400 because of invalid user ID', (done) => {
       chai.request(app)
         .delete("/api/v1/users/" + user_id)
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(401);
+          response.should.have.status(404);
           done();
         });
     });

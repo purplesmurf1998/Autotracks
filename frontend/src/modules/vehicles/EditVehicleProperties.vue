@@ -135,8 +135,6 @@ export default {
         properties,
         this.editedVehicle
       );
-
-      console.log(formattedProperties);
       // create the request body
       let tempVehicle = this.vehicle;
       tempVehicle.properties = formattedProperties;

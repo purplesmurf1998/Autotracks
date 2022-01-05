@@ -85,10 +85,11 @@ export default {
     })
       .then((response) => {
         if (response.data.success) {
-          this.dealership = response.data.data;
+          this.dealership = response.data.payload;
         }
       })
       .catch((err) => {
+        console.log(err);
         this.$router.replace("/pages/404");
       });
   },

@@ -42,7 +42,7 @@ describe('Testing Vehicle Property Controller Class', () => {
 
   //The below test checks if we can create a vehicle property successfully
   describe('Create Vehicle Property API Test', () => {
-    it('should return 200 when a vehicle property is created', (done) => {
+    it('should return 201 when a vehicle property is created', (done) => {
       chai.request(app)
         .post("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
         .send({
@@ -53,7 +53,7 @@ describe('Testing Vehicle Property Controller Class', () => {
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           vehicle_prop_1_id = response.body.payload._id;
@@ -65,7 +65,7 @@ describe('Testing Vehicle Property Controller Class', () => {
   });
 
   describe('Create 2nd Vehicle Property API Test', () => {
-    it('should return 200 when the 2nd vehicle property is created', (done) => {
+    it('should return 201 when the 2nd vehicle property is created', (done) => {
       chai.request(app)
         .post("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
         .send({
@@ -76,7 +76,7 @@ describe('Testing Vehicle Property Controller Class', () => {
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           vehicle_prop_2_id = response.body.payload._id;
