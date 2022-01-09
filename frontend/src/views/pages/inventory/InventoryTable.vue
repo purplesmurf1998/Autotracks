@@ -3,6 +3,12 @@
     <CCard v-if="tableFields.length > 0">
       <CCardHeader>
         <slot name="header">Inventory list of vehicles</slot>
+        <!-- Download button below -->
+        <CButton 
+        @click="downloadInventory"
+        color="primary" class="float-right">
+          <CIcon name="cil-cloud-download" />
+        </CButton>
       </CCardHeader>
       <CCardBody>
         <CDataTable
@@ -42,6 +48,9 @@ export default {
     };
   },
   methods: {
+    downloadInventory() {
+      console.log("Report Downloaded");
+    },
     rowClicked(vehicle) {
       this.$router.push(`/inventory/details/${vehicle._id}`);
     },
