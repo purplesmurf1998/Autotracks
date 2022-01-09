@@ -2,8 +2,8 @@
   <CRow>
     <CCol sm="6" lg="3">
       <CWidgetDropdown
-       color="gradient-primary" :header="inventoryCount" text="Members online">
-        <template #default>
+       color="gradient-primary" header="Vehicles Sold" :text="inventoryCount" style="height:160px" id="total-sales">
+        <!-- <template #default>
           <CDropdown
             color="transparent p-0"
             placement="bottom-end"
@@ -16,8 +16,8 @@
             <CDropdownItem>Something else here...</CDropdownItem>
             <CDropdownItem disabled>Disabled actionss</CDropdownItem>
           </CDropdown>
-        </template>
-        <template #footer>
+        </template> -->
+        <!-- <template #footer>
           <CChartLineSimple
             pointed
             class="mt-3 mx-3"
@@ -26,11 +26,11 @@
             label="Members"
             labels="months"
           />
-        </template>
+        </template> -->
       </CWidgetDropdown>
     </CCol>
     <CCol sm="6" lg="3">
-      <CWidgetDropdown color="gradient-info" header="9.823" text="Members online">
+      <CWidgetDropdown color="gradient-info" header="9.823" title="Test" text="Members online">
         <template #default>
           <CDropdown
             color="transparent p-0"
@@ -129,27 +129,29 @@
 </template>
 
 <script>
+const axios = require("axios");
 import { CChartLineSimple, CChartBarSimple } from '../charts/index.js'
 
 export default {
   name: 'WidgetsDropdown',
+  props: ["dealership"],
   data() {
     return {
-      inventoryCount: -1,
+      inventoryCount: "-1",
     };
   },
   methods: {
-    fetchVehiclesInInventory() {
+    fetchVehiclesInInventory(dealership) {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/inventory/dealership/${this.dealership}`,
+        url: `${this.$store.state.api}/inventory/dealership/${dealership}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
       })
         .then((response) => {
           const inventoryCount = response.data.inventoryCount;
-          this.inventoryCount = inventoryCount;
+          this.inventoryCount = inventoryCount.toString();
         })
         .catch((error) => {
           console.log(error);
@@ -159,8 +161,11 @@ export default {
     },
   },
   mounted() {
-    this.fetchVehiclesInInventory()
+    this.fetchVehiclesInInventory(this.dealership);
   },
   components: { CChartLineSimple, CChartBarSimple }
 }
+
+var elem = document.getElementById('total-sales');
+console.log(elem);
 </script>

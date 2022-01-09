@@ -20,7 +20,7 @@
                 :options="adminDealerships"
                 :value.sync="dealership"
                 placeholder="Select a dealership to view their inventory"
-                @change="dealershipSelected($route.fullPath, $event)"
+                @change="dealershipSelected($router.app._route.fullPath, $event)"
             />
     </div>
 </template>
@@ -51,12 +51,11 @@ export default {
         }
         else
         {
-            this.updateVisuals(this.dealership);
+            this.dealership = selected_val.target.value
+            //Propogate the selected dealershipID to the parent component (i.e. Inventory) via sending the selectDealership event
+            this.$emit('selectDealership', this.dealership);
+            this.$parent.$refs.wdigetDD.fetchVehiclesInInventory(this.dealership);
         }
-    },
-    updateVisuals(selectedDealership)
-    {
-        console.log("Test");
     },
     showMessage(message) {
         this.Message = message;
@@ -151,7 +150,6 @@ export default {
       if (this.$store.state.auth.dealership) {
         this.dealership = this.$store.state.auth.dealership;
         this.$emit('selectDealership', this.dealership);
-
       }
     }
   },

@@ -1,8 +1,15 @@
 <template>
   <div>
-    <DealershipDD/>
+    <DealershipDD
+      :dealership="selectedDealership"
+      @selectDealership="selectedDealership = $event"
+    />
       <!-- The following change event needs to be added later to update the visuals @change="$refs.inventoryTable.switchDealerships(selectedDealership)" -->
-    <WidgetsDropdown />
+    <WidgetsDropdown
+      v-if="selectedDealership"
+      :dealership="selectedDealership"
+      ref="wdigetDD"
+    />
     <CCard>
       <CCardBody>
         <CRow>
@@ -55,7 +62,8 @@ export default {
   },
   data() {
     return {
-      selected: null //To be used for thet line chart
+      selected: null, //To be used for thet line chart
+      selectedDealership: null,
     };
   },
 };
