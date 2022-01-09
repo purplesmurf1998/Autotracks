@@ -94,10 +94,14 @@ export default {
           const payload = response.data.payload;
           let tableItems = [];
           payload.forEach((vehicle) => {
-            let properties = vehicle.properties;
-            properties._id = vehicle._id;
-            properties.missing = vehicle.missing;
-            tableItems.push(properties);
+            //Check if vehicle has properties
+            if (vehicle.properties != null)
+            {
+              let properties = vehicle.properties;
+              properties._id = vehicle._id;
+              properties.missing = vehicle.missing;
+              tableItems.push(properties);
+            } 
           });
           this.tableItems = tableItems;
         })

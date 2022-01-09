@@ -1,7 +1,8 @@
 <template>
   <CRow>
     <CCol sm="6" lg="3">
-      <CWidgetDropdown color="gradient-primary" header="9.823" text="Members online">
+      <CWidgetDropdown
+       color="gradient-primary" :header="inventoryCount" text="Members online">
         <template #default>
           <CDropdown
             color="transparent p-0"
@@ -13,7 +14,7 @@
             <CDropdownItem>Action</CDropdownItem>
             <CDropdownItem>Another action</CDropdownItem>
             <CDropdownItem>Something else here...</CDropdownItem>
-            <CDropdownItem disabled>Disabled action</CDropdownItem>
+            <CDropdownItem disabled>Disabled actionss</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
@@ -21,7 +22,6 @@
             pointed
             class="mt-3 mx-3"
             style="height:70px"
-            :data-points="[65, 59, 84, 84, 51, 55, 40]"
             point-hover-background-color="primary"
             label="Members"
             labels="months"
@@ -133,6 +133,34 @@ import { CChartLineSimple, CChartBarSimple } from '../charts/index.js'
 
 export default {
   name: 'WidgetsDropdown',
+  data() {
+    return {
+      inventoryCount: -1,
+    };
+  },
+  methods: {
+    fetchVehiclesInInventory() {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/inventory/dealership/${this.dealership}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          const inventoryCount = response.data.inventoryCount;
+          this.inventoryCount = inventoryCount;
+        })
+        .catch((error) => {
+          console.log(error);
+          //Show an error message instead of showing the 404 page
+          this.$router.replace("/pages/404");
+        });
+    },
+  },
+  mounted() {
+    this.fetchVehiclesInInventory()
+  },
   components: { CChartLineSimple, CChartBarSimple }
 }
 </script>

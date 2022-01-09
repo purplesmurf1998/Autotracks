@@ -1,5 +1,13 @@
 <template>
   <div>
+    <CSelect
+          v-if="$store.state.auth.role == 'Administration'"
+          id="dealership-select"
+          :options="adminDealerships"
+          :value.sync="selectedDealership"
+          placeholder="Select a dealership to view their inventory"
+        />
+      <!-- The following change event needs to be added later to update the visuals @change="$refs.inventoryTable.switchDealerships(selectedDealership)" -->
     <WidgetsDropdown />
     <CCard>
       <CCardBody>
@@ -386,97 +394,92 @@ export default {
   },
   data() {
     return {
-      selected: "Month",
-      tableItems: [
-        {
-          avatar: { url: "img/avatars/1.jpg", status: "success" },
-          user: {
-            name: "Yiorgos Avraamu",
-            new: true,
-            registered: "Jan 1, 2015",
-          },
-          country: { name: "USA", flag: "cif-us" },
-          usage: { value: 50, period: "Jun 11, 2015 - Jul 10, 2015" },
-          payment: { name: "Mastercard", icon: "cib-cc-mastercard" },
-          activity: "10 sec ago",
-        },
-        {
-          avatar: { url: "img/avatars/2.jpg", status: "danger" },
-          user: {
-            name: "Avram Tarasios",
-            new: false,
-            registered: "Jan 1, 2015",
-          },
-          country: { name: "Brazil", flag: "cif-br" },
-          usage: { value: 22, period: "Jun 11, 2015 - Jul 10, 2015" },
-          payment: { name: "Visa", icon: "cib-cc-visa" },
-          activity: "5 minutes ago",
-        },
-        {
-          avatar: { url: "img/avatars/3.jpg", status: "warning" },
-          user: { name: "Quintin Ed", new: true, registered: "Jan 1, 2015" },
-          country: { name: "India", flag: "cif-in" },
-          usage: { value: 74, period: "Jun 11, 2015 - Jul 10, 2015" },
-          payment: { name: "Stripe", icon: "cib-stripe" },
-          activity: "1 hour ago",
-        },
-        {
-          avatar: { url: "img/avatars/4.jpg", status: "" },
-          user: { name: "Enéas Kwadwo", new: true, registered: "Jan 1, 2015" },
-          country: { name: "France", flag: "cif-fr" },
-          usage: { value: 98, period: "Jun 11, 2015 - Jul 10, 2015" },
-          payment: { name: "PayPal", icon: "cib-paypal" },
-          activity: "Last month",
-        },
-        {
-          avatar: { url: "img/avatars/5.jpg", status: "success" },
-          user: {
-            name: "Agapetus Tadeáš",
-            new: true,
-            registered: "Jan 1, 2015",
-          },
-          country: { name: "Spain", flag: "cif-es" },
-          usage: { value: 22, period: "Jun 11, 2015 - Jul 10, 2015" },
-          payment: { name: "Google Wallet", icon: "cib-google-pay" },
-          activity: "Last week",
-        },
-        {
-          avatar: { url: "img/avatars/6.jpg", status: "danger" },
-          user: {
-            name: "Friderik Dávid",
-            new: true,
-            registered: "Jan 1, 2015",
-          },
-          country: { name: "Poland", flag: "cif-pl" },
-          usage: { value: 43, period: "Jun 11, 2015 - Jul 10, 2015" },
-          payment: { name: "Amex", icon: "cib-cc-amex" },
-          activity: "Last week",
-        },
-      ],
-      tableFields: [
-        { key: "avatar", label: "", _classes: "text-center" },
-        { key: "user" },
-        { key: "country", _classes: "text-center" },
-        { key: "usage" },
-        { key: "payment", label: "Payment method", _classes: "text-center" },
-        { key: "activity" },
-      ],
+      adminDealerships: fetchAdminDealerships(),
+      selectedDealership: null,
+      defaultAdminDealership: null,
     };
   },
   methods: {
-    color(value) {
-      let $color;
-      if (value <= 25) {
-        $color = "info";
-      } else if (value > 25 && value <= 50) {
-        $color = "success";
-      } else if (value > 50 && value <= 75) {
-        $color = "warning";
-      } else if (value > 75 && value <= 100) {
-        $color = "danger";
-      }
-      return $color;
+    setDefaultDealership() {
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {
+          dealership: this.selectedDealership,
+        },
+      })
+        .then((response) => {
+          this.defaultAdminDealership = this.selectedDealership;
+          this.$store.commit("setProperty", [
+            "dealership",
+            this.selectedDealership,
+          ]);
+          // find the dealership's name
+          const index = this.adminDealerships.findIndex(
+            (dealership) => dealership.value == this.selectedDealership
+          );
+          this.showMessage(
+            `${this.adminDealerships[index].label} successfully set as your default dealership`
+          );
+        })
+        .catch((error) => {
+          this.showMessage(
+              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`
+            );
+        });
     },
+    fetchAdminDealerships() {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/dealerships`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        params: {
+          admin: this.$store.state.auth.userId,
+        },
+      })
+        .then((response) => {
+          if (response.data.success) {
+            // convert the payload to a propery select array
+            const payload = response.data.payload;
+            const dealerships = [];
+            payload.forEach((dealership) => {
+              dealerships.push({
+                value: dealership._id,
+                label: dealership.name,
+              });
+            });
+            return dealerships;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$router.replace("/pages/404");
+        });
+    },
+  },
+  mounted() {
+    /* 
+    Get the dealership being viewed. If the user is an administrator, offer a dropdown so they can select
+    which dealership to view. If not an administrator, use the dealership associated to the account.
+    */
+    if (this.$store.state.auth.role != "Administration") {
+      // administrators will have no dealership associated to their account
+      // fetch the properties associated to the dealership
+      this.selectedDealership = this.$store.state.auth.dealership;
+    } else {
+      // fetch the dealerships associated to the admin
+      this.fetchAdminDealerships();
+
+      //if the admin has a default dealership selected, show its inventory
+      if (this.$store.state.auth.dealership) {
+        this.selectedDealership = this.$store.state.auth.dealership;
+      }
+    }
   },
 };
 </script>

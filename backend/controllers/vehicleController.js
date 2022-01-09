@@ -19,12 +19,16 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   }
   
   let query = Vehicle.find({ dealership: req.params.dealershipId });
+  let inventory_query = Vehicle.find({ dealership: req.params.dealershipId, soldBy: null});
+
   // run query
   const vehicles = await query;
+  const inventory_vehicle = await inventory_query;
 
   res.status(200).json({
     success: true,
     count: vehicles.length,
+    inventoryCount: inventory_vehicle.length,
     payload: vehicles
   });
 });
