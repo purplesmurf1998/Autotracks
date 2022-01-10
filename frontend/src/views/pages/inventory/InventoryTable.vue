@@ -13,16 +13,18 @@
           :fixed="true"
           :clickable-rows="true"
           @row-clicked="rowClicked"
-          table-filter
           sorter
           size="sm"
           hover
         >
-          <template #missing="{ item }">
+          <template v-for="field in tableFields" v-slot:[field.key]="item">
+            <inventory-slot :key="field.key" :item="item" :field="field"/>
+          </template>
+          <!-- <template #missing="{ item }">
             <td>
               <CIcon name="cil-warning" class="icon" v-if="item.missing" />
             </td>
-          </template>
+          </template> -->
         </CDataTable>
       </CCardBody>
     </CCard>
@@ -31,6 +33,7 @@
 
 <script>
 const axios = require("axios");
+import InventorySlot from "./InventorySlot.vue"
 
 export default {
   name: "InventoryTable",
@@ -60,18 +63,14 @@ export default {
       })
         .then((response) => {
           const payload = response.data.payload;
-          const fields = [
-            {
-              key: "missing",
-              label: "",
-            },
-          ];
+          const fields = [];
           payload.forEach((property) => {
             if (property.visible) {
               fields.push(property);
             }
           });
           this.tableFields = fields;
+          console.log(this.tableFields);
           if (this.tableFields.length == 1) {
             this.tableItems = [];
           } else {
@@ -96,7 +95,9 @@ export default {
           payload.forEach((vehicle) => {
             let properties = vehicle.properties;
             properties._id = vehicle._id;
-            properties.missing = vehicle.missing;
+            if (vehicle.missing) {
+              properties._classes = 'table-danger';
+            }
             tableItems.push(properties);
           });
           this.tableItems = tableItems;
@@ -110,6 +111,9 @@ export default {
   mounted() {
     this.fetchVehicleProperties();
   },
+  components: {
+    'inventory-slot': InventorySlot
+  }
 };
 </script>
 
