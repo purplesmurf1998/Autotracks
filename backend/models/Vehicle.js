@@ -6,24 +6,32 @@ const VehicleSchema = new mongoose.Schema({
     ref: 'Dealership',
     required: [true, 'Vehicle model must be associated to a dealership']
   },
-  deposit: {
-    type: Number,
-    default: 0.00
-  },
-  soldBy: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    default: null
-  },
-  delivered: {
-    type: Boolean,
-    default: false
+  vin: {
+    type: String,
+    required: [true, 'Vehicle must have a \'Vehicle Identification Number\' (VIN)'],
+    unique: true,
+    minlength: [11, 'VIN must be 17 characters long, or at least 11 characters for vehicles manufactured before 1981'],
+    maxlength: [17, 'VIN must be 17 characters long, or at least 11 characters for vehicles manufactured before 1981']
   },
   missing: {
     type: Boolean,
     default: false
   },
-  properties: Object
+  delivered: {
+    type: Boolean,
+    default: false
+  },
+  sale: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'VehicleSale',
+    default: null
+  },
+  date_added: {
+    type: Date,
+    default: Date.now
+  },
+  on_road_since: Date,
+  properties: Object,
 })
 
 module.exports = mongoose.model('Vehicle', VehicleSchema);
