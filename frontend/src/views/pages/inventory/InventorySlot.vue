@@ -1,12 +1,12 @@
 <template>
-  <td v-html="listAsString"></td>
+  <td v-html="value"></td>
 </template>
 
 <script>
 export default {
     props: ['item', 'field'],
     computed: {
-        listAsString() {
+        value() {
             if (this.field.inputType == 'List') {
                 let list = this.item.item[this.field.key];
                 let value = '';
@@ -24,9 +24,6 @@ export default {
                 return this.item.item[this.field.key];
             }
         }
-    },
-    mounted() {
-        console.log(this.item.item);
     }
 }
 </script>

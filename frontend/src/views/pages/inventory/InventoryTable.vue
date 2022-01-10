@@ -16,6 +16,7 @@
           sorter
           size="sm"
           hover
+          column-filter
         >
           <template v-for="field in tableFields" v-slot:[field.key]="item">
             <inventory-slot :key="field.key" :item="item" :field="field"/>
@@ -78,7 +79,8 @@ export default {
           }
         })
         .catch((error) => {
-          this.$router.replace("/pages/404");
+          console.log(error);
+          //this.$router.replace("/pages/404");
         });
     },
     fetchVehicles() {
@@ -96,7 +98,7 @@ export default {
             let properties = vehicle.properties;
             properties._id = vehicle._id;
             if (vehicle.missing) {
-              properties._classes = 'table-danger';
+              properties._classes = 'table-warning';
             }
             tableItems.push(properties);
           });
@@ -104,7 +106,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          this.$router.replace("/pages/404");
+          //this.$router.replace("/pages/404");
         });
     },
   },
