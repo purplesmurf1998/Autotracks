@@ -1,33 +1,41 @@
 <template>
   <CRow>
     <CCol sm="6" lg="3">
-      <CWidgetDropdown
-       color="gradient-primary" header="Vehicles Sold" :text="inventoryCount" style="height:160px" id="total-sales">
-        <!-- <template #default>
-          <CDropdown
-            color="transparent p-0"
-            placement="bottom-end"
-          >
-            <template #toggler-content>
-              <CIcon name="cil-settings"/>
-            </template>
-            <CDropdownItem>Action</CDropdownItem>
-            <CDropdownItem>Another action</CDropdownItem>
-            <CDropdownItem>Something else here...</CDropdownItem>
-            <CDropdownItem disabled>Disabled actionss</CDropdownItem>
-          </CDropdown>
-        </template> -->
-        <!-- <template #footer>
-          <CChartLineSimple
-            pointed
-            class="mt-3 mx-3"
-            style="height:70px"
-            point-hover-background-color="primary"
-            label="Members"
-            labels="months"
-          />
-        </template> -->
-      </CWidgetDropdown>
+<!--      <CWidgetDropdown-->
+<!--       color="gradient-primary" header="Vehicles Sold" :text="inventoryCount"  id="total-sales">-->
+<!--        <template #default>-->
+<!--          <CDropdown-->
+<!--            color="transparent p-0"-->
+<!--            placement="bottom-end"-->
+<!--          >-->
+<!--            <template #toggler-content>-->
+<!--              <CIcon name="cil-settings"/>-->
+<!--            </template>-->
+<!--            <CDropdownItem>Action</CDropdownItem>-->
+<!--            <CDropdownItem>Another action</CDropdownItem>-->
+<!--            <CDropdownItem>Something else here...</CDropdownItem>-->
+<!--            <CDropdownItem disabled>Disabled actionss</CDropdownItem>-->
+<!--          </CDropdown>-->
+<!--        </template>-->
+<!--        <template #footer>-->
+<!--          <CChartLineSimple-->
+<!--            pointed-->
+<!--            class="mt-3 mx-3"-->
+<!--            style="height:70px"-->
+<!--            point-hover-background-color="primary"-->
+<!--            label="Members"-->
+<!--            labels="months"-->
+<!--          />-->
+<!--        </template>-->
+<!--      </CWidgetDropdown>-->
+      <CCard class="text-center" color="gradient-primary" textColor="white" style="height:160px">
+        <CCardBody class="d-flex align-items-center">
+          <CCol>
+            <CCardTitle class="display-3" color="gradient-secondary">{{inventoryCount}}</CCardTitle>
+            <CCardSubtitle>Vehicles Sold</CCardSubtitle>
+          </CCol>
+        </CCardBody>
+      </CCard>
     </CCol>
     <CCol sm="6" lg="3">
       <CWidgetDropdown color="gradient-info" header="9.823" title="Test" text="Members online">
