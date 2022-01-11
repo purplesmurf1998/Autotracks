@@ -23,6 +23,11 @@
       >You must create vehicle properties inside the dealership details page
       before creating vehicles.</CAlert
     >
+    <CAlert
+      color="danger"
+      v-if="errorMessage"
+      >{{ errorMessage }}</CAlert
+    >
     <CRow>
       <CCol>
         <CCard v-if="vehicleProperties && vehicleProperties.length > 0">
