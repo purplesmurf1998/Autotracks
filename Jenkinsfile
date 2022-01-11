@@ -1,13 +1,13 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:16.13.1-alpine'
-    }
-
-  }
+  agent none
   stages {
     stage('Build') {
-      agent any
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+        }
+
+      }
       steps {
         echo 'Cloning Branch'
         pwd()
@@ -26,7 +26,12 @@ pipeline {
     }
 
     stage('Test') {
-      agent any
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+        }
+
+      }
       steps {
         echo 'Testing'
         dir(path: backend) {
@@ -42,7 +47,12 @@ pipeline {
     }
 
     stage('Deliver') {
-      agent any
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+        }
+
+      }
       steps {
         echo 'Deploying Server'
         sh 'npm run serve'
