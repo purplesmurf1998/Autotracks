@@ -1,7 +1,13 @@
 pipeline {
-  agent none
+  agent {
+    node {
+      label 'autotracks-jenkins'
+    }
+
+  }
   stages {
     stage('Build') {
+      agent any
       steps {
         echo 'Cloning Branch'
         pwd()
