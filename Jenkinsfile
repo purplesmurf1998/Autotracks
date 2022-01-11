@@ -10,7 +10,6 @@ pipeline {
       agent any
       steps {
         echo 'Cloning Branch'
-        git(url: 'https://github.com/purplesmurf1998/Autotracks.git', branch: 'main')
         pwd()
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
@@ -27,6 +26,7 @@ pipeline {
     }
 
     stage('Test') {
+      agent any
       steps {
         echo 'Testing'
         dir(path: backend) {
@@ -42,6 +42,7 @@ pipeline {
     }
 
     stage('Deliver') {
+      agent any
       steps {
         echo 'Deploying Server'
         sh 'npm run serve'
