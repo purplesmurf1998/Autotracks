@@ -152,6 +152,7 @@ export default {
           this.showErrorMessage(
             "Unable to create the vehicle. Make sure the information was entered correctly."
           );
+          window.scrollTo(0,0);
         });
     },
     showErrorMessage(message) {
