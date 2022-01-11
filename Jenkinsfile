@@ -10,6 +10,7 @@ pipeline {
       agent any
       steps {
         echo 'Cloning Branch'
+        git(url: 'https://github.com/purplesmurf1998/Autotracks.git', branch: 'main')
         pwd()
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
