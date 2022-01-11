@@ -4,7 +4,6 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Cloning Branch'
-        git(url: 'https://github.com/purplesmurf1998/Autotracks.git', branch: 'main', credentialsId: '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', poll: true)
         pwd()
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
