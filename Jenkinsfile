@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    node {
-      label 'autotracks-jenkins'
-    }
-
-  }
+  agent none
   stages {
     stage('Build') {
       agent any
