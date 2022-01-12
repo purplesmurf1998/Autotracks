@@ -106,7 +106,8 @@
       <CWidgetDropdown
         color="gradient-danger"
         header="9.823"
-        text="Members online"
+        :text="property"
+        style="height:160px"
       >
         <template #default>
           <CDropdown
@@ -120,7 +121,7 @@
             </template>
             <CDropdownItem v-for="vp in vehicleProperties" 
             :key="vp.label"
-            @click.native="filterVisualByProperty">{{vp.label}}</CDropdownItem>
+            @click.native="filterVisualByProperty(vp.label)">{{vp.label}}</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
@@ -148,6 +149,7 @@ export default {
     return {
       inventoryCount: "-1",
       vehicleProperties: null,
+      property: null,
     };
   },
   methods: {
@@ -170,7 +172,6 @@ export default {
         });
     },
     fetchVehicleProperties() {
-      console.log("test");
       axios({
         method: "GET",
         url: `${this.$store.state.api}/dealerships/${this.dealership}/vehicles/properties`,
@@ -187,17 +188,19 @@ export default {
           }
         });
         this.vehicleProperties = fields;
+        this.property = "Inventory Count By " + this.vehicleProperties[0].label;
       })
       .catch((error) => {
         console.log(error);
       });
     },
-    filterVisualByProperty() {
-      console.log("Filtered");
+    filterVisualByProperty(label) {
+      this.property = "Inventory Count By " + label;
     },
   },
   mounted() {
     this.fetchVehiclesInInventory(this.dealership);
+    this.fetchVehicleProperties();
   },
   components: { CChartLineSimple, CChartBarSimple }
 }
