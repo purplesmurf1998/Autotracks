@@ -35,6 +35,12 @@
             <h3>Vehicle Properties</h3>
             <hr />
             <CForm ref="vehicleForm" @submit.prevent="submitForm">
+              <CInput
+                  label="VIN"
+                  name="vin"
+                  v-model="vin"
+                  :required="true"
+                />
               <div v-for="property in vehicleProperties" :key="property._id">
                 <CInput
                   v-if="property.inputType == 'Text'"
@@ -109,6 +115,7 @@ export default {
       vehicleProperties: null,
       errorMessage: null,
       showingModal: false,
+      vin: null,
       properties: null,
     };
   },
@@ -130,6 +137,7 @@ export default {
     submitVehicle(properties) {
       const body = {
         dealership: this.$route.params.dealershipId,
+        vin: this.vin,
         properties,
       };
       axios({
@@ -149,9 +157,18 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          this.showErrorMessage(
-            "Unable to create the vehicle. Make sure the information was entered correctly."
-          );
+          if (error.response.data.error != null)
+          {
+            this.showErrorMessage(
+              error.response.data.error
+            );
+          }
+          else
+          {
+            this.showErrorMessage(
+              "Unable to create the vehicle. Make sure the information was entered correctly."
+            );
+          }
           window.scrollTo(0,0);
         });
     },
