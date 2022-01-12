@@ -4,7 +4,7 @@ const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
 
 // @desc        Get all vehicles for a specific dealership
-// @route       GET /api/v1/inventory/dealership/:dealershipId
+// @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
 // @access      Private
 exports.getVehicles = asyncHandler(async (req, res, next) => {
 
@@ -19,7 +19,7 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   }
   
   let query = Vehicle.find({ dealership: req.params.dealershipId });
-  let inventory_query = Vehicle.find({ dealership: req.params.dealershipId, sale: {$ne: null}});
+  let inventory_query = Vehicle.count({ dealership: req.params.dealershipId, delivered: {$ne: true}});
 
   // run query
   const vehicles = await query;
@@ -28,8 +28,48 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     count: vehicles.length,
-    inventoryCount: inventory_vehicle.length,
+    inventoryCount: inventory_vehicle,
     payload: vehicles
+  });
+});
+
+// @desc        Get inventory count per vehicle property
+// @route       GET /api/v1/inventory/dealership/:dealershipId/visual3/:property
+// @access      Private
+exports.getVehiclesDashboardV3 = asyncHandler(async (req, res, next) => {
+
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.params.dealershipId);
+
+  // no dealership found
+  if (!dealership) {
+      return next(
+          new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+      );
+  }
+
+  //Validate the property entered
+
+  let prop = req.params.property
+  let query = Vehicle.find({ dealership: req.params.dealershipId, delivered: {$ne: true}}).distinct('properties.' + prop);
+  let results = await query;
+  
+  end_results = [];
+  for (let i=0; i<results.length; i++)
+  {
+    let filter = {dealership: req.params.dealershipId, delivered: {$ne: true}};
+    filter['properties.'+prop] = results[i];
+    let query2 = Vehicle.count(filter);
+    let value_count = await query2;
+    console.log(value_count);
+    let prop_object = {};
+    prop_object[results[i]] = value_count;
+    end_results.push(prop_object);
+  }
+
+  res.status(200).json({
+    success: true,
+    payload: end_results,
   });
 });
 

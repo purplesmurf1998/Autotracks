@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getVehicle,
   getVehicles,
+  getVehiclesDashboardV3,
   createVehicle,
   updateVehicle,
   deleteVehicle
@@ -17,6 +18,10 @@ router.route('/')
 
 router.route('/dealership/:dealershipId')
   .get(protect, hasPermissions('View Vehicles'), getVehicles);
+
+  
+router.route('/dealership/:dealershipId/visual3/:property')
+.get(protect, getVehiclesDashboardV3);
 
 router.route('/vehicle/:vehicleId')
   .get(protect, hasPermissions('View Vehicles'), getVehicle)

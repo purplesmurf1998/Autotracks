@@ -1,38 +1,11 @@
 <template>
   <CRow>
     <CCol sm="6" lg="3">
-<!--      <CWidgetDropdown-->
-<!--       color="gradient-primary" header="Vehicles Sold" :text="inventoryCount"  id="total-sales">-->
-<!--        <template #default>-->
-<!--          <CDropdown-->
-<!--            color="transparent p-0"-->
-<!--            placement="bottom-end"-->
-<!--          >-->
-<!--            <template #toggler-content>-->
-<!--              <CIcon name="cil-settings"/>-->
-<!--            </template>-->
-<!--            <CDropdownItem>Action</CDropdownItem>-->
-<!--            <CDropdownItem>Another action</CDropdownItem>-->
-<!--            <CDropdownItem>Something else here...</CDropdownItem>-->
-<!--            <CDropdownItem disabled>Disabled actionss</CDropdownItem>-->
-<!--          </CDropdown>-->
-<!--        </template>-->
-<!--        <template #footer>-->
-<!--          <CChartLineSimple-->
-<!--            pointed-->
-<!--            class="mt-3 mx-3"-->
-<!--            style="height:70px"-->
-<!--            point-hover-background-color="primary"-->
-<!--            label="Members"-->
-<!--            labels="months"-->
-<!--          />-->
-<!--        </template>-->
-<!--      </CWidgetDropdown>-->
       <CCard class="text-center" color="gradient-primary" textColor="white" style="height:160px">
         <CCardBody class="d-flex align-items-center">
           <CCol>
             <CCardTitle class="display-3" color="gradient-secondary">{{inventoryCount}}</CCardTitle>
-            <CCardSubtitle>Vehicles Sold</CCardSubtitle>
+            <CCardSubtitle>Vehicles Count</CCardSubtitle>
           </CCol>
         </CCardBody>
       </CCard>
@@ -105,8 +78,7 @@
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-danger"
-        header="9.823"
-        :text="property"
+        :text="'Inventory Count By ' + property"
         style="height:160px"
       >
         <template #default>
@@ -188,14 +160,17 @@ export default {
           }
         });
         this.vehicleProperties = fields;
-        this.property = "Inventory Count By " + this.vehicleProperties[0].label;
+        this.property = this.vehicleProperties[0].label;
       })
       .catch((error) => {
         console.log(error);
       });
     },
     filterVisualByProperty(label) {
-      this.property = "Inventory Count By " + label;
+      this.property = label;
+      //fetch the vehicle from the inventory grouped by the vehicle property
+      //create a new contorller. we need the dealership id and the vehicle property
+
     },
   },
   mounted() {
