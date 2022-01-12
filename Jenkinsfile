@@ -33,10 +33,7 @@ pipeline {
       }
       steps {
         echo 'Testing'
-        dir(path: backend) {
-          sh 'npm test'
-        }
-
+   
         dir(path: '../')
         dir(path: frontend) {
           sh 'npm test'
@@ -55,8 +52,8 @@ pipeline {
       steps {
         echo 'Deploying Server'
         sh 'npm run serve'
+
       }
     }
-
   }
 }
