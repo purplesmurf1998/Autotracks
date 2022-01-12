@@ -112,14 +112,13 @@
           <CDropdown
             color="transparent p-0"
             placement="bottom-end"
+            @click.native="fetchVehicleProperties"
           >
             <template #toggler-content>
-             <CIcon name="cil-settings"/>
+             <CIcon
+             name="cil-settings"/>
             </template>
-            <CDropdownItem>Action</CDropdownItem>
-            <CDropdownItem>Another action</CDropdownItem>
-            <CDropdownItem>Something else here...</CDropdownItem>
-            <CDropdownItem disabled>Disabled action</CDropdownItem>
+            <CDropdownItem v-for="vp in vehicleProperties" :key="vp.label">{{vp.label}}</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
@@ -146,6 +145,7 @@ export default {
   data() {
     return {
       inventoryCount: "-1",
+      vehicleProperties: null,
     };
   },
   methods: {
@@ -166,6 +166,30 @@ export default {
           //Show an error message instead of showing the 404 page
           this.$router.replace("/pages/404");
         });
+    },
+    fetchVehicleProperties() {
+      console.log("test");
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/dealerships/${this.dealership}/vehicles/properties`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        const payload = response.data.payload;
+        const fields = [];
+        payload.forEach((property) => {
+          if (property.visible) {
+            fields.push(property);
+          }
+        });
+        this.vehicleProperties = fields;
+        console.log(this.vehicleProperties);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     },
   },
   mounted() {
