@@ -63,6 +63,14 @@
         <CRow>
           <CCol>
             <CRow class="justify-content-between ml-0 mr-0">
+              <CCol><h6 class="mb-2">VIN</h6></CCol>
+              <CCol class="d-flex align-items-end flex-column"
+                ><p 
+                class="mb-2 property-field"
+                v-text="vehicle.vin"/></CCol
+              >
+            </CRow>
+            <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Deposit Status</h6></CCol>
               <CCol class="d-flex align-items-end flex-column"
                 ><p class="mb-2 property-field">$0.00</p></CCol
@@ -165,7 +173,7 @@ export default {
       showingDeleteModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
-      errorMessage: null
+      errorMessage: null,
     };
   },
   methods: {

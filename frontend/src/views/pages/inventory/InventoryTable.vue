@@ -74,6 +74,7 @@ export default {
         .then((response) => {
           const payload = response.data.payload;
           const fields = [];
+          fields.push({key: "vin", label: "VIN"});
           payload.forEach((property) => {
             if (property.visible) {
               fields.push(property);
@@ -109,6 +110,7 @@ export default {
             { 
               let properties = vehicle.properties;
               properties._id = vehicle._id;
+              properties.vin = vehicle.vin;
               if (vehicle.missing) {
                 properties._classes = 'table-warning';
               }
