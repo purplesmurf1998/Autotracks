@@ -23,12 +23,12 @@
             >
             <CDropdownItem
               @click.native="showingSoldModal = true"
-              v-if="userHasPermissions('Edit Vehicles') && !vehicle.soldBy"
+              v-if="userHasPermissions('Edit Vehicles') && !vehicle.sale"
               >Sell vehicle</CDropdownItem
             >
             <CDropdownItem
               @click.native="setVehicleSoldPending(false)"
-              v-if="userHasPermissions('Edit Vehicles') && !!vehicle.soldBy"
+              v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
               class="delete"
               >Cancel sale</CDropdownItem
             >
