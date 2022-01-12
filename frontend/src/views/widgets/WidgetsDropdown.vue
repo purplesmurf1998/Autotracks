@@ -112,13 +112,15 @@
           <CDropdown
             color="transparent p-0"
             placement="bottom-end"
-            @click.native="fetchVehicleProperties"
           >
             <template #toggler-content>
              <CIcon
-             name="cil-settings"/>
+             name="cil-settings"
+             @click.native="fetchVehicleProperties"/>
             </template>
-            <CDropdownItem v-for="vp in vehicleProperties" :key="vp.label">{{vp.label}}</CDropdownItem>
+            <CDropdownItem v-for="vp in vehicleProperties" 
+            :key="vp.label"
+            @click.native="filterVisualByProperty">{{vp.label}}</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
@@ -185,11 +187,13 @@ export default {
           }
         });
         this.vehicleProperties = fields;
-        console.log(this.vehicleProperties);
       })
       .catch((error) => {
         console.log(error);
       });
+    },
+    filterVisualByProperty() {
+      console.log("Filtered");
     },
   },
   mounted() {
