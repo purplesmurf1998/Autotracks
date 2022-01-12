@@ -38,7 +38,6 @@ exports.createDealership = asyncHandler(async (req, res, next) => {
     const dealership = await Dealership.create(req.body);
 
     // if creating the first dealership, set tutorial to completed
-    console.log(user);
     if (!user.createDealershipCompleted) {
         await User.findByIdAndUpdate(user._id, { createDealershipCompleted: true }, {
             new: true,

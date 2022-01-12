@@ -35,7 +35,13 @@
       </CCol>
     </CRow>
     <CRow class="d-flex justify-content-start mt-3 px-3 mb-2">
-      <CButton color="secondary" class="mr-2" id="edit-user-acc" @click="setEditingUser(true)"
+      <CButton
+        color="secondary"
+        class="mr-2"
+        id="edit-user-acc"
+        @click="setEditingUser(true)"
+        v-if="userHasPermissions('Edit Staff Users')"
+        :disabled="$store.state.auth.userId == user._id"
         >Edit account details</CButton
       >
     </CRow>
@@ -46,6 +52,7 @@
           deletingUser = true;
         }
       "
+      v-if="userHasPermissions('Delete Staff Users')"
       >Delete staff account</CButton
     >
     <CModal :show.sync="deletingUser" :centered="true">
@@ -70,6 +77,7 @@
 
 <script>
 const axios = require("axios");
+const { containsPermissions } = require("../../utils/index");
 
 export default {
   props: ["user", "setEditingUser"],
@@ -79,10 +87,15 @@ export default {
     };
   },
   methods: {
+    userHasPermissions(...permissions) {
+      // console.log(permissions);
+      // console.log(containsPermissions(permissions));
+      return containsPermissions(permissions);
+    },
     removeUser() {
       axios({
         method: "DELETE",
-        url: `http://localhost:5000/api/v1/users/${this.user._id}`,
+        url: `${this.$store.state.api}/users/${this.user._id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },

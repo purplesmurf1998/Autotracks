@@ -60,7 +60,7 @@ export default {
         // post request to API to create the new dealership
         axios({
           method: 'POST',
-          url: 'http://localhost:5000/api/v1/dealerships',
+          url: `${this.$store.state.api}/dealerships`,
           headers: {
             'Authorization': `Bearer ${this.$store.state.auth.token}`
           },
@@ -71,9 +71,6 @@ export default {
           }
         }).then(response => {
           if (response.data.success) {
-            // if (!this.$store.state.auth.createDealershipCompleted) {
-            //   this.$store.commit('setProperty', 'createDealershipCompleted', true);
-            // }
             this.$router.go();
           } else {
             console.log(response);
@@ -106,7 +103,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

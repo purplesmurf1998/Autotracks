@@ -1,13 +1,13 @@
 <template>
   <div>
-    <CRow v-if="!selectedDealership">
+    <CRow>
       <CCol>
         <CRow>
           <div class="col-lg-auto">
             <CAlert
               v-if="!$store.state.auth.createDealershipCompleted"
               color="success"
-              >Welcome to your <b>Dealerships</b> page! Here you can see all
+              >Welcome to your <strong>Dealerships</strong> page! Here you can see all
               your dealerships which each contain their very own
               <u>inventory</u>, <u>vehicle</u> properties and <u>staff</u>.
               Start your experience by creating your very first dealership by
@@ -79,13 +79,6 @@
         </CCard>
       </CCol>
     </CRow>
-    <!-- <CRow>
-      <Dealership
-        v-if="selectedDealership != null"
-        :dealership="selectedDealership"
-        :resetSelectedDealership="resetSelectedDealership"
-      ></Dealership>
-    </CRow> -->
     <CModal
       :show.sync="addingDealership"
       :centered="true"
@@ -98,10 +91,6 @@
         <CButtonClose @click="addingDealership = false" />
       </template>
       <template #footer>
-        <!-- <CRow class="justify-content-center">
-        </CRow>
-        <CButton @click="addingDealership = false" color="danger">Discard</CButton>
-        <CButton @click="addingDealership = false" color="success">Accept</CButton> -->
         <span></span>
       </template>
     </CModal>
@@ -151,8 +140,6 @@ export default {
   },
   methods: {
     clickRow(dealership) {
-      //this.selectedDealership = dealership
-      //console.log(dealership)
       const dealershipId = dealership._id;
       this.$router.push(`/dealerships/${dealershipId}`);
     },
@@ -163,7 +150,7 @@ export default {
     fetchDealerships() {
       axios({
         method: "GET",
-        url: `http://localhost:5000/api/v1/dealerships/?admin=${this.$store.state.auth.userId}&populate=admin`,
+        url: `${this.$store.state.api}/dealerships/?admin=${this.$store.state.auth.userId}&populate=admin`,
         headers: {
           Authorization: "Bearer " + this.$store.state.auth.token,
         },
@@ -178,6 +165,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

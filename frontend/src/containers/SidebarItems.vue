@@ -40,14 +40,8 @@ export default {
             },
             {
               _name: "CSidebarNavItem",
-              name: "Vehicle Properties",
-              to: "/pages/vehicle/properties",
-              icon: "cil-pencil",
-            },
-            {
-              _name: "CSidebarNavItem",
               name: "Inventory",
-              to: "/pages/vehicle/inventory",
+              to: "/inventory",
               icon: "cil-spreadsheet",
             },
           ],

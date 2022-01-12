@@ -3,13 +3,6 @@ import Vuex from 'vuex'
 import AuthModule from './modules/auth/index.js'
 Vue.use(Vuex)
 
-const coreuiState = {
-  sidebarShow: 'responsive',
-  sidebarMinimize: false,
-  asideShow: false,
-  darkMode: false
-}
-
 const coreuiMutations = {
   toggleSidebarDesktop (state) {
     const sidebarOpened = [true, 'responsive'].includes(state.sidebarShow)
@@ -31,6 +24,12 @@ export default new Vuex.Store({
   modules: {
     auth: AuthModule
   },
-  state: coreuiState,
+  state: {
+    sidebarShow: 'responsive',
+    sidebarMinimize: false,
+    asideShow: false,
+    darkMode: false,
+    api: 'http://localhost:5000/api/v1'
+  },
   mutations: coreuiMutations
 })

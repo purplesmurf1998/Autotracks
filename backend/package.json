@@ -4,7 +4,8 @@
   "description": "Autotracks backend API for database queries",
   "main": "server.js",
   "scripts": {
-    "test": "nyc --reporter=html mocha ./tests/*.js",
+    "test": "mocha ./tests/*.js",
+    "test-with-coverage": "nyc -x ./tests/*.js --reporter=html mocha ./tests/*.js",
     "prod": "NODE_ENV=production node server",
     "dev": "nodemon server"
   },

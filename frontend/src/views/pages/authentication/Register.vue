@@ -1,9 +1,17 @@
 <template>
-  <div class="c-app d-flex align-items-center min-vh-100" :class="{ 'c-dark-theme': $store.state.darkMode }">
+  <div
+    class="c-app d-flex align-items-center min-vh-100"
+    :class="{ 'c-dark-theme': $store.state.darkMode }"
+  >
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="6">
-          <CButton color="secondary" class="mx-4 mb-2" @click="goBack">
+          <CButton
+            id="registration-back-btn"
+            color="secondary"
+            class="mx-4 mb-2"
+            @click="goBack"
+          >
             Back
           </CButton>
           <!-- Register admin component -->
@@ -11,7 +19,9 @@
             <CCardBody class="p-4">
               <CForm>
                 <h1>Step 1: Register new account!</h1>
-                <p class="text-muted">This account will be the admin account to the dealership.</p>
+                <p class="text-muted">
+                  This account will be the admin account to the dealership.
+                </p>
                 <CRow>
                   <CCol>
                     <CInput
@@ -55,17 +65,19 @@
                   autocomplete="new-password"
                   v-model="adminUser.adminConfirmPassword"
                 />
-                <CInput
-                  label="Account Role"
-                  value="Administration"
-                  disabled
-                />
+                <CInput label="Account Role" value="Administration" disabled />
               </CForm>
             </CCardBody>
           </CCard>
-          <CAlert show color="danger" v-if="errorMessage" class="mt-2">Invalid Credentials</CAlert>
+          <CAlert show color="danger" v-if="errorMessage" class="mt-2"
+            >Invalid Credentials</CAlert
+          >
           <CRow class="mt-2 d-flex justify-content-center">
-            <CButton color="primary" @click="completeRegistration">
+            <CButton
+              id="complete-registration-btn"
+              color="primary"
+              @click="completeRegistration"
+            >
               Complete Registration
             </CButton>
           </CRow>
@@ -76,28 +88,28 @@
 </template>
 
 <script>
-const axios = require('axios');
+const axios = require("axios");
 
 export default {
-  name: 'Register',
+  name: "Register",
   data() {
     return {
       // register admin field values
       adminUser: {
-        adminFirstName: '',
-        adminLastName: '',
-        adminEmail: '',
-        adminPassword: '',
-        adminConfirmPassword: ''
+        adminFirstName: "",
+        adminLastName: "",
+        adminEmail: "",
+        adminPassword: "",
+        adminConfirmPassword: "",
       },
-      errorMessage: null
-    }
+      errorMessage: null,
+    };
   },
   methods: {
-    goBack () {
-      this.$router.push('/pages/login');
+    goBack() {
+      this.$router.push("/pages/login");
     },
-    async completeRegistration () {
+    async completeRegistration() {
       /**********************************************
        * used axios since from the documentation axios() and fetch() are the most
        * commonly used http request APIs for SPAs.
@@ -108,12 +120,12 @@ export default {
        *
        * TODO: add some validation check (password = confirmPassword) and visual feedback
        *       when a field is entered wrong or not entered at all.
-      ***********************************************/
+       ***********************************************/
 
       // send request to register new user
       axios({
-        method: 'POST',
-        url: 'http://localhost:5000/api/v1/auth/register',
+        method: "POST",
+        url: `${this.$store.state.api}/auth/register`,
         data: {
           first_name: this.adminUser.adminFirstName,
           last_name: this.adminUser.adminLastName,
@@ -130,47 +142,52 @@ export default {
             "Delete Staff Users",
             "Add Vehicles",
             "View Vehicles",
-            "Edit Vehicle Properties",
+            "Edit Vehicles",
             "Edit Vehicle Locations",
             "Sell Vehicles",
-            "Delete Vehicles"
+            "Delete Vehicles",
+            "Add Vehicle Property",
+            "Edit Vehicle Properties",
+            "View Vehicle Properties",
+            "Delete Vehicle Properties",
           ],
-          password: this.adminUser.adminPassword
-        }
-      }).then(async (response) => {
-        console.log(response);
-        //double check valid response
-        if (response.status == 200) {
-          // log the user in
-          const response = await this.$store.dispatch('login', {
-            email: this.adminUser.adminEmail,
-            password: this.adminUser.adminPassword
-          });
-
-          // if not successful, show the error message
-          if (!response.success) {
-            this.showErrorMessage(response.message);
-          }
-          // if successful, redirect the user to the dashboad
-          else {
-            this.$router.push("/dashboard");
-          }
-        }
-      }).catch(err => {
-        console.log(err);
-        // send an invalid registration message
-        this.showErrorMessage('Invalid information or duplicate account.');
-        this.adminUser.adminPassword = '';
-        this.adminUser.adminConfirmPassword = '';
+          password: this.adminUser.adminPassword,
+        },
       })
+        .then(async (response) => {
+          //double check valid response
+          if (response.status == 200) {
+            // log the user in
+            const loggedInResponse = await this.$store.dispatch("login", {
+              email: this.adminUser.adminEmail,
+              password: this.adminUser.adminPassword,
+            });
+
+            // if not successful, show the error message
+            if (!loggedInResponse.success) {
+              this.showErrorMessage(loggedInResponse.message);
+            }
+            // if successful, redirect the user to the dashboad
+            else {
+              this.$router.push("/dashboard");
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          // send an invalid registration message
+          this.showErrorMessage("Invalid information or duplicate account.");
+          this.adminUser.adminPassword = "";
+          this.adminUser.adminConfirmPassword = "";
+        });
     },
     showErrorMessage(msg) {
       // show the error message for 5 seconds and then dissapear
       this.errorMessage = msg;
       setTimeout(() => {
         this.errorMessage = null;
-      }, 5000)
-    }
-  }
-}
+      }, 5000);
+    },
+  },
+};
 </script>

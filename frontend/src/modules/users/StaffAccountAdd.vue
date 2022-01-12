@@ -110,6 +110,27 @@
 
 <script>
 const axios = require("axios");
+/*
+"Add Dealerships",
+"View Dealerships",
+"Edit Dealerships",
+"Delete Dealerships",
+"Add Staff Users",
+"View Staff Users",
+"Edit Staff Users",
+"Delete Staff Users",
+"Add Vehicles",
+
+"View Vehicles",
+"Edit Vehicles",
+"Edit Vehicle Locations",
+"Sell Vehicles",
+"Delete Vehicles",
+"Add Vehicle Property",
+"Edit Vehicle Properties",
+"View Vehicle Properties",
+"Delete Vehicle Properties",
+*/
 
 export default {
   name: "StaffAccountAdd",
@@ -134,15 +155,19 @@ export default {
         "Add Staff Users",
         "View Staff Users",
         "Edit Staff Users",
-      ],
-      permissionsListRight: [
         "Delete Staff Users",
         "Add Vehicles",
+      ],
+      permissionsListRight: [
         "View Vehicles",
-        "Edit Vehicle Properties",
+        "Edit Vehicles",
         "Edit Vehicle Locations",
         "Sell Vehicles",
         "Delete Vehicles",
+        "Add Vehicle Properties",
+        "Edit Vehicle Properties",
+        "View Vehicle Properties",
+        "Delete Vehicle Properties",
       ],
       first_name: "",
       last_name: "",
@@ -263,7 +288,7 @@ export default {
       if (this.formIsValid()) {
         axios({
           method: "POST",
-          url: "http://localhost:5000/api/v1/users",
+          url: `${this.$store.state.api}/users`,
           headers: {
             Authorization: `Bearer ${this.$store.state.auth.token}`,
           },

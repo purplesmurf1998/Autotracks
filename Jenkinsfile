@@ -1,28 +1,40 @@
 pipeline {
-  agent any
+  agent none
   stages {
     stage('Build') {
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+        }
+
+      }
       steps {
-        tool(name: 'nodejs', type: 'nodejs')
+        echo 'Cloning Branch'
         echo 'Building Backend...'
-        sh 'cd backend && ls && npm install'
-        echo 'Building Frontend...'
-        dir(path: frontend) {
+        dir(path: 'Autotracks/backend') {
           sh 'npm install'
         }
 
-        sh 'cd backend'
+        echo 'Building Front End'
+        dir(path: '../frontend') {
+          sh 'npm install'
+        }
+
+        dir(path: '../')
       }
     }
 
     stage('Test') {
-      steps {
-        echo 'Testing Backend...'
-        dir(path: backend) {
-          sh 'npm test'
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
         }
 
-        echo 'Testing Backend...'
+      }
+      steps {
+        echo 'Testing'
+   
+        dir(path: '../')
         dir(path: frontend) {
           sh 'npm test'
         }
@@ -31,13 +43,17 @@ pipeline {
     }
 
     stage('Deliver') {
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+        }
+
+      }
       steps {
-        echo 'Deploying....'
+        echo 'Deploying Server'
+        sh 'npm run serve'
+
       }
     }
-
-  }
-  environment {
-    CI = 'true'
   }
 }

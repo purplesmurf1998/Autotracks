@@ -55,7 +55,7 @@ export default {
       const data = this.updatedDealership;
       axios({
         method: "PUT",
-        url: `http://localhost:5000/api/v1/dealerships/${this.dealership._id}`,
+        url: `${this.$store.state.api}/dealerships/${this.dealership._id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -85,6 +85,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

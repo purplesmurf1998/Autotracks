@@ -49,10 +49,14 @@ const UserSchema = new mongoose.Schema({
       'Delete Staff Users',
       'Add Vehicles',
       'View Vehicles',
-      'Edit Vehicle Properties',
+      'Edit Vehicles',
       'Edit Vehicle Locations',
       'Sell Vehicles',
-      'Delete Vehicles'
+      'Delete Vehicles',
+      'Add Vehicle Property',
+      'Edit Vehicle Properties',
+      'View Vehicle Properties',
+      'Delete Vehicle Properties'
     ],
     required: 'User must have a list of permissions, even if that list is empty.'
   },
