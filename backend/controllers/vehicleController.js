@@ -62,7 +62,8 @@ exports.getVehiclesDashboardV3 = asyncHandler(async (req, res, next) => {
     let query2 = Vehicle.count(filter);
     let value_count = await query2;
     let prop_object = {};
-    prop_object[results[i]] = value_count;
+    prop_object.value = results[i];
+    prop_object.count = value_count;
     end_results.push(prop_object);
   }
 

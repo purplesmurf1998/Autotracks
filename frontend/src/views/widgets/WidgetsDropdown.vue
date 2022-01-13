@@ -185,7 +185,7 @@ export default {
       .then((response) => {
         const payload = response.data.payload;
         console.log(payload);
-        //payload.sort((a, b) => b.age - a.age);
+        payload.sort((a, b) => b.count - a.count);
         const fields = [];
         const values = [];
         let i = 0;
@@ -194,11 +194,11 @@ export default {
           i++;
           if (i<10)
           {
-            fields.push(Object.keys(property)[0]);
-            values.push(property[Object.keys(property)[0]]);
+            fields.push(property.value);
+            values.push(property.count);
           }
           else {
-            othersSum += property[Object.keys(property)[0]];
+            othersSum += property.count;
           }
         });
         fields.push("Others");
