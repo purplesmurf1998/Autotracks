@@ -141,7 +141,9 @@ export default {
           const inventoryCount = response.data.inventoryCount;
           this.inventoryCount = inventoryCount.toString();
           this.fetchVehicleProperties();
-          this.filterVisualByProperty(this.property_key, this.property_label)
+          setTimeout(() => {
+            this.filterVisualByProperty(this.property_key, this.property_label);
+          }, 200);
         })
         .catch((error) => {
           console.log(error);
