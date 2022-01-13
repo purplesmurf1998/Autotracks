@@ -78,7 +78,7 @@
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-danger"
-        :text="'Inventory Count By ' + property"
+        :text="'Inventory Count By ' + property_label"
         style="height:160px"
       >
         <template #default>
@@ -93,7 +93,7 @@
             </template>
             <CDropdownItem v-for="vp in vehicleProperties" 
             :key="vp.label"
-            @click.native="filterVisualByProperty(vp.label)">{{vp.label}}</CDropdownItem>
+            @click.native="filterVisualByProperty(vp.key, vp.label)">{{vp.label}}</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
@@ -101,8 +101,9 @@
             class="mt-3 mx-3"
             style="height:70px"
             background-color="rgb(250, 152, 152)"
-            label="Members"
-            labels="months"
+            label="Vehicle"
+            :labels="propKeys"
+            :dataPoints="categoryCount"
           />
         </template>
       </CWidgetDropdown>
@@ -121,7 +122,10 @@ export default {
     return {
       inventoryCount: "-1",
       vehicleProperties: null,
-      property: null,
+      property_label: null,
+      property_key: null,
+      propKeys: [],
+      categoryCount: [],
     };
   },
   methods: {
@@ -136,6 +140,8 @@ export default {
         .then((response) => {
           const inventoryCount = response.data.inventoryCount;
           this.inventoryCount = inventoryCount.toString();
+          this.fetchVehicleProperties();
+          this.filterVisualByProperty(this.property_key, this.property_label)
         })
         .catch((error) => {
           console.log(error);
@@ -160,22 +166,54 @@ export default {
           }
         });
         this.vehicleProperties = fields;
-        this.property = this.vehicleProperties[0].label;
+        this.property_label = this.vehicleProperties[0].label;
+        this.property_key = this.vehicleProperties[0].key;
       })
       .catch((error) => {
         console.log(error);
       });
     },
-    filterVisualByProperty(label) {
-      this.property = label;
-      //fetch the vehicle from the inventory grouped by the vehicle property
-      //create a new contorller. we need the dealership id and the vehicle property
+    filterVisualByProperty(key, label) {
+      this.property_label = label;
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/inventory/dealership/${this.dealership}/visual3/${key}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        const payload = response.data.payload;
+        console.log(payload);
+        //payload.sort((a, b) => b.age - a.age);
+        const fields = [];
+        const values = [];
+        let i = 0;
+        let othersSum = 0;
+        payload.forEach((property) => {
+          i++;
+          if (i<10)
+          {
+            fields.push(Object.keys(property)[0]);
+            values.push(property[Object.keys(property)[0]]);
+          }
+          else {
+            othersSum += property[Object.keys(property)[0]];
+          }
+        });
+        fields.push("Others");
+        values.push(othersSum);
+        this.propKeys=fields;
+        this.categoryCount=values;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     },
   },
   mounted() {
     this.fetchVehiclesInInventory(this.dealership);
-    this.fetchVehicleProperties();
   },
   components: { CChartLineSimple, CChartBarSimple }
 }
