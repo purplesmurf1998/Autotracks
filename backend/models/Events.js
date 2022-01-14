@@ -1,0 +1,42 @@
+const mongoose = require("mongoose");
+
+const EventSchema = new mongoose.Schema({
+  // type of the event
+  event_type: {
+    type: String,
+    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved'],
+    required: [true, 'An event must have an event type.']
+  },
+  // vehicle the event is attached to
+  vehicle: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Vehicle',
+    required: [true, 'An event must be associated to a vehicle.']
+  },
+  // title of the event / main label
+  title: {
+    type: String,
+    required: [true, 'An event must have a title and a description.']
+  },
+  // more detailed description of the event
+  description: {
+    type: String,
+    required: [true, 'An event must have a title and a description.']
+  },
+  // the observers that have viewed the event / message (to remove the notification in the front end)
+  viewers: {
+    type: [mongoose.Schema.ObjectId],
+    ref: 'User',
+    default: []
+  },
+  // timestamp of the event
+  timestamp: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Event = mongoose.model('Event', EventSchema);
+
+
+module.exports = Event;
