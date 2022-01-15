@@ -4,14 +4,14 @@
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   beforeCreate() {
-    this.$store.dispatch('verify');
-  }
-}
+    this.$store.dispatch("verify");
+  },
+};
 </script>
 
 <style lang="scss">
-  // Import Main styles for this application
-  @import 'assets/scss/style';
+// Import Main styles for this application
+@import "assets/scss/style";
 </style>
