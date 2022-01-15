@@ -4,8 +4,13 @@ const EventSchema = new mongoose.Schema({
   // type of the event
   event_type: {
     type: String,
-    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved'],
+    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved', 'vehicle_found'],
     required: [true, 'An event must have an event type.']
+  },
+  dealership: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Dealership',
+    required: [true, 'An event must be associated to a dealership.']
   },
   // vehicle the event is attached to
   vehicle: {
