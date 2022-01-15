@@ -12,4 +12,8 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 FROM node:16.13.1-alpine
 RUN apk add -U subversion
 USER jenkins
+EXPOSE 3000
+EXPOSE 8080
+EXPOSE 8000
+EXPOSE 5000
 RUN jenkins-plugin-cli --plugins "blueocean:1.25.0 docker-workflow:1.26"
