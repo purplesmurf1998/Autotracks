@@ -1,42 +1,59 @@
 pipeline {
-    agent {
+  agent none
+  stages {
+    stage('Build') {
+      agent {
         docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
+          image 'node:16.13.1-alpine'
         }
+
+      }
+      steps {
+        echo 'Cloning Branch'
+        echo 'Building Backend...'
+        dir(path: 'Autotracks/backend') {
+          sh 'npm install'
+        }
+
+        echo 'Building Front End'
+        dir(path: '../frontend') {
+          sh 'npm install'
+        }
+
+        dir(path: '../')
+      }
     }
-    environment { 
-        CI = 'true'
+
+    stage('Test') {
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+        }
+
+      }
+      steps {
+        echo 'Testing'
+   
+        dir(path: '../')
+        dir(path: frontend) {
+          sh 'npm test'
+        }
+
+      }
     }
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building Backend...'
-                dir(backend){
-                    sh 'npm install'
-                }
-                echo 'Building Frontend...'
-                dir(frontend){
-                    sh 'npm install'
-                }
-            }
+
+    stage('Deliver') {
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
         }
-        stage('Test') {
-            steps {
-                echo 'Testing Backend...'
-                dir(backend){
-                    sh 'npm test'
-                }
-                echo 'Testing Backend...'
-                dir(frontend){
-                    sh 'npm test'
-                }
-            }
-        }
-        stage('Deliver') { 
-            steps {
-                echo 'Deploying....'
-            }
-        }
+
+      }
+      steps {
+        echo 'Deploying Server'
+        sh 'npm run serve'
+
+      }
     }
+  }
 }
