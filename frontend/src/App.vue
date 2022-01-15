@@ -3,11 +3,28 @@
 </template>
 
 <script>
+const { io } = require("socket.io-client");
+
 export default {
   name: "App",
+  data() {
+    return {
+      socket: null
+    };
+  },
   beforeCreate() {
     this.$store.dispatch("verify");
   },
+  created() {
+    this.socket = io("http://localhost:5000");
+
+    this.socket.on("connected", (arg) => {
+      console.log(arg);
+    })
+  },
+  beforeUnmount() {
+    this.socket.disconnect();
+  }
 };
 </script>
 
