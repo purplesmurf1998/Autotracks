@@ -43,7 +43,7 @@ const EventSchema = new mongoose.Schema({
 
 EventSchema.post('save', async function (next) {
   // socket.io notifies every running frontend to fetch to the api
-  require("../utils/serverIO").io().emit("test", "This is a test");
+  require("../utils/serverIO").io().emit(this.event_type, this);
 });
 
 const Event = mongoose.model('Event', EventSchema);
