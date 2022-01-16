@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthModule from './modules/auth/index.js'
+import EventsModule from './modules/events/index.js'
 Vue.use(Vuex)
 
 const coreuiMutations = {
@@ -22,7 +23,8 @@ const coreuiMutations = {
 
 export default new Vuex.Store({
   modules: {
-    auth: AuthModule
+    auth: AuthModule,
+    events: EventsModule
   },
   state: {
     sidebarShow: 'responsive',

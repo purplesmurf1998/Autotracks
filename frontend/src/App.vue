@@ -16,15 +16,13 @@ export default {
     this.$store.dispatch("verify");
   },
   created() {
-    this.socket = io("http://localhost:5000");
+    const socket = io("http://localhost:5000");
 
-    this.socket.on("connected", (arg) => {
+    socket.on("connected", (arg) => {
       console.log(arg);
     });
 
-    this.socket.on("test", (arg) => {
-      console.log(arg);
-    })
+    this.$store.commit('setSocket', {socket});
   },
   beforeUnmount() {
     this.socket.disconnect();

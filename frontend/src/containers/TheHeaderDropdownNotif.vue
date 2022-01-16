@@ -71,6 +71,10 @@ export default {
     // do a first time api call to the server for new events
     // create the socket
     // when the socket get pinged, fetch new events
+    this.$store.state.events.socket.on("test", (arg) => {
+      console.log(arg)
+      this.itemsCount = this.itemsCount + 1;
+    })
   },
 };
 </script>
