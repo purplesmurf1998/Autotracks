@@ -1,6 +1,9 @@
 const ignoredModules = ['@coreui/icons', '@coreui/utils'].join('|')
 
 module.exports = {
+
+  preset: '@vue/cli-plugin-unit-jest',
+
   moduleFileExtensions: [
     'js',
     'jsx',

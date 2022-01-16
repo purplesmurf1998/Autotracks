@@ -2,10 +2,9 @@
 
 exports[`Register.vue renders correctly 1`] = `
 <div
-  class="c-app d-flex align-items-center min-vh-100"
+  class="c-app flex-row align-items-center"
 >
   <ccontainer-stub
-    fluid="true"
     tag="div"
   >
     <crow-stub
@@ -14,120 +13,132 @@ exports[`Register.vue renders correctly 1`] = `
       tag="div"
     >
       <ccol-stub
-        md="6"
+        md="8"
         tag="div"
       >
-        <ccard-stub
-          class="mx-4 mb-0"
+        <ccardgroup-stub
+          tag="div"
         >
-          <ccardbody-stub
+          <ccard-stub
             class="p-4"
           >
-            <cform-stub>
-              <h1>
-                Register
-              </h1>
+            <ccardbody-stub>
+              <cform-stub>
+                <h1>
+                  Step 1: Register new account!
+                </h1>
+                 
+                <p
+                  class="text-muted"
+                >
+                  This account will be the admin account to the dealership.
+                </p>
+                 
+                <cinput-stub
+                  autocomplete="username email"
+                  id="email-txt-field"
+                  lazy="400"
+                  placeholder="Email"
+                  type="text"
+                  value=""
+                />
+                 
+                <cinput-stub
+                  autocomplete="curent-password"
+                  id="password-txt-field"
+                  lazy="400"
+                  placeholder="Password"
+                  type="password"
+                  value=""
+                />
+                 
+                <crow-stub
+                  gutters="true"
+                  tag="div"
+                >
+                  <ccol-stub
+                    class="text-left"
+                    col="6"
+                    tag="div"
+                  >
+                    <cbutton-stub
+                      activeclass="router-link-active"
+                      class="px-4"
+                      color="primary"
+                      event="click"
+                      exactactiveclass="router-link-exact-active"
+                      id="login-btn"
+                      routertag="a"
+                      target="_self"
+                      type="submit"
+                    >
+                      Login
+                    </cbutton-stub>
+                  </ccol-stub>
+                   
+                  <ccol-stub
+                    class="text-right"
+                    col="6"
+                    tag="div"
+                  >
+                    <cbutton-stub
+                      activeclass="router-link-active"
+                      class="px-0"
+                      color="link"
+                      event="click"
+                      exactactiveclass="router-link-exact-active"
+                      id="forgot-pswrd-btn"
+                      routertag="a"
+                      target="_self"
+                      type="button"
+                    >
+                      Forgot password?
+                    </cbutton-stub>
+                  </ccol-stub>
+                </crow-stub>
+                 
+                <!---->
+              </cform-stub>
+            </ccardbody-stub>
+          </ccard-stub>
+           
+          <ccard-stub
+            bodywrapper="true"
+            class="text-center py-5 d-md-down-none"
+            color="primary"
+            textcolor="white"
+          >
+            <ccardbody-stub>
+              <h2>
+                Sign up
+              </h2>
                
-              <p
-                class="text-muted"
-              >
-                Create your account
+              <p>
+                Sign up for an admin account and start tracking your inventory today! Get three users FREE when signing up for one year.
               </p>
                
-              <cinput-stub
-                autocomplete="username"
-                lazy="400"
-                placeholder="Username"
-                type="text"
-              />
-               
-              <cinput-stub
-                autocomplete="email"
-                lazy="400"
-                placeholder="Email"
-                prepend="@"
-                type="text"
-              />
-               
-              <cinput-stub
-                autocomplete="new-password"
-                lazy="400"
-                placeholder="Password"
-                type="password"
-              />
-               
-              <cinput-stub
-                autocomplete="new-password"
-                class="mb-4"
-                lazy="400"
-                placeholder="Repeat password"
-                type="password"
-              />
-               
-              <cbutton-stub
-                activeclass="router-link-active"
-                block="true"
-                color="success"
-                event="click"
-                exactactiveclass="router-link-exact-active"
-                routertag="a"
-                target="_self"
-                type="button"
-              >
-                Create Account
-              </cbutton-stub>
-            </cform-stub>
-          </ccardbody-stub>
-           
-          <ccardfooter-stub
-            class="p-4"
-          >
-            <crow-stub
-              gutters="true"
-              tag="div"
-            >
-              <ccol-stub
-                col="6"
-                tag="div"
+              <router-link
+                to="/pages/register"
               >
                 <cbutton-stub
                   activeclass="router-link-active"
-                  block="true"
-                  color="facebook"
+                  color="light"
                   event="click"
                   exactactiveclass="router-link-exact-active"
                   routertag="a"
+                  size="lg"
                   target="_self"
                   type="button"
+                  variant="outline"
                 >
                   
-                  Facebook
+                  Register Now!
                 
                 </cbutton-stub>
-              </ccol-stub>
-               
-              <ccol-stub
-                col="6"
-                tag="div"
-              >
-                <cbutton-stub
-                  activeclass="router-link-active"
-                  block="true"
-                  color="twitter"
-                  event="click"
-                  exactactiveclass="router-link-exact-active"
-                  routertag="a"
-                  target="_self"
-                  type="button"
-                >
-                  
-                  Twitter
-                
-                </cbutton-stub>
-              </ccol-stub>
-            </crow-stub>
-          </ccardfooter-stub>
-        </ccard-stub>
+              </router-link>
+            </ccardbody-stub>
+          </ccard-stub>
+        </ccardgroup-stub>
       </ccol-stub>
     </crow-stub>
   </ccontainer-stub>

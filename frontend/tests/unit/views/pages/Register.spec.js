@@ -2,7 +2,7 @@ import {createLocalVue, shallowMount} from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue-pro'
 import Vuex from 'vuex'
 
-import Register from '@/views/pages/Register'
+import Register from './../../../../src/views/pages/authentication/Login.vue'
 
 const localVue = createLocalVue()
 localVue.use(CoreuiVue)
@@ -31,7 +31,7 @@ describe('Register.vue', () => {
   })
   it('should render correct content', () => {
     const wrapper = shallowMount(Register, { store, localVue })
-    expect(wrapper.find('h1').text()).toMatch('Register')
+    expect(wrapper.find('h1').text()).toMatch('Step 1: Register new account!')
   })
   test('renders correctly', () => {
     const wrapper = shallowMount(Register, { store, localVue })

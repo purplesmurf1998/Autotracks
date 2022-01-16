@@ -6,6 +6,7 @@ exports[`TheHeaderDropdownAccnt.vue renders correctly 1`] = `
   caret="true"
   class="c-header-nav-items"
   flip="true"
+  id="nav-dropdown"
   innav="true"
   offset="0,0"
   placement="bottom-end"
@@ -238,6 +239,7 @@ exports[`TheHeaderDropdownAccnt.vue renders correctly 1`] = `
     activeclass="router-link-active"
     event="click"
     exactactiveclass="router-link-exact-active"
+    id="log-out"
     routertag="a"
     target="_self"
   >

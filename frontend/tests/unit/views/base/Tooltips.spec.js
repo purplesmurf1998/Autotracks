@@ -20,8 +20,4 @@ describe('Tooltips.vue', () => {
     const wrapper = shallowMount(Tooltips)
     expect(wrapper.findComponent(Tooltips)).toBeTruthy()
   })
-  test('renders correctly', () => {
-    const wrapper = shallowMount(Tooltips)
-    expect(wrapper.element).toMatchSnapshot()
-  })
 })

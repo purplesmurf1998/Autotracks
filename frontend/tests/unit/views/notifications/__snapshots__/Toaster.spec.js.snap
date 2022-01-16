@@ -119,11 +119,13 @@ exports[`Toaster.vue renders correctly 1`] = `
       >
         <ctoaster-stub
           closebutton="true"
+          color=""
           fade="true"
           position="static"
         >
           <ctoast-stub
             closebutton="true"
+            color=""
             fade="true"
             header="Toast title"
             position="static"
@@ -135,6 +137,7 @@ exports[`Toaster.vue renders correctly 1`] = `
           </ctoast-stub>
           <ctoast-stub
             closebutton="true"
+            color=""
             fade="true"
             header="Toast title"
             position="static"
@@ -147,12 +150,14 @@ exports[`Toaster.vue renders correctly 1`] = `
         </ctoaster-stub>
         <ctoaster-stub
           closebutton="true"
+          color=""
           fade="true"
           position="top-right"
         >
           <ctoast-stub
             autohide="3000"
             closebutton="true"
+            color=""
             fade="true"
             header="Toast title"
             position="top-right"

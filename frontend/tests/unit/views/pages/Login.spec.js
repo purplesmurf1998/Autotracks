@@ -2,7 +2,7 @@ import {createLocalVue, shallowMount} from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue-pro'
 import Vuex from 'vuex'
 
-import Login from '@/views/pages/Login'
+import Login from './../../../../src/views/pages/authentication/Login.vue'
 
 const localVue = createLocalVue()
 localVue.use(CoreuiVue)
@@ -32,6 +32,9 @@ describe('Login.vue', () => {
   it('should render correct content', () => {
     const wrapper = shallowMount(Login, { store, localVue })
     expect(wrapper.find('h1').text()).toMatch('Login')
+    expect(wrapper.find('p').text()).toMatch('Sign In to your account')
+    expect(wrapper.find('h2').text()).toMatch('Sign up')
+    // expect(wrapper.find('p').text()).toMatch('Sign up for an admin account and start tracking your inventory today! Get three users FREE when signing up for one year')
   })
   test('renders correctly', () => {
     const wrapper = shallowMount(Login, { store, localVue })

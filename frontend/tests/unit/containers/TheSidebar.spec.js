@@ -33,8 +33,4 @@ describe('TheSidebar.vue', () => {
   it('has a name', () => {
     expect(TheSidebar.name).toBe('TheSidebar')
   })
-  test('renders correctly', () => {
-    const wrapper = shallowMount(TheSidebar, { store, localVue, i18n })
-    expect(wrapper.element).toMatchSnapshot()
-  })
 })

@@ -1,7 +1,7 @@
-import { mount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import CoreuiVue from '@coreui/vue-pro'
-import User from '@/views/users/User'
+import User from './../../../../src/views/users/User.vue'
 import appRouter from '@/router'
 
 const localVue = createLocalVue()
@@ -12,13 +12,7 @@ router.push({path: '/users/1'})
 localVue.use(CoreuiVue)
 
 describe('User.vue', () => {
-  let wrapper
-  beforeEach(() => {
-    wrapper = mount(User, {
-      localVue,
-      router
-    })
-  })
+  const wrapper = shallowMount(User, { localVue, router })
   it('has a name', () => {
     expect(User.name).toBe('User')
   })

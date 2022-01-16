@@ -36,16 +36,20 @@ exports[`Login.vue renders correctly 1`] = `
                  
                 <cinput-stub
                   autocomplete="username email"
+                  id="email-txt-field"
                   lazy="400"
-                  placeholder="Username"
+                  placeholder="Email"
                   type="text"
+                  value=""
                 />
                  
                 <cinput-stub
                   autocomplete="curent-password"
+                  id="password-txt-field"
                   lazy="400"
                   placeholder="Password"
                   type="password"
+                  value=""
                 />
                  
                 <crow-stub
@@ -63,9 +67,10 @@ exports[`Login.vue renders correctly 1`] = `
                       color="primary"
                       event="click"
                       exactactiveclass="router-link-exact-active"
+                      id="login-btn"
                       routertag="a"
                       target="_self"
-                      type="button"
+                      type="submit"
                     >
                       Login
                     </cbutton-stub>
@@ -82,27 +87,17 @@ exports[`Login.vue renders correctly 1`] = `
                       color="link"
                       event="click"
                       exactactiveclass="router-link-exact-active"
+                      id="forgot-pswrd-btn"
                       routertag="a"
                       target="_self"
                       type="button"
                     >
                       Forgot password?
                     </cbutton-stub>
-                     
-                    <cbutton-stub
-                      activeclass="router-link-active"
-                      class="d-lg-none"
-                      color="link"
-                      event="click"
-                      exactactiveclass="router-link-exact-active"
-                      routertag="a"
-                      target="_self"
-                      type="button"
-                    >
-                      Register now!
-                    </cbutton-stub>
                   </ccol-stub>
                 </crow-stub>
+                 
+                <!---->
               </cform-stub>
             </ccardbody-stub>
           </ccard-stub>
@@ -119,24 +114,28 @@ exports[`Login.vue renders correctly 1`] = `
               </h2>
                
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Sign up for an admin account and start tracking your inventory today! Get three users FREE when signing up for one year.
               </p>
                
-              <cbutton-stub
-                activeclass="router-link-active"
-                color="light"
-                event="click"
-                exactactiveclass="router-link-exact-active"
-                routertag="a"
-                size="lg"
-                target="_self"
-                type="button"
-                variant="outline"
+              <router-link
+                to="/pages/register"
               >
+                <cbutton-stub
+                  activeclass="router-link-active"
+                  color="light"
+                  event="click"
+                  exactactiveclass="router-link-exact-active"
+                  routertag="a"
+                  size="lg"
+                  target="_self"
+                  type="button"
+                  variant="outline"
+                >
+                  
+                  Register Now!
                 
-                Register Now!
-              
-              </cbutton-stub>
+                </cbutton-stub>
+              </router-link>
             </ccardbody-stub>
           </ccard-stub>
         </ccardgroup-stub>
