@@ -15,7 +15,7 @@ const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { createServer } = require('http');
-const { Server } = require('socket.io');
+const serverIo = require('./utils/serverIO');
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -69,19 +69,7 @@ app.use(errorHandler);
 // create the server
 const httpServer = createServer(app);
 // create the server socket
-const io = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:8080", "http://localhost:8081"]
-  }
-})
-// start the socket
-io.on("connection", (socket) => {
-  console.log("Socket " + socket.id + " connected.");
-  socket.emit("connected", "Connected to server socket");
-});
-io.on("disconnect", (socket) => {
-  console.log("Socket " + socket.id + " disconnected.");
-});
+serverIo.initialize(httpServer);
 // launch server app by listening on the PORT
 httpServer.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
@@ -96,5 +84,3 @@ httpServer.listen(PORT, () => {
 // test commit 4 for sonarcloud scan
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
-
-module.exports = app;

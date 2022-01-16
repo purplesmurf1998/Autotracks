@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+//const io = 
 const EventSchema = new mongoose.Schema({
   // type of the event
   event_type: {
@@ -43,7 +43,7 @@ const EventSchema = new mongoose.Schema({
 
 EventSchema.post('save', async function (next) {
   // socket.io notifies every running frontend to fetch to the api
-  next();
+  require("../utils/serverIO").io().emit("test", "This is a test");
 });
 
 const Event = mongoose.model('Event', EventSchema);

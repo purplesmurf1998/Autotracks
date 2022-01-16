@@ -36,7 +36,6 @@ exports.getUnReadEvents = asyncHandler(async (req, res, next) => {
 
   // get the user
   const user = req.user;
-  console.log(user);
   // get the event types the user is subscribed to
   const eventTypes = req.user.subscribed_events;
   // find the events in the dealership with the specific event types where the viewers array does not contain

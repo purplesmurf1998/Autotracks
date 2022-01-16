@@ -20,6 +20,10 @@ export default {
 
     this.socket.on("connected", (arg) => {
       console.log(arg);
+    });
+
+    this.socket.on("test", (arg) => {
+      console.log(arg);
     })
   },
   beforeUnmount() {
