@@ -18,7 +18,7 @@
     </CDropdownHeader>
     <CDropdownItem v-for="notif in notifications"
     :key="notif._id"
-    > {{notif.description}}
+    > {{notif.title}}
     </CDropdownItem>
   </CDropdown>
 </template>

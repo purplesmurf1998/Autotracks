@@ -121,7 +121,7 @@ exports.updateVehicle = asyncHandler(async (req, res, next) => {
         event_type: 'vehicle_missing',
         dealership: newVehicle.dealership,
         vehicle: newVehicle._id,
-        title: 'Vehicle missing or missplaced',
+        title: `[${newVehicle.vin}] vehicle missing or missplaced`,
         description: `The vehicle with the serial number [${newVehicle.vin}] has been marked as missing / missplaced by the staff user ${req.user.first_name}.`
       }
 
@@ -132,7 +132,7 @@ exports.updateVehicle = asyncHandler(async (req, res, next) => {
         event_type: 'vehicle_found',
         dealership: newVehicle.dealership,
         vehicle: newVehicle._id,
-        title: 'Vehicle has been located',
+        title: `[${newVehicle.vin}] vehicle has been located`,
         description: `The vehicle with the serial number [${newVehicle.vin}] has been located by the staff user ${req.user.first_name}.`
       }
 
