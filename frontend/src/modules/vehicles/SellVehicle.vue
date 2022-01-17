@@ -6,9 +6,10 @@
             <CCol>
                 <CSelect
                 label="Sales representative"
+                :lazy="false"
                 :options="dealershipStaff"
                 :value.sync="form.stafUser"
-                placehoder="Select a sales rep"
+                placeholder="Select a sales rep"
                 />
             </CCol>
         </CRow>
@@ -17,17 +18,34 @@
             <CCol>
                 <CInput
                 label="Enter the sale amount:"
+                :lazy="false"
                 :options="dealershipStaff"
                 :value.sync="form.saleAmount"
                 placeholder="$0.00"
-                />
+                >
+                <template #prepend-content><CIcon name="cil-dollar" /></template>
+                </CInput>
             </CCol>
             <CCol>
                 <CInput
                 label="Enter the deposit amount:"
+                :lazy="false"
                 :options="dealershipStaff"
                 :value.sync="form.deposit"
                 placeholder="$0.00"
+                >
+                <template #prepend-content><CIcon name="cil-dollar" /></template>
+                </CInput>
+            </CCol>
+        </CRow>
+        <CRow class="justify-content-center">
+            <CCol>
+                <CTextarea
+                label="Notes"
+                :lazy="false"
+                :value.sync="form.notes"
+                placeholder="Add notes..."
+                rows="6"
                 />
             </CCol>
         </CRow>

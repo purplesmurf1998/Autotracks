@@ -116,28 +116,6 @@
         >
       </template>
     </CModal>
-    <!-- <CModal :show.sync="showingSoldModal" :centered="true">
-      <template #header>
-        <h6 class="modal-title">Mark the vehicle as sold</h6>
-        <CButtonClose @click="showingSoldModal = false" />
-      </template>
-      <CForm>
-        <CSelect
-          label="Sales Representative"
-          :options="dealershipStaff"
-          :value.sync="selectedStaffAccount"
-          placehoder="Select a sales rep"
-        />
-      </CForm>
-      <template #footer>
-        <CButton @click="showingSoldModal = false" color="danger"
-          >Cancel</CButton
-        >
-        <CButton @click="setVehicleSoldPending(true)" color="success"
-          >Save</CButton
-        >
-      </template>
-    </CModal> -->
     <CModal
       :show.sync="showingSoldModal"
       :centered="true"
