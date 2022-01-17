@@ -116,7 +116,7 @@
         >
       </template>
     </CModal>
-    <CModal :show.sync="showingSoldModal" :centered="true">
+    <!-- <CModal :show.sync="showingSoldModal" :centered="true">
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
         <CButtonClose @click="showingSoldModal = false" />
@@ -136,6 +136,28 @@
         <CButton @click="setVehicleSoldPending(true)" color="success"
           >Save</CButton
         >
+      </template>
+    </CModal> -->
+    <CModal
+      :show.sync="showingSoldModal"
+      :centered="true"
+      title="Modal title 2"
+      size="lg"
+    >
+      <vehicle-sell 
+        v-if="showingSoldModal"
+        :showingSoldModal="showingSoldModal"
+        :dealershipStaff="dealershipStaff"
+        :selectedStaffAccount="selectedStaffAccount"
+        :setVehicleSoldPending="setVehicleSoldPending"
+        :setSellVehicle="setSellVehicle"
+      />
+      <template #header>
+        <h6 class="modal-title">Mark the vehicle as sold</h6>
+        <CButtonClose @click="showingSoldModal = false" />
+      </template>
+      <template #footer>
+        <span></span>
       </template>
     </CModal>
     <CModal :show.sync="showingDeleteModal" :centered="true">
@@ -161,9 +183,13 @@
 <script>
 const axios = require("axios");
 const { containsPermissions } = require("../../utils/index");
+import VehicleSell from "./SellVehicle.vue";
 
 export default {
   name: "VehicleDetails",
+  components: {
+    "vehicle-sell": VehicleSell,
+  },
   props: ["vehicle", "setNewVehicle"],
   data() {
     return {
@@ -185,6 +211,9 @@ export default {
     },
     userHasPermissions(...permissions) {
       return containsPermissions(permissions);
+    },
+    setSellVehicle(value){
+      this.showingSoldModal = value;
     },
     setVehicleSoldPending(state) {
       let body = {
