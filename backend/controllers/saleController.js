@@ -11,6 +11,15 @@ const advancedFilter = require('../utils/advancedFilter');
 // @access  Public
 exports.createSale = asyncHandler(async (req, res, next) => {
 
+    //Check if there is a sale object for a given vehicle
+    const sale_check = await Sale.findOne({vehicle: req.body.vehicle});
+
+    // if a sale has already been created for this object return an error
+    if (!!sale_check) {
+        return next(
+            new ErrorResponse(`A sale has already been created for this vehicle`, 400)
+        );
+    }
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
 
