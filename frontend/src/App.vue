@@ -9,24 +9,28 @@ export default {
   name: "App",
   data() {
     return {
-      socket: null
+      socket: null,
     };
   },
   beforeCreate() {
     this.$store.dispatch("verify");
   },
   created() {
-    const socket = io("http://localhost:5000");
+    const socket = io("http://localhost:5000", {
+      extraHeaders: {
+        user_id: this.$store.state.auth.userId,
+      },
+    });
 
     socket.on("connected", (arg) => {
       console.log(arg);
     });
 
-    this.$store.commit('setSocket', {socket});
+    this.$store.commit("setSocket", { socket });
   },
   beforeUnmount() {
     this.socket.disconnect();
-  }
+  },
 };
 </script>
 
