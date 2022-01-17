@@ -8,7 +8,7 @@
                 label="Sales representative"
                 :lazy="false"
                 :options="dealershipStaff"
-                :value.sync="form.stafUser"
+                :value.sync="form.staffUser"
                 placeholder="Select a sales rep"
                 />
             </CCol>
@@ -77,7 +77,7 @@ const axios = require('axios');
 
 export default {
   name: 'VehicleSell',
-  props: ["setVehicleSoldPending", "selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle"],
+  props: ["setVehicleSoldPending", "selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle", "vehicle"],
   data() {
     return {
       form: this.getEmptyForm(),
@@ -91,38 +91,41 @@ export default {
       return !!this.form.name && this.form.name != '';
     },
     submit () {
-      this.disableButtons = true;
-      if (this.checkIfValid()) {
+        this.disableButtons = true;
+        console.log(data);
         // post request to API to create the new dealership
         axios({
-          method: 'POST',
-          url: `${this.$store.state.api}/dealerships`,
-          headers: {
-            'Authorization': `Bearer ${this.$store.state.auth.token}`
-          },
-          data: {
-            name: this.form.name,
-            description: this.form.description,
-            admin: this.form.admin
-          }
+            method: 'POST',
+            url: `${this.$store.state.api}/inventory/details/sell`,
+            headers: {
+                'Authorization': `Bearer ${this.$store.state.auth.token}`
+            },
+            data: {
+                dealership: this.vehicle.dealership,
+                vehicle: this.vehicle._id,
+                deposit_amount: this.form.deposit,
+                sale_amount: this.form.saleAmount,
+                sales_rep: this.form.staffUser,
+                notes: this.form.notes,
+            }
         }).then(response => {
-          if (response.data.success) {
-            this.$router.go();
-          }
+            if (response.data.success) {
+                this.setSellVehicle(false)
+            }
         }).catch(error => {
-          this.showErrorMessage(error.response.data.error);
-          this.disableButtons = false;
+            console.log(error);
+            this.showErrorMessage(error.response.data.error);
+            this.disableButtons = false;
         })
-      } else {
-        this.showErrorMessage('Must have a proper dealership name.');
-        this.disableButtons = false;
-      }
     },
     getEmptyForm () {
       return {
-        name: "",
-        description: "",
-        admin: this.$store.state.auth.userId
+        dealership: null,
+        vehicle: null,
+        deposit_amount: 0,
+        sale_amount: 0,
+        sales_rep: null,
+        notes: "",
       }
     },
     showErrorMessage(message) {
@@ -131,29 +134,29 @@ export default {
         this.errorMessage = null;
       }, 5000)
     },
-    setVehicleSoldPending(state) {
-      let body = {
-        soldBy: state ? this.selectedStaffAccount : null,
-      };
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-        data: body,
-      })
-        .then((response) => {
-          if (response.data.success) {
-            this.setNewVehicle(response.data.payload);
-            this.showingSoldModal = false;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          this.showError("Error occured while setting vehicle sale status");
-        });
-    },
+    // setVehicleSoldPending(state) {
+    //   let body = {
+    //     soldBy: state ? this.selectedStaffAccount : null,
+    //   };
+    //   axios({
+    //     method: "PUT",
+    //     url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
+    //     headers: {
+    //       Authorization: `Bearer ${this.$store.state.auth.token}`,
+    //     },
+    //     data: body,
+    //   })
+    //     .then((response) => {
+    //       if (response.data.success) {
+    //         this.setNewVehicle(response.data.payload);
+    //         this.showingSoldModal = false;
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       this.showError("Error occured while setting vehicle sale status");
+    //     });
+    // },
   }
 }
 </script>

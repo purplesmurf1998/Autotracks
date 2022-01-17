@@ -129,6 +129,7 @@
         :selectedStaffAccount="selectedStaffAccount"
         :setVehicleSoldPending="setVehicleSoldPending"
         :setSellVehicle="setSellVehicle"
+        :vehicle="vehicle"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
