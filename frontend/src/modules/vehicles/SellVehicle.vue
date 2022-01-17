@@ -92,7 +92,6 @@ export default {
     },
     submit () {
         this.disableButtons = true;
-        console.log(data);
         // post request to API to create the new dealership
         axios({
             method: 'POST',
