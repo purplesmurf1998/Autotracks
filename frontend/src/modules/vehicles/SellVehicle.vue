@@ -1,6 +1,5 @@
 <template>
   <div>
-    <CAlert show color="danger" v-if="errorMessage" class="mb-2">{{ errorMessage }}</CAlert>
      <CForm @submit.prevent="submit">
         <CRow class="justify-content-center">
             <CCol>
@@ -77,12 +76,11 @@ const axios = require('axios');
 
 export default {
   name: 'VehicleSell',
-  props: ["selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle", "vehicle", "setSaleStatus"],
+  props: ["showMessage", "selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle", "vehicle", "setSaleStatus"],
   data() {
     return {
       form: this.getEmptyForm(),
       submitted: false,
-      errorMessage: null,
       disableButtons: false
     }
   },
@@ -109,12 +107,14 @@ export default {
             }
         }).then(response => {
             if (response.data.success) {
+              this.showMessage("A sale request has been submitted", "success");
                 this.setSellVehicle(false)
                 this.setSaleStatus(true);
+                this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
             console.log(error);
-            this.showErrorMessage(error.response.data.error);
+            this.showMessage(error.response.data.error, "danger");
             this.disableButtons = false;
         })
     },
@@ -127,12 +127,6 @@ export default {
         sales_rep: null,
         notes: "",
       }
-    },
-    showErrorMessage(message) {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = null;
-      }, 5000)
     },
   }
 }

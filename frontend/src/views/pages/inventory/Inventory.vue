@@ -2,13 +2,11 @@
   <div>
     <CRow>
       <CCol>
-        <CAlert 
-          show
-          @showMessage="showMessage($event)" 
-          :color="MessageType" 
-          v-if="Message" 
+        <CAlert  
+          :color="messageType" 
+          v-if="message" 
           class="mb-2">
-          {{ Message }}
+          {{ message }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
           <router-link :to="`/inventory/add/${selectedDealership}`">
@@ -42,17 +40,17 @@ export default {
   data() {
     return {
       selectedDealership: null,
-      Message: null,
-      MessageType: null
+      message: null,
+      messageType: null
     };
   },
   methods: {
     showMessage(message, messageType) {
-      this.Message = message;
-      this.MessageType = messageType;
+      this.message = message;
+      this.messageType = messageType;
       setTimeout(() => {
-          this.Message = null;
-          this.MessageType = null;
+          this.message = null;
+          this.messageType = null;
       }, 5000);
     },
   },

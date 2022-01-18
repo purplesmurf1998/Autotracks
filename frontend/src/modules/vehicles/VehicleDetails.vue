@@ -58,7 +58,6 @@
             >
           </CDropdown>
         </CRow>
-        <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
         <hr />
         <CRow>
           <CCol>
@@ -130,6 +129,7 @@
         :setSellVehicle="setSellVehicle"
         :vehicle="vehicle"
         :setSaleStatus="setSaleStatus"
+        :showMessage="showMessage"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
@@ -169,7 +169,7 @@ export default {
   components: {
     "vehicle-sell": VehicleSell,
   },
-  props: ["vehicle", "setNewVehicle"],
+  props: ["vehicle", "setNewVehicle", "showMessage"],
   data() {
     return {
       showingSoldModal: false,
@@ -178,17 +178,10 @@ export default {
       showingDeleteModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
-      errorMessage: null,
       saleStatus: !!this.vehicle.sale ? true : false,
     };
   },
   methods: {
-    showError(message) {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = null;
-      }, 5000);
-    },
     userHasPermissions(...permissions) {
       return containsPermissions(permissions);
     },
@@ -228,11 +221,12 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
+            this.showMessage("Vehicle location has been updated successfully", "success");
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showError("Error occured while updating vehicle location");
+          this.showMessage("Error occured while updating vehicle location", "danger");
         });
     },
     fetchDealershipUsers() {
