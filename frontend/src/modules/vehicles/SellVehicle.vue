@@ -48,24 +48,23 @@
                 />
             </CCol>
         </CRow>
-        
         <CRow class="justify-content-center">
-        <CButton 
-          color="primary"
-          type="submit"
-          id = "sell-vehicle"
-          :disabled="disableButtons"
-        >
-          Create
-        </CButton>
-        <CButton 
-          class="ml-1"
-          color="danger"
-          :disabled="disableButtons"
-          @click="setSellVehicle(false)"
-        >
-          Cancel
-        </CButton>
+          <CButton 
+            color="primary"
+            type="submit"
+            id = "sell-vehicle"
+            :disabled="disableButtons"
+          >
+            Create
+          </CButton>
+          <CButton 
+            class="ml-1"
+            color="secondary"
+            :disabled="disableButtons"
+            @click="setSellVehicle(false)"
+          >
+            Cancel
+          </CButton>
       </CRow>
       </CForm>
   </div>
@@ -76,7 +75,16 @@ const axios = require('axios');
 
 export default {
   name: 'VehicleSell',
-  props: ["showMessage", "selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle", "vehicle", "setSaleStatus"],
+  props: [
+    "showMessage", 
+    "selectedStaffAccount", 
+    "dealershipStaff", 
+    "showingSoldModal", 
+    "setSellVehicle", 
+    "vehicle", 
+    "setSaleStatus", 
+    "updateSaleStatus"
+  ],
   data() {
     return {
       form: this.getEmptyForm(),
@@ -93,7 +101,7 @@ export default {
         // post request to API to create the new dealership
         axios({
             method: 'POST',
-            url: `${this.$store.state.api}/inventory/details/sell`,
+            url: `${this.$store.state.api}/inventory/details/sale`,
             headers: {
                 'Authorization': `Bearer ${this.$store.state.auth.token}`
             },

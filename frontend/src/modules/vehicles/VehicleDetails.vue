@@ -27,10 +27,15 @@
               >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
+              @click.native="editSale()"
+              v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
+              >Edit Sale </CDropdownItem
+            >
+            <CDropdownItem
               @click.native="cancelSale()"
               v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
               class="delete"
-              >Cancel/Edit Sale </CDropdownItem
+              >Cancel Sale </CDropdownItem
             >
             <CDropdownItem v-if="userHasPermissions('Edit Vehicle')"
               >Mark as Delivered</CDropdownItem
@@ -119,7 +124,6 @@
       :show.sync="showingSoldModal"
       :centered="true"
       title="Modal title 2"
-      size="lg"
     >
       <vehicle-sell 
         v-if="showingSoldModal"
@@ -130,6 +134,7 @@
         :vehicle="vehicle"
         :setSaleStatus="setSaleStatus"
         :showMessage="showMessage"
+        :updateSaleStatus="updateSaleStatus"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
@@ -179,6 +184,7 @@ export default {
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
       saleStatus: !!this.vehicle.sale ? true : false,
+      updateSaleStatus: false,
     };
   },
   methods: {
@@ -205,6 +211,25 @@ export default {
         .catch((err) => {
           console.log(err);
           this.$router.replace("/pages/404");
+        });
+    },
+    cancelSale() {
+      axios({
+        method: "DELETE",
+        url: `${this.$store.state.api}/inventory/details/sale/${this.vehicle.sale}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          if (response.data.success) {
+            this.saleStatus = false;
+            this.showMessage("The sale has been canceled.", "success");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.showMessage("An error occured while canceling sale.", "danger");
         });
     },
     toggleVehicleMissing() {
@@ -257,8 +282,10 @@ export default {
     setSaleStatus(value) {
       this.saleStatus = value;
     },
-    cancelSale() {
-      console.log("CANCEL SELL");
+    updateSale() {
+      console.log("Update Sale");
+      this.updateSaleStatus = true;
+      this.showingSoldModal = true;
     }
   },
   computed: {

@@ -63,7 +63,7 @@ app.use('/api/v1/dealerships', dealershipsRoutes);
 app.use('/api/v1/dealerships/:dealershipId/vehicles/properties', vehiclePropertyRoutes);
 app.use('/api/v1/inventory', vehicleRoutes);
 app.use('/api/v1/events', eventRoutes);
-app.use('/api/v1/inventory/details/sell', saleRoutes);
+app.use('/api/v1/inventory/details/sale', saleRoutes);
 
 // mount error handler middleware
 app.use(errorHandler);
