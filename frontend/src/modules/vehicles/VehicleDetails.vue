@@ -27,12 +27,12 @@
               >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
-              @click.native="editSale()"
+              @click.native="updateSale()"
               v-if="userHasPermissions('Edit Vehicles') && !!saleStatus"
               >Edit Sale </CDropdownItem
             >
             <CDropdownItem
-              @click.native="cancelSale()"
+              @click.native="showingCancelSaleModal = true"
               v-if="userHasPermissions('Edit Vehicles') && !!saleStatus"
               class="delete"
               >Cancel Sale </CDropdownItem
@@ -161,6 +161,21 @@
         <CButton @click="deleteVehicle" color="success">Confirm</CButton>
       </template>
     </CModal>
+    <CModal :show.sync="showingCancelSaleModal" :centered="true">
+      <template #header>
+        <h6 class="modal-title">Cancel Sale Request</h6>
+        <CButtonClose @click="showingCancelSaleModal = false" />
+      </template>
+      <p>
+        Are you sure you want to cancel this sale request?
+      </p>
+      <template #footer>
+        <CButton @click="showingCancelSaleModal = false" color="danger"
+          >Cancel</CButton
+        >
+        <CButton @click="cancelSale" color="success">Confirm</CButton>
+      </template>
+    </CModal>
   </div>
 </template>
 
@@ -181,6 +196,7 @@ export default {
       showingDeliveredModal: false,
       showingDepositModal: false,
       showingDeleteModal: false,
+      showingCancelSaleModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
       saleStatus: !!this.vehicle.sale ? true : false,
@@ -222,6 +238,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.saleStatus = false;
+            this.showingCancelSaleModal = false;
             this.showMessage("The sale requesthas been canceled.", "success");
           }
         })
