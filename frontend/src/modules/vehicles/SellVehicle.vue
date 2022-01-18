@@ -127,7 +127,7 @@ export default {
         }).then(response => {
             if (response.data.success) {
               this.setVehicleModal(false);
-              this.setSaleStatus(true, response.data.payload._id);
+              this.setSaleStatus(true, response.data.payload);
               this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
@@ -157,7 +157,7 @@ export default {
           if (response.data.success) {
             this.showMessage("The sale request has been updated", "success");
             this.setVehicleModal(false);
-            this.setSaleStatus(true, response.data.payload._id);
+            this.setSaleStatus(true, response.data.payload);
             this.showMessage("The sale request has been updated", "success");
           }
       }).catch(error => {

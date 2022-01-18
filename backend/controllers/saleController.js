@@ -34,6 +34,40 @@ exports.createSale = asyncHandler(async (req, res, next) => {
     });
 });
 
+// @desc    Get a sale instance
+// @route   GET /api/v1/inventory/details/sale/:saleId'
+// @access  Public
+exports.getSale = asyncHandler(async (req, res, next) => {
+    // find vehicle property to delete
+    const sale = await Sale.findById(req.params.saleId);
+    // return error if no sale found
+    if (!sale) {
+        return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
+    }
+
+    res.status(200).json({
+    success: true,
+    payload: sale
+    })
+});
+
+// @desc    Update a sale instance
+// @route   Update /api/v1/inventory/details/sale/:saleId'
+// @access  Public
+exports.updateSale = asyncHandler(async (req, res, next) => {
+    // find vehicle property to delete
+    const sale = await Sale.findByIdAndUpdate(req.params.saleId, req.body);
+    // return error if no sale found
+    if (!sale) {
+        return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
+    }
+
+    res.status(200).json({
+    success: true,
+    payload: sale
+    })
+});
+
 // @desc    Delete a sale instance
 // @route   Delete /api/v1/inventory/details/sale/:saleId'
 // @access  Public
@@ -54,22 +88,5 @@ exports.deleteSale = asyncHandler(async (req, res, next) => {
     res.status(200).json({
     success: true,
     payload: {}
-    })
-});
-
-// @desc    Update a sale instance
-// @route   Update /api/v1/inventory/details/sale/:saleId'
-// @access  Public
-exports.updateSale = asyncHandler(async (req, res, next) => {
-    // find vehicle property to delete
-    const sale = await Sale.findByIdAndUpdate(req.params.saleId, req.body);
-    // return error if no sale found
-    if (!sale) {
-        return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
-    }
-
-    res.status(200).json({
-    success: true,
-    payload: sale
     })
 });

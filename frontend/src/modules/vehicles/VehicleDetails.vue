@@ -76,9 +76,10 @@
             </CRow>
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Deposit Status</h6></CCol>
-              <CCol class="d-flex align-items-end flex-column"
-                ><p class="mb-2 property-field">$0.00</p></CCol
-              >
+              <CCol class="d-flex align-items-end flex-column">
+                <p class="mb-2 property-field" v-if="!sale">$0.00</p>
+                <p class="mb-2 property-field" v-if="!!sale">${{sale.deposit_amount}}</p>
+              </CCol>
             </CRow>
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Sale Status</h6></CCol>
@@ -93,9 +94,10 @@
             </CRow>
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Delivery Status</h6></CCol>
-              <CCol class="d-flex align-items-end flex-column"
-                ><p class="mb-2 property-field">Not Delivered</p></CCol
-              >
+              <CCol class="d-flex align-items-end flex-column">
+                <p class="mb-2 property-field" v-if="vehicle.delivered">Delivered</p>
+                <p class="mb-2 property-field" v-if="!vehicle.delivered">Not Delivered</p>
+              </CCol>
             </CRow>
           </CCol>
         </CRow>
@@ -203,6 +205,8 @@ export default {
       saleStatus: !!this.vehicle.sale ? true : false,
       updateSaleStatus: false,
       sale_id: this.vehicle.sale,
+      sale: null,
+      deposit: "",
     };
   },
   methods: {
@@ -226,6 +230,25 @@ export default {
         .catch((err) => {
           console.log(err);
           this.$router.replace("/pages/404");
+        });
+    },
+    fetchSale() {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/inventory/details/sale/${this.sale_id}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          if (response.data.success) {
+            console.log("Success");
+            this.sale = response.data.payload;
+            console.log(this.sale);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
     cancelSale() {
@@ -295,8 +318,9 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    setSaleStatus(value, sale_id) {
-      this.sale_id = sale_id;
+    setSaleStatus(value, sale) {
+      this.sale = sale
+      this.sale_id = sale._id;
       this.saleStatus = value;
     },
     setVehicleModal(value){
@@ -320,6 +344,11 @@ export default {
   beforeMount() {
     this.fetchDealershipUsers();
   },
+  mounted() {
+    if (!!this.sale_id) {
+      this.fetchSale();
+    }
+  }
 };
 </script>
 
