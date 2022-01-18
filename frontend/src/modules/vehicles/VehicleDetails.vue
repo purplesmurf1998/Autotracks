@@ -135,6 +135,7 @@
         :setSaleStatus="setSaleStatus"
         :showMessage="showMessage"
         :updateSaleStatus="updateSaleStatus"
+        :sale_id="sale_id"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>

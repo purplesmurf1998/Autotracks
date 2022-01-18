@@ -49,13 +49,23 @@
             </CCol>
         </CRow>
         <CRow class="justify-content-center">
-          <CButton 
+          <CButton
+            v-if="!updateSaleStatus" 
             color="primary"
             type="submit"
             id = "sell-vehicle"
             :disabled="disableButtons"
           >
             Create
+          </CButton>
+          <CButton
+            v-if="updateSaleStatus" 
+            color="primary"
+            id = "update-vehicle"
+            :disabled="disableButtons"
+            @click="updateSale"
+          >
+            Update
           </CButton>
           <CButton 
             class="ml-1"
@@ -84,6 +94,7 @@ export default {
     "vehicle", 
     "setSaleStatus", 
     "updateSaleStatus",
+    "sale_id",
   ],
   data() {
     return {
@@ -98,7 +109,7 @@ export default {
     },
     submit () {
         this.disableButtons = true;
-        // post request to API to create the new dealership
+        // post request to API to create the new sale instance
         axios({
             method: 'POST',
             url: `${this.$store.state.api}/inventory/details/sale`,
@@ -115,16 +126,45 @@ export default {
             }
         }).then(response => {
             if (response.data.success) {
+              this.setVehicleModal(false);
+              this.setSaleStatus(true, response.data.payload._id);
               this.showMessage("A sale request has been submitted", "success");
-                this.setVehicleModal(false);
-                this.setSaleStatus(true, response.data.payload._id);
-                this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
             console.log(error);
             this.showMessage(error.response.data.error, "danger");
             this.disableButtons = false;
         })
+    },
+    updateSale() {
+      this.disableButtons = true;
+      // PUT request to API to update the vehicle
+      axios({
+          method: 'PUT',
+          url: `${this.$store.state.api}/inventory/details/sale/${this.sale_id}`,
+          headers: {
+              'Authorization': `Bearer ${this.$store.state.auth.token}`
+          },
+          data: {
+              dealership: this.vehicle.dealership,
+              vehicle: this.vehicle._id,
+              deposit_amount: this.form.deposit,
+              sale_amount: this.form.saleAmount,
+              sales_rep: this.form.staffUser,
+              notes: this.form.notes,
+          }
+      }).then(response => {
+          if (response.data.success) {
+            this.showMessage("The sale request has been updated", "success");
+            this.setVehicleModal(false);
+            this.setSaleStatus(true, response.data.payload._id);
+            this.showMessage("The sale request has been updated", "success");
+          }
+      }).catch(error => {
+          console.log(error);
+          this.showMessage(error.response.data.error, "danger");
+          this.disableButtons = false;
+      })
     },
     getEmptyForm () {
       return {

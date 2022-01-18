@@ -4,6 +4,7 @@ const router = express.Router();
 const {
     createSale,
     deleteSale,
+    updateSale,
 } = require('../controllers/saleController');
 
 // get authentication middleware
@@ -13,6 +14,7 @@ router.route('/')
   .post(protect, createSale)
 
 router.route('/:saleId')
-  .delete(protect, deleteSale);
+  .delete(protect, deleteSale)
+  .put(protect, updateSale)
 
 module.exports = router;
