@@ -27,7 +27,7 @@
               >Sell vehicle</CDropdownItem
             >
             <CDropdownItem
-              @click.native="setVehicleSoldPending(false)"
+              @click.native="cancelSale()"
               v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
               class="delete"
               >Cancel sale</CDropdownItem
@@ -79,10 +79,10 @@
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Sale Status</h6></CCol>
               <CCol class="d-flex align-items-end flex-column">
-                <p class="mb-2 property-field" v-if="!vehicle.soldBy">
+                <p class="mb-2 property-field" v-if="!saleStatus">
                   {{ soldByUser }}
                 </p>
-                <p class="mb-2 property-field warning" v-if="!!vehicle.soldBy">
+                <p class="mb-2 property-field warning" v-if="!!saleStatus">
                   {{ soldByUser }}
                 </p>
               </CCol>
@@ -127,9 +127,9 @@
         :showingSoldModal="showingSoldModal"
         :dealershipStaff="dealershipStaff"
         :selectedStaffAccount="selectedStaffAccount"
-        :setVehicleSoldPending="setVehicleSoldPending"
         :setSellVehicle="setSellVehicle"
         :vehicle="vehicle"
+        :setSaleStatus="setSaleStatus"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
@@ -179,6 +179,7 @@ export default {
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
       errorMessage: null,
+      saleStatus: !!this.vehicle.sale ? true : false,
     };
   },
   methods: {
@@ -193,29 +194,6 @@ export default {
     },
     setSellVehicle(value){
       this.showingSoldModal = value;
-    },
-    setVehicleSoldPending(state) {
-      let body = {
-        soldBy: state ? this.selectedStaffAccount : null,
-      };
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-        data: body,
-      })
-        .then((response) => {
-          if (response.data.success) {
-            this.setNewVehicle(response.data.payload);
-            this.showingSoldModal = false;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          this.showError("Error occured while setting vehicle sale status");
-        });
     },
     deleteVehicle() {
       axios({
@@ -282,10 +260,16 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
+    setSaleStatus(value) {
+      this.saleStatus = value;
+    },
+    cancelSale() {
+      console.log("CANCEL SELL");
+    }
   },
   computed: {
     soldByUser() {
-      if (!this.vehicle.soldBy) {
+      if (!this.saleStatus) {
         return "Not Sold";
       } else {
         return "Pending sale authorization";

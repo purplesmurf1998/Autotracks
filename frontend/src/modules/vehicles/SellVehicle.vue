@@ -77,7 +77,7 @@ const axios = require('axios');
 
 export default {
   name: 'VehicleSell',
-  props: ["setVehicleSoldPending", "selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle", "vehicle"],
+  props: ["selectedStaffAccount", "dealershipStaff", "showingSoldModal", "setSellVehicle", "vehicle", "setSaleStatus"],
   data() {
     return {
       form: this.getEmptyForm(),
@@ -110,6 +110,7 @@ export default {
         }).then(response => {
             if (response.data.success) {
                 this.setSellVehicle(false)
+                this.setSaleStatus(true);
             }
         }).catch(error => {
             console.log(error);
@@ -133,29 +134,6 @@ export default {
         this.errorMessage = null;
       }, 5000)
     },
-    // setVehicleSoldPending(state) {
-    //   let body = {
-    //     soldBy: state ? this.selectedStaffAccount : null,
-    //   };
-    //   axios({
-    //     method: "PUT",
-    //     url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
-    //     headers: {
-    //       Authorization: `Bearer ${this.$store.state.auth.token}`,
-    //     },
-    //     data: body,
-    //   })
-    //     .then((response) => {
-    //       if (response.data.success) {
-    //         this.setNewVehicle(response.data.payload);
-    //         this.showingSoldModal = false;
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       this.showError("Error occured while setting vehicle sale status");
-    //     });
-    // },
   }
 }
 </script>
