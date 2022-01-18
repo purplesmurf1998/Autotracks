@@ -1,6 +1,7 @@
 const Dealership = require('../models/Dealership');
 const User = require('../models/User');
 const Sale = require('../models/VehicleSale');
+const Vehicle = require('../models/Vehicle');
 
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
@@ -22,6 +23,12 @@ exports.createSale = asyncHandler(async (req, res, next) => {
     }
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
+    //Map this created sale to the vehicle
+    const newVehicle = await Vehicle.findByIdAndUpdate(req.body.vehicle, {sale: sale._id}, {
+        runValidators: true,
+        new: true
+    });
+
 
     // send response
     res.status(201).json({
