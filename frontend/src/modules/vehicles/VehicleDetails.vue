@@ -185,7 +185,7 @@ export default {
       selectedStaffAccount: this.$store.state.auth.userId,
       saleStatus: !!this.vehicle.sale ? true : false,
       updateSaleStatus: false,
-      sale_id: null,
+      sale_id: this.vehicle.sale,
     };
   },
   methods: {
@@ -222,12 +222,12 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.saleStatus = false;
-            this.showMessage("The sale has been canceled.", "success");
+            this.showMessage("The sale requesthas been canceled.", "success");
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("An error occured while canceling sale.", "danger");
+          this.showMessage("An error occured while canceling the sale request.", "danger");
         });
     },
     toggleVehicleMissing() {

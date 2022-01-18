@@ -83,7 +83,7 @@ export default {
     "setVehicleModal", 
     "vehicle", 
     "setSaleStatus", 
-    "updateSaleStatus"
+    "updateSaleStatus",
   ],
   data() {
     return {
@@ -117,7 +117,7 @@ export default {
             if (response.data.success) {
               this.showMessage("A sale request has been submitted", "success");
                 this.setVehicleModal(false);
-                this.setSaleStatus(true, sale_id);
+                this.setSaleStatus(true, response.data.payload._id);
                 this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
