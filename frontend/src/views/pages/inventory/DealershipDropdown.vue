@@ -30,7 +30,7 @@ const axios = require("axios");
 
 export default {
   name: "DealershipDropdown",
-  props: ["dealership", "Message", "MessageType"],
+  props: ["dealership", "showMessage"],
   data() {
     return {
       adminDealerships: [],
@@ -57,20 +57,6 @@ export default {
             this.$parent.$refs.wdigetDD.fetchVehiclesInInventory(this.dealership);
         }
     },
-    showMessage(message) {
-        this.Message = message;
-        if (message.includes('error'))
-            this.MessageType = 'danger';
-        else {
-            this.MessageType = 'success';
-        }
-        this.$emit('showMessage', {message: this.Message, messageType: this.MessageType});
-        setTimeout(() => {
-            this.Message = null;
-            this.MessageType = null;
-            this.$emit('showMessage', {message: this.Message, messageType: this.MessageType});
-        }, 5000);
-    },
     setDefaultDealership() {
       axios({
         method: "PUT",
@@ -93,12 +79,12 @@ export default {
             (dealership) => dealership.value == this.dealership
           );
           this.showMessage(
-            `${this.adminDealerships[index].label} successfully set as your default dealership`
+            `${this.adminDealerships[index].label} successfully set as your default dealership`, 'success'
           );
         })
         .catch((error) => {
           this.showMessage(
-              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`
+              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`, 'danger'
             );
         });
     },

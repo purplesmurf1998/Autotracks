@@ -20,6 +20,7 @@
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
+          :showMessage="showMessage"
         />
         <inventory-table
           v-if="selectedDealership"
@@ -46,12 +47,13 @@ export default {
     };
   },
   methods: {
-    showMessage(message) {
-      this.Message = message.message;
-      if (message.includes('error'))
-        this.MessageType = message.messageType;
-      else
-        this.MessageType = message.messageType;
+    showMessage(message, messageType) {
+      this.Message = message;
+      this.MessageType = messageType;
+      setTimeout(() => {
+          this.Message = null;
+          this.MessageType = null;
+      }, 5000);
     },
   },
   components: {

@@ -19,21 +19,21 @@
             <CDropdownItem
               @click.native="showingDepositModal = true"
               v-if="userHasPermissions('Edit Vehicles')"
-              >Add a deposit</CDropdownItem
+              >Add a Deposit</CDropdownItem
             >
             <CDropdownItem
               @click.native="showingSoldModal = true"
               v-if="userHasPermissions('Edit Vehicles') && !vehicle.sale"
-              >Sell vehicle</CDropdownItem
+              >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
               @click.native="cancelSale()"
               v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
               class="delete"
-              >Cancel sale</CDropdownItem
+              >Cancel/Edit Sale </CDropdownItem
             >
             <CDropdownItem v-if="userHasPermissions('Edit Vehicle')"
-              >Mark as delivered</CDropdownItem
+              >Mark as Delivered</CDropdownItem
             >
             <CDropdownDivider />
             <CDropdownItem
@@ -54,7 +54,7 @@
               class="delete"
               @click.native="showingDeleteModal = true"
               v-if="userHasPermissions('Delete Vehicles')"
-              >Delete vehicle</CDropdownItem
+              >Delete Vehicle</CDropdownItem
             >
           </CDropdown>
         </CRow>
