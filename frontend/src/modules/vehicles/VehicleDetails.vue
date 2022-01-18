@@ -23,17 +23,17 @@
             >
             <CDropdownItem
               @click.native="showingSoldModal = true"
-              v-if="userHasPermissions('Edit Vehicles') && !vehicle.sale"
+              v-if="userHasPermissions('Edit Vehicles') && !saleStatus"
               >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
               @click.native="editSale()"
-              v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
+              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus"
               >Edit Sale </CDropdownItem
             >
             <CDropdownItem
               @click.native="cancelSale()"
-              v-if="userHasPermissions('Edit Vehicles') && !!vehicle.sale"
+              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus"
               class="delete"
               >Cancel Sale </CDropdownItem
             >
@@ -130,7 +130,7 @@
         :showingSoldModal="showingSoldModal"
         :dealershipStaff="dealershipStaff"
         :selectedStaffAccount="selectedStaffAccount"
-        :setSellVehicle="setSellVehicle"
+        :setVehicleModal="setVehicleModal"
         :vehicle="vehicle"
         :setSaleStatus="setSaleStatus"
         :showMessage="showMessage"
@@ -185,14 +185,12 @@ export default {
       selectedStaffAccount: this.$store.state.auth.userId,
       saleStatus: !!this.vehicle.sale ? true : false,
       updateSaleStatus: false,
+      sale_id: null,
     };
   },
   methods: {
     userHasPermissions(...permissions) {
       return containsPermissions(permissions);
-    },
-    setSellVehicle(value){
-      this.showingSoldModal = value;
     },
     deleteVehicle() {
       axios({
@@ -216,7 +214,7 @@ export default {
     cancelSale() {
       axios({
         method: "DELETE",
-        url: `${this.$store.state.api}/inventory/details/sale/${this.vehicle.sale}`,
+        url: `${this.$store.state.api}/inventory/details/sale/${this.sale_id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -279,8 +277,12 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    setSaleStatus(value) {
+    setSaleStatus(value, sale_id) {
+      this.sale_id = sale_id;
       this.saleStatus = value;
+    },
+    setVehicleModal(value){
+      this.showingSoldModal = value;
     },
     updateSale() {
       console.log("Update Sale");

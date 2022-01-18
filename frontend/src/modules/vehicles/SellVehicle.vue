@@ -61,7 +61,7 @@
             class="ml-1"
             color="secondary"
             :disabled="disableButtons"
-            @click="setSellVehicle(false)"
+            @click="setVehicleModal(false)"
           >
             Cancel
           </CButton>
@@ -80,7 +80,7 @@ export default {
     "selectedStaffAccount", 
     "dealershipStaff", 
     "showingSoldModal", 
-    "setSellVehicle", 
+    "setVehicleModal", 
     "vehicle", 
     "setSaleStatus", 
     "updateSaleStatus"
@@ -116,8 +116,8 @@ export default {
         }).then(response => {
             if (response.data.success) {
               this.showMessage("A sale request has been submitted", "success");
-                this.setSellVehicle(false)
-                this.setSaleStatus(true);
+                this.setVehicleModal(false);
+                this.setSaleStatus(true, sale_id);
                 this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
