@@ -34,7 +34,6 @@ describe('Login.vue', () => {
     expect(wrapper.find('h1').text()).toMatch('Login')
     expect(wrapper.find('p').text()).toMatch('Sign In to your account')
     expect(wrapper.find('h2').text()).toMatch('Sign up')
-    // expect(wrapper.find('p').text()).toMatch('Sign up for an admin account and start tracking your inventory today! Get three users FREE when signing up for one year')
   })
   test('renders correctly', () => {
     const wrapper = shallowMount(Login, { store, localVue })
