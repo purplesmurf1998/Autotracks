@@ -81,6 +81,9 @@ const Inventory = () => import('@/views/pages/inventory/Inventory')
 const InventoryAdd = () => import('@/views/pages/inventory/InventoryAdd')
 const Vehicle = () => import('@/views/pages/vehicle/Vehicle')
 
+// Views - Pages - Transactions
+const Transaction = () => import('@/views/pages/transactions/Transaction')
+
 // Users
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
@@ -172,6 +175,17 @@ const router = new Router({
             ]
           },
           component: InventoryAdd
+        },
+        {
+          path: 'transactions',
+          name: 'transactions',
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Vehicles'
+            ]
+          },
+          component: Transaction
         },
       ]
     },

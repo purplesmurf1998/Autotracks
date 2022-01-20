@@ -44,6 +44,12 @@ export default {
               to: "/inventory",
               icon: "cil-spreadsheet",
             },
+            {
+              _name: "CSidebarNavItem",
+              name: "Transactions",
+              to: "/transactions",
+              icon: "cil-dollar",
+            },
           ],
         },
       ];
