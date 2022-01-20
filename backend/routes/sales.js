@@ -6,6 +6,7 @@ const {
     deleteSale,
     updateSale,
     getSale,
+    getSales,
 } = require('../controllers/saleController');
 
 // get authentication middleware
@@ -18,5 +19,8 @@ router.route('/:saleId')
   .delete(protect, deleteSale)
   .put(protect, updateSale)
   .get(protect, getSale)
+
+router.route('/dealership/:dealershipId')
+  .get(protect, getSales)
 
 module.exports = router;

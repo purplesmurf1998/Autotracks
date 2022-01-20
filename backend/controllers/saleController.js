@@ -35,6 +35,32 @@ exports.createSale = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Get a sale instance
+// @route   GET /api/v1/inventory/details/sale/:dealershipId'
+// @access  Public
+exports.getSales = asyncHandler(async (req, res, next) => {    
+    // grab the dealership_ID from the body and verify that the dealership exists
+    const dealership = await Dealership.findById(req.params.dealershipId);
+
+    // no dealership found
+    if (!dealership) {
+        return next(
+            new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+        );
+    }
+
+    const sales = await Sale.find({ dealership: req.params.dealershipId });
+    // return error if no sale found
+    if (!sales) {
+        return next(new ErrorResponse(`An error occured while fetching transactions`, 404));
+    }
+
+    res.status(200).json({
+    success: true,
+    payload: sales
+    })
+});
+
+// @desc    Get a sale instance
 // @route   GET /api/v1/inventory/details/sale/:saleId'
 // @access  Public
 exports.getSale = asyncHandler(async (req, res, next) => {

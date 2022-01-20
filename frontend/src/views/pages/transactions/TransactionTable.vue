@@ -53,6 +53,37 @@ export default {
     };
   },
   methods: {
+    fetchSales(dealership) {
+        axios({
+            method: "GET",
+            url: `${this.$store.state.api}/inventory/details/sale/dealership/${this.dealership}`,
+            headers: {
+                Authorization: `Bearer ${this.$store.state.auth.token}`,
+            },
+        })
+        .then((response) => {
+          const payload = response.data.payload;
+          const fields = [];
+          //The below code needs refactoring
+          payload.forEach((sale) => {
+            fields.push(sale.vehicle.vin);
+            let user_name = sale.sales_rep.first_name + sale.sales_rep.last_name;
+            fields.push(user_name);
+            fields.push(sale.date_of_sale);
+            let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
+            fields.push(delivery);
+            fields.push(sale.deposit_amount);
+            fields.push(sale.date_approved);
+          });
+          console.log(fields);
+        //   this.tableFields = fields;
+        //   console.log(this.tableFields);
+        })
+        .catch((error) => {
+          console.log(error);
+          //this.$router.replace("/pages/404");
+        });
+    },
     showMessage(message, messageType) {
       this.message = message;
       this.messageType = messageType;
@@ -70,5 +101,8 @@ export default {
   },
   components: {
   },
+  mounted() {
+      this.fetchSales(this.dealership);
+  }
 };
 </script>
