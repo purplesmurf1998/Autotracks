@@ -33,7 +33,7 @@ exports.createComment = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const comment = await Comment.create(req.body);
+  let comment = await Comment.create(req.body);
 
   // for testing, this may not be reachable. If not this check can be deleted.
   if (!comment) {
@@ -41,6 +41,8 @@ exports.createComment = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`Server error`, 500)
     );
   }
+
+  comment = await comment.populate('author');
 
   res.status(200).json({
     success: true,
