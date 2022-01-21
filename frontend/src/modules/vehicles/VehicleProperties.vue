@@ -39,8 +39,7 @@
     <edit-properties
       v-if="editingProperties"
       :vehicle="vehicle"
-      :leftProperties="leftProperties"
-      :rightProperties="rightProperties"
+      :vehicleProperties="vehicleProperties"
       :setEditingProperties="setEditingProperties"
       :setNewVehicle="setNewVehicle"
     />
