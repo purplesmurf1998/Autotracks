@@ -14,48 +14,26 @@
           </CButton>
         </CRow>
         <hr />
-        <CRow>
-          <CCol>
-            <CRow
-              v-for="property in leftProperties"
-              :key="property._id"
-              class="justify-content-between ml-0 mr-0"
-            >
-              <CCol>
-                <h6>{{ property.label }}</h6>
-              </CCol>
-              <CCol class="d-flex align-items-end flex-column">
-                <p class="mb-0 property-field">
-                  {{
-                    !vehicle.properties[property.key]
-                      ? "N/A"
-                      : getFormattedProperty(property)
-                  }}
-                </p>
-              </CCol>
-            </CRow>
-          </CCol>
-          <CCol>
-            <CRow
-              v-for="property in rightProperties"
-              :key="property._id"
-              class="justify-content-between ml-0 mr-0"
-            >
-              <CCol>
-                <h6>{{ property.label }}</h6>
-              </CCol>
-              <CCol class="d-flex align-items-end flex-column">
-                <p class="mb-0 property-field">
-                  {{
-                    !vehicle.properties[property.key]
-                      ? "N/A"
-                      : getFormattedProperty(property)
-                  }}
-                </p>
-              </CCol>
-            </CRow>
-          </CCol>
-        </CRow>
+        <CCol>
+          <CRow
+            v-for="property in vehicleProperties"
+            :key="property._id"
+            class="justify-content-between ml-0 mr-0"
+          >
+            <CCol>
+              <h6>{{ property.label }}</h6>
+            </CCol>
+            <CCol class="d-flex align-items-end flex-column">
+              <p class="mb-2 property-field">
+                {{
+                  !vehicle.properties[property.key]
+                    ? "N/A"
+                    : getFormattedProperty(property)
+                }}
+              </p>
+            </CCol>
+          </CRow>
+        </CCol>
       </CCardBody>
     </CCard>
     <edit-properties
@@ -151,7 +129,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.vehicleProperties = response.data.payload;
-            this.splitVehicleProperties();
+            //this.splitVehicleProperties();
           }
         })
         .catch((err) => {
@@ -159,21 +137,21 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    splitVehicleProperties() {
-      let leftProperties = [];
-      let rightProperties = [];
-      this.vehicleProperties.forEach((property, index) => {
-        if (index % 2 == 0) {
-          // leftProperties
-          leftProperties.push(property);
-        } else {
-          // rightProperties
-          rightProperties.push(property);
-        }
-      });
-      this.leftProperties = leftProperties;
-      this.rightProperties = rightProperties;
-    },
+    // splitVehicleProperties() {
+    //   let leftProperties = [];
+    //   let rightProperties = [];
+    //   this.vehicleProperties.forEach((property, index) => {
+    //     if (index % 2 == 0) {
+    //       // leftProperties
+    //       leftProperties.push(property);
+    //     } else {
+    //       // rightProperties
+    //       rightProperties.push(property);
+    //     }
+    //   });
+    //   this.leftProperties = leftProperties;
+    //   this.rightProperties = rightProperties;
+    // },
   },
   beforeMount() {
     this.fetchDealershipProperties();
