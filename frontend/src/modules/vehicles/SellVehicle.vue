@@ -132,6 +132,7 @@ export default {
             }
         }).catch(error => {
             console.log(error);
+            this.setVehicleModal(false);
             this.showMessage(error.response.data.error, "danger");
             this.disableButtons = false;
         })

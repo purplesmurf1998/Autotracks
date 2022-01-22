@@ -16,7 +16,7 @@
         <transaction-table
           v-if="selectedDealership"
           :dealership="selectedDealership"
-          ref="inventoryTable"
+          ref="transactionTable"
         />
       </CCol>
     </CRow>

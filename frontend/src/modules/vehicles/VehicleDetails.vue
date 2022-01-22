@@ -52,11 +52,6 @@
               v-if="vehicle.missing && userHasPermissions('Edit Vehicles')"
               >Present / Located</CDropdownItem
             >
-            <CDropdownItem
-              @click.native="toggleVehicleDelivered"
-              v-if="!vehicle.delivered && userHasPermissions('Edit Vehicles')"
-              >Delivered</CDropdownItem
-            >
             <CDropdownItem>Subscribe to vehicle</CDropdownItem>
             <CDropdownItem>Add to list</CDropdownItem>
             <CDropdownDivider />
@@ -267,6 +262,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.saleStatus = false;
+            this.sale = null;
             this.showingCancelSaleModal = false;
             this.showMessage("The sale requesthas been canceled.", "success");
           }
@@ -296,28 +292,6 @@ export default {
         .catch((err) => {
           console.log(err);
           this.showMessage("Error occured while updating vehicle location", "danger");
-        });
-    },
-    toggleVehicleDelivered() {
-      let body = this.vehicle;
-      body.delivered = true;
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-        data: body,
-      })
-        .then((response) => {
-          if (response.data.success) {
-            this.setNewVehicle(response.data.payload);
-            this.showMessage("Vehicle has been marked as delivered", "success");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          this.showMessage("Error occured while updating vehicle delivery status", "danger");
         });
     },
     fetchDealershipUsers() {

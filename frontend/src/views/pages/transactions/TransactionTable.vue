@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Deposit", "Approval Date"],
-      tableItems: [{"test1" : 1, "test2" : 2}, {"test1" : 3, "test2" : 4}, {"test2" : 3}, {"test2" : 4}],
+      tableItems: [{"vin" : 1, "Sales Rep" : 2}, {"Request Date" : 3, "Delivery Status" : 4}, {"Deposit" : 3}, {"Approval Date" : 4}],
       message: null,
       messageType: null
     };

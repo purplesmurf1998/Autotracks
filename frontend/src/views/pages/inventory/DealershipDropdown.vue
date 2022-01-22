@@ -59,8 +59,7 @@ export default {
         else {
           this.dealership = selected_val.target.value
           this.$emit('selectDealership', this.dealership);
-          console.log(this.$parent);
-          this.$parent.$children[0].fetchSales(this.dealership); //.$parent.$children[1].$children[0].fetchSales); //(this.dealership);
+          this.$parent.$refs.transactionTable.fetchSales(this.dealership); //.$parent.$children[1].$children[0].fetchSales); //(this.dealership);
         }
     },
     setDefaultDealership() {
