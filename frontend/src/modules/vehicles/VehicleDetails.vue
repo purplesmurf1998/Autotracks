@@ -23,17 +23,17 @@
             >
             <CDropdownItem
               @click.native="showingSoldModal = true"
-              v-if="userHasPermissions('Edit Vehicles') && !saleStatus"
+              v-if="userHasPermissions('Edit Vehicles') && !saleStatus && !approved"
               >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
               @click.native="updateSale()"
-              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus"
+              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus && !approved"
               >Edit Sale </CDropdownItem
             >
             <CDropdownItem
               @click.native="showingCancelSaleModal = true"
-              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus"
+              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus && !approved"
               class="delete"
               >Cancel Sale </CDropdownItem
             >
@@ -84,10 +84,13 @@
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Sale Status</h6></CCol>
               <CCol class="d-flex align-items-end flex-column">
-                <p class="mb-2 property-field" v-if="!saleStatus">
+                <p class="mb-2 property-field" v-if="approved">
                   {{ soldByUser }}
                 </p>
-                <p class="mb-2 property-field warning" v-if="!!saleStatus">
+                <p class="mb-2 property-field" v-if="!saleStatus && !approved">
+                  {{ soldByUser }}
+                </p>
+                <p class="mb-2 property-field warning" v-if="!!saleStatus && !approved">
                   {{ soldByUser }}
                 </p>
               </CCol>
@@ -207,6 +210,7 @@ export default {
       sale_id: this.vehicle.sale,
       sale: null,
       deposit: "",
+      approved: false 
     };
   },
   methods: {
@@ -244,6 +248,7 @@ export default {
           if (response.data.success) {
             console.log("Success");
             this.sale = response.data.payload;
+            this.approved = !this.sale.approved_by ? false : true
             console.log(this.sale);
           }
         })
@@ -263,6 +268,7 @@ export default {
           if (response.data.success) {
             this.saleStatus = false;
             this.sale = null;
+            this.approved = false;
             this.showingCancelSaleModal = false;
             this.showMessage("The sale requesthas been canceled.", "success");
           }
@@ -321,6 +327,7 @@ export default {
     },
     setSaleStatus(value, sale) {
       this.sale = sale
+      this.approved = !this.sale.approved_by ? false : true
       this.sale_id = sale._id;
       this.saleStatus = value;
     },
@@ -335,9 +342,13 @@ export default {
   },
   computed: {
     soldByUser() {
-      if (!this.saleStatus) {
+      if (this.approved) {
+        return "Sold"
+      }
+      else if (!this.saleStatus && !this.approved) {
         return "Not Sold";
-      } else {
+      } 
+      else {
         return "Pending sale authorization";
       }
     },
