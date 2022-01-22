@@ -11,11 +11,18 @@ pipeline {
     stage('Build ') {
       parallel {
         stage('Build Backend') {
-          agent any
+          agent {
+            docker {
+              image 'node:16.13.1-alpine'
+              args '''-u root 
+-p 5000'''
+            }
+
+          }
           steps {
             echo 'Building Backend...'
             dir(path: 'Autotracks/backend') {
-              sh 'npm install'
+              sh 'npm install --force'
             }
 
           }
