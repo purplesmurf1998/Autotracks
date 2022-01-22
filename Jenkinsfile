@@ -13,7 +13,7 @@ pipeline {
       steps {
         echo 'Cloning Branch'
         sh '''node -v; export HOME=/tmp ;  npm config set cache /tmp;export HOME=/tmp ;  npm --prefix ./Server install
-'''
+;docker exec -u root -t -i container_id /bin/bash'''
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
           sh 'npm install'
