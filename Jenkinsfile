@@ -21,6 +21,8 @@ pipeline {
         }
 
         dir(path: '../')
+        sh '''sudo chown -R 979:979 "/.npm"
+'''
       }
     }
 
@@ -33,7 +35,6 @@ pipeline {
       }
       steps {
         echo 'Testing'
-   
         dir(path: '../')
         dir(path: frontend) {
           sh 'npm test'
@@ -52,8 +53,8 @@ pipeline {
       steps {
         echo 'Deploying Server'
         sh 'npm run serve'
-
       }
     }
+
   }
 }
