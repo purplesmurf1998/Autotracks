@@ -1,17 +1,17 @@
 pipeline {
-  agent none
+  agent {
+    docker {
+      image 'node:16.13.1-alpine'
+      args '''-p 5000 
+-u root'''
+    }
+
+  }
   stages {
     stage('Build ') {
       parallel {
         stage('Build Backend') {
-          agent {
-            docker {
-              image 'node:14.16.1-alpine'
-              args '''-u root
--p 5000'''
-            }
-
-          }
+          agent any
           steps {
             echo 'Building Backend...'
             dir(path: 'Autotracks/backend') {
@@ -22,14 +22,7 @@ pipeline {
         }
 
         stage('Build Frontend') {
-          agent {
-            docker {
-              image 'node:14.16.1-alpine'
-              args '''-p 5000 
--u root'''
-            }
-
-          }
+          agent any
           steps {
             echo 'Building Frontend...'
             dir(path: '../frontend') {
@@ -43,14 +36,7 @@ pipeline {
     }
 
     stage('Test') {
-      agent {
-        docker {
-          image 'node:16.13.1-alpine'
-          args '''-u root
--p 5000'''
-        }
-
-      }
+      agent any
       steps {
         echo 'Testing'
         dir(path: '../')
@@ -62,14 +48,7 @@ pipeline {
     }
 
     stage('Deliver') {
-      agent {
-        docker {
-          image 'node:16.13.1-alpine'
-          args '''-u root
--p 5000'''
-        }
-
-      }
+      agent any
       steps {
         echo 'Deploying Server'
         sh 'npm run serve'
