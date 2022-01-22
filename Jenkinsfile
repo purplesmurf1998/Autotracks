@@ -32,6 +32,8 @@ pipeline {
       agent {
         docker {
           image 'node:16.13.1-alpine'
+          args '''-u root
+-p 5000'''
         }
 
       }
@@ -49,6 +51,8 @@ pipeline {
       agent {
         docker {
           image 'node:16.13.1-alpine'
+          args '''-u root
+-p 5000'''
         }
 
       }
