@@ -10,7 +10,6 @@ pipeline {
       }
       steps {
         echo 'Cloning Branch'
-        sh 'whoami'
         sh 'mkdir ~/.npm-global'
         sh '''npm config set prefix \'~/.npm-global\'
 '''
