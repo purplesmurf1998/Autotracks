@@ -2,7 +2,7 @@
   <div>
     <CCard v-if="!editingProperties">
       <CCardBody>
-        <CRow class="ml-0 mr-0">
+        <CRow class="ml-0 mr-0 d-flex justify-content-between">
           <h4 class="mr-3">Vehicle Properties</h4>
           <CButton
             color="primary"
@@ -10,7 +10,7 @@
             v-if="!editingProperties && userHasPermissions('Edit Vehicles')"
             :disabled="!!vehicle.soldBy"
           >
-            Edit
+            <CIcon name="cil-pen"/>&nbsp;&nbsp;Edit vehicle properties
           </CButton>
         </CRow>
         <hr />

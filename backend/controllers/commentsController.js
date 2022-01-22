@@ -16,7 +16,8 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    payload: comments
+    payload: comments,
+    count: comments.length
   });
 });
 

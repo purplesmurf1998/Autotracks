@@ -3,9 +3,9 @@
     <CCard>
       <CCardBody>
         <CRow class="justify-content-between ml-0 mr-0">
-          <h4>Comments</h4>
+          <h4>Comments - ({{ commentsCount }})</h4>
           <CButton color="primary" @click="writingComment = true" v-if="!writingComment">
-            <CIcon name="cil-pencil"/>
+            <CIcon name="cil-pen"/>
             &nbsp;&nbsp;Write a comment
           </CButton>
         </CRow>
@@ -33,7 +33,6 @@
             </div>
             <CRow class="ml-0 mr-0 d-flex justify-content-end" v-if="comment.author._id == $store.state.auth.userId">
               <CIcon name="cil-trash" class="mr-2 trash-comment-btn" @click.native="deleteComment(comment, index)"/>
-              <CIcon name="cil-pencil"/>
             </CRow>
             <hr />
           </div>
@@ -86,6 +85,7 @@ export default {
   data() {
     return {
       comments: [],
+      commentsCount: 0,
       writingComment: false,
       deletingComment: false,
       commentBeingDeleted: false,
@@ -104,6 +104,7 @@ export default {
       })
         .then((response) => {
           this.comments = response.data.payload;
+          this.commentsCount = response.data.count;
         })
         .catch((err) => {
           console.log(err);
@@ -141,7 +142,8 @@ export default {
           this.comments.splice(this.indexBeingDeleted, 1);
           this.commentBeingDeleted = null;
           this.indexBeingDeleted = null;
-          this.deletingComment = false
+          this.deletingComment = false;
+          this.commentsCount = this.commentsCount - 1;
         })
         .catch((err) => {
           console.log(err);

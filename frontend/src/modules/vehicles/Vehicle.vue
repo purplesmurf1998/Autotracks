@@ -2,6 +2,7 @@
   <div>
     <CRow>
       <CCol lg="6" sm="12">
+        
         <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
         <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>

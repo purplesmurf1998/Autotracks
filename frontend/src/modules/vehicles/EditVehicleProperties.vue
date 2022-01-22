@@ -2,14 +2,16 @@
   <div>
     <CCard>
       <CCardBody>
-        <CRow class="ml-0 mr-0">
+        <CRow class="ml-0 mr-0 d-flex justify-content-between">
           <h4 class="mr-3">Vehicle Properties</h4>
-          <CButton color="success" @click="submitNewProperties" class="mr-2"
-            >Save changes</CButton
-          >
-          <CButton color="secondary" @click="setEditingProperties(false)"
-            >Cancel</CButton
-          >
+          <div>
+            <CButton color="success" @click="submitNewProperties" class="mr-2"
+              >Save changes</CButton
+            >
+            <CButton color="danger" @click="setEditingProperties(false)"
+              >Cancel</CButton
+            >
+          </div>
         </CRow>
         <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
         <hr />
