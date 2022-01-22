@@ -46,7 +46,7 @@ export default {
   props: ["dealership"],
   data() {
     return {
-      tableFields: ["test1", "test2"],
+      tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Deposit", "Approval Date"],
       tableItems: [{"test1" : 1, "test2" : 2}, {"test1" : 3, "test2" : 4}, {"test2" : 3}, {"test2" : 4}],
       message: null,
       messageType: null
