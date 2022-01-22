@@ -33,7 +33,7 @@ pipeline {
           steps {
             echo 'Building Frontend...'
             dir(path: '../frontend') {
-              sh 'npm install'
+              sh 'npm install --force'
             }
 
           }
