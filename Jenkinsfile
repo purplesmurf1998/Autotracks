@@ -10,7 +10,7 @@ pipeline {
       }
       steps {
         echo 'Cloning Branch'
-        sh 'node -v'
+        sh 'node -v; export HOME=/tmp ;  npm config set cache /tmp'
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
           sh 'npm install'
