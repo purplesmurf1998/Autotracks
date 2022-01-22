@@ -10,6 +10,7 @@ pipeline {
       }
       steps {
         echo 'Cloning Branch'
+        sh 'node -v'
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
           sh 'npm install'
