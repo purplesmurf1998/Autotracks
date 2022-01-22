@@ -5,6 +5,8 @@ pipeline {
       agent {
         docker {
           image 'node:14.16.1-alpine'
+          args '''-u 979
+-p 5000'''
         }
 
       }
