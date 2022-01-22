@@ -1,30 +1,44 @@
 pipeline {
   agent none
   stages {
-    stage('Build') {
-      agent {
-        docker {
-          image 'node:14.16.1-alpine'
-          args '''-u root
+    stage('Build ') {
+      parallel {
+        stage('Build Backend') {
+          agent {
+            docker {
+              image 'node:14.16.1-alpine'
+              args '''-u root
 -p 5000'''
+            }
+
+          }
+          steps {
+            echo 'Building Backend...'
+            dir(path: 'Autotracks/backend') {
+              sh 'npm install'
+            }
+
+          }
         }
 
-      }
-      steps {
-        echo 'Cloning Branch'
-        sh '''node -v; export HOME=/tmp ;  npm config set cache /tmp;export HOME=/tmp ;  npm --prefix ./Server install
-'''
-        echo 'Building Backend...'
-        dir(path: 'Autotracks/backend') {
-          sh 'npm install'
+        stage('Build Frontend') {
+          agent {
+            docker {
+              image 'node:14.16.1-alpine'
+              args '''-p 5000 
+-u root'''
+            }
+
+          }
+          steps {
+            echo 'Building Frontend...'
+            dir(path: '../frontend') {
+              sh 'npm install'
+            }
+
+          }
         }
 
-        echo 'Building Front End'
-        dir(path: '../frontend') {
-          sh 'npm install'
-        }
-
-        dir(path: '../')
       }
     }
 
