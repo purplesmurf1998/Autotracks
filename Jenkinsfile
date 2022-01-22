@@ -1,12 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:16.13.1-alpine'
-      args '''-p 5000 
--u root'''
-    }
-
-  }
+  agent none
   stages {
     stage('Build ') {
       parallel {
@@ -29,7 +22,13 @@ pipeline {
         }
 
         stage('Build Frontend') {
-          agent any
+          agent {
+            docker {
+              image 'node:16.13.1-alpine'
+              args '-p 5000 -u root'
+            }
+
+          }
           steps {
             echo 'Building Frontend...'
             dir(path: '../frontend') {
@@ -43,7 +42,14 @@ pipeline {
     }
 
     stage('Test') {
-      agent any
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+          args '''-p 5000
+-u root'''
+        }
+
+      }
       steps {
         echo 'Testing'
         dir(path: '../')
@@ -55,7 +61,14 @@ pipeline {
     }
 
     stage('Deliver') {
-      agent any
+      agent {
+        docker {
+          image 'node:16.13.1-alpine'
+          args '''-p 5000
+-u root'''
+        }
+
+      }
       steps {
         echo 'Deploying Server'
         sh 'npm run serve'
