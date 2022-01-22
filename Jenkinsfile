@@ -10,7 +10,7 @@ pipeline {
       }
       steps {
         echo 'Cloning Branch'
-        sh 'mkdir ~/.npm-global'
+        sh 'sudo mkdir ~/.npm-global'
         sh '''npm config set prefix \'~/.npm-global\'
 '''
         sh '''export PATH=~/.npm-global/bin:$PATH
@@ -28,6 +28,7 @@ pipeline {
         }
 
         dir(path: '../')
+        sh 'chown jenkins ~/.npm-global'
       }
     }
 
