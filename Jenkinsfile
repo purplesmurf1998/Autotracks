@@ -5,7 +5,7 @@ pipeline {
       agent {
         docker {
           image 'node:14.16.1-alpine'
-          args '''-u 979
+          args '''-u root
 -p 5000'''
         }
 
@@ -14,7 +14,6 @@ pipeline {
         echo 'Cloning Branch'
         sh '''node -v; export HOME=/tmp ;  npm config set cache /tmp;export HOME=/tmp ;  npm --prefix ./Server install
 '''
-        sh 'docker exec -u root -t -i container_id /bin/bash'
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
           sh 'npm install'
