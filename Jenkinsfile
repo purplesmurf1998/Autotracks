@@ -10,13 +10,6 @@ pipeline {
       }
       steps {
         echo 'Cloning Branch'
-        sh 'mkdir ~/.npm-global'
-        sh '''npm config set prefix \'~/.npm-global\'
-'''
-        sh '''export PATH=~/.npm-global/bin:$PATH
-'''
-        sh '''source ~/.profile
-'''
         echo 'Building Backend...'
         dir(path: 'Autotracks/backend') {
           sh 'npm install'
