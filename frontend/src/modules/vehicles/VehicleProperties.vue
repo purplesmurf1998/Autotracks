@@ -20,10 +20,10 @@
             :key="property._id"
             class="justify-content-between ml-0 mr-0"
           >
-            <CCol>
+            <CCol class="pl-0">
               <h6>{{ property.label }}</h6>
             </CCol>
-            <CCol class="d-flex align-items-end flex-column">
+            <CCol class="d-flex align-items-end flex-column pr-0">
               <p class="mb-2 property-field">
                 {{
                   !vehicle.properties[property.key]
