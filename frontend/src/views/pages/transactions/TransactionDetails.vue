@@ -6,7 +6,6 @@
                 <CSelect
                 label="Sales Representative"
                 :lazy="false"
-                :value.sync="sales_rep"
                 :placeholder="saleDetail['Sales Rep']"
                 :Disabled="true"
                 />
@@ -60,6 +59,7 @@
             class="ml-3"
             color="success"
             id="approve_sale"
+            @click="approveSale"
           >
           Approve Sale
           </CButton>
@@ -99,16 +99,40 @@ export default {
   ],
   data() {
     return {
-      // form: this.getEmptyForm(),
-      submitted: false,
       disableButtons: false,
       saleObject: null,
-      sales_rep: "test",
-      date_of_sale: '',
-      delivery_status: '',
     }
   },
   methods: {
+    approveSale () {
+      let ts = Date.now();
+      let date_ob = new Date(ts);
+      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
+      // prints date & time in YYYY-MM-DD format
+      axios({
+          method: 'PUT',
+          url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,
+          headers: {
+            'Authorization': `Bearer ${this.$store.state.auth.token}`
+          },
+          data: {
+            approved_by: this.$store.state.auth.userId,
+            date_approved: date,
+          }
+      }).then(response => {
+          if (response.data.success) {
+            console.log(response.data.payload);
+            this.saleDetail['Approved By'] = this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName;
+            this.saleDetail['Approved Date'] = date;
+            this.setNewSale(this.saleDetail);
+            this.setTransactionModal(false);
+            this.showMessage("The sale has been approved", "success");
+          }
+      }).catch(error => {
+          console.log(error);
+          this.showMessage(error.response.data.error, "danger");
+      })
+    },
     // updateSale() {
     //   this.disableButtons = true;
     //   // PUT request to API to update the vehicle
@@ -150,10 +174,7 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            console.log("Success");
             this.saleObject = response.data.payload;
-            console.log(this.saleDetail);
-            console.log(this.saleObject);
           }
         })
         .catch((err) => {
@@ -163,7 +184,6 @@ export default {
     markVehicleDelivered() {
       let body = this.saleObject.vehicle;
       body.delivered = true;
-      console.log(body);
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${body._id}`,
@@ -176,7 +196,7 @@ export default {
           if (response.data.success) {
             console.log(response.data.payload);
             this.saleDetail['Delivery Status'] = "Delivered";
-            this.setNewSale(this.sale);
+            this.setNewSale(this.saleDetail);
             this.setTransactionModal(false);
             this.showMessage("Vehicle has been marked as delivered", "success");
           }
@@ -186,20 +206,9 @@ export default {
           this.showMessage("Error occured while updating vehicle delivery status", "danger");
         });
     },
-    // getEmptyForm () {
-    //   return {
-    //     dealership: null,
-    //     vehicle: null,
-    //     deposit_amount: 0,
-    //     sale_amount: 0,
-    //     sales_rep: null,
-    //     notes: "",
-    //   }
-    // },
   },
   mounted() {
     this.getSale();
-    this.sales_rep = this.saleDetail['Sales Rep'];
   }
 }
 </script>

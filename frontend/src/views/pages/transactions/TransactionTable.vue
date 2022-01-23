@@ -78,7 +78,7 @@ export default {
     fetchSales(dealership) {
         axios({
             method: "GET",
-            url: `${this.$store.state.api}/inventory/details/sale/dealership/${this.dealership}`,
+            url: `${this.$store.state.api}/inventory/details/sale/dealership/${dealership}`,
             headers: {
                 Authorization: `Bearer ${this.$store.state.auth.token}`,
             },

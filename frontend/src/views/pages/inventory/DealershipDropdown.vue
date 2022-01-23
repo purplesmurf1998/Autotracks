@@ -52,14 +52,14 @@ export default {
         else if (current_url.indexOf('dashboard') > -1)
         {
             this.dealership = selected_val.target.value
-            //Propogate the selected dealershipID to the parent component (i.e. Inventory) via sending the selectDealership event
+            //Propogate the selected dealershipID to the parent component (i.e. dashboard) via sending the selectDealership event
             this.$emit('selectDealership', this.dealership);
             this.$parent.$refs.wdigetDD.fetchVehiclesInInventory(this.dealership);
         }
         else {
           this.dealership = selected_val.target.value
           this.$emit('selectDealership', this.dealership);
-          this.$parent.$refs.transactionTable.fetchSales(this.dealership); //.$parent.$children[1].$children[0].fetchSales); //(this.dealership);
+          this.$parent.$refs.transactionTable.fetchSales(this.dealership);
         }
     },
     setDefaultDealership() {

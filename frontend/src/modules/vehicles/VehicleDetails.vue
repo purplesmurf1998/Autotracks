@@ -335,7 +335,6 @@ export default {
       this.showingSoldModal = value;
     },
     updateSale() {
-      console.log("Update Sale");
       this.updateSaleStatus = true;
       this.showingSoldModal = true;
     }
@@ -343,13 +342,13 @@ export default {
   computed: {
     soldByUser() {
       if (this.approved) {
-        return "Sold"
+        return "Sale Approved"
       }
       else if (!this.saleStatus && !this.approved) {
         return "Not Sold";
       } 
       else {
-        return "Pending sale authorization";
+        return "Pending Sale Authorization";
       }
     },
   },
