@@ -14,4 +14,4 @@ else
     npm install --force
 fi
 echo "Running Backend and Frontend servers"
-node server & cd ../frontend & npm run serve
+node server.js & cd ../frontend & npm run build

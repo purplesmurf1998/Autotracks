@@ -1,9 +1,8 @@
 pipeline {
   agent none
   stages {
-    stage('Build ') {
       parallel {
-        stage('Build Backend') {
+        stage('Build') {
           agent {
             docker {
               args '''-u root 
@@ -17,19 +16,6 @@ pipeline {
             dir(path: 'Autotracks/backend') {
               sh 'npm install --force'
             }
-
-          }
-        }
-
-        stage('Build Frontend') {
-          agent {
-            docker {
-              args '-p 5000 -u root'
-              image 'node:14.18.3-alpine'
-            }
-
-          }
-          steps {
             echo 'Building Frontend...'
             dir(path: '../frontend') {
               sh 'npm install --force'
@@ -38,26 +24,24 @@ pipeline {
           }
         }
 
-      }
-    }
+      
+    
 
     stage('Test') {
-      parallel {
-        stage('Test Backend') {
-          agent any
-          steps {
-            echo 'Testing Frontend'
-            dir(path: '../')
-            dir(path: Autotracks/backend) {
-              sh 'npm test'
+          agent {
+            docker {
+              args '''-u root 
+-p 5000'''
+              image 'node:14.18.3-alpine'
             }
 
           }
-        }
-
-        stage('Test Frontend') {
-          agent any
           steps {
+            echo 'Testing Frontend'
+            dir(path: '../')
+            dir(path: 'Autotracks/backend') {
+              sh 'npm test'
+            }
             echo 'Testing Backend'
             dir(path: 'Autotracks/frontend') {
               sh 'npm test'
@@ -66,26 +50,24 @@ pipeline {
           }
         }
 
-      }
-    }
+      
+    
 
     stage('Deliver') {
-      parallel {
-        stage('Deliver Frontend') {
-          agent any
+        agent {
+            docker {
+              args '''-u root 
+-p 5000'''
+              image 'node:14.18.3-alpine'
+            }
+
+          }
           steps {
             echo 'Deploying Server'
             dir(path: 'Autotracks/frontend') {
               sh 'npm build'
               sh 'npm run serve'
             }
-
-          }
-        }
-
-        stage('Deliver Backend') {
-          agent any
-          steps {
             echo 'Deploying Backend'
             dir(path: 'Autotracks/backend') {
               sh 'npm build'
@@ -93,17 +75,12 @@ pipeline {
             }
 
           }
-        }
 
       }
-    }
+    
 
-    stage('error') {
-      steps {
-        warnError(catchInterruptions: true, message: 'Error Found in Pipeline')
-        echo 'Built and deployed'
-      }
-    }
 
-  }
+  
 }
+    }
+  }
