@@ -16,6 +16,7 @@
         <transaction-table
           v-if="selectedDealership"
           :dealership="selectedDealership"
+          :showMessage="showMessage"
           ref="transactionTable"
         />
       </CCol>

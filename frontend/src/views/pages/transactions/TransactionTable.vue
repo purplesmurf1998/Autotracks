@@ -43,7 +43,7 @@ const axios = require("axios");
 
 export default {
   name: "transactionTable",
-  props: ["dealership"],
+  props: ["dealership", "showMessage"],
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Deposit", "Approved By", "Approval Date"],
@@ -74,7 +74,7 @@ export default {
             items["Request Date"] = req_date;
             let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
             items["Delivery Status"] = delivery;
-            items["Deposit"] = sale.deposit_amount;
+            items["Deposit"] = '$' + sale.deposit_amount;
             let approved_by_user_name = !sale.approved_by ? 'Not approved' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
             items["Approved By"] = approved_by_user_name;
             let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
@@ -85,15 +85,8 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          showMessage("An error occured while fetching transactions data", "danger");
         });
-    },
-    showMessage(message, messageType) {
-      this.message = message;
-      this.messageType = messageType;
-      setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
-      }, 5000);
     },
     rowClicked() {
         console.log("Render Sales Modal");
