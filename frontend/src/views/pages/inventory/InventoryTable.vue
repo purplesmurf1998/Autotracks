@@ -56,6 +56,7 @@ export default {
       console.log("Report Downloaded");
     },
     rowClicked(vehicle) {
+      console.log(vehicle);
       this.$router.push(`/inventory/details/${vehicle._id}`);
     },
     switchDealerships(dealership) {

@@ -35,11 +35,32 @@
         </CDataTable>
       </CCardBody>
     </CCard>
+    <CModal
+      :show.sync="showingTransactionModal"
+      :centered="true"
+      title="Modal title 2"
+      size="lg"
+    >
+      <transaction-detail 
+        v-if="showingTransactionModal"
+        :setTransactionModal="setTransactionModal"
+        :sale="sale"
+        :showMessage="showMessage"
+      />
+      <template #header>
+        <h6 class="modal-title">View Transaction Detail</h6>
+        <CButtonClose @click="showingTransactionModal = false" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
 <script>
 const axios = require("axios");
+import transactionDetails from './TransactionDetails.vue';
 
 export default {
   name: "transactionTable",
@@ -47,9 +68,9 @@ export default {
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Deposit", "Approved By", "Approval Date"],
-      tableItems: [{"vin" : 1, "Sales Rep" : 2}, {"Request Date" : 3, "Delivery Status" : 4}, {"Deposit" : 3}, {"Approval Date" : 4}],
-      message: null,
-      messageType: null
+      tableItems: [],
+      showingTransactionModal: false,
+      sale: null
     };
   },
   methods: {
@@ -67,6 +88,7 @@ export default {
           payload.forEach((sale) => {
             //Format the data when fetched
             let items = {};
+            items.id = sale._id;
             items["vin"] = sale.vehicle.vin;
             let rep_user_name = sale.sales_rep.first_name + ' ' + sale.sales_rep.last_name;
             items["Sales Rep"] = rep_user_name;
@@ -88,17 +110,25 @@ export default {
           showMessage("An error occured while fetching transactions data", "danger");
         });
     },
-    rowClicked() {
-        console.log("Render Sales Modal");
+    rowClicked(sale) {
+      console.log(sale);
+      this.sale = sale;
+      this.showingTransactionModal = true;
+    },
+    setTransactionModal(value){
+      this.showingTransactionModal = value;
     },
     downloadTransactions(){
-        console.log("Download transactions");
+      console.log("Download transactions");
     },
   },
   components: {
   },
   mounted() {
       this.fetchSales(this.dealership);
-  }
+  },
+  components: {
+    "transaction-detail": transactionDetails,
+  },
 };
 </script>

@@ -68,7 +68,10 @@ exports.getSales = asyncHandler(async (req, res, next) => {
 // @access  Public
 exports.getSale = asyncHandler(async (req, res, next) => {
     // find vehicle property to delete
-    const sale = await Sale.findById(req.params.saleId);
+    const sale = await Sale.findById(req.params.saleId)
+    .populate('vehicle')
+    .populate('sales_rep')
+    .populate('approved_by');
     // return error if no sale found
     if (!sale) {
         return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
