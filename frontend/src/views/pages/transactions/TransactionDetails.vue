@@ -3,8 +3,8 @@
      <CForm @submit.prevent="submit">
        <CRow class="justify-content-center">
             <CCol>
-                <CSelect
-                label="Sales Representative"
+                <CInput
+                label="Sales Representative:"
                 :lazy="false"
                 :placeholder="saleDetail['Sales Rep']"
                 :Disabled="true"
@@ -15,6 +15,43 @@
               label="Request Date:"
               :lazy="false"
               :value="saleDetail['Request Date']"
+              :Disabled="true"
+              />
+            </CCol>
+        </CRow>
+        <CRow class="justify-content-center"
+        v-if="saleDetail['Approved By']!='Not approved'">
+            <CCol>
+                <CInput
+                label="Approved By"
+                :lazy="false"
+                :placeholder="saleDetail['Approved By']"
+                :Disabled="true"
+                />
+            </CCol>
+            <CCol>
+              <CInput
+              label="Approval Date:"
+              :lazy="false"
+              :value="saleDetail['Approval Date']"
+              :Disabled="true"
+              />
+            </CCol>
+        </CRow>
+        <CRow class="justify-content-center">
+            <CCol>
+                <CInput
+                label="Delivery Status:"
+                :lazy="false"
+                :placeholder="saleDetail['Delivery Status']"
+                :Disabled="true"
+                />
+            </CCol>
+            <CCol>
+              <CInput
+              label="Delivery Date:"
+              :lazy="false"
+              :value="saleDetail['Delivery Date']"
               :Disabled="true"
               />
             </CCol>
@@ -133,36 +170,6 @@ export default {
           this.showMessage(error.response.data.error, "danger");
       })
     },
-    // updateSale() {
-    //   this.disableButtons = true;
-    //   // PUT request to API to update the vehicle
-    //   axios({
-    //       method: 'PUT',
-    //       url: `${this.$store.state.api}/inventory/details/sale/${this.sale._id}`,
-    //       headers: {
-    //           'Authorization': `Bearer ${this.$store.state.auth.token}`
-    //       },
-    //       data: {
-    //           dealership: this.vehicle.dealership,
-    //           vehicle: this.vehicle._id,
-    //           deposit_amount: this.form.deposit,
-    //           sale_amount: this.form.saleAmount,
-    //           sales_rep: this.form.staffUser,
-    //           notes: this.form.notes,
-    //       }
-    //   }).then(response => {
-    //       if (response.data.success) {
-    //         this.showMessage("The sale request has been updated", "success");
-    //         this.setVehicleModal(false);
-    //         this.setSaleStatus(true, response.data.payload);
-    //         this.showMessage("The sale request has been updated", "success");
-    //       }
-    //   }).catch(error => {
-    //       console.log(error);
-    //       this.showMessage(error.response.data.error, "danger");
-    //       this.disableButtons = false;
-    //   })
-    // },
     getSale() {
       console.log(this.saleDetail);
         axios({
