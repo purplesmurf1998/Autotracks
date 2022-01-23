@@ -44,14 +44,7 @@ pipeline {
     stage('Test') {
       parallel {
         stage('Test Backend') {
-          agent {
-            docker {
-              args '''-p 5000
--u root'''
-              image 'node:14.18.3-alpine'
-            }
-
-          }
+          agent any
           steps {
             echo 'Testing Frontend'
             dir(path: '../')
@@ -63,14 +56,7 @@ pipeline {
         }
 
         stage('Test Frontend') {
-          agent {
-            docker {
-              image 'node:14.18.3-alpine'
-              args '''-p 5000
--u root'''
-            }
-
-          }
+          agent any
           steps {
             echo 'Testing Backend'
             dir(path: 'Autotracks/frontend') {
@@ -86,14 +72,7 @@ pipeline {
     stage('Deliver') {
       parallel {
         stage('Deliver Frontend') {
-          agent {
-            docker {
-              args '''-p 5000
--u root'''
-              image 'node:14.18.3-alpine'
-            }
-
-          }
+          agent any
           steps {
             echo 'Deploying Server'
             dir(path: 'Autotracks/frontend') {
@@ -105,6 +84,7 @@ pipeline {
         }
 
         stage('Deliver Backend') {
+          agent any
           steps {
             echo 'Deploying Backend'
             dir(path: 'Autotracks/backend') {
