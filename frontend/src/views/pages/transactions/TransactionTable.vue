@@ -46,7 +46,7 @@ export default {
   props: ["dealership"],
   data() {
     return {
-      tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Deposit", "Approval Date"],
+      tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Deposit", "Approved By", "Approval Date"],
       tableItems: [{"vin" : 1, "Sales Rep" : 2}, {"Request Date" : 3, "Delivery Status" : 4}, {"Deposit" : 3}, {"Approval Date" : 4}],
       message: null,
       messageType: null
@@ -64,24 +64,27 @@ export default {
         .then((response) => {
           const payload = response.data.payload;
           const fields = [];
-          //The below code needs refactoring
           payload.forEach((sale) => {
-            fields.push(sale.vehicle.vin);
-            let user_name = sale.sales_rep.first_name + sale.sales_rep.last_name;
-            fields.push(user_name);
-            fields.push(sale.date_of_sale);
+            //Format the data when fetched
+            let items = {};
+            items["vin"] = sale.vehicle.vin;
+            let rep_user_name = sale.sales_rep.first_name + ' ' + sale.sales_rep.last_name;
+            items["Sales Rep"] = rep_user_name;
+            let req_date = sale.date_of_sale.split('T')[0];
+            items["Request Date"] = req_date;
             let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
-            fields.push(delivery);
-            fields.push(sale.deposit_amount);
-            fields.push(sale.date_approved);
+            items["Delivery Status"] = delivery;
+            items["Deposit"] = sale.deposit_amount;
+            let approved_by_user_name = !sale.approved_by ? 'Not approved' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
+            items["Approved By"] = approved_by_user_name;
+            let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
+            items["Approval Date"] = approval_date
+            fields.push(items);
           });
-          console.log(fields);
-        //   this.tableFields = fields;
-        //   console.log(this.tableFields);
+          this.tableItems = fields;
         })
         .catch((error) => {
           console.log(error);
-          //this.$router.replace("/pages/404");
         });
     },
     showMessage(message, messageType) {

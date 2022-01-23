@@ -40,7 +40,7 @@ exports.createSale = asyncHandler(async (req, res, next) => {
 exports.getSales = asyncHandler(async (req, res, next) => {    
     // grab the dealership_ID from the body and verify that the dealership exists
     const dealership = await Dealership.findById(req.params.dealershipId);
-
+    
     // no dealership found
     if (!dealership) {
         return next(
@@ -48,7 +48,10 @@ exports.getSales = asyncHandler(async (req, res, next) => {
         );
     }
 
-    const sales = await Sale.find({ dealership: req.params.dealershipId });
+    const sales = await Sale.find({ dealership: req.params.dealershipId })
+    .populate('vehicle')
+    .populate('sales_rep')
+    .populate('approved_by');
     // return error if no sale found
     if (!sales) {
         return next(new ErrorResponse(`An error occured while fetching transactions`, 404));
