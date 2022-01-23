@@ -43,7 +43,7 @@ pipeline {
 
     stage('Test') {
       parallel {
-        stage('Test') {
+        stage('Test Backend') {
           agent {
             docker {
               args '''-p 5000
@@ -62,7 +62,7 @@ pipeline {
           }
         }
 
-        stage('') {
+        stage('Test Frontend') {
           agent {
             docker {
               image 'node:14.18.3-alpine'
@@ -85,7 +85,7 @@ pipeline {
 
     stage('Deliver') {
       parallel {
-        stage('Deliver') {
+        stage('Deliver Frontend') {
           agent {
             docker {
               args '''-p 5000
@@ -97,16 +97,18 @@ pipeline {
           steps {
             echo 'Deploying Server'
             dir(path: 'Autotracks/frontend') {
+              sh 'npm build'
               sh 'npm run serve'
             }
 
           }
         }
 
-        stage('') {
+        stage('Deliver Backend') {
           steps {
             echo 'Deploying Backend'
             dir(path: 'Autotracks/backend') {
+              sh 'npm build'
               sh 'node server.js'
             }
 
@@ -116,7 +118,7 @@ pipeline {
       }
     }
 
-    stage('') {
+    stage('error') {
       steps {
         warnError(catchInterruptions: true, message: 'Error Found in Pipeline')
         echo 'Built and deployed'
