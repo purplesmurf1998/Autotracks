@@ -44,8 +44,9 @@
       <transaction-detail 
         v-if="showingTransactionModal"
         :setTransactionModal="setTransactionModal"
-        :sale="sale"
+        :saleDetail="sale"
         :showMessage="showMessage"
+        :setNewSale="setNewSale"
       />
       <template #header>
         <h6 class="modal-title">View Transaction Detail</h6>
@@ -96,7 +97,7 @@ export default {
             items["Request Date"] = req_date;
             let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
             items["Delivery Status"] = delivery;
-            items["Deposit"] = '$' + sale.deposit_amount;
+            items["Deposit"] = '$' + sale.deposit_amount + '.00';
             let approved_by_user_name = !sale.approved_by ? 'Not approved' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
             items["Approved By"] = approved_by_user_name;
             let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
@@ -111,9 +112,11 @@ export default {
         });
     },
     rowClicked(sale) {
-      console.log(sale);
       this.sale = sale;
       this.showingTransactionModal = true;
+    },
+    setNewSale(sale) {
+      this.sale=sale;
     },
     setTransactionModal(value){
       this.showingTransactionModal = value;
