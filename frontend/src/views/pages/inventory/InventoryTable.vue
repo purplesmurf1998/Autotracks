@@ -107,15 +107,17 @@ export default {
           let tableItems = [];
           payload.forEach((vehicle) => {
             //Check if vehicle has properties
-            if (vehicle.properties != null)
-            { 
-              let properties = vehicle.properties;
-              properties._id = vehicle._id;
-              properties.vin = vehicle.vin;
-              if (vehicle.missing) {
-                properties._classes = 'table-warning';
+            if (!vehicle.delivered) {
+              if (vehicle.properties != null)
+              { 
+                let properties = vehicle.properties;
+                properties._id = vehicle._id;
+                properties.vin = vehicle.vin;
+                if (vehicle.missing) {
+                  properties._classes = 'table-warning';
+                }
+                tableItems.push(properties);
               }
-              tableItems.push(properties);
             }
           });
           this.tableItems = tableItems;
