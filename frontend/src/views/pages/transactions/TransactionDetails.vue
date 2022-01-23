@@ -123,7 +123,7 @@ export default {
           if (response.data.success) {
             console.log(response.data.payload);
             this.saleDetail['Approved By'] = this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName;
-            this.saleDetail['Approved Date'] = date;
+            this.saleDetail['Approval Date'] = date;
             this.setNewSale(this.saleDetail);
             this.setTransactionModal(false);
             this.showMessage("The sale has been approved", "success");
@@ -183,7 +183,11 @@ export default {
     },
     markVehicleDelivered() {
       let body = this.saleObject.vehicle;
+      let ts = Date.now();
+      let date_ob = new Date(ts);
+      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
       body.delivered = true;
+      body.date_delivered = date;
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${body._id}`,
@@ -196,6 +200,7 @@ export default {
           if (response.data.success) {
             console.log(response.data.payload);
             this.saleDetail['Delivery Status'] = "Delivered";
+            this.saleDetail['Delivery Date'] =  date;
             this.setNewSale(this.saleDetail);
             this.setTransactionModal(false);
             this.showMessage("Vehicle has been marked as delivered", "success");

@@ -37,7 +37,6 @@ const VehicleSaleSchema = new mongoose.Schema({
       default: Date.now
   },
   date_approved: Date,
-  date_delivered: Date,
 })
 
 module.exports = mongoose.model('VehicleSale', VehicleSaleSchema);
