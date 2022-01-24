@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       parallel {
-        stage('Build') {
+        stage('Frontend') {
           agent {
             docker {
               args '''-u root 
@@ -29,11 +29,6 @@ pipeline {
             }
 
             echo 'Deploying Server'
-            dir(path: 'Autotracks/frontend') {
-              sh 'npm build'
-              sh 'npm run serve'
-            }
-
             echo 'Deploying Backend'
             dir(path: 'Autotracks/backend') {
               sh 'npm build'
@@ -43,7 +38,7 @@ pipeline {
           }
         }
 
-        stage('') {
+        stage('Backend') {
           agent {
             docker {
               image 'node:14.18.3-alpine'
@@ -54,6 +49,8 @@ pipeline {
           steps {
             dir(path: 'Autotracks/frontend') {
               sh 'npm install --force'
+              sh 'npm test'
+              sh 'npm run serve'
             }
 
           }
