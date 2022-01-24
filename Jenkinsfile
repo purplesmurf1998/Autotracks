@@ -1,8 +1,7 @@
 pipeline {
   agent none
   
-      parallel {
-        stages {
+      stages {
         stage('Build') {
           agent {
             docker {
@@ -21,7 +20,25 @@ pipeline {
             dir(path: '../frontend') {
               sh 'npm install --force'
             }
-
+echo 'Testing Frontend'
+            dir(path: '../')
+            dir(path: 'Autotracks/backend') {
+              sh 'npm test'
+            }
+            echo 'Testing Backend'
+            dir(path: 'Autotracks/frontend') {
+              sh 'npm test'
+            }
+            echo 'Deploying Server'
+            dir(path: 'Autotracks/frontend') {
+              sh 'npm build'
+              sh 'npm run serve'
+            }
+            echo 'Deploying Backend'
+            dir(path: 'Autotracks/backend') {
+              sh 'npm build'
+              sh 'node server.js'
+            }
           }
         }
 
@@ -78,10 +95,6 @@ pipeline {
           }
 
       }
-    
-
-
-  
-}
     }
-  }
+    }
+  
