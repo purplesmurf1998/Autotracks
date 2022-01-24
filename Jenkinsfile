@@ -18,7 +18,7 @@ pipeline {
 
         echo 'Building Frontend...'
         dir(path: '../frontend') {
-          sh 'npm fix audit '
+          sh 'echo "skipping"'
         }
 
         echo 'Testing Frontend'
