@@ -1,7 +1,8 @@
 pipeline {
   agent none
-  stages {
+  
       parallel {
+        stages {
         stage('Build') {
           agent {
             docker {
