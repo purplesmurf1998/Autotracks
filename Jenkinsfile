@@ -31,8 +31,7 @@ pipeline {
             echo 'Deploying Server'
             echo 'Deploying Backend'
             dir(path: 'Autotracks/backend') {
-              sh 'npm build'
-              sh 'node server.js'
+              echo 'this will be deployment area'
             }
 
           }
@@ -48,9 +47,7 @@ pipeline {
           }
           steps {
             dir(path: 'Autotracks/frontend') {
-              sh 'npm install --force'
-              sh 'npm test'
-              sh 'npm run serve'
+              echo 'This will be deployment area'
             }
 
           }
