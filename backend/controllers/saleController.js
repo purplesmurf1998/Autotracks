@@ -1,11 +1,9 @@
 const Dealership = require('../models/Dealership');
-const User = require('../models/User');
 const Sale = require('../models/VehicleSale');
 const Vehicle = require('../models/Vehicle');
 
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const advancedFilter = require('../utils/advancedFilter');
 
 // @desc    Create a sale instance
 // @route   POST /api/v1/inventory/details/sale'
@@ -49,9 +47,8 @@ exports.getSales = asyncHandler(async (req, res, next) => {
     }
 
     const sales = await Sale.find({ dealership: req.params.dealershipId })
-    .populate('vehicle')
-    .populate('sales_rep')
-    .populate('approved_by');
+    .populate('vehicle sales_rep approved_by');
+
     // return error if no sale found
     if (!sales) {
         return next(new ErrorResponse(`An error occured while fetching transactions`, 404));
@@ -69,9 +66,8 @@ exports.getSales = asyncHandler(async (req, res, next) => {
 exports.getSale = asyncHandler(async (req, res, next) => {
     // find vehicle property to delete
     const sale = await Sale.findById(req.params.saleId)
-    .populate('vehicle')
-    .populate('sales_rep')
-    .populate('approved_by');
+    .populate('vehicle sales_rep approved_by');
+
     // return error if no sale found
     if (!sale) {
         return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
