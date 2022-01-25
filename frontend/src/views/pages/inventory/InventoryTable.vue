@@ -41,6 +41,7 @@
 <script>
 const axios = require("axios");
 import InventorySlot from "./InventorySlot.vue"
+import Vehicle from "../vehicle/Vehicle.vue"
 
 export default {
   name: "InventoryTable",
@@ -48,7 +49,7 @@ export default {
   data() {
     return {
       tableFields: [],
-      tableItems: [],
+      tableItems: []
     };
   },
   methods: {
@@ -129,7 +130,8 @@ export default {
     this.fetchVehicleProperties();
   },
   components: {
-    'inventory-slot': InventorySlot
+    'inventory-slot': InventorySlot,
+    'vehicle': Vehicle
   }
 };
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div>
     <CRow>
-      <CCol md="6">
+      <CCol xl="6">
         
         <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
         <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>
-      <CCol md="6">
+      <CCol xl="6">
         <vehicle-location :vehicle="vehicle" />
         <vehicle-comments :vehicle="vehicle" />
       </CCol>

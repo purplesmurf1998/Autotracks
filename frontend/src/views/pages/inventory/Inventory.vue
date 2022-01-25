@@ -28,6 +28,7 @@
         />
       </CCol>
     </CRow>
+    <router-view />
   </div>
 </template>
 
