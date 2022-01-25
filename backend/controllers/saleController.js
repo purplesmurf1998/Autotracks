@@ -88,15 +88,18 @@ exports.getSale = asyncHandler(async (req, res, next) => {
 // @access  Public
 exports.updateSale = asyncHandler(async (req, res, next) => {
     // find vehicle property to delete
-    const sale = await Sale.findByIdAndUpdate(req.params.saleId, req.body);
+    const sale = await Sale.findByIdAndUpdate(req.params.saleId, req.body, {
+        runValidators: true,
+        new: true
+    });
     // return error if no sale found
     if (!sale) {
         return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
     }
 
     res.status(200).json({
-    success: true,
-    payload: sale
+        success: true,
+        payload: sale
     })
 });
 
