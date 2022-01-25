@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <CButton color="primary" @click="showQueryParams">Test</CButton>
+  <div class="inventory-div">
     <CRow>
       <CCol>
         <CAlert 
