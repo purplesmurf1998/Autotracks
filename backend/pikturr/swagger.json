@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
     "title": "Autotracks API",
     "description": "This collection contains all the supported API calls to the Autotracks Express API.\n\nEach request is an example of an API call for testing purposes and contains a description of what the route is used for as well as usage guidelines.",

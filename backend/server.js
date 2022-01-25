@@ -79,5 +79,5 @@ mongoose.connection.on("error", console.error.bind(console, "connection error: "
 module.exports = app;
 
 var swaggerUi = require('swagger-ui-express');
-var swaggerDocument = require('./swagger.json')
+var swaggerDocument = require('./pikturr/swagger.json')
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
