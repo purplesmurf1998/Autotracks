@@ -18,7 +18,7 @@
         <CButton
         v-if="!delivered_bool" 
         @click="setDeliveredBool(true)"
-        color="success" class="float-right mr-3">
+        color="secondary" class="float-right mr-3">
           Show Delivered Vehicles
         </CButton>
       </CCardHeader>
