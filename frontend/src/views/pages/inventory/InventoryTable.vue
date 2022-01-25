@@ -9,6 +9,18 @@
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
+        <CButton
+        v-if="delivered_bool" 
+        @click="setDeliveredBool(false)"
+        color="secondary" class="float-right mr-3">
+          Hide Delivered Vehicles
+        </CButton>
+        <CButton
+        v-if="!delivered_bool" 
+        @click="setDeliveredBool(true)"
+        color="success" class="float-right mr-3">
+          Show Delivered Vehicles
+        </CButton>
       </CCardHeader>
       <CCardBody>
         <CDataTable
@@ -49,11 +61,16 @@ export default {
     return {
       tableFields: [],
       tableItems: [],
+      delivered_bool: false,
     };
   },
   methods: {
     downloadInventory() {
       console.log("Report Downloaded");
+    },
+    setDeliveredBool(value) {
+      this.delivered_bool = value
+      this.fetchVehicleProperties();
     },
     rowClicked(vehicle) {
       console.log(vehicle);
@@ -107,16 +124,32 @@ export default {
           let tableItems = [];
           payload.forEach((vehicle) => {
             //Check if vehicle has properties
-            if (!vehicle.delivered) {
-              if (vehicle.properties != null)
-              { 
-                let properties = vehicle.properties;
-                properties._id = vehicle._id;
-                properties.vin = vehicle.vin;
-                if (vehicle.missing) {
-                  properties._classes = 'table-warning';
+            if (!this.delivered_bool) {
+              if (!vehicle.delivered) {
+                if (vehicle.properties != null)
+                { 
+                  let properties = vehicle.properties;
+                  properties._id = vehicle._id;
+                  properties.vin = vehicle.vin;
+                  if (vehicle.missing) {
+                    properties._classes = 'table-warning';
+                  }
+                  tableItems.push(properties);
                 }
-                tableItems.push(properties);
+              }
+            }
+            if (this.delivered_bool) {
+              if (vehicle.delivered) {
+                if (vehicle.properties != null)
+                { 
+                  let properties = vehicle.properties;
+                  properties._id = vehicle._id;
+                  properties.vin = vehicle.vin;
+                  if (vehicle.missing) {
+                    properties._classes = 'table-warning';
+                  }
+                  tableItems.push(properties);
+                }
               }
             }
           });
