@@ -57,7 +57,16 @@ export default {
       console.log("Report Downloaded");
     },
     rowClicked(vehicle) {
-      this.$router.push(`/inventory/details/${vehicle._id}`);
+      //this.$router.push(`/inventory/details/${vehicle._id}`);
+      //this.$router.replace(`/inventory/?vehicleSelected=${vehicle._id}`);
+      // history.pushState(
+      //   {},
+      //   null,
+      //   `#/inventory/?vehicleSelected=${vehicle._id}`
+      // );
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries.vehicleSelected = vehicle._id;
+      this.$router.replace({query: queries});
     },
     switchDealerships(dealership) {
       this.dealership = dealership;
