@@ -1,4 +1,4 @@
-const Vehicle = require('../models/Vehicle');
+const History = require('../models/History');
 
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
@@ -18,15 +18,15 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Get a history instance
-// @route   GET /api/v1/history/vehicle/:vehicleID'
+// @route   GET /api/v1/history/vehicle/:vehicleId'
 // @access  Public
 exports.getHistory = asyncHandler(async (req, res, next) => {    
     // grab the vehicle_ID from the body and populate the table
-    const history = await History.find({ vehicle: req.params.vehicleID })
+    const history = await History.find({ vehicle: req.params.vehicleId })
     .populate('author');
 
     res.status(200).json({
-    success: true,
-    payload: history
+        success: true,
+        payload: history
     })
 });
