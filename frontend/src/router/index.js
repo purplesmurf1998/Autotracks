@@ -81,6 +81,9 @@ const Inventory = () => import('@/views/pages/inventory/Inventory')
 const InventoryAdd = () => import('@/views/pages/inventory/InventoryAdd')
 const Vehicle = () => import('@/views/pages/vehicle/Vehicle')
 
+// Views - Pages - VehicleList
+const UserVehicleLists = () => import('@/views/pages/vehicleLists/UserVehicleLists.vue')
+
 // Users
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
@@ -172,6 +175,14 @@ const router = new Router({
             ]
           },
           component: InventoryAdd
+        },
+        {
+          path: 'vehicle-lists',
+          name: 'Vehicle Lists Table',
+          meta: {
+            authRequired: true,
+          },
+          component: UserVehicleLists
         },
       ]
     },
