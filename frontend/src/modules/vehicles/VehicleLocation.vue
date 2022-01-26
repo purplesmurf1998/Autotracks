@@ -9,9 +9,6 @@
           :zoom="11"
           style="height: 400px"
         >
-          <GmapInfoWindow :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-            <CLink :href="infoLink" target="_blank">{{infoContent}}</CLink>
-          </GmapInfoWindow>
           <GmapMarker
             :key="index"
             v-for="(m, index) in markers"
