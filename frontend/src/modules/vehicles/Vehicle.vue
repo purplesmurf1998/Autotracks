@@ -18,6 +18,7 @@ import VehicleLocation from "./VehicleLocation.vue";
 import VehicleProperties from "./VehicleProperties.vue";
 
 export default {
+  name: 'Vehicle',
   props: ["vehicle", "setNewVehicle"],
   components: {
     "vehicle-details": VehicleDetails,

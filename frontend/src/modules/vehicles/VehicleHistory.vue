@@ -6,6 +6,7 @@
 
 <script>
 export default {
+  name: 'VehicleHistory',
   props: ["vehicle"],
 };
 </script>

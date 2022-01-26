@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VehicleLocation.vue renders correctly 1`] = `
+<div>
+  <ccard-stub>
+    <ccardbody-stub>
+      <h4>
+        Location
+      </h4>
+       
+      <hr />
+    </ccardbody-stub>
+  </ccard-stub>
+</div>
+`;

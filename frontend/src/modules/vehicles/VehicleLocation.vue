@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  name: 'VehicleLocation',
   props: ["vehicle"],
 };
 </script>

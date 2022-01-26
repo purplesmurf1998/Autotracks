@@ -108,6 +108,7 @@ const axios = require("axios");
 const { getFormattedProperties } = require("../../utils/index");
 
 export default {
+  name: 'EditVehicleProperties',
   props: [
     "vehicle",
     "leftProperties",
