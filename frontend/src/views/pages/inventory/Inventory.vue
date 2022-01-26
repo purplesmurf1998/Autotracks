@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="inventory-div">
     <CRow>
       <CCol>
         <CAlert 
@@ -28,6 +28,21 @@
         />
       </CCol>
     </CRow>
+    <CModal
+      :show.sync="viewVehicle"
+      :centered="false"
+      title="Vehicle Information Page"
+      size="xl"
+    >
+      <vehicle v-if="!!$route.query.vehicleSelected" :vehicleId="$route.query.vehicleSelected"/>
+      <template #header>
+        <h6 class="modal-title">Vehicle Information Page</h6>
+        <CButtonClose @click="closeModal" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
@@ -35,6 +50,7 @@
 const axios = require("axios");
 import InventoryTable from "./InventoryTable.vue";
 import dealershipDD from "./DealershipDropdown.vue";
+import Vehicle from "../vehicle/Vehicle.vue"
 
 export default {
   name: "Inventory",
@@ -45,7 +61,20 @@ export default {
       MessageType: null
     };
   },
+  computed: {
+    viewVehicle() {
+      return !!this.$route.query.vehicleSelected;
+    }
+  },
   methods: {
+    closeModal() {
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries = {};
+      this.$router.replace({query: queries});
+    },
+    showQueryParams() {
+      console.log(this.$route.query);
+    },
     showMessage(message) {
       this.Message = message.message;
       if (message.includes('error'))
@@ -57,6 +86,7 @@ export default {
   components: {
     "inventory-table": InventoryTable,
     "dealership-dropdown": dealershipDD,
+    'vehicle': Vehicle
   },
 };
 </script>

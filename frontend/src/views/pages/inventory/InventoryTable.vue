@@ -41,6 +41,7 @@
 <script>
 const axios = require("axios");
 import InventorySlot from "./InventorySlot.vue"
+import Vehicle from "../vehicle/Vehicle.vue"
 
 export default {
   name: "InventoryTable",
@@ -48,7 +49,7 @@ export default {
   data() {
     return {
       tableFields: [],
-      tableItems: [],
+      tableItems: []
     };
   },
   methods: {
@@ -56,7 +57,16 @@ export default {
       console.log("Report Downloaded");
     },
     rowClicked(vehicle) {
-      this.$router.push(`/inventory/details/${vehicle._id}`);
+      //this.$router.push(`/inventory/details/${vehicle._id}`);
+      //this.$router.replace(`/inventory/?vehicleSelected=${vehicle._id}`);
+      // history.pushState(
+      //   {},
+      //   null,
+      //   `#/inventory/?vehicleSelected=${vehicle._id}`
+      // );
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries.vehicleSelected = vehicle._id;
+      this.$router.replace({query: queries});
     },
     switchDealerships(dealership) {
       this.dealership = dealership;
@@ -129,7 +139,8 @@ export default {
     this.fetchVehicleProperties();
   },
   components: {
-    'inventory-slot': InventorySlot
+    'inventory-slot': InventorySlot,
+    'vehicle': Vehicle
   }
 };
 </script>
