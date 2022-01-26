@@ -229,8 +229,7 @@ export default {
           }
       }).then(response => {
           if (response.data.success) {
-            this.saleDetail['Approval Date'] = date;
-            this.setNewSale(this.saleDetail);
+            this.fetchSales(this.dealership);
             this.setTransactionModal(false);
             this.showMessage("The sale has been approved", "success");
           }
@@ -275,10 +274,7 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            console.log(response.data.payload);
-            this.saleDetail['Delivery Status'] = "Delivered";
-            this.saleDetail['Delivery Date'] =  date;
-            this.setNewSale(this.saleDetail);
+            this.fetchSales(this.dealership);
             this.setTransactionModal(false);
             this.showMessage("Vehicle has been marked as delivered", "success");
           }
@@ -299,8 +295,7 @@ export default {
           data: body
       }).then(response => {
           if (response.data.success) {
-            this.saleDetail['Deposit'] = response.data.payload.deposit_amount;
-            this.setNewSale(this.saleDetail);
+            this.fetchSales(this.dealership);
             this.setTransactionModal(false);
             this.showMessage("The transaction has been updated", "success");
           }

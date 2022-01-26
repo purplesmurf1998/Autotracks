@@ -24,7 +24,7 @@ const VehicleSaleSchema = new mongoose.Schema({
   approved_by: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    default: null
+    required: [true, ' Vehicle sale must be associated with a manager']
   },
   sales_rep: {
     type: mongoose.Schema.ObjectId,
