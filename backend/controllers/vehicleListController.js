@@ -31,7 +31,7 @@ exports.createVehicleList = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/vehicle-list/:vehicleListId
 // @access  Private
 exports.getVehicleList = asyncHandler(async (req, res, next) => {
-  
+
   // find the vehicle list by id
   const vehicleList = await VehicleList.findById(req.params.vehicleListId).populate('vehicles');
 
@@ -53,9 +53,9 @@ exports.getVehicleList = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/vehicle-list/user/:userId
 // @access  Private
 exports.getVehicleLists = asyncHandler(async (req, res, next) => {
-  
+
   // find the vehicle list owned by the provided userId
-  const vehicleList = await VehicleList.find({owner: req.params.userId});
+  const vehicleList = await VehicleList.find({ owner: req.params.userId });
 
   // send response
   res.status(200).json({
@@ -68,7 +68,7 @@ exports.getVehicleLists = asyncHandler(async (req, res, next) => {
 // @route   DELETE /api/v1/vehicle-list/:vehicleListId
 // @access  Private
 exports.deleteVehicleList = asyncHandler(async (req, res, next) => {
-  
+
   // find the vehicle list owned by the provided userId
   const vehicleList = await VehicleList.findByIdAndDelete(req.params.vehicleListId);
 
@@ -83,9 +83,9 @@ exports.deleteVehicleList = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/vehicle-list/add/:vehicleListId
 // @access  Private
 exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
-  
+
   // find the vehicle list owned by the provided userId
-  const vehicleList = await VehicleList.find({owner: req.params.vehicleListId});
+  const vehicleList = await VehicleList.findById(req.params.vehicleListId);
 
   if (!vehicleList) {
     // something went wront...validate with Abdul if this check ever runs
@@ -96,12 +96,14 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
 
   const vehicleIds = req.body.vehicles;
   const newVehicles = [];
-  const oldVehicles = vehicleList.vehicles;
+  let oldVehicles = vehicleList.vehicles;
+
 
   // get all the vehicle objects ids from the provided string ids
   // must use for loop since forEach doesn't work properly with await clauses
   for (let i = 0; i < vehicleIds.length; i++) {
     let newVehicle = await Vehicle.findById(vehicleIds[i]);
+    console.log(newVehicle._id);
 
     if (!newVehicle) {
       return next(
@@ -109,15 +111,18 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
       );
     }
 
-    newVehicles.push(newVehicle._id);
+    // only add the vehicle if it's not already on the list
+    if (oldVehicles.findIndex(vehicle => {
+      console.log(vehicle);
+      return vehicle.toString() == newVehicle._id.toString();
+    }) == -1) {
+      oldVehicles.push(newVehicle._id);
+    }
   }
 
-  // concatenate the old array with the new vehicles
-   const vehicles = oldVehicles.concat(newVehicles);
-
-   // add to the vehicle list and save
-   vehicleList.vehicles = vehicles;
-   vehicleList.save();
+  // add to the vehicle list and save
+  vehicleList.vehicles = oldVehicles;
+  vehicleList.save();
 
   // send response
   res.status(201).json({
@@ -130,9 +135,9 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
 // @route   DELETE /api/v1/vehicle-list/delete/:vehicleListId
 // @access  Private
 exports.deleteVehiclesFromList = asyncHandler(async (req, res, next) => {
-  
+
   // find the vehicle list owned by the provided userId
-  const vehicleList = await VehicleList.find({owner: req.params.vehicleListId});
+  const vehicleList = await VehicleList.findById(req.params.vehicleListId);
 
   if (!vehicleList) {
     // something went wront...validate with Abdul if this check ever runs
@@ -144,14 +149,14 @@ exports.deleteVehiclesFromList = asyncHandler(async (req, res, next) => {
   const vehicleIds = req.body.vehicles;
   let vehicles = vehicleList.vehicles;
 
-  vehiclesIds.forEach(vehicleId => {
+  vehicleIds.forEach(vehicleId => {
     let index = vehicles.findIndex(objectId => objectId.toString() == vehicleId);
     vehicles.splice(index, 1);
   })
 
-   // add to the vehicle list and save
-   vehicleList.vehicles = vehicles;
-   vehicleList.save();
+  // add to the vehicle list and save
+  vehicleList.vehicles = vehicles;
+  vehicleList.save();
 
   // send response
   res.status(201).json({

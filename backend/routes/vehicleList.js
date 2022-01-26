@@ -22,12 +22,12 @@ router.route('/:vehicleListId')
   .delete(protect, deleteVehicleList);
 
 router.route('/user/:userId')
-  .get(protect, getVehicleLists)
+  .get(protect, getVehicleLists);
 
-  router.route('/add/:userId')
+router.route('/add/:vehicleListId')
   .post(protect, addVehiclesToList);
 
-  router.route('/delete/:userId')
+router.route('/delete/:vehicleListId')
   .delete(protect, deleteVehiclesFromList);
 
 module.exports = router;
