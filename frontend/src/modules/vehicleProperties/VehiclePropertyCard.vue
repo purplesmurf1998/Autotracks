@@ -22,6 +22,7 @@ import ViewVehicleProperty from "./ViewVehicleProperty.vue";
 import EditVehicleProperty from "./EditVehicleProperty.vue"
 
 export default {
+  name: 'VehiclePropertyCard',
   data() {
     return {};
   },

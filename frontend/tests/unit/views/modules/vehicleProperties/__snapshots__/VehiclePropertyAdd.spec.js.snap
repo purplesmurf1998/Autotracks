@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VehiclePropertyAdd.vue renders correctly 1`] = `
+<div>
+  <cform-stub>
+    <!---->
+     
+    <cinput-stub
+      id="header-name-txt"
+      label="Header Name"
+      lazy="400"
+      placeholder="Enter the label for the vehicle property"
+      type="text"
+      value=""
+    />
+     
+    <cselect-stub
+      id="input-type-cmb"
+      label="Input Type"
+      options="Text,Number,Currency,Date,Options,List"
+      placeholder="Please select the input type"
+      value=""
+    />
+     
+    <crow-stub
+      gutters="true"
+      tag="div"
+    >
+      <ccol-stub
+        tag="div"
+      >
+        <cselect-stub
+          id="is-required-cmb"
+          label="Value required?"
+          options="Yes,No"
+          value="Yes"
+        />
+      </ccol-stub>
+       
+      <ccol-stub
+        tag="div"
+      >
+        <cselect-stub
+          id="is-visible-cmb"
+          label="Visible in inventory?"
+          options="Yes,No"
+          value="Yes"
+        />
+      </ccol-stub>
+    </crow-stub>
+     
+    <!---->
+     
+    <ctextarea-stub
+      label="Description (optional)"
+      lazy="400"
+      placeholder="Enter a description of the vehicle property"
+      rows="5"
+      value=""
+    />
+     
+    <crow-stub
+      class="justify-content-center mt-2"
+      gutters="true"
+      tag="div"
+    >
+      <cbutton-stub
+        activeclass="router-link-active"
+        color="primary"
+        event="click"
+        exactactiveclass="router-link-exact-active"
+        id="create-staff"
+        routertag="a"
+        target="_self"
+        type="submit"
+      >
+        
+        Create
+      
+      </cbutton-stub>
+       
+      <cbutton-stub
+        activeclass="router-link-active"
+        class="ml-1"
+        color="danger"
+        event="click"
+        exactactiveclass="router-link-exact-active"
+        routertag="a"
+        target="_self"
+        type="button"
+      >
+        
+        Cancel
+      
+      </cbutton-stub>
+    </crow-stub>
+  </cform-stub>
+</div>
+`;
