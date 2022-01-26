@@ -8,22 +8,16 @@
           class="mb-2">
           {{ message }}
         </CAlert>
-        <CRow class="m-0 mb-3 d-flex justify-content-between">
-          <router-link :to="`/inventory/add/${selectedDealership}`">
-            <CButton color="primary" id="add-new-vehicle">
-              Add vehicle(s) to the inventory
-            </CButton>
-          </router-link>
-        </CRow>
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
           :showMessage="showMessage"
         />
-        <inventory-table
+        <transaction-table
           v-if="selectedDealership"
           :dealership="selectedDealership"
-          ref="inventoryTable"
+          :showMessage="showMessage"
+          ref="transactionTable"
         />
       </CCol>
     </CRow>
@@ -32,11 +26,11 @@
 
 <script>
 const axios = require("axios");
-import InventoryTable from "./InventoryTable.vue";
-import dealershipDD from "./DealershipDropdown.vue";
+import TransactionTable from "./TransactionTable.vue";
+import dealershipDD from "../inventory/DealershipDropdown.vue";
 
 export default {
-  name: "Inventory",
+  name: "Transaction",
   data() {
     return {
       selectedDealership: null,
@@ -55,7 +49,7 @@ export default {
     },
   },
   components: {
-    "inventory-table": InventoryTable,
+    "transaction-table": TransactionTable,
     "dealership-dropdown": dealershipDD,
   },
 };

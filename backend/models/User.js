@@ -60,6 +60,11 @@ const UserSchema = new mongoose.Schema({
     ],
     required: 'User must have a list of permissions, even if that list is empty.'
   },
+  subscribed_events: {
+    type: [String],
+    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved', 'vehicle_found'],
+    default: []
+  },
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"
@@ -80,6 +85,10 @@ const UserSchema = new mongoose.Schema({
   promptPasswordChange: {
     type: Boolean,
     default: false
+  },
+  number_unread_alerts: {
+    type: Number,
+    default: 0
   },
   created_at: {
     type: Date,
