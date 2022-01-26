@@ -30,7 +30,7 @@ const axios = require("axios");
 
 export default {
   name: "DealershipDropdown",
-  props: ["dealership", "Message", "MessageType"],
+  props: ["dealership", "showMessage"],
   data() {
     return {
       adminDealerships: [],
@@ -49,27 +49,18 @@ export default {
             this.$emit('selectDealership', this.dealership);
             this.$parent.$refs.inventoryTable.switchDealerships(this.dealership);
         }
-        else
+        else if (current_url.indexOf('dashboard') > -1)
         {
             this.dealership = selected_val.target.value
-            //Propogate the selected dealershipID to the parent component (i.e. Inventory) via sending the selectDealership event
+            //Propogate the selected dealershipID to the parent component (i.e. dashboard) via sending the selectDealership event
             this.$emit('selectDealership', this.dealership);
             this.$parent.$refs.wdigetDD.fetchVehiclesInInventory(this.dealership);
         }
-    },
-    showMessage(message) {
-        this.Message = message;
-        if (message.includes('error'))
-            this.MessageType = 'danger';
         else {
-            this.MessageType = 'success';
+          this.dealership = selected_val.target.value
+          this.$emit('selectDealership', this.dealership);
+          this.$parent.$refs.transactionTable.fetchSales(this.dealership);
         }
-        this.$emit('showMessage', {message: this.Message, messageType: this.MessageType});
-        setTimeout(() => {
-            this.Message = null;
-            this.MessageType = null;
-            this.$emit('showMessage', {message: this.Message, messageType: this.MessageType});
-        }, 5000);
     },
     setDefaultDealership() {
       axios({
@@ -93,12 +84,12 @@ export default {
             (dealership) => dealership.value == this.dealership
           );
           this.showMessage(
-            `${this.adminDealerships[index].label} successfully set as your default dealership`
+            `${this.adminDealerships[index].label} successfully set as your default dealership`, 'success'
           );
         })
         .catch((error) => {
           this.showMessage(
-              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`
+              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`, 'danger'
             );
         });
     },

@@ -2,7 +2,6 @@
   <div>
     <CRow>
       <CCol xl="6">
-        
         <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
         <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>
@@ -22,6 +21,22 @@ import VehicleComments from "./VehicleComments.vue";
 
 export default {
   props: ["vehicle", "setNewVehicle"],
+  data() {
+    return {
+      message: null,
+      messageType: null,
+    }
+  },
+  methods: {
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+          this.message = null;
+          this.messageType = null;
+      }, 5000);
+    },
+  },
   components: {
     "vehicle-details": VehicleDetails,
     "vehicle-location": VehicleLocation,

@@ -2,13 +2,11 @@
   <div class="inventory-div">
     <CRow>
       <CCol>
-        <CAlert 
-          show
-          @showMessage="showMessage($event)" 
-          :color="MessageType" 
-          v-if="Message" 
+        <CAlert  
+          :color="messageType" 
+          v-if="message" 
           class="mb-2">
-          {{ Message }}
+          {{ message }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
           <router-link :to="`/inventory/add/${selectedDealership}`">
@@ -20,6 +18,7 @@
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
+          :showMessage="showMessage"
         />
         <inventory-table
           v-if="selectedDealership"
@@ -57,8 +56,8 @@ export default {
   data() {
     return {
       selectedDealership: null,
-      Message: null,
-      MessageType: null
+      message: null,
+      messageType: null
     };
   },
   computed: {
@@ -72,15 +71,13 @@ export default {
       queries = {};
       this.$router.replace({query: queries});
     },
-    showQueryParams() {
-      console.log(this.$route.query);
-    },
-    showMessage(message) {
-      this.Message = message.message;
-      if (message.includes('error'))
-        this.MessageType = message.messageType;
-      else
-        this.MessageType = message.messageType;
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+          this.message = null;
+          this.messageType = null;
+      }, 5000);
     },
   },
   components: {
