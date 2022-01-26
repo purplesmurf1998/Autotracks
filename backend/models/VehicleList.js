@@ -12,7 +12,7 @@ const VehicleListSchema = new mongoose.Schema({
   },
   vehicles: [{
     type: mongoose.Schema.ObjectId,
-    ref: 'User'
+    ref: 'Vehicle'
   }],
   date_created: {
     type: Date,
