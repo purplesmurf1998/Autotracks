@@ -22,9 +22,9 @@ const usersRoutes = require('./routes/users');
 const dealershipsRoutes = require('./routes/dealerships');
 const vehiclePropertyRoutes = require('./routes/vehicleProperties');
 const vehicleRoutes = require('./routes/vehicle');
-const eventRoutes = require('./routes/events')
+const eventRoutes = require('./routes/events');
+const commentRoutes = require('./routes/comments');
 const saleRoutes = require('./routes/sales')
-
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
@@ -63,6 +63,7 @@ app.use('/api/v1/dealerships', dealershipsRoutes);
 app.use('/api/v1/dealerships/:dealershipId/vehicles/properties', vehiclePropertyRoutes);
 app.use('/api/v1/inventory', vehicleRoutes);
 app.use('/api/v1/events', eventRoutes);
+app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/inventory/details/sale', saleRoutes);
 
 // mount error handler middleware
@@ -85,10 +86,9 @@ httpServer.listen(PORT, () => {
 // test commit 2 for sonarcloud scan
 // test commit 3 for sonarcloud scan
 // test commit 4 for sonarcloud scan
+// test commit 5 for sonarcloud scan
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
-
-module.exports = app;
 
 var swaggerUi = require('swagger-ui-express');
 var swaggerDocument = require('./swagger.json')

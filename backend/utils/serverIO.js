@@ -1,19 +1,59 @@
 const { Server } = require('socket.io');
+const User = require('../models/User');
+const Dealership = require('../models/Dealership');
 var io = null;
 
-exports.io = function() {
+exports.io = function () {
   return io;
 }
 
-exports.initialize = function(httpServer) {
+exports.initialize = function (httpServer) {
   io = new Server(httpServer, {
     cors: {
       origin: ["http://localhost:8080", "http://localhost:8081"]
     }
   })
   // start the socket
-  io.on("connection", (socket) => {
-    console.log("Socket " + socket.id + " connected.");
+  io.on("connection", async (socket) => {
+    // get the user id from the socket headers
+    const userId = socket.handshake.headers.user_id
+    // initialize the rooms to join
+    const rooms = [];
+
+    // if no user id passed in the headers, disconnect the socket
+    if (!userId) {
+      console.log("No userId found, disconnecting socket.");
+      socket.disconnect();
+    } else {
+      // get the user
+      const user = await User.findById(userId);
+
+      // if no user found, disconnect the socket
+      if (!user) {
+        console.log("No user found, disconnecting socket.");
+        socket.disconnect();
+      } else {
+        // if the user is an admin, we need to get all the dealerships that are registered to this admin
+        // and join each room
+        if (user.role == "Administration") {
+          // find all the dealerships registered to this admin
+          const dealerships = await Dealership.find({ admin: userId });
+          // add all the dealerships IDs to the rooms array
+          dealerships.forEach(dealership => {
+            rooms.push(dealership._id.toString());
+          })
+        } else {
+          // get the dealership ID from this user and add it to the rooms array
+          rooms.push(user.dealership.toString())
+        }
+
+        // join every room inside the rooms array
+        rooms.forEach(room => {
+          socket.join(room);
+          console.log("Joined room " + room);
+        })
+      }
+    }
     socket.emit("connected", "Connected to server socket");
   });
   io.on("disconnect", (socket) => {
