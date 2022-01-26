@@ -3,12 +3,20 @@
      <CForm @submit.prevent="submit">
         <CRow class="justify-content-center">
             <CCol>
+                <CInput
+                label="Sales representative:"
+                :lazy="false"
+                :placeholder="sales_rep"
+                :disabled="true"
+                />
+            </CCol>
+            <CCol>
                 <CSelect
-                label="Sales representative"
+                label="Select manager:"
                 :lazy="false"
                 :options="dealershipStaff"
-                :value.sync="form.staffUser"
-                placeholder="Select a sales rep"
+                :value.sync="form.manager"
+                placeholder="Select a manager"
                 />
             </CCol>
         </CRow>
@@ -18,7 +26,6 @@
                 <CInput
                 label="Enter the sale amount:"
                 :lazy="false"
-                :options="dealershipStaff"
                 :value.sync="form.saleAmount"
                 placeholder="$0.00"
                 >
@@ -29,7 +36,6 @@
                 <CInput
                 label="Enter the deposit amount:"
                 :lazy="false"
-                :options="dealershipStaff"
                 :value.sync="form.deposit"
                 placeholder="$0.00"
                 >
@@ -40,7 +46,7 @@
         <CRow class="justify-content-center">
             <CCol>
                 <CTextarea
-                label="Notes"
+                label="Notes:"
                 :lazy="false"
                 :value.sync="form.notes"
                 placeholder="Add notes..."
@@ -100,7 +106,8 @@ export default {
     return {
       form: this.getEmptyForm(),
       submitted: false,
-      disableButtons: false
+      disableButtons: false,
+      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName
     }
   },
   methods: {
@@ -121,7 +128,8 @@ export default {
                 vehicle: this.vehicle._id,
                 deposit_amount: this.form.deposit,
                 sale_amount: this.form.saleAmount,
-                sales_rep: this.form.staffUser,
+                sales_rep: this.$store.state.auth.userId,
+                approved_by: this.form.manager,
                 notes: this.form.notes,
             }
         }).then(response => {
@@ -147,11 +155,9 @@ export default {
               'Authorization': `Bearer ${this.$store.state.auth.token}`
           },
           data: {
-              dealership: this.vehicle.dealership,
-              vehicle: this.vehicle._id,
               deposit_amount: this.form.deposit,
               sale_amount: this.form.saleAmount,
-              sales_rep: this.form.staffUser,
+              approved_by: this.form.manager,
               notes: this.form.notes,
           }
       }).then(response => {
@@ -173,8 +179,8 @@ export default {
         vehicle: null,
         deposit_amount: 0,
         sale_amount: 0,
-        sales_rep: null,
         notes: "",
+        manager: null,
       }
     },
   }

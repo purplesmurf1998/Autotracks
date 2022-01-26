@@ -249,7 +249,7 @@ export default {
           if (response.data.success) {
             console.log("Success");
             this.sale = response.data.payload;
-            this.approved = !this.sale.approved_by ? false : true
+            this.approved = !this.sale.date_approved ? false : true
             console.log(this.sale);
           }
         })
@@ -304,7 +304,7 @@ export default {
     fetchDealershipUsers() {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/users/?dealership=${this.vehicle.dealership}`,
+        url: `${this.$store.state.api}/users/?dealership=${this.vehicle.dealership}&role=Management`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -328,7 +328,7 @@ export default {
     },
     setSaleStatus(value, sale) {
       this.sale = sale
-      this.approved = !this.sale.approved_by ? false : true
+      this.approved = !this.sale.date_approved ? false : true
       this.sale_id = sale._id;
       this.saleStatus = value;
     },

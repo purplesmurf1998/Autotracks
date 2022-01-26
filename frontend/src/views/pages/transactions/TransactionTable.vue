@@ -68,7 +68,7 @@ export default {
   props: ["dealership", "showMessage"],
   data() {
     return {
-      tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Delivery Date", "Deposit", "Approved By", "Approval Date"],
+      tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Delivery Date", "Deposit", "Manager", "Approval Date"],
       tableItems: [],
       showingTransactionModal: false,
       sale: null
@@ -99,8 +99,8 @@ export default {
             items["Delivery Status"] = delivery;
             items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];;
             items["Deposit"] = '$' + sale.deposit_amount + '.00';
-            let approved_by_user_name = !sale.approved_by ? 'Not approved' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
-            items["Approved By"] = approved_by_user_name;
+            let approved_by_user_name = !sale.approved_by ? '-' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
+            items["Manager"] = approved_by_user_name;
             let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
             items["Approval Date"] = approval_date
             fields.push(items);

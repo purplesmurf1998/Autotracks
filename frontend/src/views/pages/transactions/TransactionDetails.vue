@@ -19,24 +19,23 @@
               />
             </CCol>
         </CRow>
-        <CRow class="justify-content-center"
-        v-if="saleDetail['Approved By']!='Not approved'">
-            <CCol>
-                <CInput
-                label="Approved By"
-                :lazy="false"
-                :placeholder="saleDetail['Approved By']"
-                :Disabled="true"
-                />
-            </CCol>
-            <CCol>
+        <CRow class="justify-content-center">
+          <CCol>
               <CInput
-              label="Approval Date:"
+              label="Manager"
               :lazy="false"
-              :value="saleDetail['Approval Date']"
+              :placeholder="saleDetail['Manager']"
               :Disabled="true"
               />
-            </CCol>
+          </CCol>
+          <CCol>
+            <CInput
+            label="Approval Date:"
+            :lazy="false"
+            :value="saleDetail['Approval Date']"
+            :Disabled="true"
+            />
+          </CCol>
         </CRow>
         <CRow class="justify-content-center">
             <CCol>
@@ -92,7 +91,7 @@
         </CRow>
         <CRow>
           <CButton
-            v-if="saleDetail['Approved By']=='Not approved'"
+            v-if="saleDetail['Approval Date']=='-'"
             class="ml-3"
             color="success"
             id="approve_sale"
@@ -101,7 +100,7 @@
           Approve Sale
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approved By']!='Not approved'"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-'"
             class="ml-3"
             color="primary"
             id="set_delivered"
@@ -110,7 +109,7 @@
           Mark as Delivered
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approved By']=='Not approved'"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-'"
             class="ml-3"
             color="secondary"
             id="edit_sale"
@@ -152,13 +151,10 @@ export default {
             'Authorization': `Bearer ${this.$store.state.auth.token}`
           },
           data: {
-            approved_by: this.$store.state.auth.userId,
             date_approved: date,
           }
       }).then(response => {
           if (response.data.success) {
-            console.log(response.data.payload);
-            this.saleDetail['Approved By'] = this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName;
             this.saleDetail['Approval Date'] = date;
             this.setNewSale(this.saleDetail);
             this.setTransactionModal(false);
