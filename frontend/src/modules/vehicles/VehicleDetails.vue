@@ -12,6 +12,7 @@
             >
           </h4>
           <CDropdown
+            v-if="!vehicle.delivered"
             color="secondary"
             :offset="[0, 5]"
             toggler-text="Select an action"
