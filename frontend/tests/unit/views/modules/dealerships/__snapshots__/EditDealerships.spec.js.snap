@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditDealership.vue renders correctly 1`] = `
+<ccard-stub
+  class="mx-4 mb-0"
+>
+  <ccardbody-stub
+    class="p-4"
+  >
+    <cform-stub>
+      <h1>
+        Step 2: Register new dealership!
+      </h1>
+       
+      <p
+        class="text-muted"
+      >
+        The dealership is the account everything will be tied to. 
+      </p>
+       
+      <clabel
+        class="mb-2"
+      >
+        Dealership Name
+      </clabel>
+       
+      <cinput-stub
+        autocomplete="name"
+        lazy="400"
+        placeholder="Name"
+        type="text"
+      />
+       
+      <clabel
+        class="mb-2"
+      >
+        Dealership Description
+      </clabel>
+       
+      <ctextarea-stub
+        lazy="400"
+        placeholder="Description"
+        rows="9"
+      />
+    </cform-stub>
+  </ccardbody-stub>
+</ccard-stub>
+`;

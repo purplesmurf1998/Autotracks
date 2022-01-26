@@ -87,6 +87,15 @@
 const axios = require("axios");
 
 export default {
+  name: 'EditDealership',
+  props: {
+      currUser: {
+        type: Object,
+        default: function(){
+        return{};
+      }
+    }
+  },
   data() {
     return {
       disableButtons: false,

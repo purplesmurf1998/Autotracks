@@ -25,6 +25,14 @@
 
 <script>
 export default {
-  props: ['dealershipAccount']
+  name: 'EditDealership',
+  props: {
+    dealershipAccount: {
+      type: Object,
+      default: function(){
+      return{};
+      }
+    }
+  }
 }
 </script>

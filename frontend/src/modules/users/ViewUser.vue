@@ -80,6 +80,7 @@ const axios = require("axios");
 const { containsPermissions } = require("../../utils/index");
 
 export default {
+  name: 'ViewUser',
   props: ["user", "setEditingUser"],
   data() {
     return {

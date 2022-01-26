@@ -22,6 +22,7 @@ import ViewUser from "./ViewUser.vue";
 import EditUser from "./EditUsers.vue";
 
 export default {
+  name: 'UserCard',
   data() {
     return {};
   },

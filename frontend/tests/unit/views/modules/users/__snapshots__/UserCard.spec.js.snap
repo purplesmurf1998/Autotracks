@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserCard.vue renders correctly 1`] = `
+<ccard-stub>
+  <ccardbody-stub
+    class="p-3"
+  >
+    <view-user-stub />
+     
+    <!---->
+  </ccardbody-stub>
+</ccard-stub>
+`;
