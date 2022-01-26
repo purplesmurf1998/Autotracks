@@ -18,11 +18,6 @@
             toggler-text="Select an action"
           >
             <CDropdownItem
-              @click.native="showingDepositModal = true"
-              v-if="userHasPermissions('Edit Vehicles')"
-              >Add a Deposit</CDropdownItem
-            >
-            <CDropdownItem
               @click.native="showingSoldModal = true"
               v-if="userHasPermissions('Edit Vehicles') && !saleStatus && !approved"
               >Sell Vehicle</CDropdownItem
@@ -38,7 +33,9 @@
               class="delete"
               >Cancel Sale </CDropdownItem
             >
-            <CDropdownItem v-if="userHasPermissions('Edit Vehicle')"
+            <CDropdownItem 
+            v-if="userHasPermissions('Edit Vehicles') && !vehicle.delivered && !!saleStatus && approved"
+            @click="markDelivered"
               >Mark as Delivered</CDropdownItem
             >
             <CDropdownDivider />
@@ -107,25 +104,6 @@
         </CRow>
       </CCardBody>
     </CCard>
-    <CModal :show.sync="showingDepositModal" :centered="true">
-      <template #header>
-        <h6 class="modal-title">Add a deposit</h6>
-        <CButtonClose @click="showingDepositModal = false" />
-      </template>
-      <CForm>
-        <CInput placeholder="ex. $500" label="Deposit Amount">
-          <template #prepend-content><CIcon name="cil-dollar" /></template>
-        </CInput>
-      </CForm>
-      <template #footer>
-        <CButton @click="showingDepositModal = false" color="danger"
-          >Cancel</CButton
-        >
-        <CButton @click="showingDepositModal = false" color="success"
-          >Save</CButton
-        >
-      </template>
-    </CModal>
     <CModal
       :show.sync="showingSoldModal"
       :centered="true"
@@ -201,7 +179,6 @@ export default {
     return {
       showingSoldModal: false,
       showingDeliveredModal: false,
-      showingDepositModal: false,
       showingDeleteModal: false,
       showingCancelSaleModal: false,
       dealershipStaff: null,
@@ -338,7 +315,33 @@ export default {
     updateSale() {
       this.updateSaleStatus = true;
       this.showingSoldModal = true;
-    }
+    },
+    markDelivered() {
+      let body = this.vehicle;
+      let ts = Date.now();
+      let date_ob = new Date(ts);
+      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
+      body.delivered = true;
+      body.date_delivered = date;
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/inventory/vehicle/${vehicle._id}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: body,
+      })
+        .then((response) => {
+          if (response.data.success) {
+            this.showMessage("Vehicle has been marked as delivered", "success");
+            this.setNewVehicle(response.data.payload);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.showMessage("Error occured while updating vehicle delivery status", "danger");
+        });
+    },
   },
   computed: {
     soldByUser() {
