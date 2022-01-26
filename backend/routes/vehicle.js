@@ -19,7 +19,7 @@ router.route('/')
 router.route('/dealership/:dealershipId')
   .get(protect, hasPermissions('View Vehicles'), getVehicles);
 
-  
+//Add permissions  
 router.route('/dealership/:dealershipId/visual3/:property')
 .get(protect, getVehiclesDashboardV3);
 

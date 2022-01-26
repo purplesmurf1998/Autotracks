@@ -21,6 +21,7 @@ const VehicleSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  date_delivered: Date,
   sale: {
     type: mongoose.Schema.ObjectId,
     ref: 'VehicleSale',

@@ -100,6 +100,17 @@ const router = new Router({
           },
           component: InventoryAdd
         },
+        {
+          path: 'transactions',
+          name: 'transactions',
+          meta: {
+            authRequired: true,
+            permissionsRequired: [
+              'View Vehicles'
+            ]
+          },
+          component: Transaction
+        },
       ]
     },
     {

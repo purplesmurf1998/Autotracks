@@ -7,7 +7,7 @@
           <CButton
             color="primary"
             @click="setEditingProperties(true)"
-            v-if="!editingProperties && userHasPermissions('Edit Vehicles')"
+            v-if="!editingProperties && userHasPermissions('Edit Vehicles') && !vehicle.delivered"
             :disabled="!!vehicle.soldBy"
           >
             <CIcon name="cil-pen"/>&nbsp;&nbsp;Edit vehicle properties

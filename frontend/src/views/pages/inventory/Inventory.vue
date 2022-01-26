@@ -20,6 +20,7 @@
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
+          :showMessage="showMessage"
         />
         <inventory-table
           v-if="selectedDealership"
@@ -71,9 +72,6 @@ export default {
       let queries = JSON.parse(JSON.stringify(this.$route.query));
       queries = {};
       this.$router.replace({query: queries});
-    },
-    showQueryParams() {
-      console.log(this.$route.query);
     },
     showMessage(message, messageType) {
       this.message = message;
