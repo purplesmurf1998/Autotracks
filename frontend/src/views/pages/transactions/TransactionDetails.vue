@@ -114,7 +114,6 @@
             class="ml-3"
             color="secondary"
             id="edit_sale"
-            @click="markVehicleDelivered"
           >
           Edit
           </CButton>
