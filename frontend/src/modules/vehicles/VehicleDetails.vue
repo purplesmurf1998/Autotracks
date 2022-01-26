@@ -271,7 +271,7 @@ export default {
             this.sale = null;
             this.approved = false;
             this.showingCancelSaleModal = false;
-            this.showMessage("The sale requesthas been canceled.", "success");
+            this.showMessage("The sale request has been canceled.", "success");
           }
         })
         .catch((err) => {

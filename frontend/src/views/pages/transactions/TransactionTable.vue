@@ -47,6 +47,8 @@
         :saleDetail="sale"
         :showMessage="showMessage"
         :setNewSale="setNewSale"
+        :dealership="dealership"
+        :fetchSales="fetchSales"
       />
       <template #header>
         <h6 class="modal-title">View Transaction Detail</h6>

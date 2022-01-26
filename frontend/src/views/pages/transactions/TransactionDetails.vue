@@ -7,7 +7,7 @@
                 label="Sales Representative:"
                 :lazy="false"
                 :placeholder="saleDetail['Sales Rep']"
-                :Disabled="true"
+                :disabled="true"
                 />
             </CCol>
             <CCol>
@@ -15,7 +15,7 @@
               label="Request Date:"
               :lazy="false"
               :value="saleDetail['Request Date']"
-              :Disabled="true"
+              :disabled="true"
               />
             </CCol>
         </CRow>
@@ -25,7 +25,7 @@
               label="Manager"
               :lazy="false"
               :placeholder="saleDetail['Manager']"
-              :Disabled="true"
+              :disabled="true"
               />
           </CCol>
           <CCol>
@@ -33,7 +33,7 @@
             label="Approval Date:"
             :lazy="false"
             :value="saleDetail['Approval Date']"
-            :Disabled="true"
+            :disabled="true"
             />
           </CCol>
         </CRow>
@@ -43,7 +43,7 @@
                 label="Delivery Status:"
                 :lazy="false"
                 :placeholder="saleDetail['Delivery Status']"
-                :Disabled="true"
+                :disabled="true"
                 />
             </CCol>
             <CCol>
@@ -51,7 +51,7 @@
               label="Delivery Date:"
               :lazy="false"
               :value="saleDetail['Delivery Date']"
-              :Disabled="true"
+              :disabled="true"
               />
             </CCol>
         </CRow>
@@ -60,8 +60,9 @@
                 <CInput
                 label="Sale Amount:"
                 :lazy="false"
-                :value="saleObject.sale_amount + '.00'"
-                :Disabled="true"
+                :value.sync="form.sale_amount"
+                :placeholder="saleObject.sale_amount + '.00'"
+                :disabled="disableButtons"
                 >
                 <template #prepend-content><CIcon name="cil-dollar" /></template>
                 </CInput>
@@ -70,8 +71,9 @@
                 <CInput
                 label="Deposit Amount:"
                 :lazy="false"
-                :value="saleObject.deposit_amount + '.00'"
-                :Disabled="true"
+                :value.sync="form.deposit_amount"
+                :placeholder="saleObject.deposit_amount + '.00'"
+                :disabled="disableButtons"
                 >
                 <template #prepend-content><CIcon name="cil-dollar" /></template>
                 </CInput>
@@ -82,16 +84,16 @@
                 <CTextarea
                 label="Notes"
                 :lazy="false"
-                :value="saleObject.notes"
-                placeholder="Add notes..."
+                :value.sync="form.notes"
+                :placeholder="saleObject.notes"
                 rows="6"
-                :Disabled="true"
+                :disabled="disableButtons"
                 />
             </CCol>
         </CRow>
         <CRow>
           <CButton
-            v-if="saleDetail['Approval Date']=='-'"
+            v-if="saleDetail['Approval Date']=='-' && disableButtons"
             class="ml-3"
             color="success"
             id="approve_sale"
@@ -100,7 +102,7 @@
           Approve Sale
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-'"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-' && disableButtons"
             class="ml-3"
             color="primary"
             id="set_delivered"
@@ -109,15 +111,59 @@
           Mark as Delivered
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-'"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons"
             class="ml-3"
             color="secondary"
             id="edit_sale"
+            @click="editSale"
           >
           Edit
           </CButton>
+          <CButton
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons"
+            class="ml-3"
+            color="danger"
+            id="edit_sale"
+            @click="showDeleteModal = true"
+          >
+          Delete
+          </CButton>
         </CRow>
+        <CRow class="justify-content-center">
+          <CButton
+            v-if="!disableButtons" 
+            color="primary"
+            id = "update-sale"
+            @click="updateSale"
+          >
+            Update
+          </CButton>
+          <CButton
+            v-if="!disableButtons" 
+            class="ml-1"
+            color="secondary"
+            :disabled="disableButtons"
+            @click="setTransactionModal(false)"
+          >
+            Cancel
+          </CButton>
+      </CRow>
       </CForm>
+      <CModal :show.sync="showDeleteModal" :centered="true">
+      <template #header>
+        <h6 class="modal-title">Delete Transaction</h6>
+        <CButtonClose @click="showDeleteModal = false" />
+      </template>
+      <p>
+        Are you sure you want to cancel this sale request?
+      </p>
+      <template #footer>
+        <CButton @click="showDeleteModal = false" color="danger"
+          >Cancel</CButton
+        >
+        <CButton @click="deleteSale" color="success">Confirm</CButton>
+      </template>
+    </CModal>
   </div>
 </template>
 
@@ -130,15 +176,43 @@ export default {
     "showMessage", 
     "saleDetail", 
     "setTransactionModal",
-    "setNewSale", 
+    "setNewSale",
+    "dealership",
+    "fetchSales" 
   ],
   data() {
     return {
-      disableButtons: false,
+      disableButtons: true,
       saleObject: null,
+      form: null,
+      showDeleteModal: false,
     }
   },
   methods: {
+    deleteSale() {
+      axios({
+        method: "DELETE",
+        url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          if (response.data.success) {
+            this.showDeleteModal = false;
+            this.setTransactionModal(false);  
+            this.showMessage("The transaction been deleted.", "success");
+            this.fetchSales(this.dealership);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.showMessage("An error occured while deleting this transaction.", "danger");
+        });
+    },
+    editSale() {
+      this.disableButtons = false;
+    },
     approveSale () {
       let ts = Date.now();
       let date_ob = new Date(ts);
@@ -177,6 +251,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.saleObject = response.data.payload;
+            this.form = this.getEmptyForm();
           }
         })
         .catch((err) => {
@@ -212,6 +287,35 @@ export default {
           console.log(err);
           this.showMessage("Error occured while updating vehicle delivery status", "danger");
         });
+    },
+    updateSale() {
+      let body = this.form;
+      axios({
+          method: 'PUT',
+          url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,
+          headers: {
+              'Authorization': `Bearer ${this.$store.state.auth.token}`
+          },
+          data: body
+      }).then(response => {
+          if (response.data.success) {
+            this.saleDetail['Deposit'] = response.data.payload.deposit_amount;
+            this.setNewSale(this.saleDetail);
+            this.setTransactionModal(false);
+            this.showMessage("The transaction has been updated", "success");
+          }
+      }).catch(error => {
+          console.log(error);
+          this.setTransactionModal(false);
+          this.showMessage(error.response.data.error, "danger");
+      })
+    },
+    getEmptyForm() {
+      return {
+        sale_amount: this.saleObject.sale_amount,
+        deposit_amount: this.saleObject.deposit_amount,
+        notes: this.saleObject.notes,
+      }
     },
   },
   mounted() {
