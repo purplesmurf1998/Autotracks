@@ -4,21 +4,11 @@
       <CCardHeader>
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
-        <!--
         <CButton
         @click="downloadInventory"
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
-        -->
-        <CDropdown  color="primary" class="float-right" name="download" >
-          <CDropdownMenu>
-            <CDropdownItem href="#">Pdf</CDropdownItem>
-            <CDropdownItem href="#">Excel</CDropdownItem>
-            <CDropdownItem href="#">CSV</CDropdownItem>
-            <CDropdownItem href="#">Print</CDropdownItem>
-          </CDropdownMenu>
-        </CDropdown>
         <CButton
         v-if="delivered_bool"
         @click="setDeliveredBool(false)"
