@@ -24,8 +24,31 @@ const Inventory = () => import('@/views/pages/inventory/Inventory')
 const InventoryAdd = () => import('@/views/pages/inventory/InventoryAdd')
 const Vehicle = () => import('@/views/pages/vehicle/Vehicle')
 
+<<<<<<< HEAD
 // Views - Pages - Transactions
 const Transaction = () => import('@/views/pages/transactions/Transaction')
+=======
+// Views - Pages - VehicleList
+const UserVehicleLists = () => import('@/views/pages/vehicleLists/UserVehicleLists.vue')
+
+// Users
+const Users = () => import('@/views/users/Users')
+const User = () => import('@/views/users/User')
+
+// Plugins
+const Draggable = () => import('@/views/plugins/Draggable')
+const Calendar = () => import('@/views/plugins/Calendar')
+const Spinners = () => import('@/views/plugins/Spinners')
+
+// Apps -> Invoice
+const Invoice = () => import('@/views/apps/invoicing/Invoice')
+
+// Apps -> Email
+const EmailApp = () => import('@/views/apps/email/EmailApp')
+const Compose = () => import('@/views/apps/email/Compose')
+const Inbox = () => import('@/views/apps/email/Inbox')
+const Message = () => import('@/views/apps/email/Message')
+>>>>>>> 95dd283 (Started the frontend implementation)
 
 Vue.use(Router)
 
@@ -104,6 +127,7 @@ const router = new Router({
           component: InventoryAdd
         },
         {
+<<<<<<< HEAD
           path: 'transactions',
           name: 'transactions',
           meta: {
@@ -113,6 +137,14 @@ const router = new Router({
             ]
           },
           component: Transaction
+=======
+          path: 'vehicle-lists',
+          name: 'Vehicle Lists Table',
+          meta: {
+            authRequired: true,
+          },
+          component: UserVehicleLists
+>>>>>>> 95dd283 (Started the frontend implementation)
         },
       ]
     },
