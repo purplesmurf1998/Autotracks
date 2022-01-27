@@ -44,6 +44,8 @@ EventSchema.post('save', async function (next) {
   // socket.io emits the event type to the dealership's room so that
   // every running frontend inside the room gets a notification
   const dealership = this.dealership.toString();
+  
+  // simulates the notify() method
   require("../utils/serverIO").io().to(dealership).emit(this.event_type, this);
   // we also need to send an email to all the users inside the dealership
   // subscribed to the event type to alert them of the new event for those
