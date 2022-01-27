@@ -23,6 +23,7 @@
           :sorter="true"
           :hover="true"
           :clickable-rows="true"
+          :column-filter="true"
           @row-clicked="clickRow"
           v-if="selectedBulkAction == 'Bulk Action'"
         >
@@ -36,6 +37,11 @@
               {{ !!item.last_modified ? getFormattedDate(item.last_modified) : "" }}
             </td>
           </template>
+          <template #dealership="{item}" v-if="$store.state.auth.role == 'Administration'">
+            <td>
+              {{ item.dealership.name }}
+            </td>
+          </template>
         </CDataTable>
         <CDataTable
           :items="tableItems"
@@ -43,6 +49,7 @@
           :sorter="true"
           :hover="true"
           :clickable-rows="true"
+          :column-filter="true"
           @row-clicked="selectRow"
           v-if="selectedBulkAction != 'Bulk Action'"
         >
@@ -63,6 +70,11 @@
           <template #last_modified="{item}">
             <td>
               {{ !!item.last_modified ? getFormattedDate(item.last_modified) : "" }}
+            </td>
+          </template>
+          <template #dealership="{item}" v-if="$store.state.auth.role == 'Administration'">
+            <td>
+              {{ item.dealership.name }}
             </td>
           </template>
         </CDataTable>
@@ -117,6 +129,7 @@
 const axios = require('axios');
 import AddVehicleList from "./AddVehicleList.vue";
 import VehicleList from "./VehicleList.vue";
+import DealershipDD from "../inventory/DealershipDropdown.vue"
 
 export default {
   data() {
@@ -179,6 +192,10 @@ export default {
     }
   },
   methods: {
+    test(item) {
+      console.log(item);
+      return item;
+    },
     getFormattedDate(date) {
       const months = [
         "January",
@@ -217,6 +234,7 @@ export default {
             index
           };
         });
+        //console.log(response.data.payload);
       }).catch((error) => {
         console.log(error);
       });
@@ -277,12 +295,25 @@ export default {
       this.$router.replace({query: queries});
     }
   },
+  beforeMount() {
+    if (this.$store.state.auth.role == "Administration") {
+      this.tableFields.push({
+        key: "dealership",
+        label: "Dealership"
+      });
+      this.bulkTableFields.push({
+        key: "dealership",
+        label: "Dealership"
+      })
+    }
+  },
   mounted() {
     this.fetchUserVehicleLists();
   },
   components: {
     AddVehicleList,
-    VehicleList
+    VehicleList,
+    'dealership-dropdown': DealershipDD
   }
 }
 </script>

@@ -80,7 +80,7 @@ exports.updateVehicleList = asyncHandler(async (req, res, next) => {
 exports.getVehicleLists = asyncHandler(async (req, res, next) => {
 
   // find the vehicle list owned by the provided userId
-  const vehicleList = await VehicleList.find({ owner: req.params.userId });
+  const vehicleList = await VehicleList.find({ owner: req.params.userId }).populate('dealership');
 
   // send response
   res.status(200).json({

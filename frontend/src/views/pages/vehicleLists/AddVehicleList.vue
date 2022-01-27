@@ -8,7 +8,12 @@
         :value.sync="title"
         placeholder="Custom List Title"
       />
-
+      <p class="mb-0">Dealership</p>
+      <dealership-dropdown
+        v-if="$store.state.auth.role == 'Administration'"
+        :dealership="selectedDealership"
+        @selectDealership="selectedDealership = $event"
+      />
       <p class="mb-2">Notes</p>
       <quill-editor :content="notes"/>
       <CRow class="justify-content-center mt-3">
@@ -39,6 +44,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import DealershipDD from "../inventory/DealershipDropdown.vue"
 
 Vue.use(VueQuillEditor)
 
@@ -51,6 +57,7 @@ export default {
       disableButtons: false,
       message: null,
       messageType: null,
+      selectedDealership: null
     }
   },
   methods: {
@@ -60,7 +67,8 @@ export default {
       const list = {
         title: this.title,
         notes: this.notes,
-        owner: this.$store.state.auth.userId
+        owner: this.$store.state.auth.userId,
+        dealership: this.selectedDealership
       };
 
       this.postVehicleList(list);
@@ -90,6 +98,9 @@ export default {
         this.messageType = null;
       }, 5000);
     }
+  },
+  components: {
+    'dealership-dropdown': DealershipDD
   }
 }
 </script>

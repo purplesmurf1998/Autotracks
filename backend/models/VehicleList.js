@@ -6,6 +6,11 @@ const VehicleListSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Vehicle list must have an owner']
   },
+  dealership: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Dealership',
+    required: [true, 'Vehicle list must be associated to a dealership']
+  },
   title: {
     type: String,
     required: [true, 'Vehicle list must have a title']
