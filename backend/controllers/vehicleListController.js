@@ -49,6 +49,31 @@ exports.getVehicleList = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    Update a specific vehicle list
+// @route   PUT /api/v1/vehicle-list/:vehicleListId
+// @access  Private
+exports.updateVehicleList = asyncHandler(async (req, res, next) => {
+
+  // find the vehicle list by id
+  const vehicleList = await VehicleList.findByIdAndUpdate(req.params.vehicleListId, req.body, {
+    new: true,
+    runValidators: true
+  }).populate('vehicles');
+
+  if (!vehicleList) {
+    // something went wront...validate with Abdul if this check ever runs
+    return next(
+      new ErrorResponse(`User not found.`, 404)
+    );
+  }
+
+  // send response
+  res.status(200).json({
+    success: true,
+    payload: vehicleList
+  });
+});
+
 // @desc    Get a all vehicle lists for a specific user
 // @route   GET /api/v1/vehicle-list/user/:userId
 // @access  Private
