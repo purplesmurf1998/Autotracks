@@ -5,7 +5,7 @@ const {
   getVehicleList,
   getVehicleLists,
   createVehicleList,
-  deleteVehicleList,
+  deleteVehicleLists,
   addVehiclesToList,
   deleteVehiclesFromList
 
@@ -18,8 +18,10 @@ router.route('/')
   .post(protect, createVehicleList);
 
 router.route('/:vehicleListId')
-  .get(protect, getVehicleList)
-  .delete(protect, deleteVehicleList);
+  .get(protect, getVehicleList);
+
+router.route('/user/:userId/delete')
+  .post(protect, deleteVehicleLists, getVehicleLists);
 
 router.route('/user/:userId')
   .get(protect, getVehicleLists);
@@ -27,7 +29,7 @@ router.route('/user/:userId')
 router.route('/add/:vehicleListId')
   .post(protect, addVehiclesToList);
 
-router.route('/delete/:vehicleListId')
-  .delete(protect, deleteVehiclesFromList);
+router.route('/:vehicleListId/delete')
+  .post(protect, deleteVehiclesFromList);
 
 module.exports = router;

@@ -60,23 +60,25 @@ exports.getVehicleLists = asyncHandler(async (req, res, next) => {
   // send response
   res.status(200).json({
     success: true,
+    count: vehicleList.length,
     payload: vehicleList
   });
 });
 
-// @desc    Delete a vehicle list
-// @route   DELETE /api/v1/vehicle-list/:vehicleListId
+// @desc    Delete one or more vehicle lists
+// @route   POST /api/v1/vehicle-list/user/:userId/delete
 // @access  Private
-exports.deleteVehicleList = asyncHandler(async (req, res, next) => {
+exports.deleteVehicleLists = asyncHandler(async (req, res, next) => {
 
   // find the vehicle list owned by the provided userId
-  const vehicleList = await VehicleList.findByIdAndDelete(req.params.vehicleListId);
+  const vehicleLists = req.body.vehicleLists;
 
-  // send response
-  res.status(200).json({
-    success: true,
-    payload: {}
-  });
+  for (let i = 0; i < vehicleLists.length; i++) {
+    await VehicleList.findByIdAndDelete(vehicleLists[i]);
+  }
+
+  // go to next controller
+  next();
 });
 
 // @desc    Add a vehicle to the list
@@ -132,7 +134,7 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Delete a vehicle from the list
-// @route   DELETE /api/v1/vehicle-list/delete/:vehicleListId
+// @route   POST /api/v1/vehicle-list/:vehicleListId/delete
 // @access  Private
 exports.deleteVehiclesFromList = asyncHandler(async (req, res, next) => {
 

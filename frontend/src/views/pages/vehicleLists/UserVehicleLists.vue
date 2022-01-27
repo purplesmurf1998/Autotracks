@@ -7,17 +7,54 @@
       <CCardBody>
         <CRow class="d-flex justify-content-between pl-3 pr-3">
           <CButton color="primary mb-3" @click="addingVehicleList = true">Create a custom vehicle list</CButton>
+          <CRow class="m-0">
+            <CButton color="success mb-3 mr-2" @click="applyAction" v-if="selectedBulkAction != 'Bulk Action'">Apply</CButton>
+            <CButton color="secondary mb-3 mr-2" @click="cancelAction" v-if="selectedBulkAction != 'Bulk Action'">Cancel</CButton>
+            <CSelect 
+              :options="bulkActions"
+              :value.sync="selectedBulkAction"
+              :disabled="selectedBulkAction != 'Bulk Action'"
+            />
+          </CRow>
         </CRow>
         <CDataTable
           :fields="tableFields"
           :items="tableItems"
-          :items-per-page="10"
-          :fixed="true"
           :sorter="true"
           :hover="true"
           :clickable-rows="true"
           @row-clicked="clickRow"
+          v-if="selectedBulkAction == 'Bulk Action'"
         >
+          <template #date_created="{item}">
+            <td>
+              {{ getFormattedDate(item.date_created) }}
+            </td>
+          </template>
+          <template #last_modified="{item}">
+            <td>
+              {{ !!item.last_modified ? getFormattedDate(item.last_modified) : "" }}
+            </td>
+          </template>
+        </CDataTable>
+        <CDataTable
+          :items="tableItems"
+          :fields="bulkTableFields"
+          :sorter="true"
+          :hover="true"
+          :clickable-rows="true"
+          @row-clicked="selectRow"
+          v-if="selectedBulkAction != 'Bulk Action'"
+        >
+          <template #select="{item}">
+            <td>
+              <CInputCheckbox
+                :checked="item._selected"
+                @update:checked="() => check(item)"
+                custom
+              />
+            </td>
+          </template>
           <template #date_created="{item}">
             <td>
               {{ getFormattedDate(item.date_created) }}
@@ -69,8 +106,44 @@ export default {
           label: "Last Modified"
         }
       ],
+      bulkTableFields: [
+        {
+          key: 'select',
+          label: '',
+          _style: 'width:1%', 
+          sorter: false,
+          filter: false
+        },
+        {
+          key: "title",
+          label: "Title"
+        },
+        {
+          key: "date_created",
+          label: "Date Created"
+        },
+        {
+          key: "last_modified",
+          label: "Last Modified"
+        }
+      ],
       tableItems: [],
+      bulkActions: ['Bulk Action', 'Delete'],
+      selectedBulkAction: 'Bulk Action',
       addingVehicleList: false
+    }
+  },
+  computed: {
+    items() {
+      return this.tableItems.map(item => {
+        return {
+          ...item,
+          _classes: [
+            item._classes,
+            user._selected ? 'table-selected' : ''
+          ]
+        };
+      });
     }
   },
   methods: {
@@ -105,13 +178,65 @@ export default {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
       }).then((response) => {
-        this.tableItems = response.data.payload;
+        let lists = response.data.payload;
+        this.tableItems = lists.map((list, index) => {
+          return {
+            ...list,
+            index
+          };
+        });
       }).catch((error) => {
         console.log(error);
       });
     },
     clickRow(vehicleList) {
       console.log(vehicleList);
+    },
+    selectRow(vehicleList, index, column, e) {
+      if (!['INPUT', 'LABEL'].includes(e.target.tagName)) {
+        this.check(vehicleList)
+      }
+    },
+    check (item) {
+      const val = Boolean(this.tableItems[item.index]._selected)
+      this.$set(this.tableItems[item.index], '_selected', !val)
+    },
+    cancelAction() {
+      for (let i = 0; i < this.tableItems.length; i++) {
+        this.$set(this.tableItems[i], '_selected', false);
+      }
+      this.selectedBulkAction = 'Bulk Action';
+    },
+    applyAction() {
+      // get the selected items
+      const selectedItems = this.tableItems.filter(item => item._selected == true);
+      // map just to get the vehicle list ids
+      const selectedIds = selectedItems.map(item => {
+        return item._id;
+      })
+      // axios call to delete the items
+      axios({
+        method: "POST",
+        url: `${this.$store.state.api}/vehicle-list/user/${this.$store.state.auth.userId}/delete`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {
+          vehicleLists: selectedIds
+        }
+      }).then((response) => {
+        let lists = response.data.payload;
+        this.tableItems = lists.map((list, index) => {
+          return {
+            ...list,
+            index
+          };
+        });
+        this.selectedBulkAction = 'Bulk Action';
+      }).catch((error) => {
+        console.log(error);
+      });
+      
     }
   },
   mounted() {
