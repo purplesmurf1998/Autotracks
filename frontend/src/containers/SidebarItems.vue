@@ -45,36 +45,42 @@ export default {
               icon: "cil-spreadsheet",
             },
             {
-            _name: 'CSidebarNavDropdown',
-            name: 'Vehicle Lists',
-            route: '/vehicle-lists',
-            icon: 'cil-list',
-            items: [
-              {
-                name: 'View Vehicle Lists',
-                to: '/vehicle-lists',
-                icon: {
-                  name: 'cil-arrow-thick-right'
-                }
-              },
-              {
-                name: 'Breadcrumbs',
-                to: '/vehicle-lists/vehicleListId',
-                icon: {
-                  name: 'cil-star',
-                  class: 'text-warning'
-                }
-              },
-              {
-                name: 'Cards',
-                to: '/vehicle-lists/vehicleListId',
-                icon: {
-                  name: 'cil-star',
-                  class: 'text-warning'
-                }
-              },
-            ]
-          },
+              _name: "CSidebarNavItem",
+              name: "Vehicle Lists",
+              to: "/vehicle-lists",
+              icon: "cil-list",
+            },
+            // {
+            //   _name: 'CSidebarNavDropdown',
+            //   name: 'Vehicle Lists',
+            //   route: '/vehicle-lists',
+            //   icon: 'cil-list',
+            //   items: [
+            //     {
+            //       name: 'View Vehicle Lists',
+            //       to: '/vehicle-lists',
+            //       icon: {
+            //         name: 'cil-arrow-thick-right'
+            //       }
+            //     },
+            //     {
+            //       name: 'Breadcrumbs',
+            //       to: '/vehicle-lists/vehicleListId',
+            //       icon: {
+            //         name: 'cil-star',
+            //         class: 'text-warning'
+            //       }
+            //     },
+            //     {
+            //       name: 'Cards',
+            //       to: '/vehicle-lists/vehicleListId',
+            //       icon: {
+            //         name: 'cil-star',
+            //         class: 'text-warning'
+            //       }
+            //     },
+            //   ]
+            // },
           ],
         },
       ];
