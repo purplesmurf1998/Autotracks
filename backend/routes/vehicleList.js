@@ -27,7 +27,7 @@ router.route('/user/:userId/delete')
 router.route('/user/:userId')
   .get(protect, getVehicleLists);
 
-router.route('/add/:vehicleListId')
+router.route('/:vehicleListId/add')
   .post(protect, addVehiclesToList);
 
 router.route('/:vehicleListId/delete')

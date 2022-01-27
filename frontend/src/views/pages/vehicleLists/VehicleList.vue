@@ -15,7 +15,12 @@
         Save changes to notes
       </CButton>
       <hr>
-      <h3>List of vehicles</h3>
+      <CRow class="mb-3 ml-0">
+        <h3 class="mb-0 d-flex align-items-center">List of vehicles</h3>
+        <router-link to="/inventory">
+          <CButton color="primary" variant="outline" class="m-3" size="sm">Add vehicles to list</CButton>
+        </router-link>
+      </CRow>
       <CDataTable
         id="vehicle-list-datatable"
         :fields="tableFields"
@@ -44,6 +49,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import InventorySlot from "../inventory/InventorySlot.vue"
 
 Vue.use(VueQuillEditor)
 
@@ -73,7 +79,40 @@ export default {
         this.vehicleList = response.data.payload;
         this.notes = this.vehicleList.notes;
         this.title = this.vehicleList.title;
-        this.tableItems = this.vehicleList.vehicles;
+
+        let tableItems = [];
+        this.vehicleList.vehicles.forEach((vehicle) => {
+          //Check if vehicle has properties
+          if (!this.delivered_bool) {
+            if (!vehicle.delivered) {
+              if (vehicle.properties != null)
+              { 
+                let properties = vehicle.properties;
+                properties._id = vehicle._id;
+                properties.vin = vehicle.vin;
+                if (vehicle.missing) {
+                  properties._classes = 'table-warning';
+                }
+                tableItems.push(properties);
+              }
+            }
+          }
+          if (this.delivered_bool) {
+            if (vehicle.delivered) {
+              if (vehicle.properties != null)
+              { 
+                let properties = vehicle.properties;
+                properties._id = vehicle._id;
+                properties.vin = vehicle.vin;
+                if (vehicle.missing) {
+                  properties._classes = 'table-warning';
+                }
+                tableItems.push(properties);
+              }
+            }
+          }
+        });
+        this.tableItems = tableItems;
         this.fetchVehicleProperties();
       }).catch((error) => {
         console.log(error);
@@ -124,6 +163,9 @@ export default {
         });
       }
     }
+  },
+  components: {
+    InventorySlot
   },
   mounted() {
     this.fetchVehicleListDetails();
