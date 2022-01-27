@@ -132,49 +132,47 @@ export default {
           email: this.adminUser.adminEmail,
           role: "Administration",
           permissions: [
-            "Add Dealerships",
-            "View Dealerships",
-            "Edit Dealerships",
-            "Delete Dealerships",
-            "Add Staff Users",
-            "View Staff Users",
-            "Edit Staff Users",
-            "Delete Staff Users",
-            "Add Vehicles",
-            "View Vehicles",
-            "Edit Vehicles",
-            "Edit Vehicle Locations",
-            "Sell Vehicles",
-            "Delete Vehicles",
-            "Add Vehicle Property",
-            "Edit Vehicle Properties",
-            "View Vehicle Properties",
-            "Delete Vehicle Properties",
+            'Add Dealerships',
+            'View Dealerships',
+            'Edit Dealerships',
+            'Delete Dealerships',
+            'Add Staff Users',
+            'View Staff Users',
+            'Edit Staff Users',
+            'Delete Staff Users',
+            'Add Vehicles',
+            'View Vehicles',
+            'Edit Vehicles',
+            'Edit Vehicle Locations',
+            'Sell Vehicles',
+            'Delete Vehicles',
+            'Add Vehicle Property',
+            'Edit Vehicle Properties',
+            'View Vehicle Properties',
+            'Delete Vehicle Properties'
           ],
           password: this.adminUser.adminPassword,
         },
       })
         .then(async (response) => {
-          //double check valid response
-          if (response.status == 200) {
-            // log the user in
-            const loggedInResponse = await this.$store.dispatch("login", {
-              email: this.adminUser.adminEmail,
-              password: this.adminUser.adminPassword,
-            });
+          // log the user in
+          const loggedInResponse = await this.$store.dispatch("login", {
+            email: this.adminUser.adminEmail,
+            password: this.adminUser.adminPassword,
+          });
 
-            // if not successful, show the error message
-            if (!loggedInResponse.success) {
-              this.showErrorMessage(loggedInResponse.message);
-            }
-            // if successful, redirect the user to the dashboad
-            else {
-              this.$router.push("/dashboard");
-            }
+          // if not successful, show the error message
+          if (!loggedInResponse.success) {
+            this.showErrorMessage(loggedInResponse.message);
           }
+          // if successful, redirect the user to the dashboad
+          else {
+            this.$router.push("/dashboard");
+          }
+          
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
           // send an invalid registration message
           this.showErrorMessage("Invalid information or duplicate account.");
           this.adminUser.adminPassword = "";

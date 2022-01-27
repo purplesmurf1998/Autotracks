@@ -1,36 +1,17 @@
 <template>
   <CRow>
     <CCol sm="6" lg="3">
-      <CWidgetDropdown color="gradient-primary" header="9.823" text="Members online">
-        <template #default>
-          <CDropdown
-            color="transparent p-0"
-            placement="bottom-end"
-          >
-            <template #toggler-content>
-              <CIcon name="cil-settings"/>
-            </template>
-            <CDropdownItem>Action</CDropdownItem>
-            <CDropdownItem>Another action</CDropdownItem>
-            <CDropdownItem>Something else here...</CDropdownItem>
-            <CDropdownItem disabled>Disabled action</CDropdownItem>
-          </CDropdown>
-        </template>
-        <template #footer>
-          <CChartLineSimple
-            pointed
-            class="mt-3 mx-3"
-            style="height:70px"
-            :data-points="[65, 59, 84, 84, 51, 55, 40]"
-            point-hover-background-color="primary"
-            label="Members"
-            labels="months"
-          />
-        </template>
-      </CWidgetDropdown>
+      <CCard class="text-center" color="gradient-primary" textColor="white" style="height:160px">
+        <CCardBody class="d-flex align-items-center">
+          <CCol>
+            <CCardTitle class="display-3" color="gradient-secondary">{{inventoryCount}}</CCardTitle>
+            <CCardSubtitle>Vehicles Count</CCardSubtitle>
+          </CCol>
+        </CCardBody>
+      </CCard>
     </CCol>
     <CCol sm="6" lg="3">
-      <CWidgetDropdown color="gradient-info" header="9.823" text="Members online">
+      <CWidgetDropdown color="gradient-info" header="9.823" title="Test" text="Members online">
         <template #default>
           <CDropdown
             color="transparent p-0"
@@ -97,8 +78,8 @@
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-danger"
-        header="9.823"
-        text="Members online"
+        :text="'Inventory Count By ' + property_label"
+        style="height:160px"
       >
         <template #default>
           <CDropdown
@@ -106,12 +87,13 @@
             placement="bottom-end"
           >
             <template #toggler-content>
-             <CIcon name="cil-settings"/>
+             <CIcon
+             name="cil-settings"
+             @click.native="fetchVehicleProperties"/>
             </template>
-            <CDropdownItem>Action</CDropdownItem>
-            <CDropdownItem>Another action</CDropdownItem>
-            <CDropdownItem>Something else here...</CDropdownItem>
-            <CDropdownItem disabled>Disabled action</CDropdownItem>
+            <CDropdownItem v-for="vp in vehicleProperties" 
+            :key="vp.label"
+            @click.native="filterVisualByProperty(vp.key, vp.label)">{{vp.label}}</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
@@ -119,8 +101,9 @@
             class="mt-3 mx-3"
             style="height:70px"
             background-color="rgb(250, 152, 152)"
-            label="Members"
-            labels="months"
+            label="Vehicle"
+            :labels="propKeys"
+            :dataPoints="categoryCount"
           />
         </template>
       </CWidgetDropdown>
@@ -129,10 +112,112 @@
 </template>
 
 <script>
+const axios = require("axios");
 import { CChartLineSimple, CChartBarSimple } from '../charts/index.js'
 
 export default {
   name: 'WidgetsDropdown',
+  props: ["dealership"],
+  data() {
+    return {
+      inventoryCount: "-1",
+      vehicleProperties: null,
+      property_label: null,
+      property_key: null,
+      propKeys: [],
+      categoryCount: [],
+    };
+  },
+  methods: {
+    fetchVehiclesInInventory(dealership) {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/inventory/dealership/${dealership}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          const inventoryCount = response.data.inventoryCount;
+          this.inventoryCount = inventoryCount.toString();
+          this.fetchVehicleProperties();
+          setTimeout(() => {
+            this.filterVisualByProperty(this.property_key, this.property_label);
+          }, 200);
+        })
+        .catch((error) => {
+          console.log(error);
+          //Show an error message instead of showing the 404 page
+          this.$router.replace("/pages/404");
+        });
+    },
+    fetchVehicleProperties() {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/dealerships/${this.dealership}/vehicles/properties`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        const payload = response.data.payload;
+        const fields = [];
+        payload.forEach((property) => {
+          if (property.visible) {
+            fields.push(property);
+          }
+        });
+        this.vehicleProperties = fields;
+        this.property_label = this.vehicleProperties[0].label;
+        this.property_key = this.vehicleProperties[0].key;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    },
+    filterVisualByProperty(key, label) {
+      this.property_label = label;
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/inventory/dealership/${this.dealership}/visual3/${key}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        const payload = response.data.payload;
+        console.log(payload);
+        payload.sort((a, b) => b.count - a.count);
+        const fields = [];
+        const values = [];
+        let i = 0;
+        let othersSum = 0;
+        payload.forEach((property) => {
+          i++;
+          if (i<10)
+          {
+            fields.push(property.value);
+            values.push(property.count);
+          }
+          else {
+            othersSum += property.count;
+          }
+        });
+        fields.push("Others");
+        values.push(othersSum);
+        this.propKeys=fields;
+        this.categoryCount=values;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    },
+  },
+  mounted() {
+    this.fetchVehiclesInInventory(this.dealership);
+  },
   components: { CChartLineSimple, CChartBarSimple }
 }
+
 </script>

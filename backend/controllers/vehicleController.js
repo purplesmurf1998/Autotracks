@@ -1,25 +1,75 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const Vehicle = require('../models/Vehicle')
+const Vehicle = require('../models/Vehicle');
+const Dealership = require('../models/Dealership');
+const Event = require('../models/Event');
 
 // @desc        Get all vehicles for a specific dealership
-// @route       GET /api/v1/inventory/dealership/:dealershipId
+// @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
 // @access      Private
 exports.getVehicles = asyncHandler(async (req, res, next) => {
-  let query = Vehicle.find({ dealership: req.params.dealershipId });
-  // run query
-  const vehicles = await query;
 
-  if (!vehicles) {
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.params.dealershipId);
+
+  // no dealership found
+  if (!dealership) {
     return next(
-      new ErrorResponse(`No vehicles found with dealership id ${req.params.dealershipId}.`)
+      new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
     );
   }
+
+  let query = Vehicle.find({ dealership: req.params.dealershipId });
+  let inventory_query = Vehicle.count({ dealership: req.params.dealershipId, delivered: { $ne: true } });
+
+  // run query
+  const vehicles = await query;
+  const inventory_vehicle = await inventory_query;
 
   res.status(200).json({
     success: true,
     count: vehicles.length,
+    inventoryCount: inventory_vehicle,
     payload: vehicles
+  });
+});
+
+// @desc        Get inventory count per vehicle property
+// @route       GET /api/v1/inventory/dealership/:dealershipId/visual3/:property
+// @access      Private
+exports.getVehiclesDashboardV3 = asyncHandler(async (req, res, next) => {
+
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.params.dealershipId);
+
+  // no dealership found
+  if (!dealership) {
+    return next(
+      new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+    );
+  }
+
+  //Validate the property entered
+
+  let prop = req.params.property
+  let query = Vehicle.find({ dealership: req.params.dealershipId, delivered: { $ne: true } }).distinct('properties.' + prop);
+  let results = await query;
+
+  end_results = [];
+  for (let i = 0; i < results.length; i++) {
+    let filter = { dealership: req.params.dealershipId, delivered: { $ne: true } };
+    filter['properties.' + prop] = results[i];
+    let query2 = Vehicle.count(filter);
+    let value_count = await query2;
+    let prop_object = {};
+    prop_object.value = results[i];
+    prop_object.count = value_count;
+    end_results.push(prop_object);
+  }
+
+  res.status(200).json({
+    success: true,
+    payload: end_results,
   });
 });
 
@@ -31,7 +81,7 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 
   if (!vehicle) {
     return next(
-      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`)
+      new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`, 404)
     );
   }
 
@@ -45,17 +95,53 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 // @route       PUT /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
 exports.updateVehicle = asyncHandler(async (req, res, next) => {
-  // find vehicle property model to update
-  const vehicle = await Vehicle.findByIdAndUpdate(req.params.vehicleId, req.body, {
-    new: true,
-    runValidators: true
-  });
+  console.log(req);
+
+  // find vehicle to update
+  const vehicle = await Vehicle.findById(req.params.vehicleId);
   // return error if no vehicle found
   if (!vehicle) {
-    return next(new ErrorResponse(`Vehicle property not found with id ${req.params.vehicleId}`, 404));
+    return next(new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`, 404));
   }
+  // try to update the vehicle
+  const newVehicle = await Vehicle.findByIdAndUpdate(req.params.vehicleId, req.body, {
+    runValidators: true,
+    new: true
+  });
+  // if successful, check the old properties and the new ones to see what was changed and create events accordingly
+  if (!newVehicle) {
+    return next(new ErrorResponse(`Vehicle with id ${req.params.vehicleId} was unable to be updated.`, 404));
+  }
+
+  // 1. check if the missing property was changed, and if so to what value
+  if (vehicle.missing != newVehicle.missing) {
+    if (newVehicle.missing) {
+      // vehicle's status was changed to missing
+      const event = {
+        event_type: 'vehicle_missing',
+        dealership: newVehicle.dealership,
+        vehicle: newVehicle._id,
+        title: `[${newVehicle.vin}] vehicle missing or missplaced`,
+        description: `The vehicle with the serial number [${newVehicle.vin}] has been marked as missing / missplaced by the staff user ${req.user.first_name}.`
+      }
+
+      await Event.create(event);
+    } else {
+      // vehicle's status was changed to found/located
+      const event = {
+        event_type: 'vehicle_found',
+        dealership: newVehicle.dealership,
+        vehicle: newVehicle._id,
+        title: `[${newVehicle.vin}] vehicle has been located`,
+        description: `The vehicle with the serial number [${newVehicle.vin}] has been located by the staff user ${req.user.first_name}.`
+      }
+
+      await Event.create(event);
+    }
+  }
+
   // return data
-  res.status(200).json({ success: true, payload: vehicle });
+  res.status(200).json({ success: true, payload: newVehicle });
 });
 
 // @desc        Create a specific vehicle
@@ -64,18 +150,21 @@ exports.updateVehicle = asyncHandler(async (req, res, next) => {
 exports.createVehicle = asyncHandler(async (req, res, next) => {
   const reqBody = req.body;
 
-  // try to create the new vehicle
-  const newVehicle = await Vehicle.create(reqBody);
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.body.dealership);
 
-  // return an error response if no vehicle was created
-  if (!newVehicle) {
+  // no dealership found
+  if (!dealership) {
     return next(
-      new ErrorResponse("Vehicle was not created. Please validate your input.")
+      new ErrorResponse(`This is dealership ID ${req.body.dealership} was not found. Cannot create a vehicle without a valid dealership.`, 400)
     );
   }
 
+  // try to create the new vehicle
+  const newVehicle = await Vehicle.create(reqBody);
+
   // return a success response
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     payload: newVehicle
   })

@@ -85,7 +85,10 @@
       title="Modal title 2"
       size="lg"
     >
-      <dealership-add />
+      <dealership-add 
+        v-if="addingDealership"
+        :setAddingDealership="setAddingDealership"
+      />
       <template #header>
         <h6 class="modal-title">Create a new dealership!</h6>
         <CButtonClose @click="addingDealership = false" />
@@ -139,13 +142,15 @@ export default {
     this.fetchDealerships();
   },
   methods: {
+    setAddingDealership(value) {
+      this.addingDealership = value;
+    },
     clickRow(dealership) {
       const dealershipId = dealership._id;
       this.$router.push(`/dealerships/${dealershipId}`);
     },
     resetSelectedDealership() {
       this.selectedDealership = null;
-      console.log("Selected Dealership has been reset");
     },
     fetchDealerships() {
       axios({
@@ -158,8 +163,9 @@ export default {
         .then((response) => {
           this.tableItems = response.data.payload;
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
   },

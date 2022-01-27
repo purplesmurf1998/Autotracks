@@ -132,7 +132,6 @@ export default {
             this.updateProperty(response.data.payload, this.index);
             this.setEditingProperty(false);
           } else {
-            console.log(response);
             this.showError("Incomplete or invalid fields.");
           }
         })
@@ -160,7 +159,6 @@ export default {
           optionString += this.property.options[i];
         }
       }
-      console.log(optionString);
       this.currProperty.options = optionString;
     }
 

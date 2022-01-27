@@ -29,6 +29,7 @@
           class="ml-1"
           color="danger"
           :disabled="disableButtons"
+          @click="setAddingDealership(false)"
         >
           Cancel
         </CButton>
@@ -42,6 +43,7 @@ const axios = require('axios');
 
 export default {
   name: 'DealershipAdd',
+  props: ["setAddingDealership"],
   data() {
     return {
       form: this.getEmptyForm(),
@@ -72,14 +74,9 @@ export default {
         }).then(response => {
           if (response.data.success) {
             this.$router.go();
-          } else {
-            console.log(response);
-            this.showErrorMessage("Unable to create the new dealership.")
-            this.disableButtons = false;
           }
-        }).catch(err => {
-          console.log(err);
-          this.showErrorMessage("Unable to create the new dealership.")
+        }).catch(error => {
+          this.showErrorMessage(error.response.data.error);
           this.disableButtons = false;
         })
       } else {

@@ -25,6 +25,7 @@ import Vehicle from "../../../modules/vehicles/Vehicle.vue";
 import VehicleHistory from "../../../modules/vehicles/VehicleHistory.vue";
 
 export default {
+  props: ['vehicleId'],
   name: "Vehicle",
   data() {
     return {
@@ -38,7 +39,6 @@ export default {
   },
   methods: {
     setTab(tab) {
-      console.log(tab);
       this.tab = tab;
     },
     setNewVehicle(newVehicle) {
@@ -47,18 +47,18 @@ export default {
     fetchVehicle() {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/inventory/vehicle/${this.$route.params.vehicleId}`,
+        url: `${this.$store.state.api}/inventory/vehicle/${this.$route.query.vehicleSelected}`,
+        //url: `${this.$store.state.api}/inventory/vehicle/${this.vehicleId}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            this.vehicle = response.data.payload;
-          }
+          this.vehicle = response.data.payload;
         })
         .catch((error) => {
           console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
   },

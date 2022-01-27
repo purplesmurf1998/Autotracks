@@ -13,14 +13,36 @@ let vehicle_prop_1_id = ''
 let vehicle_prop_2_id = ''
 let vehicle_prop_1 = {}
 let vehicle_prop_2 = {}
-const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThhYWNmNDVjZGM3NWI4Mjg4ZWI5YjUiLCJpYXQiOjE2MzgxMzc1ODUsImV4cCI6MTY0MDcyOTU4NX0.gv4Q-vPm-MqfHVsY7BYnBThxBI3bHZtUC5JtukHp340';
 
+//creds
+const email = "admin@account.com";
+const password = "password";
+let token = "";
 
 // The following tests test the entire Vehicle Property Controller Class
 describe('Testing Vehicle Property Controller Class', () => {
+
+  //The below test checks if we can sign users/admin in successfully
+  describe('Admin/User Sign In API Test', () => {
+    it('should return 200 when the admin/user is signed in', (done) => {
+      chai.request(app)
+        .post("/api/v1/auth/signin")
+        .send({
+            email,
+            password
+        })
+        .end( (err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('object');
+          token = response.body.token;
+          done();
+        });
+    });
+  });
+
   //The below test checks if we can create a vehicle property successfully
   describe('Create Vehicle Property API Test', () => {
-    it('should return 200 when a vehicle property is created', (done) => {
+    it('should return 201 when a vehicle property is created', (done) => {
       chai.request(app)
         .post("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
         .send({
@@ -29,9 +51,9 @@ describe('Testing Vehicle Property Controller Class', () => {
             'inputType': 'Text',
             'visible': false
         })
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           vehicle_prop_1_id = response.body.payload._id;
@@ -43,7 +65,7 @@ describe('Testing Vehicle Property Controller Class', () => {
   });
 
   describe('Create 2nd Vehicle Property API Test', () => {
-    it('should return 200 when a vehicle property is created', (done) => {
+    it('should return 201 when the 2nd vehicle property is created', (done) => {
       chai.request(app)
         .post("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
         .send({
@@ -52,9 +74,9 @@ describe('Testing Vehicle Property Controller Class', () => {
             'inputType': 'Text',
             'visible': false,
         })
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(201);
           response.body.should.be.a('object');
           response.body.success.should.be.true;
           vehicle_prop_2_id = response.body.payload._id;
@@ -69,7 +91,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when vehicle properties are returned', (done) => {
       chai.request(app)
         .get("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -85,7 +107,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when a vehicle property is updated', (done) => {
       chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/" + vehicle_prop_1_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .send({
             'label': 'test_updated'
         })
@@ -101,10 +123,10 @@ describe('Testing Vehicle Property Controller Class', () => {
 
   //The below test checks if we return 404 error when the vehicle property id is wrong
   describe('Update Vehicle Property API Error (Wrong ID) Test', () => {
-    it('should return 404 when a vehicle property is updated', (done) => {
+    it('should return 404 because of the wrong vehicle property ID', (done) => {
       chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/71a1106490f3350549ffa54e")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .send({
             'label': 'test_updated'
         })
@@ -123,7 +145,7 @@ describe('Testing Vehicle Property Controller Class', () => {
         newProperties.push(vehicle_prop_1);
         chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .send({
             'properties': newProperties
         })
@@ -148,7 +170,7 @@ describe('Testing Vehicle Property Controller Class', () => {
         newProperties.push(vehicle_prop_1);
         chai.request(app)
         .put("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .send({
             'properties': newProperties
         })
@@ -165,7 +187,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when a vehicle property is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/" + vehicle_prop_1_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -180,7 +202,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 200 when a vehicle property is deleted', (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/" + vehicle_prop_2_id)
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -195,7 +217,7 @@ describe('Testing Vehicle Property Controller Class', () => {
     it('should return 404 when a vehicle property ID does not exist', (done) => {
       chai.request(app)
         .delete("/api/v1/dealerships/618b3bf134f07d9a91c32a1b/vehicles/properties/71a1106490f3350549ffa54e")
-        .set('authorization', token)
+        .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(404);
           done();

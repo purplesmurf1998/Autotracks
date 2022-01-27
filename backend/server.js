@@ -14,13 +14,19 @@ const mongoose = require('mongoose');
 const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const { createServer } = require('http');
+const serverIo = require('./utils/serverIO');
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
 const dealershipsRoutes = require('./routes/dealerships');
 const vehiclePropertyRoutes = require('./routes/vehicleProperties');
 const vehicleRoutes = require('./routes/vehicle');
+const eventRoutes = require('./routes/events');
+const commentRoutes = require('./routes/comments');
+const saleRoutes = require('./routes/sales');
 const historyRoutes = require('./routes/history')
+
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
@@ -58,13 +64,22 @@ app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/dealerships', dealershipsRoutes);
 app.use('/api/v1/dealerships/:dealershipId/vehicles/properties', vehiclePropertyRoutes);
 app.use('/api/v1/inventory', vehicleRoutes);
+app.use('/api/v1/events', eventRoutes);
+app.use('/api/v1/comments', commentRoutes);
+app.use('/api/v1/inventory/details/sale', saleRoutes);
 app.use('/api/v1/history', historyRoutes);
+
 
 // mount error handler middleware
 app.use(errorHandler);
 
+
+// create the server
+const httpServer = createServer(app);
+// create the server socket
+serverIo.initialize(httpServer);
 // launch server app by listening on the PORT
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   mongoose.connection.once("open", function () {
     console.log("Connected successfully to MongoDB");
@@ -75,7 +90,12 @@ app.listen(PORT, () => {
 // test commit 2 for sonarcloud scan
 // test commit 3 for sonarcloud scan
 // test commit 4 for sonarcloud scan
+// test commit 5 for sonarcloud scan
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
 
-module.exports = app;
+var swaggerUi = require('swagger-ui-express');
+
+var swaggerDocument = require('./pikturr/swagger.json')
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+

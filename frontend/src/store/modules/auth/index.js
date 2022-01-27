@@ -7,6 +7,8 @@ export default {
     return {
       userId: null,
       userPermissions: [],
+      firstName: null,
+      lastName: null,
       token: null,
       role: null,
       dealership: null,

@@ -63,7 +63,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     // validate that the user being registered is admin
     if (req.body.role != 'Administration') {
         return next(
-            new ErrorResponse('Can only register an admin user from this route', 400)
+            new ErrorResponse('Can only register an admin user from this route', 401)
         );
     }
 
@@ -79,7 +79,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 
     // send token response
-    sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 201, res);
 });
 
 // @desc    Verify if the user is logged in
