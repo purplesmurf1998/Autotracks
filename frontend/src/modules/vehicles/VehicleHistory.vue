@@ -12,24 +12,9 @@
               :items-per-page="10"
               :fixed="true"
             >
-              <template #admin="{ item }">
-                <td>{{ item.admin.first_name }} {{ item.admin.last_name }}</td>
-              </template>
-              <template #name="{ item }">
+              <template #author="{ item }">
                 <td>
-                  {{ item.name }}
-                  <CBadge
-                    color="primary"
-                    v-if="
-                      $store.state.auth.createDealershipCompleted &&
-                      !$store.state.auth.createUserCompleted
-                    "
-                    :style="{
-                      'vertical-align': 'middle',
-                      'margin-top': '-0.5em',
-                    }"
-                    >NEW!</CBadge
-                  >
+                  {{item.author.first_name + " " + item.author.last_name}}
                 </td>
               </template>
             </CDataTable>
@@ -48,12 +33,8 @@ export default {
       tableItems: [],
             tableFields: [
         {
-          key: "author.first_name",
-          label: "First Name",
-        },
-        {
-          key: "author.first_name",
-          label: "Last Name",
+          key: "author",
+          label: "User",
         },
         {
           key: "timestamp",
@@ -73,13 +54,11 @@ export default {
     fetchHistory() {
       axios({
         method: "GET",
-        //Not sure what to do for the url
         url: `${this.$store.state.api}/history/vehicle/${this.vehicle._id}`,
         headers: {
           Authorization: "Bearer " + this.$store.state.auth.token,
         },
       })
-      //Not sure how to translate this into 
         .then((response) => {
           this.tableItems = response.data.payload;
         })
