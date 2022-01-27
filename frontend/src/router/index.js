@@ -125,6 +125,14 @@ const router = new Router({
           },
           component: UserVehicleLists
         },
+        {
+          path: 'vehicle-lists',
+          name: 'Vehicle Lists Table',
+          meta: {
+            authRequired: true,
+          },
+          component: UserVehicleLists
+        },
       ]
     },
     {

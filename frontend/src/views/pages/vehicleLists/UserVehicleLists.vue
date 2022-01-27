@@ -192,10 +192,6 @@ export default {
     }
   },
   methods: {
-    test(item) {
-      console.log(item);
-      return item;
-    },
     getFormattedDate(date) {
       const months = [
         "January",
@@ -234,7 +230,6 @@ export default {
             index
           };
         });
-        //console.log(response.data.payload);
       }).catch((error) => {
         console.log(error);
       });
