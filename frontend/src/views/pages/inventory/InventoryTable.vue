@@ -4,19 +4,29 @@
       <CCardHeader>
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
-        <CButton 
+        <!--
+        <CButton
         @click="downloadInventory"
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
+        -->
+        <CDropdown  color="primary" class="float-right" name="download" >
+          <CDropdownMenu>
+            <CDropdownItem href="#">Pdf</CDropdownItem>
+            <CDropdownItem href="#">Excel</CDropdownItem>
+            <CDropdownItem href="#">CSV</CDropdownItem>
+            <CDropdownItem href="#">Print</CDropdownItem>
+          </CDropdownMenu>
+        </CDropdown>
         <CButton
-        v-if="delivered_bool" 
+        v-if="delivered_bool"
         @click="setDeliveredBool(false)"
         color="secondary" class="float-right mr-3">
           Hide Delivered Vehicles
         </CButton>
         <CButton
-        v-if="!delivered_bool" 
+        v-if="!delivered_bool"
         @click="setDeliveredBool(true)"
         color="secondary" class="float-right mr-3">
           Show Delivered Vehicles
@@ -129,7 +139,7 @@ export default {
             if (!this.delivered_bool) {
               if (!vehicle.delivered) {
                 if (vehicle.properties != null)
-                { 
+                {
                   let properties = vehicle.properties;
                   properties._id = vehicle._id;
                   properties.vin = vehicle.vin;
@@ -143,7 +153,7 @@ export default {
             if (this.delivered_bool) {
               if (vehicle.delivered) {
                 if (vehicle.properties != null)
-                { 
+                {
                   let properties = vehicle.properties;
                   properties._id = vehicle._id;
                   properties.vin = vehicle.vin;
