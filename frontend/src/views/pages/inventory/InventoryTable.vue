@@ -39,11 +39,6 @@
           <template v-for="field in tableFields" v-slot:[field.key]="item">
             <inventory-slot :key="field.key" :item="item" :field="field"/>
           </template>
-          <!-- <template #missing="{ item }">
-            <td>
-              <CIcon name="cil-warning" class="icon" v-if="item.missing" />
-            </td>
-          </template> -->
         </CDataTable>
       </CCardBody>
     </CCard>
@@ -90,28 +85,26 @@ export default {
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
-      })
-        .then((response) => {
-          const payload = response.data.payload;
-          const fields = [];
-          fields.push({key: "vin", label: "VIN"});
-          payload.forEach((property) => {
-            if (property.visible) {
-              fields.push(property);
-            }
-          });
-          this.tableFields = fields;
-          console.log(this.tableFields);
-          if (this.tableFields.length == 1) {
-            this.tableItems = [];
-          } else {
-            this.fetchVehicles();
+      }).then((response) => {
+        const payload = response.data.payload;
+        const fields = [];
+        fields.push({key: "vin", label: "VIN"});
+        payload.forEach((property) => {
+          if (property.visible) {
+            fields.push(property);
           }
-        })
-        .catch((error) => {
-          console.log(error);
-          //this.$router.replace("/pages/404");
         });
+        this.tableFields = fields;
+        console.log(this.tableFields);
+        if (this.tableFields.length == 1) {
+          this.tableItems = [];
+        } else {
+          this.fetchVehicles();
+        }
+      }).catch((error) => {
+        console.log(error);
+        //this.$router.replace("/pages/404");
+      });
     },
     fetchVehicles() {
       axios({

@@ -16,6 +16,23 @@
       </CButton>
       <hr>
       <h3>List of vehicles</h3>
+      <CDataTable
+        id="vehicle-list-datatable"
+        :fields="tableFields"
+        :items="tableItems"
+        :items-per-page="10"
+        :fixed="true"
+        :clickable-rows="true"
+        @row-clicked="rowClicked"
+        sorter
+        size="sm"
+        hover
+        column-filter
+      >
+        <template v-for="field in tableFields" v-slot:[field.key]="item">
+          <inventory-slot :key="field.key" :item="item" :field="field"/>
+        </template>
+      </CDataTable>
     </CCol>
   </div>
 </template>
@@ -36,10 +53,15 @@ export default {
     return {
       vehicleList: null,
       notes: null,
-      title: null
+      title: null,
+      tableFields: null,
+      tableItems: null
     }
   },
   methods: {
+    rowClicked() {
+
+    },
     fetchVehicleListDetails() {
       axios({
         method: "GET",
@@ -51,8 +73,32 @@ export default {
         this.vehicleList = response.data.payload;
         this.notes = this.vehicleList.notes;
         this.title = this.vehicleList.title;
+        this.tableItems = this.vehicleList.vehicles;
+        this.fetchVehicleProperties();
       }).catch((error) => {
         console.log(error);
+      });
+    },
+    fetchVehicleProperties() {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/dealerships/${this.vehicleList.dealership}/vehicles/properties`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      }).then((response) => {
+        const payload = response.data.payload;
+        const fields = [];
+        fields.push({key: "vin", label: "VIN"});
+        payload.forEach((property) => {
+          if (property.visible) {
+            fields.push(property);
+          }
+        });
+        this.tableFields = fields;
+      }).catch((error) => {
+        console.log(error);
+        //this.$router.replace("/pages/404");
       });
     },
     saveChanges() {
@@ -86,5 +132,7 @@ export default {
 </script>
 
 <style>
-
+#vehicle-list-datatable {
+  white-space: nowrap;
+}
 </style>
