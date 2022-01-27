@@ -7,8 +7,8 @@ const {
   createVehicleList,
   deleteVehicleLists,
   addVehiclesToList,
-  deleteVehiclesFromList
-
+  deleteVehiclesFromList,
+  updateVehicleList
 } = require('../controllers/vehicleListController');
 
 // get authentication middleware
@@ -18,7 +18,8 @@ router.route('/')
   .post(protect, createVehicleList);
 
 router.route('/:vehicleListId')
-  .get(protect, getVehicleList);
+  .get(protect, getVehicleList)
+  .put(protect, updateVehicleList);
 
 router.route('/user/:userId/delete')
   .post(protect, deleteVehicleLists, getVehicleLists);

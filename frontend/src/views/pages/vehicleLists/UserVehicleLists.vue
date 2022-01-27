@@ -82,12 +82,41 @@
         <span></span>
       </template>
     </CModal>
+    <CModal
+      :show.sync="addingVehicleList"
+      :centered="true"
+      size="lg"
+    >
+      <add-vehicle-list :finishAddingVehicleList="finishAddingVehicleList" />
+      <template #header>
+        <h6 class="modal-title">Creating a custom vehicle list!</h6>
+        <CButtonClose @click="addingVehicleList = false" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
+    <CModal
+      :show.sync="viewVehicleList"
+      :centered="false"
+      size="xl"
+    >
+      <vehicle-list v-if="!!$route.query.vehicleListSelected" :vehicleListId="$route.query.vehicleListSelected"/>
+      <template #header>
+        <h6 class="modal-title">Vehicle Information Page</h6>
+        <CButtonClose @click="closeModal" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
 <script>
 const axios = require('axios');
-import AddVehicleList from "./AddVehicleList.vue"
+import AddVehicleList from "./AddVehicleList.vue";
+import VehicleList from "./VehicleList.vue";
 
 export default {
   data() {
@@ -144,6 +173,9 @@ export default {
           ]
         };
       });
+    },
+    viewVehicleList() {
+      return !!this.$route.query.vehicleListSelected;
     }
   },
   methods: {
@@ -190,7 +222,9 @@ export default {
       });
     },
     clickRow(vehicleList) {
-      console.log(vehicleList);
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries.vehicleListSelected = vehicleList._id;
+      this.$router.replace({query: queries});
     },
     selectRow(vehicleList, index, column, e) {
       if (!['INPUT', 'LABEL'].includes(e.target.tagName)) {
@@ -236,14 +270,19 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
-      
+    },
+    closeModal() {
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries = {};
+      this.$router.replace({query: queries});
     }
   },
   mounted() {
     this.fetchUserVehicleLists();
   },
   components: {
-    AddVehicleList
+    AddVehicleList,
+    VehicleList
   }
 }
 </script>
