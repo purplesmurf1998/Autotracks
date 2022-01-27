@@ -11,8 +11,6 @@
               :striped="true"
               :items-per-page="10"
               :fixed="true"
-              :clickable-rows="true"
-              @row-clicked="clickRow"
             >
               <template #admin="{ item }">
                 <td>{{ item.admin.first_name }} {{ item.admin.last_name }}</td>
@@ -50,11 +48,11 @@ export default {
       tableItems: [],
             tableFields: [
         {
-          key: "firstName",
+          key: "author.first_name",
           label: "First Name",
         },
         {
-          key: "lastName",
+          key: "author.first_name",
           label: "Last Name",
         },
         {
@@ -69,17 +67,19 @@ export default {
     };   
   },
   mounted() {
-    this.getHistory();
+    this.fetchHistory();
   },
   methods: {
     fetchHistory() {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/inventory/?admin=${this.$store.state.auth.userId}&populate=admin`,
+        //Not sure what to do for the url
+        url: `${this.$store.state.api}/history/vehicle/${this.vehicle._id}`,
         headers: {
           Authorization: "Bearer " + this.$store.state.auth.token,
         },
       })
+      //Not sure how to translate this into 
         .then((response) => {
           this.tableItems = response.data.payload;
         })
