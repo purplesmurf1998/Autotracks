@@ -15,11 +15,45 @@
         Save changes to notes
       </CButton>
       <hr>
-      <CRow class="mb-3 ml-0">
-        <h3 class="mb-0 d-flex align-items-center">List of vehicles</h3>
-        <router-link to="/inventory">
-          <CButton color="primary" variant="outline" class="m-3" size="sm">Add vehicles to list</CButton>
-        </router-link>
+      <CRow class="ml-0 mr-0 d-flex justify-content-between">
+        <CRow class="m-0">
+          <h3 class="mb-0 d-flex align-items-center">List of vehicles</h3>
+          <router-link to="/inventory">
+            <CButton color="primary" variant="outline" class="m-3" size="sm">Add vehicles to list</CButton>
+          </router-link>
+        </CRow>
+        <CRow class="m-0">
+          <CButton 
+            v-if="removingVehicles"
+            color="danger" 
+            variant="outline" 
+            class="mt-3 mb-3 mr-1" 
+            size="sm"
+            @click="removeVehicles"
+          >
+            Confirm
+          </CButton>
+          <CButton 
+            v-if="removingVehicles"
+            color="secondary" 
+            variant="outline" 
+            class="mt-3 mb-3" 
+            size="sm" 
+            @click="setRemoveVehicles(false)"
+          >
+            Cancel
+          </CButton>
+          <CButton 
+            v-if="!removingVehicles"
+            color="danger" 
+            variant="outline" 
+            class="mt-3 mb-3" 
+            size="sm" 
+            @click="setRemoveVehicles(true)"
+          >
+            Remove vehicles from list
+          </CButton>
+        </CRow>
       </CRow>
       <CDataTable
         id="vehicle-list-datatable"
@@ -36,6 +70,15 @@
       >
         <template v-for="field in tableFields" v-slot:[field.key]="item">
           <inventory-slot :key="field.key" :item="item" :field="field"/>
+        </template>
+        <template #select="{item}">
+          <td>
+            <CInputCheckbox
+              :checked="item._selected"
+              @update:checked="() => check(item)"
+              custom
+            />
+          </td>
         </template>
       </CDataTable>
     </CCol>
@@ -61,12 +104,66 @@ export default {
       notes: null,
       title: null,
       tableFields: null,
-      tableItems: null
+      tableItems: null,
+      removingVehicles: false,
     }
   },
   methods: {
-    rowClicked() {
-
+    check (item) {
+      const val = Boolean(this.tableItems[item.index]._selected)
+      this.$set(this.tableItems[item.index], '_selected', !val)
+    },
+    setRemoveVehicles(val) {
+      if (val) {
+        this.removingVehicles = true;
+        this.tableFields.unshift({
+          key: 'select',
+          label: '',
+          _style: 'width:1%', 
+          sorter: false,
+          filter: false
+        });
+      } else {
+        for (let i = 0; i < this.tableItems.length; i++) {
+          this.$set(this.tableItems[i], '_selected', false);
+        }
+        this.removingVehicles = false;
+        this.tableFields.splice(0, 1);
+      }
+    },
+    removeVehicles() {
+      let vehicles = [];
+      this.tableItems.forEach(item => {
+        if (item._selected) {
+          vehicles.push(item._id);
+        }
+      })
+      
+      axios({
+        method: "POST",
+        url: `${this.$store.state.api}/vehicle-list/${this.vehicleList._id}/delete`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {
+          vehicles
+        }
+      }).then((response) => {
+        this.fetchVehicleListDetails(response.data.payload._id);
+      }).catch((error) => {
+        console.log(error);
+        //this.$router.replace("/pages/404");
+      });
+    },
+    rowClicked(vehicle, index, column, e) {
+      if (!this.removingVehicles) {
+        let routeData = this.$router.resolve({name: 'Vehicle Inventory', query: {vehicleSelected: vehicle._id}});
+        window.open(routeData.href, '_blank');
+      } else {
+        if (!['INPUT', 'LABEL'].includes(e.target.tagName)) {
+          this.check(vehicle)
+        }
+      }
     },
     fetchVehicleListDetails() {
       axios({
@@ -81,7 +178,7 @@ export default {
         this.title = this.vehicleList.title;
 
         let tableItems = [];
-        this.vehicleList.vehicles.forEach((vehicle) => {
+        this.vehicleList.vehicles.forEach((vehicle, index) => {
           //Check if vehicle has properties
           if (!this.delivered_bool) {
             if (!vehicle.delivered) {
@@ -90,6 +187,7 @@ export default {
                 let properties = vehicle.properties;
                 properties._id = vehicle._id;
                 properties.vin = vehicle.vin;
+                properties.index = index;
                 if (vehicle.missing) {
                   properties._classes = 'table-warning';
                 }
@@ -104,6 +202,7 @@ export default {
                 let properties = vehicle.properties;
                 properties._id = vehicle._id;
                 properties.vin = vehicle.vin;
+                properties.index = index;
                 if (vehicle.missing) {
                   properties._classes = 'table-warning';
                 }

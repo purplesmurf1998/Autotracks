@@ -176,17 +176,6 @@ export default {
     }
   },
   computed: {
-    items() {
-      return this.tableItems.map(item => {
-        return {
-          ...item,
-          _classes: [
-            item._classes,
-            user._selected ? 'table-selected' : ''
-          ]
-        };
-      });
-    },
     viewVehicleList() {
       return !!this.$route.query.vehicleListSelected;
     }

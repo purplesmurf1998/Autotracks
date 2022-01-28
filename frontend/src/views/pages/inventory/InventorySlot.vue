@@ -9,7 +9,6 @@ export default {
         value() {
             if (this.field.inputType == 'List') {
                 let list = this.item.item[this.field.key];
-                console.log(this.item);
                 let value = '';
                 for (let i = 0; i < list.length; i++) {
                     if (i < list.length - 1) {

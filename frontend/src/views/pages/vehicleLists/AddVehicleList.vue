@@ -15,7 +15,7 @@
         @selectDealership="selectedDealership = $event"
       />
       <p class="mb-2">Notes</p>
-      <quill-editor :content="notes"/>
+      <quill-editor v-model="notes"/>
       <CRow class="justify-content-center mt-3">
         <CButton 
           color="primary"
