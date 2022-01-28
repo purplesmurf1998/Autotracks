@@ -181,16 +181,24 @@ export default {
           //this.$router.replace("/pages/404");
         });
     },
-    downloadInventory(){
-          let tableData = this.tableItems
-          tableData.forEach((item) => {
-            delete item['id'];
-          })
-          const data = XLSX.utils.json_to_sheet(tableData)
-          const wb = XLSX.utils.book_new()
-          XLSX.utils.book_append_sheet(wb, data, 'data')
-          XLSX.writeFile(wb,'inventory.xlsx')
-        },
+   downloadInventory() {
+         let tableData = this.tableItems
+         let formattedData = [];
+         tableData.forEach((item) => {
+           delete item['_id'];
+           let vin = item['vin'];
+           let newObj = Object.assign({vin: vin}, item);
+           formattedData.push(newObj);
+         })
+         const data = XLSX.utils.json_to_sheet(formattedData);
+         const wb = XLSX.utils.book_new();
+         XLSX.utils.book_append_sheet(wb, data, 'data');
+         XLSX.writeFile(wb,'inventory.xlsx');
+       },
+       setDeliveredBool(value) {
+         this.delivered_bool = value
+         this.fetchVehicleProperties();
+       },
   },
   mounted() {
     this.fetchVehicleProperties();
