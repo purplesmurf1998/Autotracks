@@ -21,6 +21,7 @@
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
           :showMessage="showMessage"
+          :showSetDefault="true"
         />
         <inventory-table
           v-if="selectedDealership"

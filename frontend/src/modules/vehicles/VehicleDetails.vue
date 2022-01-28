@@ -50,8 +50,10 @@
               v-if="vehicle.missing && userHasPermissions('Edit Vehicles')"
               >Present / Located</CDropdownItem
             >
-            <CDropdownItem>Subscribe to vehicle</CDropdownItem>
-            <CDropdownItem>Add to list</CDropdownItem>
+            <CDropdownItem
+              @click.native="showingAddToListModal = true"
+              v-if="!vehicle.delivered"
+            >Add to list</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
               class="delete"
@@ -161,6 +163,21 @@
         <CButton @click="cancelSale" color="success">Confirm</CButton>
       </template>
     </CModal>
+    <CModal :show.sync="showingAddToListModal" :centered="true">
+      <template #header>
+        <h6 class="modal-title">Add vehicle to custom list</h6>
+        <CButtonClose @click="showingAddToListModal = false" />
+      </template>
+        <add-to-vehicle-list 
+          :vehicleId="vehicle._id" 
+          :closeModal="closeAddToListModal"
+          :showMessage="showMessage" 
+          v-if="showingAddToListModal"
+        />
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
@@ -168,11 +185,13 @@
 const axios = require("axios");
 const { containsPermissions } = require("../../utils/index");
 import VehicleSell from "./SellVehicle.vue";
+import AddToVehicleList from "./AddToVehicleList.vue"
 
 export default {
   name: "VehicleDetails",
   components: {
     "vehicle-sell": VehicleSell,
+    "add-to-vehicle-list": AddToVehicleList
   },
   props: ["vehicle", "setNewVehicle", "showMessage"],
   data() {
@@ -181,6 +200,7 @@ export default {
       showingDeliveredModal: false,
       showingDeleteModal: false,
       showingCancelSaleModal: false,
+      showingAddToListModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
       saleStatus: !!this.vehicle.sale ? true : false,
@@ -194,6 +214,9 @@ export default {
   methods: {
     userHasPermissions(...permissions) {
       return containsPermissions(permissions);
+    },
+    closeAddToListModal() {
+      this.showingAddToListModal = false;
     },
     deleteVehicle() {
       axios({
