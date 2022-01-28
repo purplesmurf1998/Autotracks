@@ -27,6 +27,9 @@ const Vehicle = () => import('@/views/pages/vehicle/Vehicle')
 // Views - Pages - Transactions
 const Transaction = () => import('@/views/pages/transactions/Transaction')
 
+// Views - Pages - VehicleLists
+const UserVehicleLists = () => import('@/views/pages/vehicleLists/UserVehicleLists.vue')
+
 Vue.use(Router)
 
 const router = new Router({
@@ -114,6 +117,14 @@ const router = new Router({
           },
           component: Transaction
         },
+        {
+          path: 'vehicle-lists',
+          name: 'Vehicle Lists Table',
+          meta: {
+            authRequired: true,
+          },
+          component: UserVehicleLists
+        },
       ]
     },
     {
@@ -169,7 +180,7 @@ router.beforeEach((to, from, next) => {
   if (!to.name) {
     router.replace('/pages/404');
   }
-  
+
   // if the promptPasswordChange flag is true and we're not already going to the 
   // change password page, redirect to change password page
   else if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {

@@ -1,13 +1,13 @@
 <template>
     <div>
-        <CRow class="m-0 mb-3 d-flex justify-content-between">
+        <CRow class="m-0 mb-2 d-flex justify-content-between">
             <CButton
                 color="secondary"
                 id="set-dealership-default"
                 v-if="
                 !!dealership &&
-                (!$store.state.auth.dealership ||
-                    $store.state.auth.dealership != dealership)
+                (!$store.state.auth.dealership || $store.state.auth.dealership != dealership) &&
+                showSetDefault
                 "
                 @click="setDefaultDealership"
             >
@@ -30,7 +30,7 @@ const axios = require("axios");
 
 export default {
   name: "DealershipDropdown",
-  props: ["dealership", "showMessage"],
+  props: ["dealership", "showMessage", "showSetDefault"],
   data() {
     return {
       adminDealerships: [],
