@@ -4,12 +4,12 @@
       <CCardHeader>
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
+        <CButton type="primary" color="primary" v-print="'#inventory-datatable'" class="float-right ml-2"> <CIcon name="cil-print" /> </CButton>
         <CButton
         @click="downloadInventory"
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
-        <CButton style="margin-left:5px;" type="primary" v-print="'#inventory-datatable'" class="float-right"> Print </CButton>
         <CButton
         v-if="delivered_bool"
         @click="setDeliveredBool(false)"
