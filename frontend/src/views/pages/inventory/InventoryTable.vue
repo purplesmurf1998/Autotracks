@@ -5,8 +5,7 @@
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
         <CButton
-        @click="handleDownload"
-        loading="downloadLoading"
+        @click="downloadInventory"
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
@@ -62,6 +61,7 @@ import excel from 'vue-excel-export'
 //import { fetchList } from '@/api/article'
 import { parseTime } from '@/utils'
 import Print from 'vue-print-nb'
+import XLSX from 'xlsx';
 // Global instruction
 Vue.use(Print);
 directives: {
@@ -181,27 +181,16 @@ export default {
           //this.$router.replace("/pages/404");
         });
     },
-
-    /*
-    fetchData() {
-          this.listLoading = true
-          fetchList().then(response => {
-            this.list = response.data.items
-            this.listLoading = false
+    downloadInventory(){
+          let tableData = this.tableItems
+          tableData.forEach((item) => {
+            delete item['id'];
           })
+          const data = XLSX.utils.json_to_sheet(tableData)
+          const wb = XLSX.utils.book_new()
+          XLSX.utils.book_append_sheet(wb, data, 'data')
+          XLSX.writeFile(wb,'inventory.xlsx')
         },
-    handleDownload(){
-    this.downloadLoading = true
-    import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = this.tableItems
-          const data = this.tableItems
-          excel.export_json_to_excel({
-            header: this.tableItems //Header Required
-            data, //Specific data Required
-          })
-          this.downloading = false
-        })
-    },*/
   },
   mounted() {
     this.fetchVehicleProperties();
