@@ -125,14 +125,6 @@ const router = new Router({
           },
           component: UserVehicleLists
         },
-        {
-          path: 'vehicle-lists',
-          name: 'Vehicle Lists Table',
-          meta: {
-            authRequired: true,
-          },
-          component: UserVehicleLists
-        },
       ]
     },
     {
@@ -188,7 +180,7 @@ router.beforeEach((to, from, next) => {
   if (!to.name) {
     router.replace('/pages/404');
   }
-  
+
   // if the promptPasswordChange flag is true and we're not already going to the 
   // change password page, redirect to change password page
   else if (Store.state.auth.promptPasswordChange && to.path != '/pages/changePassword') {
