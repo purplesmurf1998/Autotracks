@@ -220,6 +220,4 @@ export default {
   components: { CChartLineSimple, CChartBarSimple }
 }
 
-var elem = document.getElementById('total-sales');
-console.log(elem);
 </script>
