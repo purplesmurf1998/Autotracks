@@ -5,10 +5,12 @@
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
         <CButton
-        @click="downloadInventory"
+        @click="handleDownload"
+        loading="downloadLoading"
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
+        <CButton style="margin-left:5px;" type="primary" v-print="'#inventory-datatable'" class="float-right"> Print </CButton>
         <CButton
         v-if="delivered_bool"
         @click="setDeliveredBool(false)"
@@ -25,6 +27,7 @@
       <CCardBody>
         <CDataTable
           id="inventory-datatable"
+          ref = "printTable"
           :fields="tableFields"
           :items="tableItems"
           :items-per-page="10"
@@ -50,10 +53,22 @@
   </div>
 </template>
 
-<script>
+<script >
 const axios = require("axios");
 import InventorySlot from "./InventorySlot.vue"
 import Vehicle from "../vehicle/Vehicle.vue"
+import Vue from 'vue'
+import excel from 'vue-excel-export'
+//import { fetchList } from '@/api/article'
+import { parseTime } from '@/utils'
+import Print from 'vue-print-nb'
+// Global instruction
+Vue.use(Print);
+directives: {
+    print
+}
+
+Vue.use(excel)
 
 export default {
   name: "InventoryTable",
@@ -65,7 +80,11 @@ export default {
       delivered_bool: false,
     };
   },
+    created() {
+      this.fetchData()
+    },
   methods: {
+
     downloadInventory() {
       console.log("Report Downloaded");
     },
@@ -162,6 +181,27 @@ export default {
           //this.$router.replace("/pages/404");
         });
     },
+
+    /*
+    fetchData() {
+          this.listLoading = true
+          fetchList().then(response => {
+            this.list = response.data.items
+            this.listLoading = false
+          })
+        },
+    handleDownload(){
+    this.downloadLoading = true
+    import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = this.tableItems
+          const data = this.tableItems
+          excel.export_json_to_excel({
+            header: this.tableItems //Header Required
+            data, //Specific data Required
+          })
+          this.downloading = false
+        })
+    },*/
   },
   mounted() {
     this.fetchVehicleProperties();
