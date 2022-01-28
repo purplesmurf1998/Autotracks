@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CAlert show :color="messageType" v-if="message" class="mb-2">{{ message }}</CAlert>
+    <CAlert show :color="messageType" v-if="message" class="mb-2">{{
+      message
+    }}</CAlert>
     <CForm @submit.prevent="submit">
       <CInput
         label="Title"
@@ -15,21 +17,17 @@
         @selectDealership="selectedDealership = $event"
       />
       <p class="mb-2">Notes</p>
-      <quill-editor v-model="notes"/>
+      <quill-editor v-model="notes" />
       <CRow class="justify-content-center mt-3">
-        <CButton 
+        <CButton
           color="primary"
           type="submit"
-          id = "create-dealership"
+          id="create-dealership"
           :disabled="disableButtons"
         >
           Create
         </CButton>
-        <CButton 
-          class="ml-1"
-          color="danger"
-          :disabled="disableButtons"
-        >
+        <CButton class="ml-1" color="danger" :disabled="disableButtons">
           Cancel
         </CButton>
       </CRow>
@@ -38,37 +36,37 @@
 </template>
 
 <script>
-const axios = require('axios');
-import Vue from 'vue'
-import VueQuillEditor from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import DealershipDD from "../inventory/DealershipDropdown.vue"
+const axios = require("axios");
+import Vue from "vue";
+import VueQuillEditor from "vue-quill-editor";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import DealershipDD from "../inventory/DealershipDropdown.vue";
 
-Vue.use(VueQuillEditor)
+Vue.use(VueQuillEditor);
 
 export default {
-  props: ['finishAddingVehicleList'],
+  props: ["finishAddingVehicleList"],
   data() {
     return {
-      title: '',
-      notes: '',
+      title: "",
+      notes: "",
       disableButtons: false,
       message: null,
       messageType: null,
-      selectedDealership: null
-    }
+      selectedDealership: null,
+    };
   },
   methods: {
     submit() {
-      this.disableButtons = true
+      this.disableButtons = true;
 
       const list = {
         title: this.title,
         notes: this.notes,
         owner: this.$store.state.auth.userId,
-        dealership: this.selectedDealership
+        dealership: this.selectedDealership,
       };
 
       this.postVehicleList(list);
@@ -80,15 +78,20 @@ export default {
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
-        data
-      }).then((response) => {
-        this.disableButtons = false;
-        this.title = '';
-        this.notes = '';
-        this.finishAddingVehicleList(response.data.payload);
-      }).catch((error) => {
-        console.log(error);
-      });
+        data,
+      })
+        .then((response) => {
+          this.resetForm();
+          this.finishAddingVehicleList(response.data.payload);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    resetForm() {
+      this.disableButtons = false;
+      this.title = "";
+      this.notes = "";
     },
     showMessage(message, messageType) {
       this.message = message;
@@ -97,14 +100,13 @@ export default {
         this.message = null;
         this.messageType = null;
       }, 5000);
-    }
+    },
   },
   components: {
-    'dealership-dropdown': DealershipDD
-  }
-}
+    "dealership-dropdown": DealershipDD,
+  },
+};
 </script>
 
 <style>
-
 </style>
