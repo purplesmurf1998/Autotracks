@@ -85,7 +85,9 @@ export default {
     },
   methods: {
     downloadInventory() {
-      let tableData = this.tableItems
+      let tableData = this.tableItems.map(item => {
+        return {...item};
+      })
       let formattedData = [];
       tableData.forEach((item) => {
         for (let i in item) {
