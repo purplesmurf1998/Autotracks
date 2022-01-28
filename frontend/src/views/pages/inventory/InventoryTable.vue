@@ -62,13 +62,13 @@ import excel from 'vue-excel-export'
 import { parseTime } from '@/utils'
 import Print from 'vue-print-nb'
 import XLSX from 'xlsx';
+
 // Global instruction
 Vue.use(Print);
 directives: {
     print
 }
 
-Vue.use(excel)
 
 export default {
   name: "InventoryTable",
