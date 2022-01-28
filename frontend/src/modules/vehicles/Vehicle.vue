@@ -1,8 +1,9 @@
 <template>
   <div>
+    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
     <CRow>
       <CCol xl="6">
-        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
+        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle" :showMessage="showMessage"/>
         <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>
       <CCol xl="6">
