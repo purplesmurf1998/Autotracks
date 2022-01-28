@@ -35,7 +35,11 @@
             </CButtonGroup>
           </CCol>
         </CRow>
-        <MainChartExample style="height: 300px; margin-top: 40px" />
+        <DashboardLineChart
+          v-if="selectedDealership"
+          :dealership="selectedDealership"
+          ref="wdigetDD"
+        />
       </CCardBody>
     </CCard>
     <!-- This is an example of how to set a component's prop value from the outside -->
@@ -47,17 +51,19 @@
 </template>
 
 <script>
-import MainChartExample from "../charts/MainChartExample";
+// import MainChartExample from "../charts/MainChartExample";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
-import WidgetsBrand from "../widgets/WidgetsBrand";
+// import WidgetsBrand from "../widgets/WidgetsBrand";
 import DealershipDD from "./inventory/DealershipDropdown.vue"
+import DashboardLineChart from "@/views/charts/DashboardLineChart";
 
 export default {
   name: "Dashboard",
   components: {
-    MainChartExample,
+    DashboardLineChart,
+    // MainChartExample,
     WidgetsDropdown,
-    WidgetsBrand,
+    // WidgetsBrand,
     DealershipDD,
   },
   data() {
