@@ -20,7 +20,7 @@
             <CButton
               color="secondary"
               class="mb-3 mr-2"
-              @click="cancelAction"
+              @click="setDeletingList(false)"
               v-if="deletingVehicleLists"
               >Cancel</CButton
             >
@@ -29,7 +29,7 @@
               class="mb-3"
               color="danger"
               variant="outline"
-              @click="deletingVehicleLists = true"
+              @click="setDeletingList(true)"
             >
               Delete
             </CButton>
@@ -43,38 +43,6 @@
           :clickable-rows="true"
           :column-filter="true"
           @row-clicked="clickRow"
-          v-if="!deletingVehicleLists"
-        >
-          <template #date_created="{ item }">
-            <td>
-              {{ getFormattedDate(item.date_created) }}
-            </td>
-          </template>
-          <template #last_modified="{ item }">
-            <td>
-              {{
-                !!item.last_modified ? getFormattedDate(item.last_modified) : ""
-              }}
-            </td>
-          </template>
-          <template
-            #dealership="{ item }"
-            v-if="$store.state.auth.role == 'Administration'"
-          >
-            <td>
-              {{ item.dealership.name }}
-            </td>
-          </template>
-        </CDataTable>
-        <CDataTable
-          :items="tableItems"
-          :fields="bulkTableFields"
-          :sorter="true"
-          :hover="true"
-          :clickable-rows="true"
-          :column-filter="true"
-          @row-clicked="selectRow"
-          v-if="deletingVehicleLists"
         >
           <template #select="{ item }">
             <td>
@@ -168,27 +136,6 @@ export default {
           label: "Last Modified",
         },
       ],
-      bulkTableFields: [
-        {
-          key: "select",
-          label: "",
-          _style: "width:1%",
-          sorter: false,
-          filter: false,
-        },
-        {
-          key: "title",
-          label: "Title",
-        },
-        {
-          key: "date_created",
-          label: "Date Created",
-        },
-        {
-          key: "last_modified",
-          label: "Last Modified",
-        },
-      ],
       tableItems: [],
       deletingVehicleLists: false,
       addingVehicleList: false,
@@ -252,25 +199,41 @@ export default {
           console.log(error);
         });
     },
-    clickRow(vehicleList) {
-      let queries = JSON.parse(JSON.stringify(this.$route.query));
-      queries.vehicleListSelected = vehicleList._id;
-      this.$router.replace({ query: queries });
-    },
-    selectRow(vehicleList, index, column, e) {
-      if (!["INPUT", "LABEL"].includes(e.target.tagName)) {
-        this.check(vehicleList);
+    clickRow(vehicleList, index, column, e) {
+      if (this.deletingVehicleLists) {
+        if (!["INPUT", "LABEL"].includes(e.target.tagName)) {
+          this.check(vehicleList);
+        }
+      } else {
+        let queries = JSON.parse(JSON.stringify(this.$route.query));
+        queries.vehicleListSelected = vehicleList._id;
+        this.$router.replace({ query: queries });
       }
     },
     check(item) {
       const val = Boolean(this.tableItems[item.index]._selected);
       this.$set(this.tableItems[item.index], "_selected", !val);
     },
-    cancelAction() {
-      for (let i = 0; i < this.tableItems.length; i++) {
-        this.$set(this.tableItems[i], "_selected", false);
+    setDeletingList(val) {
+      if (!val) {
+        // clear the selected lists
+        for (let i = 0; i < this.tableItems.length; i++) {
+          this.$set(this.tableItems[i], "_selected", false);
+        }
+        // remove the checkbox column
+        this.tableFields.splice(0, 1);
+      } else {
+        // add the checkbox column
+        this.tableFields.unshift({
+          key: "select",
+          label: "",
+          _style: "width:1%",
+          sorter: false,
+          filter: false,
+        });
       }
-      this.deletingVehicleLists = false;
+
+      this.deletingVehicleLists = val;
     },
     applyAction() {
       // get the selected items
@@ -315,10 +278,6 @@ export default {
   beforeMount() {
     if (this.$store.state.auth.role == "Administration") {
       this.tableFields.push({
-        key: "dealership",
-        label: "Dealership",
-      });
-      this.bulkTableFields.push({
         key: "dealership",
         label: "Dealership",
       });
