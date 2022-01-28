@@ -88,6 +88,10 @@ export default {
       let tableData = this.tableItems
       let formattedData = [];
       tableData.forEach((item) => {
+        for (let i in item) {
+          if (Array.isArray(item[i]))
+            item[i] = item[i].join(',');
+        }
         delete item['_id'];
         let vin = item['vin'];
         let newObj = Object.assign({vin: vin}, item);
