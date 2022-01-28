@@ -113,7 +113,11 @@
       :centered="false"
       size="xl"
     >
-      <vehicle-list v-if="!!$route.query.vehicleListSelected" :vehicleListId="$route.query.vehicleListSelected"/>
+      <vehicle-list 
+        v-if="!!$route.query.vehicleListSelected" 
+        :vehicleListId="$route.query.vehicleListSelected"
+        :updateTitle="updateTitle"
+      />
       <template #header>
         <h6 class="modal-title">Vehicle Information Page</h6>
         <CButtonClose @click="closeModal" />
@@ -181,6 +185,9 @@ export default {
     }
   },
   methods: {
+    updateTitle() {
+      this.fetchUserVehicleLists();
+    },
     getFormattedDate(date) {
       const months = [
         "January",

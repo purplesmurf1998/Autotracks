@@ -2,8 +2,43 @@
   <div>
     <CCol v-if="!!vehicleList">
       <CRow class="mb-3 ml-0">
-        <h1 class="mb-0 d-flex align-items-center">{{ vehicleList.title }}</h1>
-        <CButton variant="outline" color="primary" class="m-3" size="sm">Edit</CButton>
+        <h1 class="mb-0 d-flex align-items-center" v-if="!editingTitle">{{ vehicleList.title }}</h1>
+        <CButton 
+          variant="outline" 
+          color="primary" 
+          class="m-3" 
+          size="sm" 
+          v-if="!editingTitle"
+          @click="editingTitle = true"
+        >
+          Edit
+        </CButton>
+        <CInput 
+          v-model="title"
+          size="lg"
+          v-if="editingTitle"
+          class="mb-0 d-flex align-items-center"
+        />
+        <CButton 
+          variant="outline" 
+          color="success" 
+          class="mt-3 mb-3 mr-2 ml-2" 
+          size="sm" 
+          v-if="editingTitle"
+          @click="saveTitle"
+        >
+          Save
+        </CButton>
+        <CButton 
+          variant="outline" 
+          color="secondary" 
+          class="mt-3 mb-3" 
+          size="sm" 
+          v-if="editingTitle"
+          @click="() => {editingTitle = false; title = vehicleList.title}"
+        >
+          Cancel
+        </CButton>
       </CRow>
       <quill-editor v-model="notes"/>
       <CButton 
@@ -97,7 +132,7 @@ import InventorySlot from "../inventory/InventorySlot.vue"
 Vue.use(VueQuillEditor)
 
 export default {
-  props: ['vehicleListId'],
+  props: ['vehicleListId', 'updateTitle'],
   data() {
     return {
       vehicleList: null,
@@ -106,6 +141,8 @@ export default {
       tableFields: null,
       tableItems: null,
       removingVehicles: false,
+      editingTitle: false,
+      editedTitle: null,
     }
   },
   methods: {
@@ -176,6 +213,7 @@ export default {
         this.vehicleList = response.data.payload;
         this.notes = this.vehicleList.notes;
         this.title = this.vehicleList.title;
+        this.editedTitle = this.title;
 
         let tableItems = [];
         this.vehicleList.vehicles.forEach((vehicle, index) => {
@@ -238,6 +276,11 @@ export default {
         console.log(error);
         //this.$router.replace("/pages/404");
       });
+    },
+    saveTitle() {
+      this.saveChanges();
+      this.updateTitle();
+      this.editingTitle = false;
     },
     saveChanges() {
       if (!this.title || this.title == '') {
