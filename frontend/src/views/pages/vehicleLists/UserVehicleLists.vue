@@ -6,15 +6,33 @@
       </CCardHeader>
       <CCardBody>
         <CRow class="d-flex justify-content-between pl-3 pr-3">
-          <CButton color="primary mb-3" @click="addingVehicleList = true">Create a custom vehicle list</CButton>
+          <CButton color="primary mb-3" @click="addingVehicleList = true"
+            >Create a custom vehicle list</CButton
+          >
           <CRow class="m-0">
-            <CButton color="success mb-3 mr-2" @click="applyAction" v-if="selectedBulkAction != 'Bulk Action'">Apply</CButton>
-            <CButton color="secondary mb-3 mr-2" @click="cancelAction" v-if="selectedBulkAction != 'Bulk Action'">Cancel</CButton>
-            <CSelect 
-              :options="bulkActions"
-              :value.sync="selectedBulkAction"
-              :disabled="selectedBulkAction != 'Bulk Action'"
-            />
+            <CButton
+              color="success"
+              class="mb-3 mr-2"
+              @click="applyAction"
+              v-if="deletingVehicleLists"
+              >Apply</CButton
+            >
+            <CButton
+              color="secondary"
+              class="mb-3 mr-2"
+              @click="cancelAction"
+              v-if="deletingVehicleLists"
+              >Cancel</CButton
+            >
+            <CButton
+              v-if="!deletingVehicleLists"
+              class="mb-3"
+              color="danger"
+              variant="outline"
+              @click="deletingVehicleLists = true"
+            >
+              Delete
+            </CButton>
           </CRow>
         </CRow>
         <CDataTable
@@ -25,19 +43,24 @@
           :clickable-rows="true"
           :column-filter="true"
           @row-clicked="clickRow"
-          v-if="selectedBulkAction == 'Bulk Action'"
+          v-if="!deletingVehicleLists"
         >
-          <template #date_created="{item}">
+          <template #date_created="{ item }">
             <td>
               {{ getFormattedDate(item.date_created) }}
             </td>
           </template>
-          <template #last_modified="{item}">
+          <template #last_modified="{ item }">
             <td>
-              {{ !!item.last_modified ? getFormattedDate(item.last_modified) : "" }}
+              {{
+                !!item.last_modified ? getFormattedDate(item.last_modified) : ""
+              }}
             </td>
           </template>
-          <template #dealership="{item}" v-if="$store.state.auth.role == 'Administration'">
+          <template
+            #dealership="{ item }"
+            v-if="$store.state.auth.role == 'Administration'"
+          >
             <td>
               {{ item.dealership.name }}
             </td>
@@ -51,9 +74,9 @@
           :clickable-rows="true"
           :column-filter="true"
           @row-clicked="selectRow"
-          v-if="selectedBulkAction != 'Bulk Action'"
+          v-if="deletingVehicleLists"
         >
-          <template #select="{item}">
+          <template #select="{ item }">
             <td>
               <CInputCheckbox
                 :checked="item._selected"
@@ -62,17 +85,22 @@
               />
             </td>
           </template>
-          <template #date_created="{item}">
+          <template #date_created="{ item }">
             <td>
               {{ getFormattedDate(item.date_created) }}
             </td>
           </template>
-          <template #last_modified="{item}">
+          <template #last_modified="{ item }">
             <td>
-              {{ !!item.last_modified ? getFormattedDate(item.last_modified) : "" }}
+              {{
+                !!item.last_modified ? getFormattedDate(item.last_modified) : ""
+              }}
             </td>
           </template>
-          <template #dealership="{item}" v-if="$store.state.auth.role == 'Administration'">
+          <template
+            #dealership="{ item }"
+            v-if="$store.state.auth.role == 'Administration'"
+          >
             <td>
               {{ item.dealership.name }}
             </td>
@@ -80,11 +108,7 @@
         </CDataTable>
       </CCardBody>
     </CCard>
-    <CModal
-      :show.sync="addingVehicleList"
-      :centered="true"
-      size="lg"
-    >
+    <CModal :show.sync="addingVehicleList" :centered="true" size="lg">
       <add-vehicle-list :finishAddingVehicleList="finishAddingVehicleList" />
       <template #header>
         <h6 class="modal-title">Creating a custom vehicle list!</h6>
@@ -94,11 +118,7 @@
         <span></span>
       </template>
     </CModal>
-    <CModal
-      :show.sync="addingVehicleList"
-      :centered="true"
-      size="lg"
-    >
+    <CModal :show.sync="addingVehicleList" :centered="true" size="lg">
       <add-vehicle-list :finishAddingVehicleList="finishAddingVehicleList" />
       <template #header>
         <h6 class="modal-title">Creating a custom vehicle list!</h6>
@@ -108,13 +128,9 @@
         <span></span>
       </template>
     </CModal>
-    <CModal
-      :show.sync="viewVehicleList"
-      :centered="false"
-      size="xl"
-    >
-      <vehicle-list 
-        v-if="!!$route.query.vehicleListSelected" 
+    <CModal :show.sync="viewVehicleList" :centered="false" size="xl">
+      <vehicle-list
+        v-if="!!$route.query.vehicleListSelected"
         :vehicleListId="$route.query.vehicleListSelected"
         :updateTitle="updateTitle"
       />
@@ -130,10 +146,10 @@
 </template>
 
 <script>
-const axios = require('axios');
+const axios = require("axios");
 import AddVehicleList from "./AddVehicleList.vue";
 import VehicleList from "./VehicleList.vue";
-import DealershipDD from "../inventory/DealershipDropdown.vue"
+import DealershipDD from "../inventory/DealershipDropdown.vue";
 
 export default {
   data() {
@@ -141,48 +157,47 @@ export default {
       tableFields: [
         {
           key: "title",
-          label: "Title"
+          label: "Title",
         },
         {
           key: "date_created",
-          label: "Date Created"
+          label: "Date Created",
         },
         {
           key: "last_modified",
-          label: "Last Modified"
-        }
+          label: "Last Modified",
+        },
       ],
       bulkTableFields: [
         {
-          key: 'select',
-          label: '',
-          _style: 'width:1%', 
+          key: "select",
+          label: "",
+          _style: "width:1%",
           sorter: false,
-          filter: false
+          filter: false,
         },
         {
           key: "title",
-          label: "Title"
+          label: "Title",
         },
         {
           key: "date_created",
-          label: "Date Created"
+          label: "Date Created",
         },
         {
           key: "last_modified",
-          label: "Last Modified"
-        }
+          label: "Last Modified",
+        },
       ],
       tableItems: [],
-      bulkActions: ['Bulk Action', 'Delete'],
-      selectedBulkAction: 'Bulk Action',
-      addingVehicleList: false
-    }
+      deletingVehicleLists: false,
+      addingVehicleList: false,
+    };
   },
   computed: {
     viewVehicleList() {
       return !!this.$route.query.vehicleListSelected;
-    }
+    },
   },
   methods: {
     updateTitle() {
@@ -202,12 +217,17 @@ export default {
         "October",
         "November",
         "December",
-      ]
+      ];
 
-      const formattedDate = months[parseInt(date.substring(5, 7)) - 1] + " " + date.substring(8, 10) + ", " + date.substring(0, 4);
+      const formattedDate =
+        months[parseInt(date.substring(5, 7)) - 1] +
+        " " +
+        date.substring(8, 10) +
+        ", " +
+        date.substring(0, 4);
       return formattedDate;
     },
-    finishAddingVehicleList(vehicleList) {
+    finishAddingVehicleList() {
       this.addingVehicleList = false;
       this.fetchUserVehicleLists();
     },
@@ -218,45 +238,49 @@ export default {
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
-      }).then((response) => {
-        let lists = response.data.payload;
-        this.tableItems = lists.map((list, index) => {
-          return {
-            ...list,
-            index
-          };
+      })
+        .then((response) => {
+          let lists = response.data.payload;
+          this.tableItems = lists.map((list, index) => {
+            return {
+              ...list,
+              index,
+            };
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      }).catch((error) => {
-        console.log(error);
-      });
     },
     clickRow(vehicleList) {
       let queries = JSON.parse(JSON.stringify(this.$route.query));
       queries.vehicleListSelected = vehicleList._id;
-      this.$router.replace({query: queries});
+      this.$router.replace({ query: queries });
     },
     selectRow(vehicleList, index, column, e) {
-      if (!['INPUT', 'LABEL'].includes(e.target.tagName)) {
-        this.check(vehicleList)
+      if (!["INPUT", "LABEL"].includes(e.target.tagName)) {
+        this.check(vehicleList);
       }
     },
-    check (item) {
-      const val = Boolean(this.tableItems[item.index]._selected)
-      this.$set(this.tableItems[item.index], '_selected', !val)
+    check(item) {
+      const val = Boolean(this.tableItems[item.index]._selected);
+      this.$set(this.tableItems[item.index], "_selected", !val);
     },
     cancelAction() {
       for (let i = 0; i < this.tableItems.length; i++) {
-        this.$set(this.tableItems[i], '_selected', false);
+        this.$set(this.tableItems[i], "_selected", false);
       }
-      this.selectedBulkAction = 'Bulk Action';
+      this.deletingVehicleLists = false;
     },
     applyAction() {
       // get the selected items
-      const selectedItems = this.tableItems.filter(item => item._selected == true);
+      const selectedItems = this.tableItems.filter(
+        (item) => item._selected == true
+      );
       // map just to get the vehicle list ids
-      const selectedIds = selectedItems.map(item => {
+      const selectedIds = selectedItems.map((item) => {
         return item._id;
-      })
+      });
       // axios call to delete the items
       axios({
         method: "POST",
@@ -265,37 +289,39 @@ export default {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
         data: {
-          vehicleLists: selectedIds
-        }
-      }).then((response) => {
-        let lists = response.data.payload;
-        this.tableItems = lists.map((list, index) => {
-          return {
-            ...list,
-            index
-          };
+          vehicleLists: selectedIds,
+        },
+      })
+        .then((response) => {
+          let lists = response.data.payload;
+          this.tableItems = lists.map((list, index) => {
+            return {
+              ...list,
+              index,
+            };
+          });
+          this.deletingVehicleLists = false;
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        this.selectedBulkAction = 'Bulk Action';
-      }).catch((error) => {
-        console.log(error);
-      });
     },
     closeModal() {
       let queries = JSON.parse(JSON.stringify(this.$route.query));
       queries = {};
-      this.$router.replace({query: queries});
-    }
+      this.$router.replace({ query: queries });
+    },
   },
   beforeMount() {
     if (this.$store.state.auth.role == "Administration") {
       this.tableFields.push({
         key: "dealership",
-        label: "Dealership"
+        label: "Dealership",
       });
       this.bulkTableFields.push({
         key: "dealership",
-        label: "Dealership"
-      })
+        label: "Dealership",
+      });
     }
   },
   mounted() {
@@ -304,9 +330,9 @@ export default {
   components: {
     AddVehicleList,
     VehicleList,
-    'dealership-dropdown': DealershipDD
-  }
-}
+    "dealership-dropdown": DealershipDD,
+  },
+};
 </script>
 
 <style>
