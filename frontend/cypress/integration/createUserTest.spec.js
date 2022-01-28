@@ -3,6 +3,8 @@ describe('Create User Test', () => {
         //Setting the token in the local storage to be able to access dealerships page
         cy.setLocalStorage('autotracksAuthToken','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDI1MjYwNjIsImV4cCI6MTY0NTExODA2Mn0.VJ_fSlQS8wS4tjPSOGGmmTRk0RK3Jnkbu-m5lc-kLhE')
         cy.visit('/#/dealerships')
+        //Loading the dealership takes a slight amount of time, so without this wait the test fails as cy.get("tr").eq(3) will fail
+        cy.wait(1000)
         //Selecting a dealership for which a new staff member needs to be created
         cy.get("tr").eq(3)
         .click()
