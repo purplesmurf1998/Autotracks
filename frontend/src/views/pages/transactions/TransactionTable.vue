@@ -64,6 +64,7 @@
 <script>
 const axios = require("axios");
 import transactionDetails from './TransactionDetails.vue';
+import XLSX from 'xlsx';
 
 export default {
   name: "transactionTable",
@@ -125,7 +126,14 @@ export default {
       this.showingTransactionModal = value;
     },
     downloadTransactions(){
-      console.log("Download transactions");
+      let tableData = this.tableItems
+      tableData.forEach((item) => {
+        delete item['id'];
+      })
+      const data = XLSX.utils.json_to_sheet(tableData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, data, 'data');
+      XLSX.writeFile(wb,'transactions.xlsx');
     },
   },
   components: {
