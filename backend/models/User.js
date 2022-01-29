@@ -62,7 +62,17 @@ const UserSchema = new mongoose.Schema({
   },
   subscribed_events: {
     type: [String],
-    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved', 'vehicle_found'],
+    enum: [
+      'vehicle_sale_pending',
+      'vehicle_approved',
+      'vehicle_delivered',
+      'vehicle_missing',
+      'vehicle_moved', 
+      'vehicle_found', 
+      'vehicle_created', 
+      'vehicle_deleted',
+      'transaction_modified',
+    ],
     default: []
   },
   dealership: {
@@ -85,10 +95,6 @@ const UserSchema = new mongoose.Schema({
   promptPasswordChange: {
     type: Boolean,
     default: false
-  },
-  number_unread_alerts: {
-    type: Number,
-    default: 0
   },
   created_at: {
     type: Date,

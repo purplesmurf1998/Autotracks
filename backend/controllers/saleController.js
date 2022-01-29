@@ -80,7 +80,7 @@ exports.getSale = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Update a sale instance
-// @route   Update /api/v1/inventory/details/sale/:saleId'
+// @route   PUT /api/v1/inventory/details/sale/:saleId'
 // @access  Public
 exports.updateSale = asyncHandler(async (req, res, next) => {
     // find vehicle property to delete

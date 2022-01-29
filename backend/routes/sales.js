@@ -9,15 +9,23 @@ const {
     getSales,
 } = require('../controllers/saleController');
 
+const {
+  createEvent
+} = require('../controllers/eventsController');
+
+const {
+  createHistory
+} = require('../controllers/historyController');
+
 // get authentication middleware
 const { protect, hasPermissions } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, createSale)
+  .post(protect, createEvent, createHistory, createSale)
 
 router.route('/:saleId')
-  .delete(protect, deleteSale)
-  .put(protect, updateSale)
+  .delete(protect, createHistory, deleteSale)
+  .put(protect, createEvent, createHistory, updateSale)
   .get(protect, getSale)
 
 router.route('/dealership/:dealershipId')

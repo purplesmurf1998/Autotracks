@@ -4,19 +4,20 @@
       <CCardHeader>
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
-        <CButton 
+        <CButton type="primary" color="primary" v-print="'#inventory-datatable'" class="float-right ml-2"> <CIcon name="cil-print" /> </CButton>
+        <CButton
         @click="downloadInventory"
         color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
         <CButton
-        v-if="delivered_bool" 
+        v-if="delivered_bool"
         @click="setDeliveredBool(false)"
         color="secondary" class="float-right mr-3">
           Hide Delivered Vehicles
         </CButton>
         <CButton
-        v-if="!delivered_bool" 
+        v-if="!delivered_bool"
         @click="setDeliveredBool(true)"
         color="secondary" class="float-right mr-3">
           Show Delivered Vehicles
@@ -25,6 +26,7 @@
       <CCardBody>
         <CDataTable
           id="inventory-datatable"
+          ref = "printTable"
           :fields="tableFields"
           :items="tableItems"
           :items-per-page="10"
@@ -45,10 +47,16 @@
   </div>
 </template>
 
-<script>
+<script >
 const axios = require("axios");
 import InventorySlot from "./InventorySlot.vue"
 import Vehicle from "../vehicle/Vehicle.vue"
+import Vue from 'vue'
+import Print from 'vue-print-nb'
+import XLSX from 'xlsx';
+
+// Global instruction
+Vue.use(Print);
 
 export default {
   name: "InventoryTable",
@@ -60,9 +68,29 @@ export default {
       delivered_bool: false,
     };
   },
+    created() {
+      this.fetchData()
+    },
   methods: {
     downloadInventory() {
-      console.log("Report Downloaded");
+      let tableData = this.tableItems.map(item => {
+        return {...item};
+      })
+      let formattedData = [];
+      tableData.forEach((item) => {
+        for (let i in item) {
+          if (Array.isArray(item[i]))
+            item[i] = item[i].join(',');
+        }
+        delete item['_id'];
+        let vin = item['vin'];
+        let newObj = Object.assign({vin: vin}, item);
+        formattedData.push(newObj);
+      })
+      const data = XLSX.utils.json_to_sheet(formattedData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, data, 'data');
+      XLSX.writeFile(wb,'inventory.xlsx');
     },
     setDeliveredBool(value) {
       this.delivered_bool = value
@@ -122,7 +150,7 @@ export default {
             if (!this.delivered_bool) {
               if (!vehicle.delivered) {
                 if (vehicle.properties != null)
-                { 
+                {
                   let properties = vehicle.properties;
                   properties._id = vehicle._id;
                   properties.vin = vehicle.vin;
@@ -136,7 +164,7 @@ export default {
             if (this.delivered_bool) {
               if (vehicle.delivered) {
                 if (vehicle.properties != null)
-                { 
+                {
                   let properties = vehicle.properties;
                   properties._id = vehicle._id;
                   properties.vin = vehicle.vin;

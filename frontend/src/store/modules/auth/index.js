@@ -14,7 +14,8 @@ export default {
       dealership: null,
       promptPasswordChange: false,
       createDealershipCompleted: false,
-      createUserCompleted: false
+      createUserCompleted: false,
+      userEventsSubscriptions: [],
     }
   },
   mutations,

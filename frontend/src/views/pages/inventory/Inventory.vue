@@ -2,11 +2,11 @@
   <div class="inventory-div">
     <CRow>
       <CCol>
-        <CAlert 
+        <CAlert
           show
-          @showMessage="showMessage($event)" 
-          :color="messageType" 
-          v-if="message" 
+          @showMessage="showMessage($event)"
+          :color="messageType"
+          v-if="message"
           class="mb-2">
           {{ message }}
         </CAlert>
