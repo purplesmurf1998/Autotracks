@@ -60,6 +60,21 @@ const UserSchema = new mongoose.Schema({
     ],
     required: 'User must have a list of permissions, even if that list is empty.'
   },
+  subscribed_events: {
+    type: [String],
+    enum: [
+      'vehicle_sale_pending',
+      'vehicle_approved',
+      'vehicle_delivered',
+      'vehicle_missing',
+      'vehicle_moved', 
+      'vehicle_found', 
+      'vehicle_created', 
+      'vehicle_deleted',
+      'transaction_modified',
+    ],
+    default: []
+  },
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dealership"

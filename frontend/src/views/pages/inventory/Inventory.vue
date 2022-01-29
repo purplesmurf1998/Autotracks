@@ -1,9 +1,14 @@
 <template>
-  <div>
+  <div class="inventory-div">
     <CRow>
       <CCol>
-        <CAlert show :color="MessageType" v-if="Message" class="mb-2">
-          {{ Message }}
+        <CAlert 
+          show
+          @showMessage="showMessage($event)" 
+          :color="messageType" 
+          v-if="message" 
+          class="mb-2">
+          {{ message }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
           <router-link :to="`/inventory/add/${selectedDealership}`">
@@ -11,26 +16,12 @@
               Add vehicle(s) to the inventory
             </CButton>
           </router-link>
-          <CButton
-            color="secondary"
-            id="set-dealership-default"
-            v-if="
-              !!selectedDealership &&
-              (!$store.state.auth.dealership ||
-                $store.state.auth.dealership != selectedDealership)
-            "
-            @click="setDefaultDealership"
-          >
-            Set selected dealership as default
-          </CButton>
         </CRow>
-        <CSelect
-          v-if="$store.state.auth.role == 'Administration'"
-          id="dealership-select-cmb"
-          :options="adminDealerships"
-          :value.sync="selectedDealership"
-          placeholder="Select a dealership to view their inventory"
-          @change="$refs.inventoryTable.switchDealerships(selectedDealership)"
+        <dealership-dropdown
+          :dealership="selectedDealership"
+          @selectDealership="selectedDealership = $event"
+          :showMessage="showMessage"
+          :showSetDefault="true"
         />
         <inventory-table
           v-if="selectedDealership"
@@ -39,121 +30,63 @@
         />
       </CCol>
     </CRow>
+    <CModal
+      :show.sync="viewVehicle"
+      :centered="false"
+      title="Vehicle Information Page"
+      size="xl"
+    >
+      <vehicle v-if="!!$route.query.vehicleSelected" :vehicleId="$route.query.vehicleSelected"/>
+      <template #header>
+        <h6 class="modal-title">Vehicle Information Page</h6>
+        <CButtonClose @click="closeModal" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </div>
 </template>
 
 <script>
 const axios = require("axios");
 import InventoryTable from "./InventoryTable.vue";
+import dealershipDD from "./DealershipDropdown.vue";
+import Vehicle from "../vehicle/Vehicle.vue"
 
 export default {
   name: "Inventory",
   data() {
     return {
-      tableItems: [],
-      tableFields: [],
-      adminDealerships: [],
       selectedDealership: null,
-      defaultAdminDealership: null,
-      Message: null,
-      MessageType: null,
+      message: null,
+      messageType: null
     };
   },
+  computed: {
+    viewVehicle() {
+      return !!this.$route.query.vehicleSelected;
+    }
+  },
   methods: {
-    showMessage(message) {
-      this.Message = message;
-      if (message.includes('error'))
-        this.MessageType = 'danger';
-      else
-        this.MessageType = 'success';
+    closeModal() {
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries = {};
+      this.$router.replace({query: queries});
+    },
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
       setTimeout(() => {
-        this.Message = null;
-        this.MessageType = null;
-      }, 5000);
-    },
-    setDefaultDealership() {
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-        data: {
-          dealership: this.selectedDealership,
-        },
-      })
-        .then((response) => {
-          this.defaultAdminDealership = this.selectedDealership;
-          this.$store.commit("setProperty", [
-            "dealership",
-            this.selectedDealership,
-          ]);
-          // find the dealership's name
-          const index = this.adminDealerships.findIndex(
-            (dealership) => dealership.value == this.selectedDealership
-          );
-          this.showMessage(
-            `${this.adminDealerships[index].label} successfully set as your default dealership`
-          );
-        })
-        .catch((error) => {
-          this.showMessage(
-              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`
-            );
-        });
-    },
-    fetchAdminDealerships() {
-      axios({
-        method: "GET",
-        url: `${this.$store.state.api}/dealerships`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-        params: {
-          admin: this.$store.state.auth.userId,
-        },
-      })
-        .then((response) => {
-          if (response.data.success) {
-            // convert the payload to a propery select array
-            const payload = response.data.payload;
-            const dealerships = [];
-            payload.forEach((dealership) => {
-              dealerships.push({
-                value: dealership._id,
-                label: dealership.name,
-              });
-            });
-            this.adminDealerships = dealerships;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          this.$router.replace("/pages/404");
-        });
+        this.message = null;
+        this.messageType = null;
+      }, 5000)
     },
   },
   components: {
     "inventory-table": InventoryTable,
-  },
-  mounted() {
-    /* 
-    Get the dealership being viewed. If the user is an administrator, offer a dropdown so they can select
-    which dealership to view. If not an administrator, use the dealership associated to the account.
-    */
-    if (this.$store.state.auth.role != "Administration") {
-      // administrators will have no dealership associated to their account
-      // fetch the properties associated to the dealership
-      this.selectedDealership = this.$store.state.auth.dealership;
-    } else {
-      // fetch the dealerships associated to the admin
-      this.fetchAdminDealerships();
-
-      //if the admin has a default dealership selected, show its inventory
-      if (this.$store.state.auth.dealership) {
-        this.selectedDealership = this.$store.state.auth.dealership;
-      }
-    }
+    "dealership-dropdown": dealershipDD,
+    'vehicle': Vehicle
   },
 };
 </script>

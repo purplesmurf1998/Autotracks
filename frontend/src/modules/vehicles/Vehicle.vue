@@ -1,14 +1,16 @@
 <template>
   <div>
+    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
     <CRow>
-      <CCol>
-        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
+      <CCol xl="6">
+        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle" :showMessage="showMessage"/>
+        <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>
-      <CCol>
+      <CCol xl="6">
         <vehicle-location :vehicle="vehicle" />
+        <vehicle-comments :vehicle="vehicle" />
       </CCol>
     </CRow>
-    <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
   </div>
 </template>
 
@@ -16,14 +18,32 @@
 import VehicleDetails from "./VehicleDetails.vue";
 import VehicleLocation from "./VehicleLocation.vue";
 import VehicleProperties from "./VehicleProperties.vue";
+import VehicleComments from "./VehicleComments.vue";
 
 export default {
   name: 'Vehicle',
   props: ["vehicle", "setNewVehicle"],
+  data() {
+    return {
+      message: null,
+      messageType: null,
+    }
+  },
+  methods: {
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+          this.message = null;
+          this.messageType = null;
+      }, 5000);
+    },
+  },
   components: {
     "vehicle-details": VehicleDetails,
     "vehicle-location": VehicleLocation,
     "vehicle-properties": VehicleProperties,
+    'vehicle-comments': VehicleComments
   },
 };
 </script>
