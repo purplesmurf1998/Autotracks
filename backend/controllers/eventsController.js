@@ -112,7 +112,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
 
   //if body is defined, then create the event
   if (Object.keys(body).length !== 0) {
-    const event = await Event.create(body);
+    await Event.create(body);
     return next();
   }
   next();

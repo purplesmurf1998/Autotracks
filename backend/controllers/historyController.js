@@ -129,7 +129,7 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
 
     //if body is defined, then create the event
     if (Object.keys(body).length !== 0) {
-        const history = await History.create(body);
+        await History.create(body);
         return next();
     }
     next();
