@@ -85,7 +85,7 @@
       title="Modal title 2"
       size="lg"
     >
-      <dealership-add 
+      <dealership-add
         v-if="addingDealership"
         :setAddingDealership="setAddingDealership"
       />
