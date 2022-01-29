@@ -124,6 +124,7 @@ export default {
           this.comments.unshift(response.data.payload)
           this.newComment = '';
           this.writingComment = false;
+          this.commentsCount++;
         })
         .catch((err) => {
           console.log(err);
