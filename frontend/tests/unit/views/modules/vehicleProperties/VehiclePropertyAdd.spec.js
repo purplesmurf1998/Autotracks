@@ -18,7 +18,7 @@ const store = new Vuex.Store({
   })
 
   describe('VehiclePropertyAdd.vue', () => {
-    const wrapper = shallowMount(VehiclePropertyAdd, { 
+    const wrapper = shallowMount(VehiclePropertyAdd, {
       store, 
       localVue
     })
