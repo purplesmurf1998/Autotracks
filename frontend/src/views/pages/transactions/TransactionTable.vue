@@ -126,7 +126,9 @@ export default {
       this.showingTransactionModal = value;
     },
     downloadTransactions(){
-      let tableData = this.tableItems
+      let tableData = this.tableItems.map(item => {
+        return {...item};
+      });
       tableData.forEach((item) => {
         delete item['id'];
       })
