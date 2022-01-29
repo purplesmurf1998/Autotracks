@@ -57,18 +57,11 @@ const axios = require("axios");
 import InventorySlot from "./InventorySlot.vue"
 import Vehicle from "../vehicle/Vehicle.vue"
 import Vue from 'vue'
-import excel from 'vue-excel-export'
-//import { fetchList } from '@/api/article'
-import { parseTime } from '@/utils'
 import Print from 'vue-print-nb'
 import XLSX from 'xlsx';
 
 // Global instruction
 Vue.use(Print);
-directives: {
-    print
-}
-
 
 export default {
   name: "InventoryTable",
