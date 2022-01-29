@@ -86,10 +86,6 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  number_unread_alerts: {
-    type: Number,
-    default: 0
-  },
   created_at: {
     type: Date,
     default: Date.now
