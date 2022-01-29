@@ -7,85 +7,115 @@ const Vehicle = require('../models/Vehicle');
 // @access      Private
 exports.createEvent = asyncHandler(async (req, res, next) => {
   // This endpoint is used for creating a new event for users
-  // Vehicle APIs
 
+  // Vehicle APIs
   // DELETE /api/v1/inventory/vehicle/:vehicleId
   // PUT /api/v1/inventory/vehicle/:vehicleId
 
   //Transaction APIs
-
   // PUT /api/v1/inventory/details/sale/:saleId'
   // POST /api/v1/inventory/details/sale'
 
   // 'vehicle_sale_pending', DONE
   // 'vehicle_approved', DONE
-  // 'vehicle_delivered',
-  // 'vehicle_missing',
-  // 'vehicle_moved', 
-  // 'vehicle_found', 
+  // 'vehicle_delivered', DONE
+  // 'vehicle_missing', DONE
+  // 'vehicle_moved', CAn'T DO FOR NOW
+  // 'vehicle_found', DONE
   // 'vehicle_deleted', DONE
-  // 'vehicle_proporties_modified',
   // 'transaction_modified', DONE
 
+  var body = {};
   //Transaction API Events
   if (req.originalUrl.indexOf('/api/v1/inventory/details/sale') > -1) {
     if (req.method=='POST')
     {
       //fetch vehicle details
       const vehicle = await Vehicle.findById(req.body.vehicle);
-      const body = {
+      body = {
         event_type: 'vehicle_sale_pending',
         dealership: req.body.dealership,
         vehicle: req.body.vehicle,
         title: 'New Transaction',
         description: `A new transaction has been created for the vehicle with vin: ${vehicle.vin} by ${req.user.first_name} ${req.user.last_name}`,
       }
-      const event = await Event.create(body);
-      return next();
     }
     // When a transaction has been approved. EventType=vehicle_approved
     else if (req.method=='PUT') {
       const vehicle = await Vehicle.find({ sale: req.params.saleId });
       if (!!req.body.date_approved) {
-        const body = {
+        body = {
           event_type: 'vehicle_approved',
           dealership: vehicle[0].dealership,
           vehicle: vehicle[0]._id,
           title: 'Transaction Approved',
           description: `A sale request has been approved for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
         }
-        const event = await Event.create(body);
-        return next();
       }
       else if (!!req.body.sale_amount) {
-        const body = {
+        body = {
           event_type: 'transaction_modified',
           dealership: vehicle[0].dealership,
           vehicle: vehicle[0]._id,
           title: 'Transaction Modified',
           description: `A transaction has been modified for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
         }
-        const event = await Event.create(body);
-        return next();
       }
     }
   }
 
   //Vehicle API Events
   else if (req.originalUrl.indexOf('/api/v1/inventory/vehicle/') > - 1) {
+    const vehicle = await Vehicle.findById(req.params.vehicleId);
     if (req.method == 'DELETE') {
-      const vehicle = await Vehicle.findById(req.params.vehicleId);
-      const body = {
+      body = {
         event_type: 'vehicle_deleted',
         dealership: vehicle.dealership,
         vehicle: vehicle._id,
         title: 'Vehicle Deleted',
         description: `A vehicle with vin: ${vehicle.vin} has been deleted by ${req.user.first_name} ${req.user.last_name}`,
       }
-      const event = await Event.create(body);
-      return next();
+    }
+    else if (req.method == 'PUT') {
+      if (req.body.delivered) {
+        body = {
+          event_type: 'vehicle_delivered',
+          dealership: vehicle.dealership,
+          vehicle: vehicle._id,
+          title: 'Vehicle Delivered',
+          description: `A vehicle with vin: ${vehicle.vin} has been marked delivered by ${req.user.first_name} ${req.user.last_name}`,
+        }
+      }
+      //Change the if condition later
+      else if (vehicle.missing != req.body.missing) {
+        if (req.body.missing) {
+          body = {
+            event_type: 'vehicle_missing',
+            dealership: vehicle.dealership,
+            vehicle: vehicle._id,
+            title: 'Vehicle Missing',
+            description: `A vehicle with vin: ${vehicle.vin} has been marked missing by ${req.user.first_name} ${req.user.last_name}`,
+          }
+        }
+        else {
+          body = {
+            event_type: 'vehicle_found',
+            dealership: vehicle.dealership,
+            vehicle: vehicle._id,
+            title: 'Vehicle Found',
+            description: `A vehicle with vin: ${vehicle.vin} has been marked found by ${req.user.first_name} ${req.user.last_name}`,
+          }
+        }
+      }
     }
   }
+
+  //if body is defined, then create the event
+  if (Object.keys(body).length !== 0) {
+    const event = await Event.create(body);
+    return next();
+  }
+  next();
 });
 
 // @desc        Get all events from a specific dealership

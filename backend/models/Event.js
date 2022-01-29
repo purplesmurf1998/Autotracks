@@ -11,7 +11,6 @@ const EventSchema = new mongoose.Schema({
       'vehicle_moved', 
       'vehicle_found', 
       'vehicle_deleted',
-      'vehicle_proporties_modified',
       'transaction_modified',
     ],
     required: [true, 'An event must have an event type.']
@@ -56,6 +55,9 @@ EventSchema.post('save', async function (next) {
   const dealership = this.dealership.toString();
   
   // simulates the notify() method
+  console.log(this.event_type);
+  console.log("NOW we gonna console log this");
+  console.log(this);
   require("../utils/serverIO").io().to(dealership).emit(this.event_type, this);
   // we also need to send an email to all the users inside the dealership
   // subscribed to the event type to alert them of the new event for those

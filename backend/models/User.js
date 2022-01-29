@@ -71,7 +71,6 @@ const UserSchema = new mongoose.Schema({
       'vehicle_found', 
       'vehicle_created', 
       'vehicle_deleted',
-      'vehicle_proporties_modified',
       'transaction_modified',
     ],
     default: []

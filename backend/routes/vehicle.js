@@ -29,7 +29,7 @@ router.route('/dealership/:dealershipId/visual3/:property')
 
 router.route('/vehicle/:vehicleId')
   .get(protect, hasPermissions('View Vehicles'), getVehicle)
-  .put(protect, hasPermissions('Edit Vehicles'), updateVehicle)
+  .put(protect, hasPermissions('Edit Vehicles'), createEvent, updateVehicle)
   .delete(protect, hasPermissions('Delete Vehicles'), createEvent, deleteVehicle);
 
 module.exports = router;
