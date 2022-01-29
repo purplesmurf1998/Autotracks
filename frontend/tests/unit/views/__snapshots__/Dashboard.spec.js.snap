@@ -248,7 +248,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
     >
       <ccard-stub>
         <ccardheader-stub>
-           Traffic & Sales 
+          
+          Traffic & Sales
+        
         </ccardheader-stub>
          
         <ccardbody-stub>
@@ -323,7 +325,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Monday 
+                    
+                    Monday
+                  
                   </span>
                 </div>
                  
@@ -357,7 +361,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Tuesday 
+                    
+                    Tuesday
+                  
                   </span>
                 </div>
                  
@@ -391,7 +397,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Wednesday 
+                    
+                    Wednesday
+                  
                   </span>
                 </div>
                  
@@ -425,7 +433,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Thursday 
+                    
+                    Thursday
+                  
                   </span>
                 </div>
                  
@@ -459,7 +469,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Friday 
+                    
+                    Friday
+                  
                   </span>
                 </div>
                  
@@ -493,7 +505,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Saturday 
+                    
+                    Saturday
+                  
                   </span>
                 </div>
                  
@@ -527,7 +541,9 @@ exports[`Dashboard.vue renders correctly 1`] = `
                   <span
                     class="progress-group-text"
                   >
-                     Sunday 
+                    
+                    Sunday
+                  
                   </span>
                 </div>
                  
@@ -571,7 +587,8 @@ exports[`Dashboard.vue renders correctly 1`] = `
                     </cbadge-stub>
                   </sup>
                   
-                  New clients   
+                  New clients
+                    
                   
                   <sup>
                     <cbadge-stub

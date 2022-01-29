@@ -5,7 +5,7 @@ exports[`EditVehicleProperties.vue renders correctly 1`] = `
   <ccard-stub>
     <ccardbody-stub>
       <crow-stub
-        class="ml-0 mr-0"
+        class="ml-0 mr-0 d-flex justify-content-between"
         gutters="true"
         tag="div"
       >
@@ -15,30 +15,32 @@ exports[`EditVehicleProperties.vue renders correctly 1`] = `
           Vehicle Properties
         </h4>
          
-        <cbutton-stub
-          activeclass="router-link-active"
-          class="mr-2"
-          color="success"
-          event="click"
-          exactactiveclass="router-link-exact-active"
-          routertag="a"
-          target="_self"
-          type="button"
-        >
-          Save changes
-        </cbutton-stub>
-         
-        <cbutton-stub
-          activeclass="router-link-active"
-          color="secondary"
-          event="click"
-          exactactiveclass="router-link-exact-active"
-          routertag="a"
-          target="_self"
-          type="button"
-        >
-          Cancel
-        </cbutton-stub>
+        <div>
+          <cbutton-stub
+            activeclass="router-link-active"
+            class="mr-2"
+            color="success"
+            event="click"
+            exactactiveclass="router-link-exact-active"
+            routertag="a"
+            target="_self"
+            type="button"
+          >
+            Save changes
+          </cbutton-stub>
+           
+          <cbutton-stub
+            activeclass="router-link-active"
+            color="danger"
+            event="click"
+            exactactiveclass="router-link-exact-active"
+            routertag="a"
+            target="_self"
+            type="button"
+          >
+            Cancel
+          </cbutton-stub>
+        </div>
       </crow-stub>
        
       <!---->
