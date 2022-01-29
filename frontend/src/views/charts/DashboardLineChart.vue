@@ -35,6 +35,7 @@ export default {
         },
         scales: {
           xAxes: [{
+            offset: true,
             type: "time",
             ticks: {
               min: "2021-01-29T03:02:09.136Z",
