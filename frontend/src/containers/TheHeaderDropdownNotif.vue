@@ -47,19 +47,14 @@ export default {
     // do a first time api call to the server for new events
     // create the socket
     // when the socket get pinged, fetch new events
-    this.$store.state.events.socket.on("vehicle_missing", (arg) => {
-      const notif = {'item': arg.description};
-      this.notifications.push(arg);
-      this.itemsCount = this.itemsCount + 1;
-      this.unRead = true;
-    })
-
-    this.$store.state.events.socket.on("vehicle_found", (arg) => {
-      const notif = {'item': arg.description};
-      this.notifications.push(arg);
-      this.itemsCount = this.itemsCount + 1;
-      this.unRead = true;
-    })
+    this.$store.state.auth.userEventsSubscriptions.forEach(element => {
+      this.$store.state.events.socket.on(element, (arg) => {
+        const notif = {'item': arg.description};
+        this.notifications.push(arg);
+        this.itemsCount = this.itemsCount + 1;
+        this.unRead = true;
+      })
+    });
   },
 };
 </script>

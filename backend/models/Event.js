@@ -3,7 +3,16 @@ const EventSchema = new mongoose.Schema({
   // type of the event
   event_type: {
     type: String,
-    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved', 'vehicle_found'],
+    enum: [
+      'vehicle_sale_pending',
+      'vehicle_approved',
+      'vehicle_delivered',
+      'vehicle_missing',
+      'vehicle_moved', 
+      'vehicle_found', 
+      'vehicle_deleted',
+      'transaction_modified',
+    ],
     required: [true, 'An event must have an event type.']
   },
   dealership: {
@@ -44,6 +53,8 @@ EventSchema.post('save', async function (next) {
   // socket.io emits the event type to the dealership's room so that
   // every running frontend inside the room gets a notification
   const dealership = this.dealership.toString();
+  
+  // simulates the notify() method
   require("../utils/serverIO").io().to(dealership).emit(this.event_type, this);
   // we also need to send an email to all the users inside the dealership
   // subscribed to the event type to alert them of the new event for those
@@ -53,6 +64,5 @@ EventSchema.post('save', async function (next) {
 });
 
 const Event = mongoose.model('Event', EventSchema);
-
 
 module.exports = Event;
