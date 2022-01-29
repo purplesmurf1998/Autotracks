@@ -3,6 +3,7 @@ const asyncHandler = require('../middleware/async');
 const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
 const Event = require('../models/Event');
+const Sale = require('../models/VehicleSale')
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
@@ -179,6 +180,12 @@ exports.deleteVehicle = asyncHandler(async (req, res, next) => {
   // return error if no vehicle found
   if (!vehicle) {
     return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
+  }
+
+  //Check if a vehicle has a sale object then delete it.
+  if (!!vehicle.sale) {
+    const sale = await Sale.findById(vehicle.sale);
+    sale.remove();
   }
   //TODO: Delete anything related to the vehicle. This can be done in the Vehicle model using middleware.
   vehicle.remove();

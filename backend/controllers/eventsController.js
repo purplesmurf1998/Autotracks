@@ -1,6 +1,92 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Event = require('../models/Event');
+const Vehicle = require('../models/Vehicle');
+
+// @desc        Create an event for a specific vehicle
+// @access      Private
+exports.createEvent = asyncHandler(async (req, res, next) => {
+  // This endpoint is used for creating a new event for users
+  // Vehicle APIs
+
+  // DELETE /api/v1/inventory/vehicle/:vehicleId
+  // PUT /api/v1/inventory/vehicle/:vehicleId
+
+  //Transaction APIs
+
+  // PUT /api/v1/inventory/details/sale/:saleId'
+  // POST /api/v1/inventory/details/sale'
+
+  // 'vehicle_sale_pending', DONE
+  // 'vehicle_approved', DONE
+  // 'vehicle_delivered',
+  // 'vehicle_missing',
+  // 'vehicle_moved', 
+  // 'vehicle_found', 
+  // 'vehicle_deleted', DONE
+  // 'vehicle_proporties_modified',
+  // 'transaction_modified', DONE
+
+  //Transaction API Events
+  if (req.originalUrl.indexOf('/api/v1/inventory/details/sale') > -1) {
+    if (req.method=='POST')
+    {
+      //fetch vehicle details
+      const vehicle = await Vehicle.findById(req.body.vehicle);
+      const body = {
+        event_type: 'vehicle_sale_pending',
+        dealership: req.body.dealership,
+        vehicle: req.body.vehicle,
+        title: 'New Transaction',
+        description: `A new transaction has been created for the vehicle with vin: ${vehicle.vin} by ${req.user.first_name} ${req.user.last_name}`,
+      }
+      const event = await Event.create(body);
+      return next();
+    }
+    // When a transaction has been approved. EventType=vehicle_approved
+    else if (req.method=='PUT') {
+      const vehicle = await Vehicle.find({ sale: req.params.saleId });
+      if (!!req.body.date_approved) {
+        const body = {
+          event_type: 'vehicle_approved',
+          dealership: vehicle[0].dealership,
+          vehicle: vehicle[0]._id,
+          title: 'Transaction Approved',
+          description: `A sale request has been approved for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
+        }
+        const event = await Event.create(body);
+        return next();
+      }
+      else if (!!req.body.sale_amount) {
+        const body = {
+          event_type: 'transaction_modified',
+          dealership: vehicle[0].dealership,
+          vehicle: vehicle[0]._id,
+          title: 'Transaction Modified',
+          description: `A transaction has been modified for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
+        }
+        const event = await Event.create(body);
+        return next();
+      }
+    }
+  }
+
+  //Vehicle API Events
+  else if (req.originalUrl.indexOf('/api/v1/inventory/vehicle/') > - 1) {
+    if (req.method == 'DELETE') {
+      const vehicle = await Vehicle.findById(req.params.vehicleId);
+      const body = {
+        event_type: 'vehicle_deleted',
+        dealership: vehicle.dealership,
+        vehicle: vehicle._id,
+        title: 'Vehicle Deleted',
+        description: `A vehicle with vin: ${vehicle.vin} has been deleted by ${req.user.first_name} ${req.user.last_name}`,
+      }
+      const event = await Event.create(body);
+      return next();
+    }
+  }
+});
 
 // @desc        Get all events from a specific dealership
 // @route       GET /api/v1/events/dealership/:dealershipId

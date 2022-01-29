@@ -62,7 +62,18 @@ const UserSchema = new mongoose.Schema({
   },
   subscribed_events: {
     type: [String],
-    enum: ['vehicle_sale_pending', 'vehicle_sold', 'vehicle_delivered', 'vehicle_missing', 'vehicle_moved', 'vehicle_found'],
+    enum: [
+      'vehicle_sale_pending',
+      'vehicle_approved',
+      'vehicle_delivered',
+      'vehicle_missing',
+      'vehicle_moved', 
+      'vehicle_found', 
+      'vehicle_created', 
+      'vehicle_deleted',
+      'vehicle_proporties_modified',
+      'transaction_modified',
+    ],
     default: []
   },
   dealership: {
