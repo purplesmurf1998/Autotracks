@@ -3,7 +3,7 @@ const asyncHandler = require('../middleware/async');
 const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
 const Event = require('../models/Event');
-const Sale = require('../models/VehicleSale')
+const Sale = require('../models/VehicleSale');
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
@@ -113,33 +113,6 @@ exports.updateVehicle = asyncHandler(async (req, res, next) => {
   if (!newVehicle) {
     return next(new ErrorResponse(`Vehicle with id ${req.params.vehicleId} was unable to be updated.`, 404));
   }
-
-  // 1. check if the missing property was changed, and if so to what value
-  // if (vehicle.missing != newVehicle.missing) {
-  //   if (newVehicle.missing) {
-  //     // vehicle's status was changed to missing
-  //     const event = {
-  //       event_type: 'vehicle_missing',
-  //       dealership: newVehicle.dealership,
-  //       vehicle: newVehicle._id,
-  //       title: `[${newVehicle.vin}] vehicle missing or missplaced`,
-  //       description: `The vehicle with the serial number [${newVehicle.vin}] has been marked as missing / missplaced by the staff user ${req.user.first_name}.`
-  //     }
-
-  //     await Event.create(event);
-  //   } else {
-  //     // vehicle's status was changed to found/located
-  //     const event = {
-  //       event_type: 'vehicle_found',
-  //       dealership: newVehicle.dealership,
-  //       vehicle: newVehicle._id,
-  //       title: `[${newVehicle.vin}] vehicle has been located`,
-  //       description: `The vehicle with the serial number [${newVehicle.vin}] has been located by the staff user ${req.user.first_name}.`
-  //     }
-
-  //     await Event.create(event);
-  //   }
-  // }
 
   // return data
   res.status(200).json({ success: true, payload: newVehicle });

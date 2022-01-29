@@ -6,7 +6,7 @@ const Vehicle = require('../models/Vehicle');
 // @desc        Create an event for a specific vehicle
 // @access      Private
 exports.createEvent = asyncHandler(async (req, res, next) => {
-  // This endpoint is used for creating a new event for users
+  // This endpoint is used for creating new events for users
 
   // Vehicle APIs
   // DELETE /api/v1/inventory/vehicle/:vehicleId

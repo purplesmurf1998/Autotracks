@@ -17,6 +17,11 @@
                   {{item.author.first_name + " " + item.author.last_name}}
                 </td>
               </template>
+              <template #timestamp="{ item }">
+                <td>
+                  {{getFormattedDate(item.timestamp)}}
+                </td>
+              </template>
             </CDataTable>
           </CCardBody>
         </CCard>
@@ -51,6 +56,10 @@ export default {
     this.fetchHistory();
   },
   methods: {
+    getFormattedDate(date) {
+      return date.substring(0, 10) + ' ' + date.substring(11, 16);
+    },
+
     fetchHistory() {
       axios({
         method: "GET",
