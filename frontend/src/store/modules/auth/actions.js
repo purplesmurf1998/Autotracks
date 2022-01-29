@@ -32,7 +32,8 @@ export default {
             dealership: responseData.payload.dealership,
             createDealershipCompleted: responseData.payload.createDealershipCompleted,
             createUserCompleted: responseData.payload.createUserCompleted,
-            promptPasswordChange: responseData.payload.promptPasswordChange
+            promptPasswordChange: responseData.payload.promptPasswordChange,
+            userEventsSubscriptions: responseData.payload.subscribed_events
         }
 
         // set the token in the local storage
@@ -83,7 +84,8 @@ export default {
                     dealership: responseData.payload.dealership,
                     promptPasswordChange: responseData.payload.promptPasswordChange,
                     createDealershipCompleted: responseData.payload.createDealershipCompleted,
-                    createUserCompleted: responseData.payload.createUserCompleted
+                    createUserCompleted: responseData.payload.createUserCompleted,
+                    userEventsSubscriptions: responseData.payload.subscribed_events,
                 }
 
                 // set the token in the local storage

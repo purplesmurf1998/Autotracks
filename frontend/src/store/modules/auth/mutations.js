@@ -10,6 +10,7 @@ export default {
     state.promptPasswordChange = payload.promptPasswordChange;
     state.createDealershipCompleted = payload.createDealershipCompleted;
     state.createUserCompleted = payload.createUserCompleted;
+    state.userEventsSubscriptions = payload.userEventsSubscriptions;
   },
   setProperty(state, [variable, value]) {
     state[variable] = value
