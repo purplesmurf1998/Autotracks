@@ -34,6 +34,10 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
         }
         else {
             const vehicle = await Vehicle.find({ sale: req.params.saleId });
+            // return error if no vehicle found
+            if (!vehicle) {
+                return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
+            }
             if (req.method=='DELETE') {
                 body = {
                     vehicle: vehicle[0]._id,
@@ -102,6 +106,11 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
     else if (req.originalUrl.indexOf('/api/v1/comments/') > - 1) {
         if (req.method=='POST') {
             const vehicle = await Vehicle.findById(req.params.vehicleId);
+            if (!vehicle) {
+                return next(
+                  new ErrorResponse(`Vehicle not found.`, 404)
+                );
+            }
             body = {
                 vehicle: req.params.vehicleId,
                 author: req.user._id,
@@ -110,6 +119,11 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
         }
         else {
             const comment = await Comment.findById(req.params.commentId);
+            if (!comment) {
+                return next(
+                  new ErrorResponse(`Comment not found`, 404)
+                );
+            }
             if (req.method=='DELETE') {
                 body = {
                     vehicle: comment.vehicle,

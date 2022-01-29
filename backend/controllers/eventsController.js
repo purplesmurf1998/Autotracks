@@ -32,6 +32,10 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     {
       //fetch vehicle details
       const vehicle = await Vehicle.findById(req.body.vehicle);
+      // return error if no vehicle found
+      if (!vehicle) {
+        return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
+      }
       body = {
         event_type: 'vehicle_sale_pending',
         dealership: req.body.dealership,
@@ -43,6 +47,10 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     // When a transaction has been approved. EventType=vehicle_approved
     else if (req.method=='PUT') {
       const vehicle = await Vehicle.find({ sale: req.params.saleId });
+      // return error if no vehicle found
+      if (!vehicle) {
+        return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
+      }
       if (!!req.body.date_approved) {
         body = {
           event_type: 'vehicle_approved',
@@ -67,6 +75,10 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
   //Vehicle API Events
   else if (req.originalUrl.indexOf('/api/v1/inventory/vehicle/') > - 1) {
     const vehicle = await Vehicle.findById(req.params.vehicleId);
+    // return error if no vehicle found
+    if (!vehicle) {
+      return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
+    }
     if (req.method == 'DELETE') {
       body = {
         event_type: 'vehicle_deleted',

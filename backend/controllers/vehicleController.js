@@ -100,10 +100,7 @@ exports.updateVehicle = asyncHandler(async (req, res, next) => {
 
   // find vehicle to update
   const vehicle = await Vehicle.findById(req.params.vehicleId);
-  // return error if no vehicle found
-  if (!vehicle) {
-    return next(new ErrorResponse(`Vehicle with id ${req.params.vehicleId} not found.`, 404));
-  }
+  
   // try to update the vehicle
   const newVehicle = await Vehicle.findByIdAndUpdate(req.params.vehicleId, req.body, {
     runValidators: true,
@@ -150,10 +147,6 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
 exports.deleteVehicle = asyncHandler(async (req, res, next) => {
   // find vehicle property to delete
   const vehicle = await Vehicle.findById(req.params.vehicleId);
-  // return error if no vehicle found
-  if (!vehicle) {
-    return next(new ErrorResponse(`Vehicle not found with id ${req.params.vehicleId}`, 404));
-  }
 
   //Check if a vehicle has a sale object then delete it.
   if (!!vehicle.sale) {
