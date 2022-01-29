@@ -13,27 +13,42 @@
   "tags": [
     {
       "name": "Authentication",
-      "description": "Authentication requests to the API are the routes used to sign a user in, log them out and register a new admin user. There is also a route to verify a user's saved authentication token for keeping users logged in."
+      "description": "Authentication routes to login, logout and verify a user. Returns token responses."
     },
     {
       "name": "Users",
-      "description": "Requests related to the User model. All these routes are protected, therefore an authorization (bearer token) header is needed for it to work properly.\n\nThe format of the header is as follows:\nAuthorization: Bearer json.web.token\n\nIt is important to follow the format of the header correctly or access will be refused even if the token is valid."
+      "description": "Requests related to the User model (CRUD)"
     },
     {
       "name": "Dealerships",
-      "description": "Requests related to the Dealership model"
+      "description": "Requests related to the Dealership model (CRUD)"
     },
     {
       "name": "Vehicle Properties",
-      "description": "Requests related to Vehicle Properties"
+      "description": "Requests related to the Vehicle Property model (CRUD)"
     },
     {
       "name": "Vehicles",
-      "description": "Requests related to Vehicles"
+      "description": "Requests related to the Vehicle model (CRUD)"
     },
     {
       "name": "Events",
-      "description": "Requests related to Events"
+      "description": "Requests related to the Event model (Read-ony)"
+    },
+    {
+      "name": "Comments",
+      "description": "Requests related to the Comment model (CRUD)"
+    },
+    {
+      "name": "History",
+      "description": "Requests related to the History model (Read-only)"
+    },
+    {
+      "name": "Vehicle Lists",
+      "description": "Requests related to the Vehicle List model (CRUD)"
+    },
+    {
+      "name": "Vehicle Sales"
     }
   ],
   "paths": {
@@ -43,7 +58,6 @@
           "Authentication"
         ],
         "summary": "Signin User",
-        "description": "## Description\nSign a user in to the application. Endpoint will validate the information passed in the body and if passes will return the signed in user, a valid authorization JWT and set the token in the browser cookies.\n\nJWT generated expires in 30 days.\n## Usage\nBody must have an email and a password in JSON format. All other fields are ignored. No specific header is required for this route.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -73,7 +87,16 @@
           "Authentication"
         ],
         "summary": "Logout User",
-        "description": "## Description\nLogout user from the application. Remove saved authentication token from browser cookies and return an empty object. Token must also be deleted from the browser local storage on the client side.\n\n## Usage\nSimply call the endpoint with no body and no extra headers. The currently logged in user will get logged out.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5MTYsImV4cCI6MTY0NjA3MjkxNn0.pzB2QC8gR1dCYXKz6zBqy4jerThVyKkTU7jEuo7UPvM"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -90,7 +113,6 @@
           "Authentication"
         ],
         "summary": "Register New User",
-        "description": "## Description\nRegister a new administrator user. An administrator user (admin) does not have a dealership associated to them. This route also only accepts users that have the role of 'Administration'.\n\nNote this route is not used for creating a staff user account. It is used for registering a new admin account. It will return upon success the user information as well as a valid authorization token. Client side will handle redirecting to the dashboard and storing the token in the local storage.\n## Usage\nMust be signed out to use this route. Following are the fields needed in the body in JSON format. Look at the request body as an example.\n- (required) first_name: String\n- (required) last_name: String\n- (required, unique) email: String\n- (required) role: 'Administration'\n- (required) password: String",
         "requestBody": {
           "content": {
             "application/json": {
@@ -154,7 +176,7 @@
         },
         "parameters": [
           {
-            "name": "Authorization",
+            "name": "Authori",
             "in": "header",
             "schema": {
               "type": "string"
@@ -172,21 +194,20 @@
         }
       }
     },
-    "/api/v1/users/6176c48f825fbc6aac712b62": {
+    "/api/v1/users/61a7b9d2532e9198b24f3a88": {
       "get": {
         "tags": [
           "Users"
         ],
         "summary": "Get User",
-        "description": "## Description\nGet a user with the id specified in the url\n\n## Usage\nWill return the user in the response body. If the user does not exist, will return 404 response",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "schema": {
-              "type": "number"
+              "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzgxMjcsImV4cCI6MTYzODY3MDEyN30.4NdAXH3JwnOAyAxJLyi_J-Jbr5jBSu2_DwCTRAJRjug"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5ODYsImV4cCI6MTY0NjA3Mjk4Nn0.dEhQFdg5wq_daS4rgrzfpkAB5DNhv9diHnhdzxTDO5o"
           }
         ],
         "responses": {
@@ -203,14 +224,13 @@
           "Users"
         ],
         "summary": "Update User",
-        "description": "Update a specific user with a MongoDB ID",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "example": {
-                  "first_name": "Cedrik"
+                  "last_name": "Collette"
                 }
               }
             }
@@ -223,7 +243,31 @@
             "schema": {
               "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYyMjYwNDAsImV4cCI6MTYzODgxODA0MH0.lXZY6sTfDBStweCvgDxNJT9iuh1Hsi1oF5-n6VYEU2I"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5ODYsImV4cCI6MTY0NjA3Mjk4Nn0.dEhQFdg5wq_daS4rgrzfpkAB5DNhv9diHnhdzxTDO5o"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete User",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "number"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzgxMjcsImV4cCI6MTYzODY3MDEyN30.4NdAXH3JwnOAyAxJLyi_J-Jbr5jBSu2_DwCTRAJRjug"
           }
         ],
         "responses": {
@@ -242,15 +286,14 @@
           "Users"
         ],
         "summary": "Get Users",
-        "description": "## Description\nGet a list of users based on query parameters. Must be logged in with proper authorization to access this route.\n\nCan only filter users associated to dealerships the logged in user is also associated to. This is to prevent users being able to search for users in other dealerships\n## Usage\nTo filter using the basic properties, use query parameters in the following format:\n- /?key=value\n- ex. /?first_name=Cedrik&role=Backshop\n\nYou can select specific fields you want to see if you don't need to return the entire object. To do this, add the query parameter 'select', and set it's value to the fields you want to select separated by a comma:\n- /?select=field1,field2\n- ex. /?select=first_name,last_name\n\nYou can also populate fields that are related to another document in the database. Instead of returning only the ObjectId (default), populate returns the entire object in the response. Use the 'populate' query parameter and set it's value to the fields you want populated, or 'expanded', separated by a comma:\n- /?populate=field1,field2\n- ex. /?populate=first_name,last_name\n\nNOTE: fields that can't be populated (not related to an object) will just return like they normally would.",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "schema": {
-              "type": "number"
+              "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzgxMjcsImV4cCI6MTYzODY3MDEyN30.4NdAXH3JwnOAyAxJLyi_J-Jbr5jBSu2_DwCTRAJRjug"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5ODYsImV4cCI6MTY0NjA3Mjk4Nn0.dEhQFdg5wq_daS4rgrzfpkAB5DNhv9diHnhdzxTDO5o"
           }
         ],
         "responses": {
@@ -266,17 +309,16 @@
         "tags": [
           "Users"
         ],
-        "summary": "Create New Staff",
-        "description": "Register a new user in the database",
+        "summary": "Create New User",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "example": {
-                  "first_name": "Test",
-                  "last_name": "Test",
-                  "email": "test_staff@autotracks.com",
+                  "first_name": "Cedrik",
+                  "last_name": "Dubois",
+                  "email": "cedrik@autotracks.com",
                   "role": "Management",
                   "permissions": [
                     "Add Dealerships",
@@ -294,8 +336,8 @@
                     "Sell Vehicles",
                     "Delete Vehicles"
                   ],
-                  "dealership": "618b3bf134f07d9a91c32a1b",
-                  "password": "password123"
+                  "dealership": "61868be0a45155060a4e9baf",
+                  "password": "managerpassword"
                 }
               }
             }
@@ -321,40 +363,12 @@
         }
       }
     },
-    "/api/v1/users/": {
-      "delete": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Delete User",
-        "description": "Delete a specific user with a MongoDB ID",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "schema": {
-              "type": "number"
-            },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYwNzgxMjcsImV4cCI6MTYzODY3MDEyN30.4NdAXH3JwnOAyAxJLyi_J-Jbr5jBSu2_DwCTRAJRjug"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
     "/api/v1/dealerships/618db6b95b33387804b2156a": {
       "get": {
         "tags": [
           "Dealerships"
         ],
         "summary": "Get Dealership",
-        "description": "Get a specific dealership with a MongoDB ID",
         "parameters": [
           {
             "name": "Authorization",
@@ -362,7 +376,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc2YzQ4ZjgyNWZiYzZhYWM3MTJiNjIiLCJpYXQiOjE2MzYyMjYwNDAsImV4cCI6MTYzODgxODA0MH0.lXZY6sTfDBStweCvgDxNJT9iuh1Hsi1oF5-n6VYEU2I"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5ODYsImV4cCI6MTY0NjA3Mjk4Nn0.dEhQFdg5wq_daS4rgrzfpkAB5DNhv9diHnhdzxTDO5o"
           }
         ],
         "responses": {
@@ -381,15 +395,14 @@
           "Dealerships"
         ],
         "summary": "Get Dealerships",
-        "description": "## Description\nGet a list of dealerships based on query parameters. Must be logged in with proper authorization to access this route.\n\nCan only filter dealerships associated to the logged in user. This is to prevent users being able to search for dealerships they do not own or have access to.\n## Usage\nTo filter using the basic properties, use query parameters in the following format:\n- /?key=value\n- ex. /?name=DealershipName\n\nYou can select specific fields you want to see if you don't need to return the entire object. To do this, add the query parameter 'select', and set it's value to the fields you want to select separated by a comma:\n- /?select=field1,field2\n- ex. /?select=name,description\n\nYou can also populate fields that are related to another document in the database. Instead of returning only the ObjectId (default), populate returns the entire object in the response. Use the 'populate' query parameter and set it's value to the fields you want populated, or 'expanded', separated by a comma:\n- /?populate=field1,field2\n- ex. /?populate=first_name\n\nNOTE: fields that can't be populated (not related to an object) will just return like they normally would.",
         "parameters": [
           {
             "name": "Authorization",
             "in": "header",
             "schema": {
-              "type": "number"
+              "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTg3MWU2NmFjMzNjYmE1N2JmMWQ4MTEiLCJpYXQiOjE2MzYyNTc0NTYsImV4cCI6MTYzODg0OTQ1Nn0.5EkgVbg4soRtZGUNmN5_VI9GoXTjlinewnYPaCMzs4c"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5ODYsImV4cCI6MTY0NjA3Mjk4Nn0.dEhQFdg5wq_daS4rgrzfpkAB5DNhv9diHnhdzxTDO5o"
           }
         ],
         "responses": {
@@ -441,16 +454,34 @@
         }
       }
     },
-    "/api/v1/dealerships/1": {
+    "/api/v1/dealerships/619f76ceddb1e7873a35cdc2": {
       "put": {
         "tags": [
           "Dealerships"
         ],
         "summary": "Update Dealership",
-        "description": "Update a specific dealership with a MongoDB ID",
         "requestBody": {
-          "content": {}
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Test Update"
+                }
+              }
+            }
+          }
         },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -465,7 +496,16 @@
           "Dealerships"
         ],
         "summary": "Delete Dealership",
-        "description": "Delete a specific dealership with a MongoDB ID",
+        "parameters": [
+          {
+            "name": "Autho",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -488,7 +528,8 @@
               "schema": {
                 "type": "object",
                 "example": {
-                  "headerName": "Serial Number",
+                  "dealership": "618db6b95b33387804b2156a",
+                  "label": "Serial Number",
                   "inputType": "Text",
                   "options": null,
                   "visible": true,
@@ -498,20 +539,16 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
           }
-        }
-      },
-      "get": {
-        "tags": [
-          "Vehicle Properties"
         ],
-        "summary": "Get Vehicle Properties",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -575,6 +612,42 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dealerships/618db6b95b33387804b2156a/vehicles/properties": {
+      "get": {
+        "tags": [
+          "Vehicle Properties"
+        ],
+        "summary": "Get Vehicle Properties",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -591,6 +664,16 @@
           "Vehicle Properties"
         ],
         "summary": "Delete Vehicle Property",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -620,6 +703,16 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -643,7 +736,136 @@
             "schema": {
               "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2Mzk2OTMxMzMsImV4cCI6MTY0MjI4NTEzM30.Jej1WjX3gN-XVpoYMMM4P0waByZoZHm_O9NMdZcA_BA"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inventory/vehicle/61de1cb50c6e80e28469d0b4": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Get Vehicle",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2Mzk1MzExMzksImV4cCI6MTY0MjEyMzEzOX0.yl4wfSEeHTHbM0SyOSX4y9w30HdtAegvJMwlazj9QHU"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Update Vehicle",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "dealership": "61b93a6567cca570f603427d",
+                  "vin": "123456789123456",
+                  "properties": {
+                    "model": "A4 45 TFSI",
+                    "model#": "8WCBAY",
+                    "exteriorColor": "T9T9",
+                    "interorColor": "YS",
+                    "options": [
+                      "9ZE",
+                      "AMC"
+                    ],
+                    "order#": "DT4568",
+                    "serialNumber": "WAUAAAF4XMAD42299",
+                    "stock#": "210423",
+                    "notes": "Lumieres portes avant | Ens. protection 600$ | Ens. hiver 4136$",
+                    "status": "Courtoisie"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2Mzk1MzExMzksImV4cCI6MTY0MjEyMzEzOX0.yl4wfSEeHTHbM0SyOSX4y9w30HdtAegvJMwlazj9QHU"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Delete Vehicle",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2Mzk1MzExMzksImV4cCI6MTY0MjEyMzEzOX0.yl4wfSEeHTHbM0SyOSX4y9w30HdtAegvJMwlazj9QHU"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inventory/dealership/61b93a6567cca570f603427d/visual3/619d529985799ddbda367413": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Get Vehicles Visual 3",
+        "description": "Get the data to populate visual #3 in the dashboard",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
           }
         ],
         "responses": {
@@ -669,6 +891,7 @@
                 "type": "object",
                 "example": {
                   "dealership": "61b93a6567cca570f603427d",
+                  "vin": "123456789123456",
                   "properties": {
                     "model": "A4 45 TFSI",
                     "model#": "8WCBAY",
@@ -757,6 +980,521 @@
               "type": "string"
             },
             "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDIyMDk1NjksImV4cCI6MTY0NDgwMTU2OX0.adzitM2VyemWSAbjGlpkEEiQQ4cr53Bi9U87F6-U424"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/comments/vehicle/61de1cb50c6e80e28469d0b4": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Get Vehicle Comments",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "number"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDI3MDgzMDksImV4cCI6MTY0NTMwMDMwOX0.2j-bRDRKkZp_g1jyQeRnMTC6bWisdQDc-lCPTOM33gw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Create New Comment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "vehicle": "61de1cb50c6e80e28469d0b4",
+                  "author": "61a7b9d2532e9198b24f3a88",
+                  "comment": "The first vehicle comment"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "number"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDI3MDgzMDksImV4cCI6MTY0NTMwMDMwOX0.2j-bRDRKkZp_g1jyQeRnMTC6bWisdQDc-lCPTOM33gw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/comments/comment/61e9be335b184e3e459e2914": {
+      "put": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Edit Comment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "comment": "The first edited vehicle comment"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "number"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDI3MDgzMDksImV4cCI6MTY0NTMwMDMwOX0.2j-bRDRKkZp_g1jyQeRnMTC6bWisdQDc-lCPTOM33gw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Delete Comment",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "number"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDI3MDgzMDksImV4cCI6MTY0NTMwMDMwOX0.2j-bRDRKkZp_g1jyQeRnMTC6bWisdQDc-lCPTOM33gw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/history/vehicle/61de1cb50c6e80e28469d0b4": {
+      "get": {
+        "tags": [
+          "History"
+        ],
+        "summary": "Get Vehicle History",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNDM3MTAsImV4cCI6MTY0NTczNTcxMH0.urbhxPOK8a4ib79jSE4giEPYnhbXI0NI-vIUN2cd9u0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vehicle-list": {
+      "post": {
+        "tags": [
+          "Vehicle Lists"
+        ],
+        "summary": "Create Vehicle List",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "owner": "61a7b9d2532e9198b24f3a88",
+                  "title": "My First Custom List",
+                  "vehicles": [],
+                  "notes": "This is my first cutom list created from postman."
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vehicle-list/user/61a7b9d2532e9198b24f3a88": {
+      "get": {
+        "tags": [
+          "Vehicle Lists"
+        ],
+        "summary": "Get User Vehicle Lists",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vehicle-list/61f2e3f0156fdedf1c83501a": {
+      "get": {
+        "tags": [
+          "Vehicle Lists"
+        ],
+        "summary": "Get Vehicle List",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicle Lists"
+        ],
+        "summary": "Update Vehicle List",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "title": "List with a dealership"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vehicle-list/add/61f0840dcd237363deac6c20": {
+      "post": {
+        "tags": [
+          "Vehicle Lists"
+        ],
+        "summary": "Add Vehicle to List",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "vehicles": [
+                    "61df5b2418cf278389ac1a98",
+                    "61e4edf65d7db27c65652851"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vehicle-list/user/61a7b9d2532e9198b24f3a88/delete": {
+      "post": {
+        "tags": [
+          "Vehicle Lists"
+        ],
+        "summary": "Delete Vehicle List(s)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "vehicleLists": [
+                    "61f1f0ea497f4261b9cd35dc"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inventory/details/sale": {
+      "post": {
+        "tags": [
+          "Vehicle Sales"
+        ],
+        "summary": "Create Vehicle Sale",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "dealership": "61b93a6567cca570f603427d",
+                  "vehicle": "61f4bb62f715c3d3b8716917",
+                  "approved_by": "61a7b9d2532e9198b24f3a88",
+                  "sales_rep": "61a7b9d2532e9198b24f3a88"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inventory/details/sale/61f590452736d97d34dc578f": {
+      "delete": {
+        "tags": [
+          "Vehicle Sales"
+        ],
+        "summary": "Delete Vehicle Sale",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicle Sales"
+        ],
+        "summary": "Update Vehicle Sale",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "notes": "Test Update"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vehicle Sales"
+        ],
+        "summary": "Get Vehicle Sale",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inventory/details/sale/dealership/61b93a6567cca570f603427d": {
+      "get": {
+        "tags": [
+          "Vehicle Sales"
+        ],
+        "summary": "Get Vehicle Sales",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
           }
         ],
         "responses": {
