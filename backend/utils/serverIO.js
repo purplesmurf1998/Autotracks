@@ -48,10 +48,10 @@ class ServerIO {
           }
 
           // join every room inside the rooms array
-          rooms.forEach(room => {
-            socket.join(room);
-            console.log("Joined room " + room);
-          })
+          this.subscribe({ socket, rooms });
+          // rooms.forEach(room => {
+          //   socket.join(room);
+          // })
         }
       }
       socket.emit("connected", "Connected to server socket");
@@ -59,6 +59,19 @@ class ServerIO {
     this.io.on("disconnect", (socket) => {
       console.log("Socket " + socket.id + " disconnected.");
     });
+  }
+
+  subscribe(subscriber) {
+    subscriber.rooms.forEach(room => {
+      subscriber.socket.join(room);
+      console.log("Joined room " + room);
+    });
+  }
+
+  notifySubscribers(event) {
+    const room = event.dealership.toString();
+
+    this.io.to(room).emit(event.event_type, event);
   }
 
   getServerIO() {
