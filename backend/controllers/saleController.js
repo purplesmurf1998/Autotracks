@@ -21,10 +21,8 @@ exports.createSale = asyncHandler(async (req, res, next) => {
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
     //Map this created sale to the vehicle
-    const newVehicle = await Vehicle.findByIdAndUpdate(req.body.vehicle, {sale: sale._id}, {
-        runValidators: true,
-        new: true
-    });
+    await Vehicle.findByIdAndUpdate(req.body.vehicle, {sale: sale._id});
+    
     // send response
     res.status(201).json({
         success: true,
