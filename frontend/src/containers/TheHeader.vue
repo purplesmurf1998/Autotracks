@@ -13,7 +13,7 @@
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
       <CIcon name="logo" height="48" alt="Logo"/>
     </CHeaderBrand>
-    <CHeaderNav class="d-md-down-none mr-auto">
+    <!-- <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">
         <CHeaderNavLink to="/dashboard">
           Dashboard
@@ -29,9 +29,9 @@
           Settings
         </CHeaderNavLink>
       </CHeaderNavItem>
-    </CHeaderNav>
-    <CHeaderNav>
-      <CHeaderNavItem class="px-3 c-d-legacy-none">
+    </CHeaderNav> -->
+    <CHeaderNav class="ml-auto">
+      <!-- <CHeaderNavItem class="px-3 c-d-legacy-none">
         <button
           @click="() => $store.commit('toggle', 'darkMode')"
           class="c-header-nav-btn"
@@ -39,19 +39,19 @@
           <CIcon v-if="$store.state.darkMode" name="cil-sun"/>
           <CIcon v-else name="cil-moon"/>
         </button>
-      </CHeaderNavItem>
+      </CHeaderNavItem> -->
       <TheHeaderDropdownNotif/>
-      <TheHeaderDropdownTasks/>
+      <!-- <TheHeaderDropdownTasks/> -->
       <TheHeaderDropdownMssgs/>
-      <TheHeaderDropdownAccnt/>
-      <CHeaderNavItem class="px-3">
+      <TheHeaderDropdownAccnt class="mr-3"/>
+      <!-- <CHeaderNavItem class="px-3">
         <button
           class="c-header-nav-btn"
           @click="$store.commit('toggle', 'asideShow')"
         >
           <CIcon size="lg" name="cil-applications-settings" class="mr-2"/>
         </button>
-      </CHeaderNavItem>
+      </CHeaderNavItem> -->
     </CHeaderNav>
 
     <CSubheader class="px-3">

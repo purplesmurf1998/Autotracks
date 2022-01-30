@@ -27,7 +27,7 @@ export default {
               },
               name: "Dealerships",
               to: "/dealerships",
-              icon: "cil-user",
+              icon: "cil-industry",
               ...(!this.$store.state.auth.createDealershipCompleted ||
               !this.$store.state.auth.createUserCompleted
                 ? {
@@ -42,7 +42,19 @@ export default {
               _name: "CSidebarNavItem",
               name: "Inventory",
               to: "/inventory",
-              icon: "cil-spreadsheet",
+              icon: "cil-car-alt",
+            },
+            {
+              _name: "CSidebarNavItem",
+              name: "Transactions",
+              to: "/transactions",
+              icon: "cil-chart-line",
+            },
+            {
+              _name: "CSidebarNavItem",
+              name: "Vehicle Lists",
+              to: "/vehicle-lists",
+              icon: "cil-list",
             },
           ],
         },

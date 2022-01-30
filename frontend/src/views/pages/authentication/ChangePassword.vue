@@ -97,8 +97,8 @@ export default {
             newPassword: this.newPassword,
           },
         })
-          .then((res) => {
-            if (res.data.success) {
+          .then((response) => {
+            if (response.data.success) {
               // password was changed successfully
               // change the promptPasswordChange value in the store for this session
               // change is reflected in the backend and will persist next time the user
@@ -113,8 +113,8 @@ export default {
               this.showError("Error changing password.");
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch((error) => {
+            console.log(error);
             this.showError("Error changing password.");
           });
       }

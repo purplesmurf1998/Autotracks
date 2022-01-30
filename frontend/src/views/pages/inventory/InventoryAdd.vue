@@ -23,6 +23,11 @@
       >You must create vehicle properties inside the dealership details page
       before creating vehicles.</CAlert
     >
+    <CAlert
+      color="danger"
+      v-if="errorMessage"
+      >{{ errorMessage }}</CAlert
+    >
     <CRow>
       <CCol>
         <CCard v-if="vehicleProperties && vehicleProperties.length > 0">
@@ -30,6 +35,12 @@
             <h3>Vehicle Properties</h3>
             <hr />
             <CForm ref="vehicleForm" @submit.prevent="submitForm">
+              <CInput
+                  label="VIN"
+                  name="vin"
+                  v-model="vin"
+                  :required="true"
+                />
               <div v-for="property in vehicleProperties" :key="property._id">
                 <CInput
                   v-if="property.inputType == 'Text'"
@@ -62,30 +73,6 @@
                   v-model="properties[property.key]"
                   :required="property.isRequired"
                 />
-                <!-- <CFormGroup
-                  wrapperClasses="input-group pt-2 pb-3"
-                  v-if="property.inputType == 'Date'"
-                >
-                  <template #prepend-content>
-                    <CIcon name="cil-calendar"/>
-                  </template>
-                  <template #label>
-                    {{ property.label }}
-                  </template>
-                  <template #input>
-                    <masked-input
-                      type="text"
-                      :name="property.key"
-                      class="form-control"
-                      :mask="[/0|1|2|3/, /\d/, '-', /0|1|2|3/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]"
-                      :guide="true"
-                      placeholderChar="_"
-                      :showMask="true"
-                      :keepCharPositions="true"
-                      :required="property.isRequired"
-                    />
-                  </template>
-                </CFormGroup> -->
               </div>
               <CButton color="primary" type="submit"
                 >Add vehicle to the inventory</CButton
@@ -128,6 +115,7 @@ export default {
       vehicleProperties: null,
       errorMessage: null,
       showingModal: false,
+      vin: null,
       properties: null,
     };
   },
@@ -149,9 +137,9 @@ export default {
     submitVehicle(properties) {
       const body = {
         dealership: this.$route.params.dealershipId,
+        vin: this.vin,
         properties,
       };
-      console.log(body);
       axios({
         method: "POST",
         url: `${this.$store.state.api}/inventory`,
@@ -162,17 +150,26 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            //TODO: show modal asking to enter a new vehicle or go back to the inventory
-            // for now, just refresh the page
+            //Show modal asking to enter a new vehicle or go back to the inventory
             this.resetForm();
             this.showingModal = true;
           }
         })
         .catch((error) => {
           console.log(error);
-          this.showErrorMessage(
-            "Unable to create the vehicle. Make sure the information was entered correctly."
-          );
+          if (error.response.data.error != null)
+          {
+            this.showErrorMessage(
+              error.response.data.error
+            );
+          }
+          else
+          {
+            this.showErrorMessage(
+              "Unable to create the vehicle. Make sure the information was entered correctly."
+            );
+          }
+          window.scrollTo(0,0);
         });
     },
     showErrorMessage(message) {
@@ -182,8 +179,6 @@ export default {
       }, 5000);
     },
     userHasPermissions(...permissions) {
-      // console.log(permissions);
-      // console.log(containsPermissions(permissions));
       return containsPermissions(permissions);
     },
     fetchDealership() {
@@ -203,6 +198,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
     fetchVehicleProperties() {
@@ -214,23 +210,21 @@ export default {
         },
       })
         .then((response) => {
-          if (response.data.success) {
-            // set the payload to the dealership
-            this.vehicleProperties = response.data.payload;
-            let properties = {};
-            this.vehicleProperties.forEach((property) => {
-              if (property.inputType == "Options") {
-                properties[property.key] = property.options[0];
-              } else {
-                properties[property.key] = null;
-              }
-            });
-            this.properties = properties;
-            console.log(this.properties);
-          }
+          // set the payload to the dealership
+          this.vehicleProperties = response.data.payload;
+          let properties = {};
+          this.vehicleProperties.forEach((property) => {
+            if (property.inputType == "Options") {
+              properties[property.key] = property.options[0];
+            } else {
+              properties[property.key] = null;
+            }
+          });
+          this.properties = properties;
         })
         .catch((error) => {
           console.log(error);
+          this.$router.replace("/pages/404");
         });
     },
   },

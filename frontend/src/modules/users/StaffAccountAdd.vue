@@ -110,27 +110,6 @@
 
 <script>
 const axios = require("axios");
-/*
-"Add Dealerships",
-"View Dealerships",
-"Edit Dealerships",
-"Delete Dealerships",
-"Add Staff Users",
-"View Staff Users",
-"Edit Staff Users",
-"Delete Staff Users",
-"Add Vehicles",
-
-"View Vehicles",
-"Edit Vehicles",
-"Edit Vehicle Locations",
-"Sell Vehicles",
-"Delete Vehicles",
-"Add Vehicle Property",
-"Edit Vehicle Properties",
-"View Vehicle Properties",
-"Delete Vehicle Properties",
-*/
 
 export default {
   name: "StaffAccountAdd",
@@ -265,13 +244,6 @@ export default {
       }, 5000);
     },
     submitForm(form) {
-      // console.log("####### STAFF USER FORM SUBMIT ########");
-      // console.log(`First Name: ${this.first_name}`);
-      // console.log(`Last Name: ${this.last_name}`);
-      // console.log(`Email: ${this.email}`);
-      // console.log(`Role: ${this.role}`);
-      // console.log(`Permissions: ${this.selected}`);
-      // console.log(form.target.permissions.selected);
 
       // create the data to be passed
       const data = {

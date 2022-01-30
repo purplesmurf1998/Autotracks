@@ -85,8 +85,6 @@ export default {
   },
   methods: {
     userHasPermissions(...permissions) {
-      // console.log(permissions);
-      // console.log(containsPermissions(permissions));
       return containsPermissions(permissions);
     },
     setActiveStaff(user, index) {
@@ -122,12 +120,11 @@ export default {
       },
     })
       .then((response) => {
-        if (response.data.success) {
-          this.staff = response.data.data;
-        }
+        this.staff = response.data.payload;
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
+        this.$router.replace("/pages/404");
       });
   },
   components: {

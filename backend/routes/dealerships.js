@@ -11,17 +11,17 @@ const {
 } = require('../controllers/dealershipsController');
 
 // get authentication middleware
-const { protect } = require('../middleware/auth');
+const { protect, hasPermissions } = require('../middleware/auth');
 
 // attach methods to the proper routes
 router.route('/')
-    .get(protect, getDealerships)
-    .post(protect, createDealership);
+    .get(protect, hasPermissions('View Dealerships'), getDealerships)
+    .post(protect, hasPermissions('Add Dealerships'), createDealership);
 
 router.route('/:dealershipId')
-    .get(protect, getDealership)
-    .put(protect, updateDealership)
-    .delete(protect, deleteDealership);
+    .get(protect, hasPermissions('View Dealerships'), getDealership)
+    .put(protect, hasPermissions('Edit Dealerships'), updateDealership)
+    .delete(protect, hasPermissions('Delete Dealerships'), deleteDealership);
 
 // export the router so it can be used in the server.js file
 module.exports = router;
