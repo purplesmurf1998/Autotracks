@@ -74,7 +74,7 @@
                   :required="property.isRequired"
                 />
               </div>
-              <CButton color="primary" type="submit"
+              <CButton id= "create-vehicle" color="primary" type="submit"
                 >Add vehicle to the inventory</CButton
               >
             </CForm>
@@ -92,7 +92,7 @@
       <template #footer>
         <CButton @click="showingModal = false" color="success">Yes</CButton>
         <router-link to="/inventory"
-          ><CButton color="danger">No</CButton></router-link
+          ><CButton id="no-button" color="danger">No</CButton></router-link
         >
       </template>
     </CModal>
