@@ -11,12 +11,13 @@
           {{ message }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
-          <router-link :to="`/inventory/add/${selectedDealership}`">
+          <router-link :to="`/inventory/add/${selectedDealership}`" v-if="!!selectedDealership">
             <CButton color="primary" id="add-new-vehicle">
               Add vehicle(s) to the inventory
             </CButton>
           </router-link>
         </CRow>
+        <CAlert color="info" v-if="!selectedDealership">Select a dealership or <strong><router-link to="/dealerships">create one</router-link></strong> before adding/viewing the inventory</CAlert>
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
