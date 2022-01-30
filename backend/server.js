@@ -15,7 +15,7 @@ const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { createServer } = require('http');
-const serverIo = require('./utils/serverIO');
+const IO = require('./utils/serverIO');
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -77,7 +77,7 @@ app.use(errorHandler);
 // create the server
 const httpServer = createServer(app);
 // create the server socket
-serverIo.initialize(httpServer);
+IO.getInstance().init(httpServer);
 // launch server app by listening on the PORT
 httpServer.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
