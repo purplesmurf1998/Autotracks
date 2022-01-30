@@ -24,8 +24,6 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.createComment = asyncHandler(async (req, res, next) => {
   
-  const vehicle = await Vehicle.findById(req.params.vehicleId);
-
   let comment = await Comment.create(req.body);
 
   comment = await comment.populate('author');

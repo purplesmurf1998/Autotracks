@@ -130,21 +130,6 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    // splitVehicleProperties() {
-    //   let leftProperties = [];
-    //   let rightProperties = [];
-    //   this.vehicleProperties.forEach((property, index) => {
-    //     if (index % 2 == 0) {
-    //       // leftProperties
-    //       leftProperties.push(property);
-    //     } else {
-    //       // rightProperties
-    //       rightProperties.push(property);
-    //     }
-    //   });
-    //   this.leftProperties = leftProperties;
-    //   this.rightProperties = rightProperties;
-    // },
   },
   beforeMount() {
     this.fetchDealershipProperties();

@@ -138,10 +138,8 @@ export default {
       XLSX.writeFile(wb,'transactions.xlsx');
     },
   },
-  components: {
-  },
   mounted() {
-      this.fetchSales(this.dealership);
+    this.fetchSales(this.dealership);
   },
   components: {
     "transaction-detail": transactionDetails,
