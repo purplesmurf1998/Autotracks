@@ -348,7 +348,7 @@ export default {
       body.date_delivered = date;
       axios({
         method: "PUT",
-        url: `${this.$store.state.api}/inventory/vehicle/${vehicle._id}`,
+        url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },

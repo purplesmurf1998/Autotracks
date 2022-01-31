@@ -8,6 +8,7 @@
         label="Title"
         :lazy="false"
         :value.sync="title"
+        required
         placeholder="Custom List Title"
       />
       <p class="mb-0">Dealership</p>
@@ -27,7 +28,7 @@
         >
           Create
         </CButton>
-        <CButton class="ml-1" color="danger" :disabled="disableButtons">
+        <CButton class="ml-1" color="danger" :disabled="disableButtons" @click="closeAddListModal">
           Cancel
         </CButton>
       </CRow>
@@ -47,7 +48,7 @@ import DealershipDD from "../inventory/DealershipDropdown.vue";
 Vue.use(VueQuillEditor);
 
 export default {
-  props: ["finishAddingVehicleList"],
+  props: ["finishAddingVehicleList", "closeAddListModal"],
   data() {
     return {
       title: "",
@@ -62,14 +63,22 @@ export default {
     submit() {
       this.disableButtons = true;
 
-      const list = {
-        title: this.title,
-        notes: this.notes,
-        owner: this.$store.state.auth.userId,
-        dealership: this.selectedDealership,
-      };
+      if (this.title == '') {
+        this.showMessage('Title cannot be empty', 'danger');
+        this.disableButtons = false;
+      } else if (!this.selectedDealership) {
+        this.showMessage('You must select a dealership', 'danger');
+        this.disableButtons = false;
+      } else {
+        const list = {
+          title: this.title,
+          notes: this.notes,
+          owner: this.$store.state.auth.userId,
+          dealership: this.selectedDealership,
+        };
 
-      this.postVehicleList(list);
+        this.postVehicleList(list);
+      }
     },
     postVehicleList(data) {
       axios({

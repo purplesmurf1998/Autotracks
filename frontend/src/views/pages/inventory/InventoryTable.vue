@@ -62,9 +62,6 @@ export default {
       delivered_bool: false,
     };
   },
-  created() {
-    this.fetchData();
-  },
   methods: {
     downloadInventory() {
       let tableData = this.tableItems.map((item) => {
