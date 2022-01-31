@@ -193,7 +193,7 @@ export default {
     "vehicle-sell": VehicleSell,
     "add-to-vehicle-list": AddToVehicleList
   },
-  props: ["vehicle", "setNewVehicle", "showMessage"],
+  props: ["vehicle", "setNewVehicle", "showMessage", "refreshTable"],
   data() {
     return {
       showingSoldModal: false,
@@ -229,13 +229,19 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.showingDeleteModal = false;
-            this.$router.replace("/inventory");
+            this.closeModal();
+            this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
           this.$router.replace("/pages/404");
         });
+    },
+    closeModal() {
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries = {};
+      this.$router.replace({query: queries});
     },
     fetchSale() {
       axios({
@@ -294,6 +300,7 @@ export default {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
             this.showMessage("Vehicle location has been updated successfully", "success");
+            this.refreshTable();
           }
         })
         .catch((err) => {
@@ -358,6 +365,7 @@ export default {
           if (response.data.success) {
             this.showMessage("Vehicle has been marked as delivered", "success");
             this.setNewVehicle(response.data.payload);
+            this.refreshTable();
           }
         })
         .catch((err) => {

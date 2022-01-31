@@ -37,7 +37,7 @@
       title="Vehicle Information Page"
       size="xl"
     >
-      <vehicle v-if="!!$route.query.vehicleSelected" :vehicleId="$route.query.vehicleSelected"/>
+      <vehicle v-if="!!$route.query.vehicleSelected" :vehicleId="$route.query.vehicleSelected" :refreshTable="$refs.inventoryTable.fetchVehicles"/>
       <template #header>
         <h6 class="modal-title">Vehicle Information Page</h6>
         <CButtonClose @click="closeModal" />
