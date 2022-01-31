@@ -83,11 +83,11 @@
       </CCol>
       <CCol></CCol>
     </CRow>
-    <CModal :show.sync="showingModal" :centered="true">
+    <CModal :show.sync="showingModal" :centered="true" :closeOnBackdrop="false">
       <p>Do you wish to add another vehicle?</p>
       <template #header>
         <h6 class="modal-title">Vehicle added successfully!</h6>
-        <CButtonClose @click="showingModal = false" />
+        <!-- <CButtonClose @click="showingModal = false" /> -->
       </template>
       <template #footer>
         <CButton @click="showingModal = false" color="success">Yes</CButton>
