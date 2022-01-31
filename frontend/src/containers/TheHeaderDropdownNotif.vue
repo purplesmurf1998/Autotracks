@@ -8,6 +8,7 @@
   >
     <template #toggler>
       <CHeaderNavLink
+      name="header-nav-link"
       @click.native="notifRead()">
         <CIcon name="cil-bell"/>
         <CBadge v-if="unRead" shape="pill" color="danger">{{ itemsCount }}</CBadge>

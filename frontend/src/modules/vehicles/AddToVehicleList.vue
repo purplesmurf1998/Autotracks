@@ -3,13 +3,14 @@
     <CCol>
       <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
       <CSelect 
+        name="select-dealership"
         v-if="!!userVehicleLists"
         :value.sync="selectedIndex"
         placeholder="Select a vehicle list"
         :options="options"
       />
       <CRow class="d-flex justify-content-center">
-        <CButton color="primary" class="mr-2" :disabled="addBtnDisabled" @click="validateList">Add</CButton>
+        <CButton name="add-button" color="primary" class="mr-2" :disabled="addBtnDisabled" @click="validateList">Add</CButton>
         <CButton color="danger" @click="closeModal">Cancel</CButton>
       </CRow>
     </CCol>

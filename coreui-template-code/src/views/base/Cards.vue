@@ -301,7 +301,7 @@
                 <CLink class="card-header-action btn-minimize" @click="isCollapsed = !isCollapsed">
                   <CIcon :name="`cil-chevron-${isCollapsed ? 'bottom' : 'top'}`"/>
                 </CLink>
-                <CLink href="#" class="card-header-action btn-close" v-on:click="show = false">
+                <CLink name="close-button" href="#" class="card-header-action btn-close" v-on:click="show = false">
                   <CIcon name="cil-x-circle"/>
                 </CLink>
               </div>

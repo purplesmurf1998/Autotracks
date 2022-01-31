@@ -13,6 +13,7 @@
             <CCol>
                 <CSelect
                 label="Select manager:"
+                name="select-manager"
                 :lazy="false"
                 :options="dealershipStaff"
                 :value.sync="form.manager"
@@ -24,6 +25,7 @@
         <CRow class="justify-content-center">
             <CCol>
                 <CInput
+                name="sale-amount"
                 label="Enter the sale amount:"
                 :lazy="false"
                 :value.sync="form.saleAmount"
@@ -34,6 +36,7 @@
             </CCol>
             <CCol>
                 <CInput
+                name="deposit-amount"
                 label="Enter the deposit amount:"
                 :lazy="false"
                 :value.sync="form.deposit"

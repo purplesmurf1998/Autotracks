@@ -6,9 +6,9 @@
     <CForm @submit.prevent="submit">
       <CInput
         label="Title"
-        :lazy="false"
         :value.sync="title"
         placeholder="Custom List Title"
+        name="new-custom-list-name"
       />
       <p class="mb-0">Dealership</p>
       <dealership-dropdown
@@ -22,7 +22,7 @@
         <CButton
           color="primary"
           type="submit"
-          id="create-dealership"
+          id="create-vehicle-list"
           :disabled="disableButtons"
         >
           Create
