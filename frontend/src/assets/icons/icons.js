@@ -125,7 +125,8 @@ import {
   cilUserUnfollow,
   cilXCircle,
   cilWarning,
-  cibMailRu
+  cibMailRu,
+  cilAccountLogout
 } from '@coreui/icons'
 import { logo } from './logo'
 
@@ -223,7 +224,8 @@ export const iconsSet = Object.assign({}, { logo }, {
   cilUserFollow,
   cilUserUnfollow,
   cilXCircle,
-  cilWarning
+  cilWarning,
+  cilAccountLogout
 }, {
   cifUs,
   cifBr,
