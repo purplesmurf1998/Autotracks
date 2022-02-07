@@ -48,12 +48,15 @@ exports.updateVehicleProperty = asyncHandler(async (req, res, next) => {
   // find vehicle property model to update
   const vehicleProperty = await VehicleProperty.findByIdAndUpdate(req.params.propertyId, req.body, {
     new: true,
-    runValidators: true
+    runValidators: true,
+    upsert:true 
   });
   // return error if no vehicle found
   if (!vehicleProperty) {
     return next(new ErrorResponse(`Vehicle property not found with id ${req.params.propertyId}`, 404));
   }
+  //explicitly save the vehicleProperty 
+  await vehicleProperty.save();
   // return data
   res.status(200).json({ success: true, payload: vehicleProperty });
 });
