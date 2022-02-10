@@ -46,6 +46,7 @@
       <dealership-vehicle-properties
         v-if="userHasPermissions('View Vehicle Properties')"
       />
+      <dealership-locations />
     </CCol>
   </div>
 </template>
@@ -54,6 +55,7 @@
 import EditDealership from "./EditDealership.vue";
 import DealershipAccounts from "../../../modules/users/DealershipAccounts.vue";
 import DealershipVehicleProperties from "../../../modules/vehicleProperties/DealershipVehicleProperties.vue";
+import DealershipLocations from "../../../modules/dealerships/DealershipLocations.vue";
 
 const axios = require("axios");
 const { containsPermissions } = require("../../../utils/index");
@@ -97,6 +99,7 @@ export default {
     "edit-dealership": EditDealership,
     "dealership-accounts": DealershipAccounts,
     "dealership-vehicle-properties": DealershipVehicleProperties,
+    "dealership-locations": DealershipLocations,
   },
 };
 </script>
