@@ -1,0 +1,94 @@
+const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require('../middleware/async');
+const LocationZone = require('../models/LocationZone');
+
+// @desc    Create a location zone
+// @route   POST /api/v1/locations/zones/
+// @access  Public
+exports.createLocationZone = asyncHandler(async (req, res, next) => {
+    const { path } = req.body;
+
+    // check that the path has a minimum of 3 vertices
+    if (path.length < 3) {
+      return next(
+        new ErrorResponse('A zone must have a defined perimeter with at least 3 points.', 400)
+      );
+    }
+
+    /*
+    Calculating the center of mass of the outlined zone:
+
+    Area of a polygon is defined as the following:
+        A = 1/2 * SUM(x(i)y(y+1) - x(i+1)y(i)) for i=0 TO N-1
+    
+    X coordinate of the center is defined as the following:
+        Cx = 1/(6A) * SUM((x(i) + x(i+1))*(x(i)y(i+1) - x(i+1)y(i))) for i=0 TO N-1
+    Y coordinate of the center is defined as the following:
+        Cy = 1/(6A) * SUM((y(i) + y(i+1))*(x(i)y(i+1) - x(i+1)y(i))) for i=0 TO N-1
+
+    Y = latitude
+    X = longitude
+    */
+
+    // calculate the area
+    let zoneArea = 0
+    let currentSum = 0;
+    for (let i = 0; i < path.length - 1; i++) {
+      let x = path[i].lng;
+      let xPlusOne = path[i + 1].lng;
+      let y = path[i].lat;
+      let yPlusOne = path[i + 1].lat;
+
+      currentSum = (x * yPlusOne) - (xPlusOne * y);
+      zoneArea += currentSum;
+    }
+
+    zoneArea = zoneArea / 2;
+
+    // calculate the center X coordinate
+    let xCenter = 0;
+    currentSum = 0;
+    for (let i = 0; i < path.length - 1; i++) {
+      let x = path[i].lng;
+      let xPlusOne = path[i + 1].lng;
+      let y = path[i].lat;
+      let yPlusOne = path[i + 1].lat;
+
+      currentSum = (x + xPlusOne) * ((x * yPlusOne) - (xPlusOne * y));
+      xCenter += currentSum;
+    }
+
+    xCenter = xCenter / (6 * zoneArea);
+
+    // calculate the center Y coordinate
+    let yCenter = 0;
+    currentSum = 0;
+    for (let i = 0; i < path.length - 1; i++) {
+      let x = path[i].lng;
+      let xPlusOne = path[i + 1].lng;
+      let y = path[i].lat;
+      let yPlusOne = path[i + 1].lat;
+
+      currentSum = (y + yPlusOne) * ((x * yPlusOne) - (xPlusOne * y));
+      yCenter += currentSum;
+    }
+
+    yCenter = yCenter / (6 * zoneArea);
+
+    // create the center object
+    const center = {
+      lat: yCenter,
+      lng: xCenter
+    }
+
+    let locationBody = req.body;
+    // append the center to the body
+    locationBody.center = center;
+
+    const locationZone = await LocationZone.create(locationBody);
+
+    res.status(201).json({
+      success: true,
+      payload: locationZone
+    })
+});

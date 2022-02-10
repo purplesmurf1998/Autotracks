@@ -1,9 +1,24 @@
 <template>
   <div>
     <CCard class="mt-2">
-      <CBody>
+      <CCardBody>
         <CRow>
           <CCol>
+            <h3>Dealership Zones</h3>
+            <CListGroup class="mt-3 mb-3" v-if="zones.length > 0 && !addingNewZone">
+              <CListGroupItem
+                tag="button"
+                v-for="(zone, index) in zones"
+                :key="zone._id"
+                :id="zone._id"
+                :active="
+                  selectedZone && zone._id == selectedZone._id
+                "
+                @click="setSelectedZone(zone, index)"
+              >
+                {{ zone.fillColor }}
+              </CListGroupItem>
+            </CListGroup>
             <CButton
               color="primary"
               @click="addingNewZone = true"
@@ -12,12 +27,18 @@
             >
             <CForm @submit.prevent="submitNewZone" v-if="addingNewZone">
               <CInput
-                label="Zone Color"
-                horizontal
-                v-model="newZoneColor"
+                label="Name"
+                placeholder="Unique name for the zone"
+                v-model="newZoneName"
                 required
               />
-              <CButton color="secondary" @click="path = []">Cancel</CButton>
+              <CTextarea
+                label="Description (optional)"
+                placeholder="Enter the zone's description"
+                rows="5"
+                v-model="newZoneDescription"
+              />
+              <CButton color="secondary" @click="() => {path = []; addingNewZone = false;}">Cancel</CButton>
               <CButton color="primary" type="submit">Add Zone</CButton>
               <CButton color="danger" @click="undoLastPoint">Undo</CButton>
             </CForm>
@@ -25,74 +46,32 @@
           <CCol>
             <GmapMap
               :center="center"
-              :zoom="11"
-              style="height: 400px"
+              :zoom="15"
+              map-type-id="satellite"
+              style="height: 500px"
+              :options="{
+                streetViewControl: false,
+                fullscreenControl: false,
+                rotateControl: false
+              }"
               @click="mapClick"
             >
-              <!-- <GmapMarker
-                :key="index"
-                v-for="(m, index) in markers"
-                :position="m.position"
-                :label="m.label"
-                :title="m.title"
-                :clickable="true"
-                :draggable="m.draggable"
-                @click="toggleInfoWindow(m, index)"
-              /> -->
-              <gmap-rectangle
-                ref="rectangleRef"
-                :bounds="{
-                  north: 37.394694,
-                  east: -122.09022,
-                  south: 37.363188,
-                  west: -122.150333,
-                }"
-                :editable="false"
-                :visible="true"
-                :options="{ fillColor: 'blue', fillOpacity: 0.2 }"
-                @click="showRectangleInfo"
-              />
-              <gmap-rectangle
-                ref="rectangleRef"
-                :bounds="{
-                  north: 37.394694,
-                  east: -122.0301,
-                  south: 37.363188,
-                  west: -122.09022,
-                }"
-                :editable="false"
-                :visible="true"
-                :options="{ fillColor: 'yellow', fillOpacity: 0.2 }"
-                @click="showRectangleInfo"
-              />
-              <gmap-rectangle
-                ref="rectangleRef"
-                :bounds="{
-                  north: 37.363188,
-                  east: -122.0301,
-                  south: 37.331681,
-                  west: -122.150333,
-                }"
-                :editable="false"
-                :visible="true"
-                :options="{ fillColor: 'red', fillOpacity: 0.2 }"
-                @click="showRectangleInfo"
-              />
-              <gmap-polyline
+              <!-- <gmap-polyline
                 v-if="newPath.length > 1 && newPath.length < 4"
                 ref="polylineRef"
                 :path="newPath"
                 :editable="false"
                 :visible="true"
                 :options="{ fillColor: 'red', fillOpacity: 0.5 }"
-              />
+              /> -->
               <gmap-polygon
-                v-if="newPath.length == 4"
+                v-if="newPath.length > 0"
                 ref="polygonRef"
                 :path="newPath"
                 :editable="false"
                 :visible="true"
                 :options="{ fillColor: 'red', fillOpacity: 0.5 }"
+                @click="mapClick"
               />
               <gmap-polygon
                 v-for="zone in zones"
@@ -105,7 +84,7 @@
             </GmapMap>
           </CCol>
         </CRow>
-      </CBody>
+      </CCardBody>
     </CCard>
   </div>
 </template>
@@ -130,8 +109,10 @@ export default {
     return {
       center: { lat: 37.431489, lng: -122.163719 },
       zones: [],
+      selectedZone: null,
       newPath: [],
-      newZoneColor: "",
+      newZoneName: "",
+      newZoneDescription: "",
       addingNewZone: false,
       infoContent: "",
       infoLink: "",
@@ -151,6 +132,9 @@ export default {
     };
   },
   methods: {
+    setSelectedZone(zone, index) {
+      this.selectedZone = zone._id;
+    },
     toggleInfoWindow(marker, idx) {
       console.log(marker.position);
       this.infoWindowPos = marker.position;
@@ -167,7 +151,7 @@ export default {
     },
     mapClick(event) {
       if (!this.addingNewZone) return;
-      if (this.newPath.length >= 4) return;
+      // if (this.newPath.length >= 4) return;
 
       const path = {
         lat: event.latLng.lat(),
@@ -186,16 +170,18 @@ export default {
     },
     submitNewZone() {
       const newZone = {
-        _id: Date.now().toString(),
         path: this.newPath,
-        fillColor: this.newZoneColor,
+        fillColor: 'red',
+        name: this.newZoneName,
+        description: this.newZoneDescription,
+        dealership: this.$route.params.dealershipId
       };
 
-      this.zones.push(newZone);
+      console.log(newZone);
       this.newPath = [];
       this.addingNewZone = false;
     },
-  },
+  }
 };
 </script>
 
