@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Comment = require('./Comment');
 const History = require('./History');
-const VehicleSale = require('./VehicleSale')
 const Event = require('./Event');
+const VehicleSale = require('./VehicleSale');
 
 const VehicleSchema = new mongoose.Schema({
   dealership: {
