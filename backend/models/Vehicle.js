@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Comment = require('./Comment');
 const History = require('./History');
 const VehicleSale = require('./VehicleSale')
+const Event = require('./Event');
 
 const VehicleSchema = new mongoose.Schema({
   dealership: {
@@ -39,10 +40,11 @@ const VehicleSchema = new mongoose.Schema({
 })
 
 // cascade delete comments, history, vehiclesale
-VehicleSchema.pre('remove', async function(next) {
+VehicleSchema.pre('remove', async function (next) {
   await Comment.deleteMany({ vehicle: this._id });
   await History.deleteMany({ vehicle: this._id });
   await VehicleSale.deleteMany({ vehicle: this._id });
+  await Event.deleteMany({ vehicle: this._id });
 });
 
 module.exports = mongoose.model('Vehicle', VehicleSchema);
