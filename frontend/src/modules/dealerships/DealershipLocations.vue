@@ -80,6 +80,7 @@
                 :path="zone.path"
                 :editable="false"
                 :visible="true"
+                :draggable="true"
                 :options="{ fillColor: zone.fillColor, fillOpacity: 0.5 }"
               />
               <GmapMarker
@@ -117,7 +118,7 @@ export default {
   props: ["vehicle"],
   data() {
     return {
-      center: { lat: 37.431489, lng: -122.163719 },
+      center: { lat: 45.431311, lng: -73.479005 },
       zones: [],
       selectedZone: null,
       newPath: [],

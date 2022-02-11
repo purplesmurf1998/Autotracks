@@ -15,7 +15,59 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
       );
     }
 
-    /*
+    
+
+    let locationBody = req.body;
+    // append the center to the body
+    //locationBody.center = getPolygonCentroidSum(path);
+    locationBody.center = getPolyginCentroidAvg(path);
+
+    const locationZone = await LocationZone.create(locationBody);
+
+    res.status(201).json({
+      success: true,
+      payload: locationZone
+    })
+});
+
+// @desc    Get location zones for a dealership
+// @route   POST /api/v1/locations/zones/dealership/:dealershipId
+// @access  Public
+exports.getLocationZones = asyncHandler(async (req, res, next) => {
+  const locationZones = await LocationZone.find({ dealership: req.params.dealershipId });
+
+  res.status(200).json({
+    success: true,
+    payload: locationZones
+  })
+});
+
+function getPolyginCentroidAvg(path) {
+  // get the centroid of a polygon by taking the average of x, and the average of y
+
+  let lngAverage = 0;
+  let latAverage = 0;
+
+  path.forEach(vertex => {
+    lngAverage += vertex.lng;
+    latAverage += vertex.lat;
+  })
+
+  lngAverage /= path.length;
+  latAverage /= path.length;
+
+  const center = {
+    lat: latAverage,
+    lng: lngAverage
+  }
+
+  return center;
+}
+
+function getPolygonCentroidSum(path) {
+  // get the centroid of a polygon by using the formula in http://paulbourke.net/geometry/polygonmesh/centroid.pdf
+
+  /*
     Calculating the center of mass of the outlined zone:
 
     Area of a polygon is defined as the following:
@@ -84,26 +136,5 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
       lng: xCenter
     }
 
-    let locationBody = req.body;
-    // append the center to the body
-    locationBody.center = center;
-
-    const locationZone = await LocationZone.create(locationBody);
-
-    res.status(201).json({
-      success: true,
-      payload: locationZone
-    })
-});
-
-// @desc    Get location zones for a dealership
-// @route   POST /api/v1/locations/zones/dealership/:dealershipId
-// @access  Public
-exports.getLocationZones = asyncHandler(async (req, res, next) => {
-  const locationZones = await LocationZone.find({ dealership: req.params.dealershipId });
-
-  res.status(200).json({
-    success: true,
-    payload: locationZones
-  })
-});
+    return center;
+}
