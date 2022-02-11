@@ -203,7 +203,7 @@ export default {
       showingAddToListModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
-      saleStatus: !!this.vehicle.sale ? true : false,
+      saleStatus: this.vehicle.sale ? true : false,
       updateSaleStatus: false,
       sale_id: this.vehicle.sale,
       sale: null,
@@ -383,7 +383,7 @@ export default {
     this.fetchDealershipUsers();
   },
   mounted() {
-    if (!!this.sale_id) {
+    if (this.sale_id) {
       this.fetchSale();
     }
   }

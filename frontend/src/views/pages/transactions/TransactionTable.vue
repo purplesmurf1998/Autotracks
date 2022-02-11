@@ -100,7 +100,7 @@ export default {
             items["Request Date"] = req_date;
             let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
             items["Delivery Status"] = delivery;
-            items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];;
+            items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];
             items["Deposit"] = '$' + sale.deposit_amount + '.00';
             let approved_by_user_name = !sale.approved_by ? '-' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
             items["Manager"] = approved_by_user_name;

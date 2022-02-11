@@ -232,7 +232,7 @@ export default {
     },
   },
   mounted() {
-    if (!!this.user) {
+    if (this.user) {
       let permissions = [];
       this.user.permissions.forEach((permission) => {
         permissions.push(permission);
