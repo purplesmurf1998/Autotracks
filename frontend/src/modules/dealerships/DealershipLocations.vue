@@ -16,7 +16,7 @@
                 "
                 @click="setSelectedZone(zone, index)"
               >
-                {{ zone.fillColor }}
+                {{ zone.name }}
               </CListGroupItem>
             </CListGroup>
             <CButton
@@ -46,7 +46,8 @@
           <CCol>
             <GmapMap
               :center="center"
-              :zoom="15"
+              :zoom="17"
+              ref="mapRef"
               map-type-id="satellite"
               style="height: 500px"
               :options="{
@@ -81,6 +82,13 @@
                 :visible="true"
                 :options="{ fillColor: zone.fillColor, fillOpacity: 0.5 }"
               />
+              <GmapMarker
+                :key="index"
+                v-for="(zone, index) in zones"
+                :position="zone.center"
+                :label="index"
+                :clickable="true"
+              />
             </GmapMap>
           </CCol>
         </CRow>
@@ -92,6 +100,8 @@
 <script>
 import * as VueGoogleMaps from "vue2-google-maps";
 import Vue from "vue";
+
+const axios = require('axios');
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -134,6 +144,7 @@ export default {
   methods: {
     setSelectedZone(zone, index) {
       this.selectedZone = zone._id;
+      this.panToZone(zone.center);
     },
     toggleInfoWindow(marker, idx) {
       console.log(marker.position);
@@ -171,16 +182,53 @@ export default {
     submitNewZone() {
       const newZone = {
         path: this.newPath,
-        fillColor: 'red',
+        fillColor: 'blue',
         name: this.newZoneName,
         description: this.newZoneDescription,
         dealership: this.$route.params.dealershipId
       };
-
-      console.log(newZone);
-      this.newPath = [];
-      this.addingNewZone = false;
+      this.postNewZoneToApi(newZone);
     },
+    postNewZoneToApi(zone) {
+      axios({
+        method: "POST",
+        url: `${this.$store.state.api}/locations/zones`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: zone,
+      }).then((response) => {
+        console.log(response.data.payload);
+
+        this.zones.push(response.data.payload);
+        this.newPath = [];
+        this.addingNewZone = false;
+      }).catch((error) => {
+        console.log(error);
+        this.showErrorMessage("Unable to create the vehicle property.");
+      });
+    },
+    fetchLocationZones() {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/locations/zones/dealership/${this.$route.params.dealershipId}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        }
+      }).then((response) => {
+        this.zones = response.data.payload;
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    panToZone(zoneCenter) {
+      this.$refs.mapRef.$mapPromise.then(map => {
+        map.panTo(zoneCenter);
+      })
+    }
+  },
+  mounted() {
+    this.fetchLocationZones();
   }
 };
 </script>

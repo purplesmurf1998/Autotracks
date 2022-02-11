@@ -30,6 +30,9 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
     X = longitude
     */
 
+    // get the first point in the path and add it as the last point
+    path.push(path[0]);
+
     // calculate the area
     let zoneArea = 0
     let currentSum = 0;
@@ -91,4 +94,16 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
       success: true,
       payload: locationZone
     })
+});
+
+// @desc    Get location zones for a dealership
+// @route   POST /api/v1/locations/zones/dealership/:dealershipId
+// @access  Public
+exports.getLocationZones = asyncHandler(async (req, res, next) => {
+  const locationZones = await LocationZone.find({ dealership: req.params.dealershipId });
+
+  res.status(200).json({
+    success: true,
+    payload: locationZones
+  })
 });
