@@ -6,28 +6,26 @@ const LocationZone = require('../models/LocationZone');
 // @route   POST /api/v1/locations/zones/
 // @access  Public
 exports.createLocationZone = asyncHandler(async (req, res, next) => {
-    const { path } = req.body;
+  const { path } = req.body;
 
-    // check that the path has a minimum of 3 vertices
-    if (path.length < 3) {
-      return next(
-        new ErrorResponse('A zone must have a defined perimeter with at least 3 points.', 400)
-      );
-    }
+  // check that the path has a minimum of 3 vertices
+  if (path.length < 3) {
+    return next(
+      new ErrorResponse('A zone must have a defined perimeter with at least 3 points.', 400)
+    );
+  }
 
-    
+  let locationBody = req.body;
+  // append the center to the body
+  //locationBody.center = getPolygonCentroidSum(path);
+  locationBody.center = getPolyginCentroidAvg(path);
 
-    let locationBody = req.body;
-    // append the center to the body
-    //locationBody.center = getPolygonCentroidSum(path);
-    locationBody.center = getPolyginCentroidAvg(path);
+  const locationZone = await LocationZone.create(locationBody);
 
-    const locationZone = await LocationZone.create(locationBody);
-
-    res.status(201).json({
-      success: true,
-      payload: locationZone
-    })
+  res.status(201).json({
+    success: true,
+    payload: locationZone
+  })
 });
 
 // @desc    Get location zones for a dealership
@@ -39,6 +37,18 @@ exports.getLocationZones = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     payload: locationZones
+  })
+});
+
+// @desc    Delete a location zone from a dealership
+// @route   DELETE /api/v1/locations/zones/:zoneId
+// @access  Public
+exports.deleteLocationZone = asyncHandler(async (req, res, next) => {
+  await LocationZone.findByIdAndDelete(req.params.zoneId);
+
+  res.status(200).json({
+    success: true,
+    payload: {}
   })
 });
 
@@ -82,59 +92,59 @@ function getPolygonCentroidSum(path) {
     X = longitude
     */
 
-    // get the first point in the path and add it as the last point
-    path.push(path[0]);
+  // get the first point in the path and add it as the last point
+  path.push(path[0]);
 
-    // calculate the area
-    let zoneArea = 0
-    let currentSum = 0;
-    for (let i = 0; i < path.length - 1; i++) {
-      let x = path[i].lng;
-      let xPlusOne = path[i + 1].lng;
-      let y = path[i].lat;
-      let yPlusOne = path[i + 1].lat;
+  // calculate the area
+  let zoneArea = 0
+  let currentSum = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    let x = path[i].lng;
+    let xPlusOne = path[i + 1].lng;
+    let y = path[i].lat;
+    let yPlusOne = path[i + 1].lat;
 
-      currentSum = (x * yPlusOne) - (xPlusOne * y);
-      zoneArea += currentSum;
-    }
+    currentSum = (x * yPlusOne) - (xPlusOne * y);
+    zoneArea += currentSum;
+  }
 
-    zoneArea = zoneArea / 2;
+  zoneArea = zoneArea / 2;
 
-    // calculate the center X coordinate
-    let xCenter = 0;
-    currentSum = 0;
-    for (let i = 0; i < path.length - 1; i++) {
-      let x = path[i].lng;
-      let xPlusOne = path[i + 1].lng;
-      let y = path[i].lat;
-      let yPlusOne = path[i + 1].lat;
+  // calculate the center X coordinate
+  let xCenter = 0;
+  currentSum = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    let x = path[i].lng;
+    let xPlusOne = path[i + 1].lng;
+    let y = path[i].lat;
+    let yPlusOne = path[i + 1].lat;
 
-      currentSum = (x + xPlusOne) * ((x * yPlusOne) - (xPlusOne * y));
-      xCenter += currentSum;
-    }
+    currentSum = (x + xPlusOne) * ((x * yPlusOne) - (xPlusOne * y));
+    xCenter += currentSum;
+  }
 
-    xCenter = xCenter / (6 * zoneArea);
+  xCenter = xCenter / (6 * zoneArea);
 
-    // calculate the center Y coordinate
-    let yCenter = 0;
-    currentSum = 0;
-    for (let i = 0; i < path.length - 1; i++) {
-      let x = path[i].lng;
-      let xPlusOne = path[i + 1].lng;
-      let y = path[i].lat;
-      let yPlusOne = path[i + 1].lat;
+  // calculate the center Y coordinate
+  let yCenter = 0;
+  currentSum = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    let x = path[i].lng;
+    let xPlusOne = path[i + 1].lng;
+    let y = path[i].lat;
+    let yPlusOne = path[i + 1].lat;
 
-      currentSum = (y + yPlusOne) * ((x * yPlusOne) - (xPlusOne * y));
-      yCenter += currentSum;
-    }
+    currentSum = (y + yPlusOne) * ((x * yPlusOne) - (xPlusOne * y));
+    yCenter += currentSum;
+  }
 
-    yCenter = yCenter / (6 * zoneArea);
+  yCenter = yCenter / (6 * zoneArea);
 
-    // create the center object
-    const center = {
-      lat: yCenter,
-      lng: xCenter
-    }
+  // create the center object
+  const center = {
+    lat: yCenter,
+    lng: xCenter
+  }
 
-    return center;
+  return center;
 }

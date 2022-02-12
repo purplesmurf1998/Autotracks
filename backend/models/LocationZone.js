@@ -22,6 +22,10 @@ const LocationZoneSchema = new mongoose.Schema({
   center: {
     type: Object,
     required: [true, 'A zone must have a defined center point.']
+  },
+  vehicleCount: {
+    type: Number,
+    default: 0
   }
 });
 
