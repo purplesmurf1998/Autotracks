@@ -97,8 +97,10 @@ export default {
         })
         .then((response) => {
             if (response.data.success) {
-                this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events
+                this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events;
                 this.showMessage("User account subscriptions have been updated", "success");
+                //The page must be refreshed for the new user account subscription to take palce
+                this.$router.go();
             } 
             else
                 this.showMessage("An error occured while updating user account subscriptions", "danger");
