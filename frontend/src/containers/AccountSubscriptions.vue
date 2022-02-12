@@ -4,13 +4,17 @@
     <CForm @submit.prevent="submitUser">
       <CRow>
         <CCol>
-          <CRow>
+ 
+          <CRow
+            v-for="(event, index) in events"
+            :key="index"
+          >
             <CCol>
-              <label>Vehicle Missing</label>
+              <label>{{ event }}</label>
             </CCol>
             <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
               <CSwitch
+                :id="index"
                 class="mr-1"
                 color="success"
                 @change.native="toggleEventChange"
@@ -18,106 +22,7 @@
               />
             </CCol>
           </CRow>
-          <CRow>
-            <CCol>
-              <label>Vehicle Found</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol>
-              <label>Vehicle Moved</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>  
-          <CRow>
-            <CCol>
-              <label>Vehicle Delivery</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-        </CCol>
-        <CCol>
-          <CRow>
-            <CCol>
-              <label>Vehicle Deleted</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol>
-              <label>Transaction Requests</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol>
-              <label>Transaction Approvals</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol>
-              <label>Transaction Modifications</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-            <!-- :checked="isPermissionSelected(permission)" -->
-              <CSwitch
-                class="mr-1"
-                color="success"
-                @change.native="toggleEventChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
+
         </CCol>
       </CRow>
       <hr />
@@ -145,6 +50,17 @@ export default {
   ],
   data() {
     return {
+        events: {
+            vehicle_delivered: 'Vehicle Delivery',
+            vehicle_missing: 'Vehicle Missing',
+            vehicle_moved: 'Vehicle Moved',
+            vehicle_found: 'Vehicle Found',
+            vehicle_deleted: 'Vehicle Deleted',
+            vehicle_sale_pending: 'Transaction Requests',
+            vehicle_approved: 'Transaction Approvals',
+            transaction_modified: "Transaction Modifications",
+        },
+        user_events: this.$store.state.auth.userEventsSubscriptions,
     }
   },
   methods: {
@@ -153,7 +69,8 @@ export default {
     }
   },
   mounted() {
-    //this.getSale();
+    console.log(this.user_events);
+    console.log(this.events);
   }
 }
 </script>
