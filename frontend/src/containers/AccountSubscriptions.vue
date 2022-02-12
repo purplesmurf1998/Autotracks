@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert>
+    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
     <CForm @submit.prevent="submitEvents">
       <CRow>
         <CCol>
@@ -63,6 +63,8 @@ export default {
         },
         user_events: this.$store.state.auth.userEventsSubscriptions,
         new_events: [],
+        message: null,
+        messageType: null,
     }
   },
   methods: {
@@ -85,8 +87,35 @@ export default {
             return true;
     },
     submitEvents() {
-
-    }
+        axios({
+          method: "PUT",
+          url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+          data: {subscribed_events: this.new_events},
+        })
+        .then((response) => {
+            if (response.data.success) {
+                this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events
+                this.showMessage("User account subscriptions have been updated", "success");
+            } 
+            else
+                this.showMessage("An error occured while updating user account subscriptions", "danger");
+        })
+        .catch((error) => {
+            console.log(error);
+            this.showMessage("An error occured while updating user account subscriptions", "danger");
+        });
+    },
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+          this.message = null;
+          this.messageType = null;
+      }, 5000);
+    },
   },
   mounted() {
     this.user_events.forEach((event) => {
