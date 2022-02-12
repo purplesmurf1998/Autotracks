@@ -17,6 +17,7 @@
                 :id="index"
                 class="mr-1"
                 color="success"
+                :checked="isEventSelected(index)"
                 @change.native="toggleEventChange"
                 shape="pill"
               />
@@ -66,7 +67,11 @@ export default {
   methods: {
     toggleEventChange() {
         console.log("Test");
-    }
+    },
+    isEventSelected(event) {
+        if (this.user_events.includes(event))
+            return true;
+    },
   },
   mounted() {
     console.log(this.user_events);
