@@ -21,7 +21,7 @@
     >
       <div class="message">
           <div>
-            <small class="text-muted">Jane Doe</small>
+            <small class="text-muted">{{notif.user}}</small>
             <small class="text-muted float-right mt-1">{{notif.timestamp}}</small>
           </div>
           <div class="text-truncate font-weight-bold">{{notif.title}}</div>

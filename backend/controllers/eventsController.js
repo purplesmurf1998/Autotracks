@@ -40,6 +40,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         event_type: 'vehicle_sale_pending',
         dealership: req.body.dealership,
         vehicle: req.body.vehicle,
+        user: `${req.user.first_name} ${req.user.last_name}`,
         title: 'New Transaction',
         description: `A new transaction has been created for the vehicle with vin: ${vehicle.vin} by ${req.user.first_name} ${req.user.last_name}`,
       }
@@ -56,6 +57,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           event_type: 'vehicle_approved',
           dealership: vehicle[0].dealership,
           vehicle: vehicle[0]._id,
+          user: `${req.user.first_name} ${req.user.last_name}`,
           title: 'Transaction Approved',
           description: `A sale request has been approved for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
         }
@@ -65,6 +67,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           event_type: 'transaction_modified',
           dealership: vehicle[0].dealership,
           vehicle: vehicle[0]._id,
+          user: `${req.user.first_name} ${req.user.last_name}`,
           title: 'Transaction Modified',
           description: `A transaction has been modified for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
         }
@@ -84,6 +87,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         event_type: 'vehicle_deleted',
         dealership: vehicle.dealership,
         vehicle: vehicle._id,
+        user: `${req.user.first_name} ${req.user.last_name}`,
         title: 'Vehicle Deleted',
         description: `A vehicle with vin: ${vehicle.vin} has been deleted by ${req.user.first_name} ${req.user.last_name}`,
       }
@@ -94,6 +98,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           event_type: 'vehicle_delivered',
           dealership: vehicle.dealership,
           vehicle: vehicle._id,
+          user: `${req.user.first_name} ${req.user.last_name}`,
           title: 'Vehicle Delivered',
           description: `A vehicle with vin: ${vehicle.vin} has been marked delivered by ${req.user.first_name} ${req.user.last_name}`,
         }
@@ -105,6 +110,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
             event_type: 'vehicle_missing',
             dealership: vehicle.dealership,
             vehicle: vehicle._id,
+            user: `${req.user.first_name} ${req.user.last_name}`,
             title: 'Vehicle Missing',
             description: `A vehicle with vin: ${vehicle.vin} has been marked missing by ${req.user.first_name} ${req.user.last_name}`,
           }
@@ -114,6 +120,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
             event_type: 'vehicle_found',
             dealership: vehicle.dealership,
             vehicle: vehicle._id,
+            user: `${req.user.first_name} ${req.user.last_name}`,
             title: 'Vehicle Found',
             description: `A vehicle with vin: ${vehicle.vin} has been marked found by ${req.user.first_name} ${req.user.last_name}`,
           }
