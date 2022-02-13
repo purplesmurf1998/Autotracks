@@ -10,7 +10,7 @@
       <CHeaderNavLink
       @click.native="notifRead()">
         <CIcon name="cil-bell"/>
-        <CBadge v-if="unRead" shape="pill" color="danger">{{ itemsCount }}</CBadge>
+        <CBadge v-if="unRead" shape="pill" color="info">{{ itemsCount }}</CBadge>
       </CHeaderNavLink>
     </template>
     <CDropdownHeader tag="div" class="text-center bg-light">
@@ -21,8 +21,8 @@
     >
       <div class="message">
           <div>
-            <small class="text-muted">{{notif.user}}</small>
-            <small class="text-muted float-right mt-1">{{notif.timestamp}}</small>
+            <small class="blueTxt">{{notif.user}}</small>
+            <small class="float-right mt-1 blueTxt">{{notif.timestamp}}</small>
           </div>
           <div class="text-truncate font-weight-bold">{{notif.title}}</div>
           <div class="small text-muted text-truncate">{{notif.description}}</div>
@@ -30,7 +30,7 @@
     </CDropdownItem>
     <CDropdownItem 
       href="#" 
-      class="border-top text-center"
+      class="border-top text-center blueTxt"
       v-if="viewAll"
     >
       <strong>View all notifications</strong>
@@ -45,7 +45,7 @@ export default {
       itemsCount: 0,
       notifications: [],
       unRead: false,
-      viewAll: this.itemsCount >= 5 ? true : false,
+      viewAll: false,
     };
   },
   methods: {
@@ -68,11 +68,11 @@ export default {
         const notif = {'item': arg.description};
         //Formating date
         var currentDateObj = new Date(arg.timestamp);
-        arg.timestamp = currentDateObj.toString().split('GMT')[0];
+        arg.timestamp = currentDateObj.toString().split(' GMT')[0];
         this.notifications.push(arg);
         this.itemsCount = this.itemsCount + 1;
         this.unRead = true;
-        this.viewAll = this.itemsCount >= 5 ? true : false;
+        this.viewAll = this.notifications.length >= 5 ? true : false;
       })
     });
   },
@@ -82,5 +82,9 @@ export default {
 <style scoped>
 .c-icon {
   margin-right: 0.3rem;
+}
+
+.blueTxt {
+  color: #39f;
 }
 </style>
