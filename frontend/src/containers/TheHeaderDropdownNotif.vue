@@ -18,7 +18,22 @@
     </CDropdownHeader>
     <CDropdownItem v-for="notif in notifications"
     :key="notif._id"
-    > {{notif.title}}
+    >
+      <div class="message">
+          <div>
+            <small class="text-muted">Jane Doe</small>
+            <small class="text-muted float-right mt-1">{{notif.timestamp}}</small>
+          </div>
+          <div class="text-truncate font-weight-bold">{{notif.title}}</div>
+          <div class="small text-muted text-truncate">{{notif.description}}</div>
+        </div>
+    </CDropdownItem>
+    <CDropdownItem 
+      href="#" 
+      class="border-top text-center"
+      v-if="viewAll"
+    >
+      <strong>View all notifications</strong>
     </CDropdownItem>
   </CDropdown>
 </template>
@@ -29,7 +44,8 @@ export default {
     return { 
       itemsCount: 0,
       notifications: [],
-      unRead: false 
+      unRead: false,
+      viewAll: this.itemsCount >= 5 ? true : false,
     };
   },
   methods: {
@@ -50,9 +66,13 @@ export default {
     this.$store.state.auth.userEventsSubscriptions.forEach(element => {
       this.$store.state.events.socket.on(element, (arg) => {
         const notif = {'item': arg.description};
+        //Formating date
+        var currentDateObj = new Date(arg.timestamp);
+        arg.timestamp = currentDateObj.toString().split('GMT')[0];
         this.notifications.push(arg);
         this.itemsCount = this.itemsCount + 1;
         this.unRead = true;
+        this.viewAll = this.itemsCount >= 5 ? true : false;
       })
     });
   },
