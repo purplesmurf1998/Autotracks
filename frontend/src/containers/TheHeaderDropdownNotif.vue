@@ -56,29 +56,29 @@ export default {
     setNotifModal () {
       this.$emit('notifModal');
     },
-    fetchNotifications() {
-      // fetch new events
-      axios({
-        methods: "GET",
-        url: `${this.$store.state.api}/events/dealership/${this.$store.state.auth.dealership}?eventType=${this.subscribedEvents}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-      })
-      .then((response) => {
-        if (response.data.success) {
-          this.notifications = response.data.payload;
-          console.log(this.notifications);
-          let temp_notif = this.notifications.map((elem) => elem)
-          this.top5Notif = temp_notif.splice(0, 5);
-          console.log(this.top5Notif);
-          console.log(this.notifications);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-    },
+    // fetchNotifications() {
+    //   // fetch new events
+    //   axios({
+    //     methods: "GET",
+    //     url: `${this.$store.state.api}/events/dealership/${this.$store.state.auth.dealership}?eventType=${this.subscribedEvents}`,
+    //     headers: {
+    //       Authorization: `Bearer ${this.$store.state.auth.token}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     if (response.data.success) {
+    //       this.notifications = response.data.payload;
+    //       console.log(this.notifications);
+    //       let temp_notif = this.notifications.map((elem) => elem)
+    //       this.top5Notif = temp_notif.splice(0, 5);
+    //       console.log(this.top5Notif);
+    //       console.log(this.notifications);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   })
+    // },
     fetchUnReadNotif() {
       // fetch new Unread events
       this.unReadNotif= [];
@@ -103,26 +103,6 @@ export default {
         console.log(error);
       })
     },
-    markNotifRead() {
-      this.unReadNotif.forEach((notif) => {
-        axios({
-          method: "PUT",
-          url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
-          headers: {
-            Authorization: `Bearer ${this.$store.state.auth.token}`,
-          },
-        })
-        .then((response) => {
-          if (response.data.success) {
-            console.log("success");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-      })
-      this.itemsCount = 0;
-    }
   },
   mounted() {
     //Events that we need to listen to: 
@@ -138,10 +118,6 @@ export default {
     });
     this.subscribedEvents = this.$store.state.auth.userEventsSubscriptions.join(',');
   },
-  unmounted() {
-    // this.markNotifRead();
-    this.unReadNotif = [];
-  }
 };
 </script>
 
@@ -154,7 +130,4 @@ export default {
   color: #39f;
 }
 
-.scrollable {
-  overflow: auto;
-}
 </style>
