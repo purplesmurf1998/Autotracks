@@ -31,7 +31,6 @@
     <CModal
       :show.sync="subscriptionModal"
       :centered="true"
-      size="lg"
     >
       <account-subscriptions
         v-if="subscriptionModal"

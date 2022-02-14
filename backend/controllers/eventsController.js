@@ -154,7 +154,7 @@ exports.getEvents = asyncHandler(async (req, res, next) => {
     // separate the event types into an array
     const eventTypes = req.query.eventType.split(',')
     // get the events that have the event types passed
-    events = await Event.find({ dealership: req.params.dealershipId, event_type: { $in: eventTypes } }).sort({ timestamp: 1 });
+    events = await Event.find({ dealership: req.params.dealershipId, event_type: { $in: eventTypes } }).sort({ timestamp: -1 });
   }
 
   res.status(200).json({
@@ -181,7 +181,7 @@ exports.getUnReadEvents = asyncHandler(async (req, res, next) => {
       event_type: { $in: eventTypes },
       viewers: { $nin: user._id }
     }
-  ).sort({ timestamp: 1 });
+  ).sort({ timestamp: -1 });
 
   res.status(200).json({
     success: true,
@@ -190,11 +190,12 @@ exports.getUnReadEvents = asyncHandler(async (req, res, next) => {
   });
 })
 
-// @desc        Get all unread events from a specific dealership for a specific user
-// @route       GET /api/v1/events/:eventId/user/:userId
+// @desc        Update an unread event to add the user who viewed it.
+// @route       PUT /api/v1/events/:eventId/user/:userId
 // @access      Private
 exports.markEventAsRead = asyncHandler(async (req, res, next) => {
   const user = req.user;
+  console.log(req.params);
   const event = await Event.findById(req.params.eventId);
 
   // if no event found, return 404
@@ -206,12 +207,14 @@ exports.markEventAsRead = asyncHandler(async (req, res, next) => {
 
   // add the user ID to the list of viewers
   let viewers = event.viewers;
-  viewers.push(user._id);
+  if (!viewers.includes(user._id)) {
+    viewers.push(user._id);
+  }
   event.viewers = viewers;
   // save the event
   event.save()
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     payload: event
   });
