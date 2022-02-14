@@ -113,7 +113,9 @@ export default {
 
     this.$store.state.auth.userEventsSubscriptions.forEach(element => {
       this.$store.state.events.socket.on(element, (arg) => {
-        this.itemsCount = this.itemsCount + 1;
+        // if the user didn't view this notification yet, then increment the notif count
+        if (!arg.viewers.includes(this.$store.state.auth.userId))
+          this.itemsCount = this.itemsCount + 1;
       })
     });
     this.subscribedEvents = this.$store.state.auth.userEventsSubscriptions.join(',');

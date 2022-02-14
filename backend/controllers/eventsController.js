@@ -7,23 +7,7 @@ const Vehicle = require('../models/Vehicle');
 // @access      Private
 exports.createEvent = asyncHandler(async (req, res, next) => {
   // This endpoint is used for creating new events for users
-
-  // Vehicle APIs
-  // DELETE /api/v1/inventory/vehicle/:vehicleId
-  // PUT /api/v1/inventory/vehicle/:vehicleId
-
-  //Transaction APIs
-  // PUT /api/v1/inventory/details/sale/:saleId'
-  // POST /api/v1/inventory/details/sale'
-
-  // 'vehicle_sale_pending', DONE
-  // 'vehicle_approved', DONE
-  // 'vehicle_delivered', DONE
-  // 'vehicle_missing', DONE
-  // 'vehicle_moved', CAn'T DO FOR NOW
-  // 'vehicle_found', DONE
-  // 'vehicle_deleted', DONE
-  // 'transaction_modified', DONE
+  // 'vehicle_moved', Missing this eventType
 
   var body = {};
   //Transaction API Events
@@ -42,6 +26,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         vehicle: req.body.vehicle,
         user: `${req.user.first_name} ${req.user.last_name}`,
         title: 'New Transaction',
+        viewers: [req.user._id],
         description: `A new transaction has been created for the vehicle with vin: ${vehicle.vin} by ${req.user.first_name} ${req.user.last_name}`,
       }
     }
@@ -59,6 +44,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           vehicle: vehicle[0]._id,
           user: `${req.user.first_name} ${req.user.last_name}`,
           title: 'Transaction Approved',
+          viewers: [req.user._id],
           description: `A sale request has been approved for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
         }
       }
@@ -69,6 +55,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           vehicle: vehicle[0]._id,
           user: `${req.user.first_name} ${req.user.last_name}`,
           title: 'Transaction Modified',
+          viewers: [req.user._id],
           description: `A transaction has been modified for the vehicle with vin: ${vehicle[0].vin} by ${req.user.first_name} ${req.user.last_name}`,
         }
       }
@@ -89,6 +76,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         vehicle: vehicle._id,
         user: `${req.user.first_name} ${req.user.last_name}`,
         title: 'Vehicle Deleted',
+        viewers: [req.user._id],
         description: `A vehicle with vin: ${vehicle.vin} has been deleted by ${req.user.first_name} ${req.user.last_name}`,
       }
     }
@@ -100,6 +88,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           vehicle: vehicle._id,
           user: `${req.user.first_name} ${req.user.last_name}`,
           title: 'Vehicle Delivered',
+          viewers: [req.user._id],
           description: `A vehicle with vin: ${vehicle.vin} has been marked delivered by ${req.user.first_name} ${req.user.last_name}`,
         }
       }
@@ -112,6 +101,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
             vehicle: vehicle._id,
             user: `${req.user.first_name} ${req.user.last_name}`,
             title: 'Vehicle Missing',
+            viewers: [req.user._id],
             description: `A vehicle with vin: ${vehicle.vin} has been marked missing by ${req.user.first_name} ${req.user.last_name}`,
           }
         }
@@ -122,6 +112,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
             vehicle: vehicle._id,
             user: `${req.user.first_name} ${req.user.last_name}`,
             title: 'Vehicle Found',
+            viewers: [req.user._id],
             description: `A vehicle with vin: ${vehicle.vin} has been marked found by ${req.user.first_name} ${req.user.last_name}`,
           }
         }
