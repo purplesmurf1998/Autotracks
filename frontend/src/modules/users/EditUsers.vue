@@ -116,7 +116,7 @@ export default {
         "Edit Vehicle Locations",
         "Sell Vehicles",
         "Delete Vehicles",
-        "Add Vehicle Properties",
+        "Add Vehicle Property",
         "Edit Vehicle Properties",
         "View Vehicle Properties",
         "Delete Vehicle Properties",
