@@ -30,7 +30,7 @@
         </div>
     </CDropdownItem>
     <CDropdownItem 
-      href="#" 
+      @click="setNotifModal" 
       class="border-top text-center blueTxt"
     >
       <strong>View all notifications</strong>
@@ -53,6 +53,9 @@ export default {
     };
   },
   methods: {
+    setNotifModal () {
+      this.$emit('notifModal');
+    },
     fetchNotifications() {
       // fetch new events
       axios({
