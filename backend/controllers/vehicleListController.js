@@ -78,7 +78,6 @@ exports.updateVehicleList = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/vehicle-list/user/:userId
 // @access  Private
 exports.getVehicleLists = asyncHandler(async (req, res, next) => {
-  console.log(req);
   // find the vehicle list owned by the provided userId
   const vehicleList = await VehicleList.find({ owner: req.params.userId }).populate('dealership');
 
@@ -130,7 +129,6 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
   // must use for loop since forEach doesn't work properly with await clauses
   for (let i = 0; i < vehicleIds.length; i++) {
     let newVehicle = await Vehicle.findById(vehicleIds[i]);
-    console.log(newVehicle._id);
 
     if (!newVehicle) {
       return next(
@@ -140,7 +138,6 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
 
     // only add the vehicle if it's not already on the list
     if (oldVehicles.findIndex(vehicle => {
-      console.log(vehicle);
       return vehicle.toString() == newVehicle._id.toString();
     }) == -1) {
       oldVehicles.push(newVehicle._id);
