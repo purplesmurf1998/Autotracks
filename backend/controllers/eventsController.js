@@ -195,7 +195,6 @@ exports.getUnReadEvents = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.markEventAsRead = asyncHandler(async (req, res, next) => {
   const user = req.user;
-  console.log(req.params);
   const event = await Event.findById(req.params.eventId);
 
   // if no event found, return 404
@@ -211,8 +210,10 @@ exports.markEventAsRead = asyncHandler(async (req, res, next) => {
     viewers.push(user._id);
   }
   event.viewers = viewers;
-  // save the event
-  event.save()
+
+  await Event.findByIdAndUpdate(req.params.eventId, event, {
+    runValidators: true,
+  });
 
   res.status(200).json({
     success: true,

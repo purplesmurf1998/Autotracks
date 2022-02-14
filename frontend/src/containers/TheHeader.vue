@@ -26,10 +26,11 @@
       <notif-modal
         v-if="showNotifModal"
         :showNotifModal="showNotifModal"
+        @notifRead="unReadNotif = $event"
       />
       <template #header>
         <h6 class="modal-title">Notifications</h6>
-        <CButtonClose @click="showNotifModal = false" />
+        <CButtonClose @click="markNotifRead" />
       </template>
       <template #footer>
         <span></span>
@@ -44,7 +45,8 @@ import TheHeaderDropdownNotif from './TheHeaderDropdownNotif'
 import TheHeaderDropdownTasks from './TheHeaderDropdownTasks'
 import TheHeaderDropdownMssgs from './TheHeaderDropdownMssgs'
 import NotifModal from "./NotificationModal.vue"
- 
+const axios = require("axios");
+
 export default {
   name: 'TheHeader',
   components: {
@@ -57,7 +59,30 @@ export default {
   data() {
     return {
       showNotifModal: false,
+      unReadNotif: [],
     }
+  },
+  methods: {
+    markNotifRead() {
+      this.showNotifModal = false;
+      this.unReadNotif.forEach((notif) => {
+        axios({
+          method: "PUT",
+          url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+        })
+        .then((response) => {
+          if (response.data.success) {
+            console.log("success");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+      })
+    },
   }
 }
 </script>

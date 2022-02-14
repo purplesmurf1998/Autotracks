@@ -50,12 +50,15 @@ export default {
       tab: 0,
       notifications: [],
       unReadNotif: [],
-      subscribedEvents: null
+      subscribedEvents: null,
+      notifRead: false,
     };
   },
   methods: {
     setTab(tab) {
-      this.tab = tab;
+        if (tab == 1)
+            this.$emit("notifRead", this.unReadNotif);
+        this.tab = tab;
     },
     fetchNotifications() {
         this.notifications = [];
@@ -103,12 +106,36 @@ export default {
         console.log(error);
       })
     },
+    markNotifRead() {
+      this.unReadNotif.forEach((notif) => {
+        axios({
+          method: "PUT",
+          url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+        })
+        .then((response) => {
+          if (response.data.success) {
+            console.log("success");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+      })
+    }
   },
   mounted() {
       this.subscribedEvents = this.$store.state.auth.userEventsSubscriptions.join(',');
       this.fetchNotifications();
       this.fetchUnReadNotif();
   },
+  beforeUnmount() {
+      console.log("TEST");
+      if (this.notifRead)
+        this.markNotifRead();
+  }
 };
 </script>
 
