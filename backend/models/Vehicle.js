@@ -31,6 +31,10 @@ const VehicleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  qr_code: {
+    data: Buffer,
+    contentType: String
+  },
   on_road_since: Date,
   properties: Object,
 })
