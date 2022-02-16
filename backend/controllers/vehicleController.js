@@ -4,6 +4,19 @@ const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
 const Event = require('../models/Event');
 const Sale = require('../models/VehicleSale');
+const qr = require('qrcode')
+
+
+exports.getQrCode = asyncHandler(async (req, res, next) => {
+  const vehicleId = req.params.vehicleId
+  if (vehicleId.length === 0) res.send("Invalid ID")
+  const url = "http://localhost:8080/#/inventory?vehicleSelected=" + vehicleId
+  qr.toDataURL(url, (err, source) => {
+    if (err) res.send("error occured")
+    return source
+  })
+});
+
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
