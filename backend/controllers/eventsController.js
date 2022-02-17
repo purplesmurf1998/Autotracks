@@ -137,15 +137,15 @@ exports.getEvents = asyncHandler(async (req, res, next) => {
   // filters, looking for new events only with the input types they are subscribed to.
 
   let events;
-
+  let user_name = `${req.user.first_name} ${req.user.last_name}`;
   if (!req.query.eventType) {
     // no event types passed, get all types of events
-    events = await Event.find({ dealership: req.params.dealershipId }).sort({ timestamp: 1 });
+    events = await Event.find({ dealership: req.params.dealershipId, user: { $ne: user_name } }).sort({ timestamp: -1 });
   } else {
     // separate the event types into an array
     const eventTypes = req.query.eventType.split(',')
     // get the events that have the event types passed
-    events = await Event.find({ dealership: req.params.dealershipId, event_type: { $in: eventTypes } }).sort({ timestamp: -1 });
+    events = await Event.find({ dealership: req.params.dealershipId, event_type: { $in: eventTypes }, user: { $ne: user_name } }).sort({ timestamp: -1 });
   }
 
   res.status(200).json({
