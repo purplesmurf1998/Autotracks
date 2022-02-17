@@ -52,6 +52,21 @@ exports.deleteLocationZone = asyncHandler(async (req, res, next) => {
   })
 });
 
+// @desc    Update a location zone name or description
+// @route   PUT /api/v1/locations/zones/:zoneId
+// @access  Public
+exports.updateZoneNameDescription = asyncHandler(async (req, res, next) => {
+  const zone = await LocationZone.findByIdAndUpdate(req.params.zoneId, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    success: true,
+    payload: zone
+  })
+});
+
 function getPolyginCentroidAvg(path) {
   // get the centroid of a polygon by taking the average of x, and the average of y
 

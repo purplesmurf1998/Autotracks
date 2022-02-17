@@ -2,59 +2,92 @@
   <div>
     <CCard class="mt-2">
       <CCardBody>
-        <h3 class="mb-2">Dealership Zones</h3>
-        <GmapMap
-          :center="center"
-          :zoom="17"
-          ref="mapRef"
-          map-type-id="satellite"
-          style="height: 500px"
-          :options="{
-            streetViewControl: false,
-            fullscreenControl: false,
-            rotateControl: false,
-          }"
-          @click="mapClick"
-        >
-          <!-- <gmap-polyline
-            v-if="newPath.length > 1 && newPath.length < 4"
-            ref="polylineRef"
-            :path="newPath"
-            :editable="false"
-            :visible="true"
-            :options="{ fillColor: 'red', fillOpacity: 0.5 }"
-          /> -->
-          <gmap-polygon
-            v-if="newPath.length > 0"
-            ref="polygonRef"
-            :path="newPath"
-            :editable="false"
-            :visible="true"
-            :options="{ fillColor: 'red', fillOpacity: 0.5 }"
-            @click="mapClick"
-          />
-          <gmap-polygon
-            v-for="zone in zones"
-            :key="zone._id"
-            :path="zone.path"
-            :editable="false"
-            :visible="true"
-            :draggable="true"
-            :options="{
-              fillColor: zone.fillColor,
-              fillOpacity: 0.5,
-              strokeWeight: 0,
-              strokeColor: 'blue',
-            }"
-          />
-          <GmapMarker
-            :key="index"
-            v-for="(zone, index) in zones"
-            :position="zone.center"
-            :clickable="true"
-            :visible="selectedZone == zone._id"
-          />
-        </GmapMap>
+        <h3 class="mb-3">Dealership Zones</h3>
+        <CRow>
+          <CCol v-if="addingNewZone">
+            <CForm @submit.prevent="submitNewZone" v-if="addingNewZone">
+              <CInput
+                label="Name"
+                placeholder="Unique name for the zone"
+                v-model="newZoneName"
+                required
+              />
+              <CTextarea
+                label="Description (optional)"
+                placeholder="Enter the zone's description"
+                rows="5"
+                v-model="newZoneDescription"
+              />
+              <CButton
+                color="secondary"
+                @click="
+                  () => {
+                    path = [];
+                    addingNewZone = false;
+                  }
+                "
+                >Cancel</CButton
+              >
+              <CButton color="primary" type="submit">Add Zone</CButton>
+              <CButton color="danger" @click="undoLastPoint">Undo</CButton>
+            </CForm>
+          </CCol>
+          <CCol>
+            <GmapMap
+              :center="center"
+              :zoom="17"
+              ref="mapRef"
+              map-type-id="satellite"
+              style="height: 500px"
+              :options="{
+                streetViewControl: false,
+                fullscreenControl: false,
+                rotateControl: false,
+              }"
+              @click="mapClick"
+            >
+              <!-- <gmap-polyline
+                v-if="newPath.length > 1 && newPath.length < 4"
+                ref="polylineRef"
+                :path="newPath"
+                :editable="false"
+                :visible="true"
+                :options="{ fillColor: 'red', fillOpacity: 0.5 }"
+              /> -->
+              <gmap-polygon
+                v-if="newPath.length > 0"
+                ref="polygonRef"
+                :path="newPath"
+                :editable="false"
+                :visible="true"
+                :options="{ fillColor: 'red', fillOpacity: 0.5 }"
+                @click="mapClick"
+              />
+              <gmap-polygon
+                v-for="zone in zones"
+                :key="zone._id"
+                :path="zone.path"
+                :editable="false"
+                :visible="true"
+                :draggable="true"
+                :options="{
+                  fillColor: zone.fillColor,
+                  fillOpacity: 0.5,
+                  strokeWeight: 0,
+                  strokeColor: 'blue',
+                }"
+              />
+              <GmapMarker
+                :key="index"
+                v-for="(zone, index) in zones"
+                :position="zone.center"
+                :clickable="true"
+                :visible="selectedZone == zone._id"
+              />
+            </GmapMap>
+          </CCol>
+        </CRow>
+        
         <CDataTable
           :items="zones"
           :fields="fields"
@@ -66,10 +99,11 @@
         >
           <template #details="{ item }">
             <CCollapse :show="item._id == selectedZone" :duration="200">
-              <location-details :zone="item" />
+              <location-details :zone="item" @close="closeExpanded" @closeAndSave="closeExpandedAndSave"/>
             </CCollapse>
           </template>
         </CDataTable>
+        <CButton color="primary" @click="addingNewZone = true">Add a location zone</CButton>
         <!-- <CRow>
           <CCol>
             
@@ -166,6 +200,9 @@ export default {
         },
       ],
       selectedZone: null,
+      selectedIndex: -1,
+      closeDetails: false,
+      addingZone: false,
       newPath: [],
       newZoneName: "",
       newZoneDescription: "",
@@ -188,9 +225,27 @@ export default {
     };
   },
   methods: {
-    setSelectedZone(zone) {
-      this.selectedZone = this.selectedZone == zone._id ? null : zone._id;
-      if (this.selectedZone) this.panToZone(zone.center);
+    setSelectedZone(zone, index) {
+      console.log("runs second")
+      if (this.closeDetails) {
+        this.selectedZone = null;
+        this.selectedIndex = -1;
+        this.closeDetails = false;
+      } else {
+        this.selectedZone = zone._id;
+        this.selectedIndex = index;
+        if (this.selectedZone) this.panToZone(zone.center);
+      }
+    },
+    closeExpanded() {
+      this.closeDetails = true;
+    },
+    closeExpandedAndSave(newZone) {
+      console.log("runs first")
+      this.fetchLocationZones();
+      this.selectedZone = null;
+      this.selectedIndex = -1;
+      this.closeDetails = false;
     },
     toggleInfoWindow(marker, idx) {
       console.log(marker.position);

@@ -4,7 +4,8 @@ const router = express.Router();
 const {
   createLocationZone,
   getLocationZones,
-  deleteLocationZone
+  deleteLocationZone,
+  updateZoneNameDescription
 } = require('../controllers/locationZoneController');
 
 // get authentication middleware
@@ -14,7 +15,8 @@ router.route('/')
   .post(protect, createLocationZone);
 
 router.route('/:zoneId')
-  .delete(protect, deleteLocationZone);
+  .delete(protect, deleteLocationZone)
+  .put(protect, updateZoneNameDescription);
 
 router.route('/dealership/:dealershipId')
   .get(protect, getLocationZones);
