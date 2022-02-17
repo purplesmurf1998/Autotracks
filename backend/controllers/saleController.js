@@ -150,44 +150,44 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
     These datasets will be returned by the payload and saved locally in the frontend on mount.
     */
 
-    const salesByWeek = await Sale.aggregate([
-        {
-            $match: {
-                dealership: req.params.dealershipId
-            }
-        },
-        {
-            $project: {
-                year: {$year: "$date_of_sale"},
-                month: {$month: "$date_of_sale"},
-                week: {$week: "$date_of_sale"}
-            }
-        },
-        {
-            $group: {
-                _id: {
-                    "year": "$year",
-                    "month": "$month",
-                    "week": "$week"
-                },
-                total: {
-                    $sum:1
-                }
-            }
-        },
-        {
-            $sort: {
-                "_id.year":1,
-                "_id.month":1,
-                "_id.week:":1
-            }
-        }
-    ])
+    // const salesByWeek = await Sale.aggregate([
+    //     {
+    //         $match: {
+    //             dealership: dealership._id
+    //         }
+    //     },
+    //     {
+    //         $project: {
+    //             year: {$year: "$date_of_sale"},
+    //             month: {$month: "$date_of_sale"},
+    //             week: {$week: "$date_of_sale"}
+    //         }
+    //     },
+    //     {
+    //         $group: {
+    //             _id: {
+    //                 "year": "$year",
+    //                 "month": "$month",
+    //                 "week": "$week"
+    //             },
+    //             total: {
+    //                 $sum:1
+    //             }
+    //         }
+    //     },
+    //     {
+    //         $sort: {
+    //             "_id.year":1,
+    //             "_id.month":1,
+    //             "_id.week:":1
+    //         }
+    //     }
+    // ])
 
     const salesByMonth = await Sale.aggregate([
         {
             $match: {
-                dealership: req.params.dealershipId
+                dealership: dealership._id
             }
         },
         {
@@ -218,7 +218,7 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
     const salesByYear = await Sale.aggregate([
         {
             $match: {
-                dealership: req.params.dealershipId
+                dealership: dealership._id
             }
         },
         {
@@ -243,11 +243,11 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
         }
     ])
 
-    const formattedSalesByWeek = formatPoints(salesByWeek, "week")
+    //const formattedSalesByWeek = formatPoints(salesByWeek, "week")
     const formattedSalesByMonth = formatPoints(salesByMonth, "month")
     const formattedSalesByYear = formatPoints(salesByYear, "year")
     const datasets = {
-        formattedSalesByWeek,
+        //formattedSalesByWeek,
         formattedSalesByMonth,
         formattedSalesByYear
     }
@@ -261,9 +261,13 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
 function formatPoints(data, type) {
     let formattedPoints = []
     let dateString = ""
+    console.log("[BACKEND] Formatting points by "+type)
     switch (type) {
         case "week": {
+            console.log(data)
             data.forEach(sale => {
+                console.log("[BACKEND] Sale processing:")
+                console.log(sale)
                 const salePoint = new Object()
                 dateString = (
                     sale._id.year
@@ -273,12 +277,12 @@ function formatPoints(data, type) {
                     +sale._id.week
                 )
                 salePoint.x = dateString
-                salePoint.y = sale._id.count
+                salePoint.y = sale.total
                 formattedPoints.push(salePoint)
                 dateString = ""
             })
-            break
         }
+        break
         case "month": {
             data.forEach(sale => {
                 const salePoint = new Object()
@@ -288,25 +292,26 @@ function formatPoints(data, type) {
                     + sale._id.month
                 )
                 salePoint.x = dateString
-                salePoint.y = sale._id.count
+                salePoint.y = sale.total
                 formattedPoints.push(salePoint)
                 dateString = ""
             })
-            break
         }
+        break
         case "year": {
             data.forEach(sale => {
                 const salePoint = new Object()
                 dateString= (
-                    sale._id.year
+                    (sale._id.year).toString()
                 )
                 salePoint.x = dateString
-                salePoint.y = sale._id.count
+                salePoint.y = sale.total
                 formattedPoints.push(salePoint)
                 dateString = ""
             })
-            break
         }
+        break
     }
+
     return formattedPoints
 }
