@@ -235,6 +235,7 @@ function formatPoints(data, type) {
                 formattedPoints.push(salePoint)
                 dateString = ""
             })
+            break
         }
         case "month": {
             data.forEach(sale => {
@@ -249,6 +250,7 @@ function formatPoints(data, type) {
                 formattedPoints.push(salePoint)
                 dateString = ""
             })
+            break
         }
         case "year": {
             data.forEach(sale => {
@@ -261,6 +263,7 @@ function formatPoints(data, type) {
                 formattedPoints.push(salePoint)
                 dateString = ""
             })
+            break
         }
     }
     return formattedPoints
