@@ -54,6 +54,9 @@
               @click.native="showingAddToListModal = true"
               v-if="!vehicle.delivered"
             >Add to list</CDropdownItem>
+            <CDropdownItem
+              @click.native="downloadQrCode"
+            >Download QR code</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
               class="delete"
@@ -307,6 +310,17 @@ export default {
           console.log(err);
           this.showMessage("Error occured while updating vehicle location", "danger");
         });
+    },
+    downloadQrCode() {
+        const url1 = "http://localhost:8080/#/inventory?vehicleSelected=" + this.vehicle._id
+        console.log(url1)
+        //Call functon that returns the img here and add it as a blob below
+        const url = window.URL.createObjectURL(new Blob(["https://i.imgur.com/lF1GKDt.jpg"]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "qrCode.png");
+        document.body.appendChild(link);
+        link.click();
     },
     fetchDealershipUsers() {
       axios({
