@@ -17,7 +17,7 @@
             </CButton>
           </router-link>
         </CRow>
-        <CAlert color="info" v-if="!selectedDealership">Select a dealership or <strong><router-link to="/dealerships">create one</router-link></strong> before adding/viewing the inventory</CAlert>
+        <CAlert color="info" v-if="!selectedDealership && $store.state.auth.role == 'Administration'">Select a dealership or <strong><router-link to="/dealerships">create one</router-link></strong> before adding/viewing the inventory</CAlert>
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
@@ -25,8 +25,8 @@
           :showSetDefault="true"
         />
         <inventory-table
-          v-if="selectedDealership"
-          :dealership="selectedDealership"
+          v-if="selectedDealership || $store.state.auth.role != 'Administration'"
+          :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
           ref="inventoryTable"
         />
       </CCol>
