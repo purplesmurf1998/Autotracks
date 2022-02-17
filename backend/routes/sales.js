@@ -7,6 +7,7 @@ const {
     updateSale,
     getSale,
     getSales,
+    getSalesByTime
 } = require('../controllers/saleController');
 
 // get authentication middleware

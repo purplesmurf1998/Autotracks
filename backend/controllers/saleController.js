@@ -123,7 +123,7 @@ exports.deleteSale = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Returns the number of sales per time period, formatted as data points for the dashboard chart
-// @route   GET /api/v1/inventory/details/sale/:dealershipId'
+// @route   GET /api/v1/dashboard-visuals/dealership/:dealershipId/visual3
 // @access  Public
 exports.getSalesByTime = asyncHandler(async (req, res, next) => {
     // grab the dealership_ID from the body and verify that the dealership exists
@@ -150,56 +150,98 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
     These datasets will be returned by the payload and saved locally in the frontend on mount.
     */
 
-    const salesByWeek = await Sale.find({ dealership: req.params.dealershipId })
-        .projection({
-            year: {$year: "$date_of_sale"},
-            month: {$month: "$date_of_sale"},
-            week: {$week: "$date_of_sale"}
-        }).group({
-            _id: {
-                "year": "$year",
-                "month": "$month",
-                "week": "$week"
-            },
-            total: {
-                $sum:1
+    const salesByWeek = await Sale.aggregate([
+        {
+            $match: {
+                dealership: req.params.dealershipId
             }
-        }).sort({
-            "_id.year":1,
-            "_id.month":1,
-            "_id.week:":1
-        })
+        },
+        {
+            $project: {
+                year: {$year: "$date_of_sale"},
+                month: {$month: "$date_of_sale"},
+                week: {$week: "$date_of_sale"}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    "year": "$year",
+                    "month": "$month",
+                    "week": "$week"
+                },
+                total: {
+                    $sum:1
+                }
+            }
+        },
+        {
+            $sort: {
+                "_id.year":1,
+                "_id.month":1,
+                "_id.week:":1
+            }
+        }
+    ])
 
-    const salesByMonth = await Sale.find({ dealership: req.params.dealershipId })
-        .projection({
-            year: {$year: "$date_of_sale"},
-            month: {$month: "$date_of_sale"}
-        }).group({
-            _id: {
-                "year": "$year",
-                "month": "$month"
-            },
-            total: {
-                $sum:1
+    const salesByMonth = await Sale.aggregate([
+        {
+            $match: {
+                dealership: req.params.dealershipId
             }
-        }).sort({
-            "_id.year":1,
-            "_id.month":1
-        })
+        },
+        {
+            $project: {
+                year: {$year: "$date_of_sale"},
+                month: {$month: "$date_of_sale"}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    "year": "$year",
+                    "month": "$month"
+                },
+                total: {
+                    $sum:1
+                }
+            }
+        },
+        {
+            $sort: {
+                "_id.year":1,
+                "_id.month":1
+            }
+        }
+    ])
 
-    const salesByYear = await Sale.find({ dealership: req.params.dealershipId })
-        .projection({
-            year: {$year: "$date_of_sale"}
-        }).group({
-            _id: {
-                "year": "$year"
-            },
-            total: {
-                $sum:1
+    const salesByYear = await Sale.aggregate([
+        {
+            $match: {
+                dealership: req.params.dealershipId
             }
-        }).sort({
-            "_id.year":1
-        })
+        },
+        {
+            $project: {
+                year: {$year: "$date_of_sale"}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    "year": "$year"
+                },
+                total: {
+                    $sum:1
+                }
+            }
+        },
+        {
+            $sort: {
+                "_id.year":1
+            }
+        }
+    ])
 
     const formattedSalesByWeek = formatPoints(salesByWeek, "week")
     const formattedSalesByMonth = formatPoints(salesByMonth, "month")

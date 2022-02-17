@@ -25,6 +25,7 @@ const vehicleRoutes = require('./routes/vehicle');
 const eventRoutes = require('./routes/events');
 const commentRoutes = require('./routes/comments');
 const saleRoutes = require('./routes/sales')
+const dashboardVisualsRoutes = require('./routes/dashboardVisuals')
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
@@ -65,6 +66,7 @@ app.use('/api/v1/inventory', vehicleRoutes);
 app.use('/api/v1/events', eventRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/inventory/details/sale', saleRoutes);
+app.use('/api/v1/dashboard-visuals/dealership/:dealershipId', dashboardVisualsRoutes);
 
 // mount error handler middleware
 app.use(errorHandler);
