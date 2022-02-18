@@ -25,12 +25,12 @@
     <CModal :show.sync="showNotifModal" :centered="true">
       <notif-modal
         v-if="showNotifModal"
-        :showNotifModal="showNotifModal"
+        :setNotifModal="setNotifModal"
         @notifRead="unReadNotif = $event"
       />
       <template #header>
         <h6 class="modal-title">Notifications</h6>
-        <CButtonClose @click="markNotifRead" />
+        <CButtonClose @click="setNotifModal(false)" />
       </template>
       <template #footer>
         <span></span>
@@ -63,25 +63,8 @@ export default {
     }
   },
   methods: {
-    markNotifRead() {
-      this.showNotifModal = false;
-      this.unReadNotif.forEach((notif) => {
-        axios({
-          method: "PUT",
-          url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
-          headers: {
-            Authorization: `Bearer ${this.$store.state.auth.token}`,
-          },
-        })
-        .then((response) => {
-          if (response.data.success) {
-            console.log("success");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-      })
+    setNotifModal(value) {
+      this.showNotifModal = value;
     },
   }
 }

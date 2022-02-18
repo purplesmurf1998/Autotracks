@@ -10,21 +10,24 @@
     </CNav>
     <hr />
     <CCard v-if="tab == 0">
-        <CCardBody v-for="notif in notifications"
-        :key="notif._id">
-            <div class="message">
-                <div>
-                    <small class="blueTxt">{{notif.user}}</small>
-                    <small class="float-right mt-1 blueTxt">{{notif.timestamp}}</small>
-                </div>
-                <div class="text-truncate font-weight-bold">{{notif.title}}</div>
-                <div class="small text-muted text-truncate">{{notif.description}}</div>
-            </div>
-        </CCardBody>
+          <CCardBody v-for="notif in notifications"
+          :key="notif._id"
+          class='cursor-pointer'>
+              <div class="message">
+                  <div>
+                      <small class="blueTxt">{{notif.user}}</small>
+                      <small class="float-right mt-1 blueTxt">{{notif.timestamp}}</small>
+                  </div>
+                  <div class="text-truncate font-weight-bold">{{notif.title}}</div>
+                  <div class="small text-muted text-truncate">{{notif.description}}</div>
+              </div>
+          </CCardBody>
     </CCard>
     <CCard v-if="tab == 1">
         <CCardBody v-for="notif in unReadNotif"
-        :key="notif._id">
+        :key="notif._id"
+        class='cursor-pointer'
+        @click="redirectAndMarkRead(notif)">
             <div class="message">
                 <div>
                     <small class="blueTxt">{{notif.user}}</small>
@@ -43,7 +46,7 @@
 const axios = require("axios");
 
 export default {
-  props: [],
+  props: ["setNotifModal"],
   name: "NotifModal",
   data() {
     return {
@@ -55,9 +58,10 @@ export default {
   },
   methods: {
     setTab(tab) {
-        if (tab == 1)
-            this.$emit("notifRead", this.unReadNotif);
-        this.tab = tab;
+      this.tab = tab;
+    },
+    changeCursor() {
+      this.$refs.allNotif.style.cursor = "pointer";
     },
     fetchNotifications() {
         this.notifications = [];
@@ -105,6 +109,26 @@ export default {
         console.log(error);
       })
     },
+    redirectAndMarkRead(notif) {
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.success) {
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      this.setNotifModal(false);
+      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : `/inventory?vehicleSelected=${notif.vehicle}`
+      this.$router.push(redirect);
+    },
   },
   mounted() {
       this.subscribedEvents = this.$store.state.auth.userEventsSubscriptions.join(',');
@@ -126,5 +150,9 @@ export default {
 .scroll {
   height: 300px;
   overflow: auto;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

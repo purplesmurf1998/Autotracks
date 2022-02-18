@@ -20,8 +20,9 @@
     <CDropdownItem v-for="notif in top5Notif"
     :key="notif._id"
     :class="notif.className"
+    @click="redirectAndMarkRead(notif)"
     >
-      <div class="message">
+      <div class="message" style="width: 100%">
         <div>
           <small class="blueTxt">{{notif.user}}</small>
           <small class="float-right mt-1 blueTxt">{{notif.timestamp}}</small>
@@ -35,7 +36,8 @@
       @click="setNotifModal" 
       class="border-top text-center blueTxt"
     >
-      <strong>View all notifications</strong>
+      <strong v-if="itemsCount > 0">View all notifications ({{itemsCount}})</strong>
+      <strong v-if="itemsCount == 0">View all notifications</strong>
     </CDropdownItem>
   </CDropdown>
 </template>
@@ -61,6 +63,7 @@ export default {
     fetchNotifications() {
       this.notifications = [];
       this.top5Notif = [];
+      this.fetchUnReadNotif();
       // fetch new events
       axios({
         methods: "GET",
@@ -111,6 +114,26 @@ export default {
       .catch((error) => {
         console.log(error);
       })
+    },
+    redirectAndMarkRead(notif) {
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.success) {
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      this.itemsCount = this.itemsCount - 1;
+      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : `/inventory?vehicleSelected=${notif.vehicle}`
+      this.$router.push(redirect);
     },
   },
   mounted() {
