@@ -9,7 +9,7 @@
   >
     <template #toggler>
       <CHeaderNavLink
-      @click.native="fetchUnReadNotif(true)">
+      @click.native="fetchNotifications">
         <CIcon name="cil-bell"/>
         <CBadge v-if="itemsCount!=0" shape="pill" color="info">{{ itemsCount }}</CBadge>
       </CHeaderNavLink>
@@ -17,17 +17,19 @@
     <CDropdownHeader tag="div" class="text-center bg-light">
       <strong>You have {{ unReadNotif.length }} notifications</strong>
     </CDropdownHeader>
-    <CDropdownItem v-for="notif in unReadNotif"
+    <CDropdownItem v-for="notif in top5Notif"
     :key="notif._id"
+    :class="notif.className"
     >
       <div class="message">
-          <div>
-            <small class="blueTxt">{{notif.user}}</small>
-            <small class="float-right mt-1 blueTxt">{{notif.timestamp}}</small>
-          </div>
-          <div class="text-truncate font-weight-bold">{{notif.title}}</div>
-          <div class="small text-muted text-truncate">{{notif.description}}</div>
+        <div>
+          <small class="blueTxt">{{notif.user}}</small>
+          <small class="float-right mt-1 blueTxt">{{notif.timestamp}}</small>
         </div>
+        <div class="text-truncate font-weight-bold">{{notif.title}}</div>
+        <div class="small text-muted text-truncate">{{notif.description}}</div>
+      </div>
+      <!-- <CIcon name="cib-discover" class="notif-unread small"/> -->
     </CDropdownItem>
     <CDropdownItem 
       @click="setNotifModal" 
@@ -56,30 +58,37 @@ export default {
     setNotifModal () {
       this.$emit('notifModal');
     },
-    // fetchNotifications() {
-    //   // fetch new events
-    //   axios({
-    //     methods: "GET",
-    //     url: `${this.$store.state.api}/events/dealership/${this.$store.state.auth.dealership}?eventType=${this.subscribedEvents}`,
-    //     headers: {
-    //       Authorization: `Bearer ${this.$store.state.auth.token}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     if (response.data.success) {
-    //       this.notifications = response.data.payload;
-    //       console.log(this.notifications);
-    //       let temp_notif = this.notifications.map((elem) => elem)
-    //       this.top5Notif = temp_notif.splice(0, 5);
-    //       console.log(this.top5Notif);
-    //       console.log(this.notifications);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   })
-    // },
-    fetchUnReadNotif(clearItemCount) {
+    fetchNotifications() {
+      this.notifications = [];
+      this.top5Notif = [];
+      // fetch new events
+      axios({
+        methods: "GET",
+        url: `${this.$store.state.api}/events/dealership/${this.$store.state.auth.dealership}?eventType=${this.subscribedEvents}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.success) {
+          var ctr = 0;
+          response.data.payload.forEach((notif) => {
+            var currentDateObj = new Date(notif.timestamp);
+            notif.timestamp = currentDateObj.toString().split('GMT')[0];
+            this.notifications.push(notif);
+            if (ctr < 5) {
+              notif.className = notif.viewers.includes(this.$store.state.auth.userId) ? "none" : "background-unread"
+              this.top5Notif.push(notif);
+            }
+            ctr = ctr + 1;
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    },
+    fetchUnReadNotif() {
       // fetch new Unread events
       this.unReadNotif= [];
       axios({
@@ -96,7 +105,7 @@ export default {
             notif.timestamp = currentDateObj.toString().split('GMT')[0];
             this.unReadNotif.push(notif);
           })
-          this.itemsCount = clearItemCount ? 0 : this.unReadNotif.length;
+          this.itemsCount = this.unReadNotif.length;
         }
       })
       .catch((error) => {
@@ -110,6 +119,7 @@ export default {
     // do a first time api call to the server for new events
     // create the socket
     // when the socket get pinged, fetch new events
+    this.fetchUnReadNotif();
     this.$store.state.auth.userEventsSubscriptions.forEach(element => {
       this.$store.state.events.socket.on(element, (arg) => {
         // if the user didn't view this notification yet, then increment the notif count
@@ -129,6 +139,10 @@ export default {
 
 .blueTxt {
   color: #39f;
+}
+
+.background-unread {
+  background-color: rgb(228, 237, 247);
 }
 
 </style>
