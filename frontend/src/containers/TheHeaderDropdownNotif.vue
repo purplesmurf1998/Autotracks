@@ -116,25 +116,34 @@ export default {
       })
     },
     redirectAndMarkRead(notif) {
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-      })
-      .then((response) => {
-        if (response.data.success) {
-          console.log("success");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      this.itemsCount = this.itemsCount - 1;
-      localStorage.setItem('vehicle', notif.vehicle);
-      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
-      this.$router.push(redirect);
+      //if the clicked notification is unread (i.e. className = background-unread), then mark it read and redirect. if it's read, then only redirect
+      if (notif.className == 'background-unread')
+      {
+        axios({
+          method: "PUT",
+          url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+        })
+        .then((response) => {
+          if (response.data.success) {
+            console.log("success");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        this.itemsCount = this.itemsCount - 1;
+        localStorage.setItem('vehicle', notif.vehicle);
+        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
+        this.$router.push(redirect);
+      }
+      else {
+        localStorage.setItem('vehicle', notif.vehicle);
+        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
+        this.$router.push(redirect);
+      }
     },
   },
   mounted() {

@@ -12,7 +12,8 @@
     <CCard v-if="tab == 0">
           <CCardBody v-for="notif in notifications"
           :key="notif._id"
-          class='cursor-pointer'>
+          class='cursor-pointer'
+          @click="redirectAndMarkRead(notif, true)">
               <div class="message">
                   <div>
                       <small class="blueTxt">{{notif.user}}</small>
@@ -27,7 +28,7 @@
         <CCardBody v-for="notif in unReadNotif"
         :key="notif._id"
         class='cursor-pointer'
-        @click="redirectAndMarkRead(notif)">
+        @click="redirectAndMarkRead(notif, false)">
             <div class="message">
                 <div>
                     <small class="blueTxt">{{notif.user}}</small>
@@ -109,25 +110,33 @@ export default {
         console.log(error);
       })
     },
-    redirectAndMarkRead(notif) {
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-      })
-      .then((response) => {
-        if (response.data.success) {
-          console.log("success");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      this.setNotifModal(false);
-      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : `/inventory?vehicleSelected=${notif.vehicle}`
-      this.$router.push(redirect);
+    redirectAndMarkRead(notif, redirectOnly) {
+      if (!redirectOnly) {
+        axios({
+          method: "PUT",
+          url: `${this.$store.state.api}/events/${notif._id}/user/${this.$store.state.auth.userId}`,
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+        })
+        .then((response) => {
+          if (response.data.success) {
+            console.log("success");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        this.setNotifModal(false);
+        localStorage.setItem('vehicle', notif.vehicle);
+        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
+        this.$router.push(redirect);
+      }
+      else {
+        localStorage.setItem('vehicle', notif.vehicle);
+        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
+        this.$router.push(redirect);
+      } 
     },
   },
   mounted() {
