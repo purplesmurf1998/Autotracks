@@ -35,7 +35,6 @@ exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
   newProperty.position = position;
   newProperty.dealership = req.params.dealershipId;
 
-  console.log(newProperty);
   const newVehicleProperty = await VehicleProperty.create(newProperty);
 
   res.status(201).json({ success: true, payload: newVehicleProperty })
@@ -104,7 +103,6 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
         runValidators: true
       }
     );
-    console.log(property)
     if (!property) {
       return next(new ErrorResponse(`Vehicle property not found with id ${vehicleProperties[i]._id}`, 404));
     }

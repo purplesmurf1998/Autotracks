@@ -119,6 +119,7 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
         }
         else {
             const comment = await Comment.findById(req.params.commentId);
+            const vehicle = await Vehicle.findById(comment.vehicle);
             if (!comment) {
                 return next(
                   new ErrorResponse(`Comment not found`, 404)

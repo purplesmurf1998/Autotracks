@@ -23,12 +23,12 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 // @route       POST /api/v1/comments/vehicle/:vehicleId
 // @access      Private
 exports.createComment = asyncHandler(async (req, res, next) => {
-  
+  console.log("TESTTEST");
   let comment = await Comment.create(req.body);
 
   comment = await comment.populate('author');
 
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     payload: comment
   });
@@ -47,12 +47,6 @@ exports.editComment = asyncHandler(async (req, res, next) => {
   if (author._id.toString() != user._id.toString()) {
     return next(
       new ErrorResponse(`Unauthorized to make this edit.`, 401)
-    );
-  }
-
-  if (!req.body.comment) {
-    return next(
-      new ErrorResponse(`Bad request. Comment must have content.`, 400)
     );
   }
 
