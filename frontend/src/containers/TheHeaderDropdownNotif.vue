@@ -132,7 +132,8 @@ export default {
         console.log(error);
       })
       this.itemsCount = this.itemsCount - 1;
-      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : `/inventory?vehicleSelected=${notif.vehicle}`
+      localStorage.setItem('vehicle', notif.vehicle);
+      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
       this.$router.push(redirect);
     },
   },

@@ -37,7 +37,9 @@
       title="Vehicle Information Page"
       size="xl"
     >
-      <vehicle v-if="!!$route.query.vehicleSelected" :vehicleId="$route.query.vehicleSelected" :refreshTable="$refs.inventoryTable.fetchVehicles"/>
+      <vehicle v-if="!!$route.query.vehicleSelected" 
+      :vehicleId="$route.query.vehicleSelected" 
+      :refreshTable="$refs.inventoryTable.fetchVehicles"/>
       <template #header>
         <h6 class="modal-title">Vehicle Information Page</h6>
         <CButtonClose @click="closeModal" />
@@ -83,6 +85,13 @@ export default {
         this.messageType = null;
       }, 5000)
     },
+  },
+  mounted() {
+    var vehicle_id = localStorage.getItem('vehicle')
+    if (vehicle_id) {
+      this.$router.push("/inventory?vehicleSelected=" + vehicle_id);
+      localStorage.removeItem('vehicle');
+    }
   },
   components: {
     "inventory-table": InventoryTable,
