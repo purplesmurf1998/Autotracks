@@ -259,7 +259,9 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
 });
 
 function formatPoints(data, type) {
-    let formattedPoints = []
+    let labels = []
+    let points = []
+    let formattedPoints = [labels, points]
     let dateString = ""
     console.log("[BACKEND] Formatting points by "+type)
     switch (type) {
@@ -268,7 +270,6 @@ function formatPoints(data, type) {
             data.forEach(sale => {
                 console.log("[BACKEND] Sale processing:")
                 console.log(sale)
-                const salePoint = new Object()
                 dateString = (
                     sale._id.year
                     +"-"
@@ -276,37 +277,32 @@ function formatPoints(data, type) {
                     +"-"
                     +sale._id.week
                 )
-                salePoint.x = dateString
-                salePoint.y = sale.total
-                formattedPoints.push(salePoint)
+                formattedPoints[0].push(dateString)
+                formattedPoints[1].push(sale.total)
                 dateString = ""
             })
         }
         break
         case "month": {
             data.forEach(sale => {
-                const salePoint = new Object()
                 dateString = (
                     sale._id.year
                     + "-"
                     + sale._id.month
                 )
-                salePoint.x = dateString
-                salePoint.y = sale.total
-                formattedPoints.push(salePoint)
+                formattedPoints[0].push(dateString)
+                formattedPoints[1].push(sale.total)
                 dateString = ""
             })
         }
         break
         case "year": {
             data.forEach(sale => {
-                const salePoint = new Object()
                 dateString= (
                     (sale._id.year).toString()
                 )
-                salePoint.x = dateString
-                salePoint.y = sale.total
-                formattedPoints.push(salePoint)
+                formattedPoints[0].push(dateString)
+                formattedPoints[1].push(sale.total)
                 dateString = ""
             })
         }

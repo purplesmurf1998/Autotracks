@@ -1,19 +1,18 @@
 <template>
- <CChartBar
-   :datasets="this.dataPoints"
-   :labels="this.dataLabels"
+ <CChartLine
+   :datasets="this.chartData"
    :options="this.chartOptions"
  />
 </template>
 
 <script>
 const axios = require("axios");
-import { CChartBar } from '@coreui/vue-chartjs'
+import { CChartLine } from '@coreui/vue-chartjs'
 
 export default {
   name: 'DashboardLineChart',
   props: ["dealership"],
-  components: { CChartBar },
+  components: { CChartLine },
   // Data stored in the component
   data() {
     return {
@@ -27,21 +26,30 @@ export default {
           ]
         }
       ],
-      monthlyPoints: [],
-      monthlyLabels: [],
-      yearlyPoints: [],
-      yearlyLabels: [],
-      dataPoints: [{data:[]}],
-      dataLabels: ["First", "Second"],
+      dataPoints: [],
       dataPayload: [],
       chartOptions: {
+        title: {
+          display: true,
+          text: "Vehicle Sales Over Time"
+        },
         scales: {
           xAxes: [{
-            //type: "time"
+            offset: true,
+            type: "time",
+            ticks: {
+              min: "2021-01-29T03:02:09.136Z",
+              max: "2023-01-29T03:02:09.136Z"
+            },
+            scaleLabel: {
+              display: true,
+              labelString: "Date Of Sale"
+            }
           }],
           yAxes: [{
-            ticks:{
-              beginAtZero: true
+            scaleLabel: {
+              display: true,
+              labelString: "Value Of Sale"
             }
           }]
         }
@@ -54,7 +62,7 @@ export default {
     fetchSalesFromDealership(dealership) {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/dashboard-visuals/dealership/${dealership}/visual3`,
+        url: `${this.$store.state.api}/inventory/details/sale/dealership/${dealership}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -63,13 +71,7 @@ export default {
         .then((response) => {
           console.log("Sales requested successfully!")
           this.dataPayload = response.data.payload
-          console.log(this.dataPayload)
-          this.monthlyLabels = this.dataPayload.formattedSalesByMonth[0]
-          this.monthlyPoints = this.dataPayload.formattedSalesByMonth[1]
-          this.yearlyLabels = this.dataPayload.formattedSalesByYear[0]
-          this.yearlyPoints = this.dataPayload.formattedSalesByYear[1]
-          this.dataLabels = this.dataPayload.formattedSalesByMonth[0]
-          this.dataPoints[0].data = this.dataPayload.formattedSalesByMonth[1]
+          this.processDataPoints()
         })
         .catch((error) => {
           console.log(error);
@@ -77,15 +79,27 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    useDataSet(type) {
-      if (type == "month") {
-        this.dataLabels = this.monthlyLabels
-        this.dataPoints[0].data = this.monthlyPoints
-      }
-      else if (type == "year") {
-        this.dataLabels = this.yearlyLabels
-        this.dataPoints[0].data = this.yearlyPoints
-      }
+    processDataPoints() {
+      console.log("Processing data points...")
+      this.dataPayload.forEach(sale => {
+        console.log(sale);
+        const salePoint = new Object()
+        // salePoint.vehicle = sale.vehicle.vin
+        salePoint.x = sale.date_of_sale
+        salePoint.y = sale.sale_amount
+        this.dataPoints.push(salePoint)
+      })
+      console.log("Data points processed:")
+      console.log(this.dataPoints)
+      this.chartOptions.scales.xAxes[0].ticks.min = this.dataPoints[0].x.valueOf()
+      this.chartOptions.scales.xAxes[0].ticks.max = this.dataPoints.at(-1).x.valueOf()
+      console.log("Chart min: "+this.chartOptions.scales.xAxes[0].ticks.min)
+      console.log("Chart max: "+this.chartOptions.scales.xAxes[0].ticks.max)
+
+      this.chartData[0].data = this.dataPoints
+
+      console.log("Chart data:")
+      console.log(this.chartData)
     },
   },
   // Actions to take the instant the component is loaded
@@ -93,7 +107,6 @@ export default {
     console.log("Dashboard chart mounted -> "+`${this.dealership}`);
     setTimeout(() => {
       this.fetchSalesFromDealership(this.dealership);
-      this.useDataSet("month")
     }, 1)
   }
 }
