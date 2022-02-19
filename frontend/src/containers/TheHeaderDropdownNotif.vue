@@ -115,6 +115,14 @@ export default {
         console.log(error);
       })
     },
+    redirect(notif) {
+      localStorage.setItem('vehicle', notif.vehicle)
+      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
+      if (this.$route.path == '/transactions' || this.$route.path == '/inventory')
+        this.$router.go();
+      else
+        this.$router.push(redirect);
+    },
     redirectAndMarkRead(notif) {
       //if the clicked notification is unread (i.e. className = background-unread), then mark it read and redirect. if it's read, then only redirect
       if (notif.className == 'background-unread')
@@ -135,14 +143,10 @@ export default {
           console.log(error);
         })
         this.itemsCount = this.itemsCount - 1;
-        localStorage.setItem('vehicle', notif.vehicle);
-        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
-        this.$router.push(redirect);
+        this.redirect(notif);
       }
       else {
-        localStorage.setItem('vehicle', notif.vehicle);
-        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
-        this.$router.push(redirect);
+        this.redirect(notif);
       }
     },
   },

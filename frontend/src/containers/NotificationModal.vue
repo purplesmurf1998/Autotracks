@@ -110,6 +110,14 @@ export default {
         console.log(error);
       })
     },
+    redirect(notif) {
+      localStorage.setItem('vehicle', notif.vehicle)
+      var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
+      if (this.$route.path == '/transactions' || this.$route.path == '/inventory')
+        this.$router.go();
+      else
+        this.$router.push(redirect);
+    },
     redirectAndMarkRead(notif, redirectOnly) {
       if (!redirectOnly) {
         axios({
@@ -128,14 +136,10 @@ export default {
           console.log(error);
         })
         this.setNotifModal(false);
-        localStorage.setItem('vehicle', notif.vehicle);
-        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
-        this.$router.push(redirect);
+        this.redirect(notif);
       }
       else {
-        localStorage.setItem('vehicle', notif.vehicle);
-        var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
-        this.$router.push(redirect);
+        this.redirect(notif);
       } 
     },
   },
