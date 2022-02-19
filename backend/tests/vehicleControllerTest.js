@@ -46,7 +46,8 @@ describe('Testing Vehicle Controller Class', () => {
             'dealership': '618b3bf134f07d9a91c32a1b',
             'properties': {
               'test1': 'testing',
-            }
+            },
+            'vin': '1G1PF5SC1C7142797'
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
@@ -189,7 +190,7 @@ describe('Testing Vehicle Controller Class', () => {
   describe('Delete Vehicle API Error Test (Invalid vehicle_id)', () => {
     it('should return 404 when a vehicle is deleted', (done) => {
       chai.request(app)
-        .delete("/api/v1/inventory/vehicle/" + vehicle_id)
+        .delete("/api/v1/inventory/vehicle/61de1cb50c6e80e28479d1b4")
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(404);
