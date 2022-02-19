@@ -169,7 +169,7 @@ export default {
           }
       }).catch(error => {
           console.log(error);
-          /*this.showMessage(error.response.data.error, "danger");*/
+          //this.showMessage(error.response.data.error, "danger");
           alert(error.response.data.error);
           this.disableButtons = false;
       })
