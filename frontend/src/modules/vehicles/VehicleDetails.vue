@@ -13,7 +13,7 @@
           </h4>
           <CDropdown
             v-if="!vehicle.delivered"
-            color="secondary"
+            color="primary"
             :offset="[0, 5]"
             toggler-text="Select an action"
           >
@@ -33,7 +33,7 @@
               class="delete"
               >Cancel Sale </CDropdownItem
             >
-            <CDropdownItem 
+            <CDropdownItem
             v-if="userHasPermissions('Edit Vehicles') && !vehicle.delivered && !!saleStatus && approved"
             @click="markDelivered"
               >Mark as Delivered</CDropdownItem
@@ -69,7 +69,7 @@
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">VIN</h6></CCol>
               <CCol class="d-flex align-items-end flex-column"
-                ><p 
+                ><p
                 class="mb-2 property-field"
                 v-text="vehicle.vin"/></CCol
               >
@@ -111,7 +111,7 @@
       :centered="true"
       title="Modal title 2"
     >
-      <vehicle-sell 
+      <vehicle-sell
         v-if="showingSoldModal"
         :showingSoldModal="showingSoldModal"
         :dealershipStaff="dealershipStaff"
@@ -119,7 +119,6 @@
         :setVehicleModal="setVehicleModal"
         :vehicle="vehicle"
         :setSaleStatus="setSaleStatus"
-        :showMessage="showMessage"
         :updateSaleStatus="updateSaleStatus"
         :sale_id="sale_id"
       />
@@ -168,10 +167,10 @@
         <h6 class="modal-title">Add vehicle to custom list</h6>
         <CButtonClose @click="showingAddToListModal = false" />
       </template>
-        <add-to-vehicle-list 
-          :vehicleId="vehicle._id" 
+        <add-to-vehicle-list
+          :vehicleId="vehicle._id"
           :closeModal="closeAddToListModal"
-          :showMessage="showMessage" 
+          :showMessage="showMessage"
           v-if="showingAddToListModal"
         />
       <template #footer>
@@ -208,7 +207,7 @@ export default {
       sale_id: this.vehicle.sale,
       sale: null,
       deposit: "",
-      approved: false 
+      approved: false
     };
   },
   methods: {
@@ -373,7 +372,7 @@ export default {
       }
       else if (!this.saleStatus && !this.approved) {
         return "Not Sold";
-      } 
+      }
       else {
         return "Pending Sale Authorization";
       }

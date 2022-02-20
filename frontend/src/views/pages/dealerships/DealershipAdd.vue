@@ -17,7 +17,7 @@
         rows="6"
       />
       <CRow class="justify-content-center">
-        <CButton 
+        <CButton
           color="primary"
           type="submit"
           id = "create-dealership"
@@ -25,9 +25,9 @@
         >
           Create
         </CButton>
-        <CButton 
+        <CButton
           class="ml-1"
-          color="danger"
+          color="secondary"
           :disabled="disableButtons"
           @click="setAddingDealership(false)"
         >
