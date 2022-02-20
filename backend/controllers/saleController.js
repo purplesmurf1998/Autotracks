@@ -19,13 +19,6 @@ exports.createSale = asyncHandler(async (req, res, next) => {
             new ErrorResponse(`A sale has already been created for this vehicle`, 400)
         );
     }
-    // //Check if the approved_by field is a manager
-    // const manager = await User.findById(req.body.approved_by);
-    // if (manager && manager.role != "Management") {
-    //     return next(
-    //         new ErrorResponse(`A sale has already been created for this vehicle`, 400)
-    //     );
-    // }
 
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
