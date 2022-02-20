@@ -30,7 +30,6 @@
         <div class="text-truncate font-weight-bold">{{notif.title}}</div>
         <div class="small text-muted text-truncate">{{notif.description}}</div>
       </div>
-      <!-- <CIcon name="cib-discover" class="notif-unread small"/> -->
     </CDropdownItem>
     <CDropdownItem 
       @click="setNotifModal" 
