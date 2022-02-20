@@ -2,6 +2,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Event = require('../models/Event');
 const Vehicle = require('../models/Vehicle');
+const Sale = require('../models/VehicleSale');
 
 // @desc        Create an event for a specific vehicle
 // @access      Private
@@ -46,6 +47,11 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     }
     // When a transaction has been approved. EventType=vehicle_approved
     else if (req.method=='PUT') {
+      const sale = await Sale.findById(req.params.saleId)
+      // return error if no sale found
+      if (!sale) {
+        return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
+      }
       const vehicle = await Vehicle.find({ sale: req.params.saleId });
       // return error if no vehicle found
       if (!vehicle) {

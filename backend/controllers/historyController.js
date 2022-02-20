@@ -1,6 +1,7 @@
 const History = require('../models/History');
 const Vehicle = require('../models/Vehicle');
 const Comment = require('../models/Comment');
+const Sale = require('../models/VehicleSale');
 
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
@@ -33,6 +34,12 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
             }
         }
         else {
+            // find vehicle property to delete
+            const sale = await Sale.findById(req.params.saleId);
+            // return error if no sale found
+            if (!sale) {
+                return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
+            }
             const vehicle = await Vehicle.find({ sale: req.params.saleId });
             // return error if no vehicle found
             if (!vehicle) {

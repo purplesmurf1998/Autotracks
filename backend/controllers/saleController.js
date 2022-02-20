@@ -40,7 +40,7 @@ exports.createSale = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Get a sale instance
-// @route   GET /api/v1/inventory/details/sale/:dealershipId'
+// @route   GET /api/v1/inventory/details/sale/dealership/:dealershipId'
 // @access  Public
 exports.getSales = asyncHandler(async (req, res, next) => {    
     // grab the dealership_ID from the body and verify that the dealership exists
@@ -95,10 +95,6 @@ exports.updateSale = asyncHandler(async (req, res, next) => {
         runValidators: true,
         new: true
     });
-    // return error if no sale found
-    if (!sale) {
-        return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
-    }
 
     res.status(200).json({
         success: true,
@@ -110,16 +106,10 @@ exports.updateSale = asyncHandler(async (req, res, next) => {
 // @route   Delete /api/v1/inventory/details/sale/:saleId'
 // @access  Public
 exports.deleteSale = asyncHandler(async (req, res, next) => {
+    //Map the sale object in the vehicle to null
+    await Vehicle.updateOne({sale: req.params.saleId}, { $set: {sale: null} });
     // find vehicle property to delete
     const sale = await Sale.findById(req.params.saleId);
-    // return error if no sale found
-    if (!sale) {
-        return next(new ErrorResponse(`Sale not found with id ${req.params.saleId}`, 404));
-    }
-
-    //Map this created sale to the vehicle
-    await Vehicle.updateOne({sale: req.params.saleId}, { $set: {sale: null} });
-
     //TODO: Delete anything related to the vehicle. This can be done in the Vehicle model using middleware.
     sale.remove();
 

@@ -43,6 +43,7 @@ describe('Testing Sale Controller Class', () => {
             "deposit_amount": 50,
             "sale_amount": 5000,
             "sales_rep": "61d4e5bb12d6b3b54a70e4dd",
+            "approved_by": "6192c675d871bef9ad3887d1",
             "notes": "test",
         })
         .set('authorization', 'Bearer ' + token)
@@ -83,7 +84,7 @@ describe('Testing Sale Controller Class', () => {
   describe('Get Sales API Test', () => {
     it('should return 200 when sales are returned', (done) => {
       chai.request(app)
-        .get("/api/v1/inventory/details/sale/61eb8ea4caa229aa551cca3c")
+        .get("/api/v1/inventory/details/sale/dealership/61eb8ea4caa229aa551cca3c")
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(200);
