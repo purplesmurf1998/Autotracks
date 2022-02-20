@@ -227,9 +227,6 @@ export default {
         .catch((error) => {
           console.log(error);
           this.showMessage("Please select a Dealership", "danger")
-          //alert("stop");
-          //this.showMessage("Please select a Dealership", "danger")
-          this.$router.replace("/pages/404");
         });
     },
   },
