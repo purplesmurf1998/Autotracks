@@ -1,6 +1,7 @@
 const Dealership = require('../models/Dealership');
 const Sale = require('../models/VehicleSale');
 const Vehicle = require('../models/Vehicle');
+const User = require('../models/User');
 
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
@@ -18,6 +19,14 @@ exports.createSale = asyncHandler(async (req, res, next) => {
             new ErrorResponse(`A sale has already been created for this vehicle`, 400)
         );
     }
+    // //Check if the approved_by field is a manager
+    // const manager = await User.findById(req.body.approved_by);
+    // if (manager && manager.role != "Management") {
+    //     return next(
+    //         new ErrorResponse(`A sale has already been created for this vehicle`, 400)
+    //     );
+    // }
+
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
     //Map this created sale to the vehicle
@@ -109,7 +118,7 @@ exports.deleteSale = asyncHandler(async (req, res, next) => {
     }
 
     //Map this created sale to the vehicle
-    const newVehicle = await Vehicle.updateOne({sale: req.params.saleId}, { $set: {sale: null} });
+    await Vehicle.updateOne({sale: req.params.saleId}, { $set: {sale: null} });
 
     //TODO: Delete anything related to the vehicle. This can be done in the Vehicle model using middleware.
     sale.remove();
