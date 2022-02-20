@@ -119,7 +119,6 @@
         :setVehicleModal="setVehicleModal"
         :vehicle="vehicle"
         :setSaleStatus="setSaleStatus"
-        :showMessage="showMessage"
         :updateSaleStatus="updateSaleStatus"
         :sale_id="sale_id"
       />

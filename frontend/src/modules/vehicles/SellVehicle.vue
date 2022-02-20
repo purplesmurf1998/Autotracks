@@ -1,5 +1,6 @@
 <template>
   <div>
+   <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
      <CForm @submit.prevent="submit">
         <CRow class="justify-content-center">
             <CCol>
@@ -92,7 +93,6 @@ const axios = require('axios');
 export default {
   name: 'VehicleSell',
   props: [
-    "showMessage",
     "selectedStaffAccount",
     "dealershipStaff",
     "showingSoldModal",
@@ -140,8 +140,7 @@ export default {
             }
         }).catch(error => {
             console.log(error);
-            /*this.showMessage(error.response.data.error, "danger");*/
-            alert(error.response.data.error);
+            this.showMessage(error.response.data.error, "danger");
             this.disableButtons = false;
         })
     },
@@ -169,8 +168,7 @@ export default {
           }
       }).catch(error => {
           console.log(error);
-          //this.showMessage(error.response.data.error, "danger");
-          alert(error.response.data.error);
+          this.showMessage(error.response.data.error, "danger");
           this.disableButtons = false;
       })
     },
@@ -183,6 +181,14 @@ export default {
         notes: "",
         manager: null,
       }
+    },
+    showMessage(message, messageType) {
+       this.message = message;
+       this.messageType = messageType;
+       setTimeout(() => {
+          this.message = null;
+          this.messageType = null;
+          }, 5000);
     },
   }
 }

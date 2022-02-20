@@ -200,7 +200,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          //this.$router.replace("/pages/404");
+          this.$router.replace("/pages/404");
         });
     },
     fetchVehicleProperties() {
@@ -225,12 +225,11 @@ export default {
           this.properties = properties;
         })
         .catch((error) => {
-          //console.log(error);
+          console.log(error);
           this.showMessage("Please select a Dealership", "danger")
           //alert("stop");
           //this.showMessage("Please select a Dealership", "danger")
-          //this.showMessage("test", "danger");
-          //this.$router.replace("/pages/404");
+          this.$router.replace("/pages/404");
         });
     },
   },
