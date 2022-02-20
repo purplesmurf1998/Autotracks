@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
+    <CAlert :color="messageType" v-if="message">{{ message }}</CAlert>
     <CForm @submit.prevent="submitEvents">
       <CRow>
         <CCol>

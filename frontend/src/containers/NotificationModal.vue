@@ -61,9 +61,6 @@ export default {
     setTab(tab) {
       this.tab = tab;
     },
-    changeCursor() {
-      this.$refs.allNotif.style.cursor = "pointer";
-    },
     fetchNotifications() {
         this.notifications = [];
         axios({

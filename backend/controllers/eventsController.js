@@ -196,11 +196,9 @@ exports.markEventAsRead = asyncHandler(async (req, res, next) => {
   }
 
   // add the user ID to the list of viewers
-  let viewers = event.viewers;
-  if (!viewers.includes(user._id)) {
-    viewers.push(user._id);
+  if (!event.viewers.includes(user._id)) {
+    event.viewers.push(user._id);
   }
-  event.viewers = viewers;
 
   await Event.findByIdAndUpdate(req.params.eventId, event, {
     runValidators: true,
