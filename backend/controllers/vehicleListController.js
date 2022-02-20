@@ -13,13 +13,6 @@ exports.createVehicleList = asyncHandler(async (req, res, next) => {
   // create the list passed in the request body and let mongoose apply the proper validations
   const vehicleList = await VehicleList.create(req.body);
 
-  if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
-    return next(
-      new ErrorResponse(`User not found.`, 404)
-    );
-  }
-
   // send response
   res.status(201).json({
     success: true,

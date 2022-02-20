@@ -98,20 +98,7 @@ describe('Testing Sale Controller Class', () => {
   describe('Get Sales API Error Test (Invalid dealership_id)', () => {
     it('should return 404 because dealership_id is not valid', (done) => {
       chai.request(app)
-        .get("/api/v1/inventory/details/sale/618b3bf134f07d9a91c32b1a")
-        .set('authorization', 'Bearer ' + token)
-        .end( (err, response) => {
-          response.should.have.status(404);
-          done();
-        });
-    });
-  });
-
-  //The below test, refuses to return a list of empty sales
-  describe('Get Sales API Error Test (No sales)', () => {
-    it('should return 404 because the dealership doesnt have sales in it', (done) => {
-      chai.request(app)
-        .get("/api/v1/inventory/details/sale/61a7f8561f1880abfb2f4330")
+        .get("/api/v1/inventory/details/sale/dealership/618b3bf134f07d9a91c32b1a")
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(404);

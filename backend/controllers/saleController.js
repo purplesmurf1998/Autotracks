@@ -56,11 +56,6 @@ exports.getSales = asyncHandler(async (req, res, next) => {
     const sales = await Sale.find({ dealership: req.params.dealershipId })
     .populate('vehicle sales_rep approved_by');
 
-    // return error if no sale found
-    if (!sales) {
-        return next(new ErrorResponse(`An error occured while fetching transactions`, 404));
-    }
-
     res.status(200).json({
     success: true,
     payload: sales
