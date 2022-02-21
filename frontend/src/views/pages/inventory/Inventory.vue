@@ -11,12 +11,13 @@
           {{ message }}
         </CAlert>
         <CRow class="m-0 mb-3 d-flex justify-content-between">
-          <router-link :to="`/inventory/add/${selectedDealership}`">
+          <router-link :to="`/inventory/add/${selectedDealership}`" v-if="!!selectedDealership">
             <CButton color="primary" id="add-new-vehicle">
               Add vehicle(s) to the inventory
             </CButton>
           </router-link>
         </CRow>
+        <CAlert color="info" v-if="!selectedDealership && $store.state.auth.role == 'Administration'">Select a dealership or <strong><router-link to="/dealerships">create one</router-link></strong> before adding/viewing the inventory</CAlert>
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
@@ -24,8 +25,8 @@
           :showSetDefault="true"
         />
         <inventory-table
-          v-if="selectedDealership"
-          :dealership="selectedDealership"
+          v-if="selectedDealership || $store.state.auth.role != 'Administration'"
+          :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
           ref="inventoryTable"
         />
       </CCol>
@@ -36,7 +37,9 @@
       title="Vehicle Information Page"
       size="xl"
     >
-      <vehicle v-if="!!$route.query.vehicleSelected" :vehicleId="$route.query.vehicleSelected"/>
+      <vehicle v-if="!!$route.query.vehicleSelected" 
+      :vehicleId="$route.query.vehicleSelected" 
+      :refreshTable="$refs.inventoryTable.fetchVehicles"/>
       <template #header>
         <h6 class="modal-title">Vehicle Information Page</h6>
         <CButtonClose @click="closeModal" />
@@ -82,6 +85,13 @@ export default {
         this.messageType = null;
       }, 5000)
     },
+  },
+  mounted() {
+    var vehicle_id = localStorage.getItem('vehicle')
+    if (vehicle_id) {
+      this.$router.push("/inventory?vehicleSelected=" + vehicle_id);
+      localStorage.removeItem('vehicle');
+    }
   },
   components: {
     "inventory-table": InventoryTable,

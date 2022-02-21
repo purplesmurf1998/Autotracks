@@ -13,7 +13,7 @@
     </CNav>
     <hr />
 
-    <vehicle v-if="tab == 0 && vehicle" :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
+    <vehicle v-if="tab == 0 && vehicle" :vehicle="vehicle" :setNewVehicle="setNewVehicle" :refreshTable="refreshTable"/>
     <vehicle-history v-if="tab == 1 && vehicle" :vehicle="vehicle" />
   </div>
 </template>
@@ -25,7 +25,7 @@ import Vehicle from "../../../modules/vehicles/Vehicle.vue";
 import VehicleHistory from "../../../modules/vehicles/VehicleHistory.vue";
 
 export default {
-  props: ['vehicleId'],
+  props: ['vehicleId', 'refreshTable'],
   name: "Vehicle",
   data() {
     return {

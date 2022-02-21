@@ -3,7 +3,8 @@ const router = express.Router();
 
 const {
   getEvents,
-  getUnReadEvents
+  getUnReadEvents,
+  markEventAsRead,
 } = require('../controllers/eventsController');
 
 // get authentication middleware
@@ -14,5 +15,8 @@ router.route('/dealership/:dealershipId')
 
 router.route('/dealership/:dealershipId/user/:userId')
   .get(protect, getUnReadEvents);
+
+router.route('/:eventId/user/:userId')
+  .put(protect, markEventAsRead);
 
 module.exports = router;

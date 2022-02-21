@@ -9,7 +9,7 @@
           <CButton color="primary mb-3" @click="addingVehicleList = true"
             >Create a custom vehicle list</CButton
           >
-          <CRow class="m-0">
+          <CRow class="m-0" v-if="tableItems.length > 0">
             <CButton
               color="success"
               class="mb-3 mr-2"
@@ -43,6 +43,7 @@
           :clickable-rows="true"
           :column-filter="true"
           @row-clicked="clickRow"
+          v-if="tableItems.length > 0"
         >
           <template #select="{ item }">
             <td>
@@ -87,7 +88,7 @@
       </template>
     </CModal>
     <CModal :show.sync="addingVehicleList" :centered="true" size="lg">
-      <add-vehicle-list :finishAddingVehicleList="finishAddingVehicleList" />
+      <add-vehicle-list :finishAddingVehicleList="finishAddingVehicleList" :closeAddListModal="closeAddListModal" v-if="addingVehicleList"/>
       <template #header>
         <h6 class="modal-title">Creating a custom vehicle list!</h6>
         <CButtonClose @click="addingVehicleList = false" />
@@ -274,6 +275,9 @@ export default {
       queries = {};
       this.$router.replace({ query: queries });
     },
+    closeAddListModal() {
+      this.addingVehicleList = false;
+    }
   },
   beforeMount() {
     if (this.$store.state.auth.role == "Administration") {
