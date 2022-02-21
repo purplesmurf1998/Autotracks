@@ -2,7 +2,11 @@
   <div>
     <CCard class="mt-2">
       <CCardBody>
-        <h3 class="mb-3">Dealership Zones</h3>
+        <CRow>
+          <h3 class="mb-3">Dealership Zones</h3>
+          <CButton color="primary" @click="editPerimeters = true">Edit zone perimeters</CButton>
+        </CRow>
+        
         <CRow>
           <CCol v-if="addingNewZone">
             <CForm @submit.prevent="submitNewZone" v-if="addingNewZone">
@@ -22,7 +26,7 @@
                 color="secondary"
                 @click="
                   () => {
-                    path = [];
+                    newPath = [];
                     addingNewZone = false;
                   }
                 "
@@ -41,19 +45,11 @@
               style="height: 500px"
               :options="{
                 streetViewControl: false,
-                fullscreenControl: false,
+                fullscreenControl: true,
                 rotateControl: false,
               }"
               @click="mapClick"
             >
-              <!-- <gmap-polyline
-                v-if="newPath.length > 1 && newPath.length < 4"
-                ref="polylineRef"
-                :path="newPath"
-                :editable="false"
-                :visible="true"
-                :options="{ fillColor: 'red', fillOpacity: 0.5 }"
-              /> -->
               <gmap-polygon
                 v-if="newPath.length > 0"
                 ref="polygonRef"
@@ -67,14 +63,13 @@
                 v-for="zone in zones"
                 :key="zone._id"
                 :path="zone.path"
-                :editable="false"
+                :editable="editPerimeters"
                 :visible="true"
                 :draggable="true"
                 :options="{
                   fillColor: zone.fillColor,
                   fillOpacity: 0.5,
-                  strokeWeight: 0,
-                  strokeColor: 'blue',
+                  strokeWeight: 0
                 }"
               />
               <GmapMarker
@@ -104,59 +99,6 @@
           </template>
         </CDataTable>
         <CButton color="primary" @click="addingNewZone = true">Add a location zone</CButton>
-        <!-- <CRow>
-          <CCol>
-            
-
-            <CListGroup
-              class="mt-3 mb-3"
-              v-if="zones.length > 0 && !addingNewZone"
-            >
-              <div v-for="(zone, index) in zones" :key="zone._id">
-                <CListGroupItem
-                  tag="button"
-                  :id="zone._id"
-                  :active="selectedZone && zone._id == selectedZone._id"
-                  @click="setSelectedZone(zone, index)"
-                >
-                  {{ zone.name }}
-                </CListGroupItem>
-              </div>
-            </CListGroup>
-            <CButton
-              color="primary"
-              @click="addingNewZone = true"
-              v-if="!addingNewZone"
-              >Add New Zone</CButton
-            >
-            <CForm @submit.prevent="submitNewZone" v-if="addingNewZone">
-              <CInput
-                label="Name"
-                placeholder="Unique name for the zone"
-                v-model="newZoneName"
-                required
-              />
-              <CTextarea
-                label="Description (optional)"
-                placeholder="Enter the zone's description"
-                rows="5"
-                v-model="newZoneDescription"
-              />
-              <CButton
-                color="secondary"
-                @click="
-                  () => {
-                    path = [];
-                    addingNewZone = false;
-                  }
-                "
-                >Cancel</CButton
-              >
-              <CButton color="primary" type="submit">Add Zone</CButton>
-              <CButton color="danger" @click="undoLastPoint">Undo</CButton>
-            </CForm>
-          </CCol>
-        </CRow> -->
       </CCardBody>
     </CCard>
   </div>
@@ -172,10 +114,6 @@ const axios = require("axios");
 Vue.use(VueGoogleMaps, {
   load: {
     key: "AIzaSyDnzuP55GknIhhOh5L1pJbpPc5DBkc_2pM",
-    // key: ''
-    // To use the Google Maps JavaScript API, you must register your app project on the Google API Console and get a Google API key which you can add to your app
-    // v: 'OPTIONAL VERSION NUMBER',
-    // libraries: 'places', //// If you need to use place input
   },
 });
 
@@ -203,6 +141,7 @@ export default {
       selectedIndex: -1,
       closeDetails: false,
       addingZone: false,
+      editPerimeters: false,
       newPath: [],
       newZoneName: "",
       newZoneDescription: "",
@@ -246,20 +185,6 @@ export default {
       this.selectedZone = null;
       this.selectedIndex = -1;
       this.closeDetails = false;
-    },
-    toggleInfoWindow(marker, idx) {
-      console.log(marker.position);
-      this.infoWindowPos = marker.position;
-      this.infoContent = marker.title;
-      this.infoLink = marker.www;
-      // check if its the same marker that was selected if yes toggle
-      if (this.currentMidx === idx) {
-        this.infoWinOpen = !this.infoWinOpen;
-      } else {
-        // if different marker set infowindow to open and reset current marker index
-        this.currentMidx = idx;
-        this.infoWinOpen = true;
-      }
     },
     mapClick(event) {
       if (!this.addingNewZone) return;
