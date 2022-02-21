@@ -61,7 +61,7 @@ export default {
     setTab(tab) {
       this.tab = tab;
     },
-    fetchNotifications() {
+    fetchNotif() {
         this.notifications = [];
         axios({
             methods: "GET",
@@ -83,7 +83,7 @@ export default {
             console.log(error);
         })
     },
-    fetchUnReadNotif() {
+    getUnReadNotif() {
       // fetch new Unread events
       this.unReadNotif= [];
       axios({
@@ -107,7 +107,7 @@ export default {
         console.log(error);
       })
     },
-    redirect(notif) {
+    redirectPage(notif) {
       localStorage.setItem('vehicle', notif.vehicle)
       var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
       if (this.$route.path == '/transactions' || this.$route.path == '/inventory')
@@ -133,17 +133,17 @@ export default {
           console.log(error);
         })
         this.setNotifModal(false);
-        this.redirect(notif);
+        this.redirectPage(notif);
       }
       else {
-        this.redirect(notif);
+        this.redirectPage(notif);
       } 
     },
   },
   mounted() {
       this.subscribedEvents = this.$store.state.auth.userEventsSubscriptions.join(',');
-      this.fetchNotifications();
-      this.fetchUnReadNotif();
+      this.fetchNotif();
+      this.getUnReadNotif();
   },
 };
 </script>
