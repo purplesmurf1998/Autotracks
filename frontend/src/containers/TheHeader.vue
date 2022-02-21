@@ -11,6 +11,7 @@
       @click="$store.commit('toggleSidebarDesktop')"
     />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
+      <img src="../assets/polaris.svg" class="img-fluid" alt="Responsive image">
       <CIcon name="logo" height="48" alt="Logo"/>
     </CHeaderBrand>
     <!-- <CHeaderNav class="d-md-down-none mr-auto">
@@ -65,9 +66,14 @@ import TheHeaderDropdownAccnt from './TheHeaderDropdownAccnt'
 import TheHeaderDropdownNotif from './TheHeaderDropdownNotif'
 import TheHeaderDropdownTasks from './TheHeaderDropdownTasks'
 import TheHeaderDropdownMssgs from './TheHeaderDropdownMssgs'
-
+import logo from '../assets/polaris.svg'
 export default {
   name: 'TheHeader',
+  data(){
+    return {
+      logo: logo
+    }
+  },
   components: {
     TheHeaderDropdownAccnt,
     TheHeaderDropdownNotif,
