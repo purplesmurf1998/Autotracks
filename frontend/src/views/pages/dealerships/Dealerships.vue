@@ -40,7 +40,7 @@
           </div>
           <div class="col-sm-auto"></div>
         </CRow>
-        <CCard>
+        <CCard v-if="tableItems.length > 0">
           <CCardHeader>
             <slot name="header"> List of registered dealerships </slot>
           </CCardHeader>

@@ -92,6 +92,7 @@ httpServer.listen(PORT, () => {
 // test commit 4 for sonarcloud scan
 // test commit 5 for sonarcloud scan
 // test commit 6 for sonarcloud scan
+// test commit 7 for sonarcloud scan
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
 

@@ -89,6 +89,7 @@ export default {
         .then((response) => {
           const payload = response.data.payload;
           const fields = [];
+          var vehicle_id = localStorage.getItem('vehicle')
           payload.forEach((sale) => {
             //Format the data when fetched
             let items = {};
@@ -106,6 +107,11 @@ export default {
             items["Manager"] = approved_by_user_name;
             let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
             items["Approval Date"] = approval_date
+            //If a transaction notification clicked, check the vehicle storage if defined and render the transaction modal
+            if (vehicle_id && vehicle_id == sale.vehicle._id) {
+              this.rowClicked(items);
+              localStorage.removeItem('vehicle');
+            }
             fields.push(items);
           });
           this.tableItems = fields;

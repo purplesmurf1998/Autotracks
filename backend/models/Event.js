@@ -27,6 +27,11 @@ const EventSchema = new mongoose.Schema({
     ref: 'Vehicle',
     required: [true, 'An event must be associated to a vehicle.']
   },
+  //User first and last name that initiated the event
+  user: {
+    type: String,
+    required: [true, 'An event must be associated to a user.']
+  },
   // title of the event / main label
   title: {
     type: String,

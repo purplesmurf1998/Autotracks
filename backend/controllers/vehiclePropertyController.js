@@ -35,7 +35,6 @@ exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
   newProperty.position = position;
   newProperty.dealership = req.params.dealershipId;
 
-  console.log(newProperty);
   const newVehicleProperty = await VehicleProperty.create(newProperty);
 
   res.status(201).json({ success: true, payload: newVehicleProperty })
@@ -88,7 +87,6 @@ exports.deleteVehicleProperty = asyncHandler(async (req, res, next) => {
 exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => {
   // body of the request should have the list of vehicle properties in the new order
   // go through the list and change the positions in the backend to their new index
-  console.log('*****UPDATE VEHICLE PROPERTY POSITIONS*****');
 
   const vehicleProperties = req.body.properties;
   let newProperties = [];
@@ -104,7 +102,6 @@ exports.updateVehiclePropertyPositions = asyncHandler(async (req, res, next) => 
         runValidators: true
       }
     );
-    console.log(property)
     if (!property) {
       return next(new ErrorResponse(`Vehicle property not found with id ${vehicleProperties[i]._id}`, 404));
     }
