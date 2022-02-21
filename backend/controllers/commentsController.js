@@ -23,7 +23,6 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 // @route       POST /api/v1/comments/vehicle/:vehicleId
 // @access      Private
 exports.createComment = asyncHandler(async (req, res, next) => {
-  console.log("TESTTEST");
   let comment = await Comment.create(req.body);
 
   comment = await comment.populate('author');
