@@ -150,40 +150,6 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
     These datasets will be returned by the payload and saved locally in the frontend on mount.
     */
 
-    // const salesByWeek = await Sale.aggregate([
-    //     {
-    //         $match: {
-    //             dealership: dealership._id
-    //         }
-    //     },
-    //     {
-    //         $project: {
-    //             year: {$year: "$date_of_sale"},
-    //             month: {$month: "$date_of_sale"},
-    //             week: {$week: "$date_of_sale"}
-    //         }
-    //     },
-    //     {
-    //         $group: {
-    //             _id: {
-    //                 "year": "$year",
-    //                 "month": "$month",
-    //                 "week": "$week"
-    //             },
-    //             total: {
-    //                 $sum:1
-    //             }
-    //         }
-    //     },
-    //     {
-    //         $sort: {
-    //             "_id.year":1,
-    //             "_id.month":1,
-    //             "_id.week:":1
-    //         }
-    //     }
-    // ])
-
     const salesByMonth = await Sale.aggregate([
         {
             $match: {

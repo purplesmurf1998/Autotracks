@@ -12,7 +12,7 @@ import { CChartBar } from '@coreui/vue-chartjs'
 
 export default {
   name: 'DashboardLineChart',
-  props: ["dealership"],
+  props: ["dealership", "timescale"],
   components: { CChartBar },
   // Data stored in the component
   data() {
@@ -31,7 +31,7 @@ export default {
       monthlyLabels: [],
       yearlyPoints: [],
       yearlyLabels: [],
-      dataPoints: [{data:[]}],
+      dataPoints: [{data:[], backgroundColor: '#E55353', label: 'Sales over time'}],
       dataLabels: ["First", "Second"],
       dataPayload: [],
       chartOptions: {
@@ -41,7 +41,9 @@ export default {
           }],
           yAxes: [{
             ticks:{
-              beginAtZero: true
+              beginAtZero: true,
+              //callback: function(value) {if (value % 1 === 0){return value}}
+              stepSize: 1
             }
           }]
         }
@@ -78,11 +80,11 @@ export default {
         });
     },
     useDataSet(type) {
-      if (type == "month") {
+      if (type == "Month") {
         this.dataLabels = this.monthlyLabels
         this.dataPoints[0].data = this.monthlyPoints
       }
-      else if (type == "year") {
+      else if (type == "Year") {
         this.dataLabels = this.yearlyLabels
         this.dataPoints[0].data = this.yearlyPoints
       }
@@ -93,7 +95,7 @@ export default {
     console.log("Dashboard chart mounted -> "+`${this.dealership}`);
     setTimeout(() => {
       this.fetchSalesFromDealership(this.dealership);
-      this.useDataSet("month")
+      this.useDataSet(this.timescale)
     }, 1)
   }
 }

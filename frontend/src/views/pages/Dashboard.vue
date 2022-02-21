@@ -14,8 +14,8 @@
       <CCardBody>
         <CRow>
           <CCol sm="5">
-            <h4 id="traffic" class="card-title mb-0">Traffic</h4>
-            <div class="small text-muted">November 2017</div>
+            <h4 id="traffic" class="card-title mb-0">Sales Tracker</h4>
+            <div class="small text-muted">View vehicle sales grouped by month or year</div>
           </CCol>
           <CCol sm="7" class="d-none d-md-block">
             <CButton color="primary" class="float-right">
@@ -24,11 +24,11 @@
             <CButtonGroup class="float-right mr-3">
               <CButton
                 color="outline-secondary"
-                v-for="(value, key) in ['Day', 'Month', 'Year']"
+                v-for="(value, key) in ['Month', 'Year']"
                 :key="key"
                 class="mx-0"
-                :pressed="value === selected ? true : false"
-                @click="selected = value"
+                :pressed="value === selected"
+                @click="selectTimeScale(value)"
               >
                 {{ value }}
               </CButton>
@@ -38,7 +38,8 @@
         <DashboardLineChart
           v-if="selectedDealership"
           :dealership="selectedDealership"
-          ref="wdigetDD"
+          :timescale="selected"
+          ref="dlc"
         />
       </CCardBody>
     </CCard>
@@ -66,9 +67,16 @@ export default {
     // WidgetsBrand,
     DealershipDD,
   },
+  methods: {
+    selectTimeScale(choice) {
+      this.selected = choice
+      this.$refs.dlc.useDataSet(choice)
+      console.log("Dashboard line chart timescale: "+choice)
+    }
+  },
   data() {
     return {
-      selected: null, //To be used for thet line chart
+      selected: null, //To be used for the line chart
       selectedDealership: null,
     };
   },
