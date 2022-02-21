@@ -13,13 +13,6 @@ exports.createVehicleList = asyncHandler(async (req, res, next) => {
   // create the list passed in the request body and let mongoose apply the proper validations
   const vehicleList = await VehicleList.create(req.body);
 
-  if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
-    return next(
-      new ErrorResponse(`User not found.`, 404)
-    );
-  }
-
   // send response
   res.status(201).json({
     success: true,
@@ -36,9 +29,8 @@ exports.getVehicleList = asyncHandler(async (req, res, next) => {
   const vehicleList = await VehicleList.findById(req.params.vehicleListId).populate('vehicles');
 
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
-      new ErrorResponse(`User not found.`, 404)
+      new ErrorResponse(`Vehicle list not found.`, 404)
     );
   }
 
@@ -61,9 +53,8 @@ exports.updateVehicleList = asyncHandler(async (req, res, next) => {
   }).populate('vehicles');
 
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
-      new ErrorResponse(`User not found.`, 404)
+      new ErrorResponse(`Vehicle list not found.`, 404)
     );
   }
 
@@ -106,15 +97,12 @@ exports.deleteVehicleLists = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Add a vehicle to the list
-// @route   POST /api/v1/vehicle-list/add/:vehicleListId
+// @route   POST /api/v1/vehicle-list/:vehicleListId/add
 // @access  Private
 exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
-
   // find the vehicle list owned by the provided userId
   const vehicleList = await VehicleList.findById(req.params.vehicleListId);
-
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
       new ErrorResponse(`Vehicle list not found.`, 404)
     );
@@ -164,7 +152,6 @@ exports.deleteVehiclesFromList = asyncHandler(async (req, res, next) => {
   const vehicleList = await VehicleList.findById(req.params.vehicleListId);
 
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
       new ErrorResponse(`Vehicle list not found.`, 404)
     );

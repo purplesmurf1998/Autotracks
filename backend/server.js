@@ -103,3 +103,4 @@ var swaggerUi = require('swagger-ui-express');
 var swaggerDocument = require('./pikturr/swagger.json')
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
+module.exports = app;
