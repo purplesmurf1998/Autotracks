@@ -146,7 +146,7 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
     }
 
     /*
-    The logic will be to get all the sales from the start, then process them into 3 datasets here in the backend.
+    The logic will be to get all the sales from the start, then process them into 2 datasets here in the backend.
     These datasets will be returned by the payload and saved locally in the frontend on mount.
     */
 

@@ -21,6 +21,20 @@
             <CButton color="primary" class="float-right">
               <CIcon name="cil-cloud-download" />
             </CButton>
+            <!-- Use this button to select the number of periods to display -->
+            <CButtonGroup class="float-right mr-3">
+              <CButton
+                color="outline-secondary"
+                v-for="(value, key) in ['Last 12', 'All']"
+                :key="key"
+                class="mx-0"
+                :pressed="value === selectedPeriod"
+                @click="selectPeriod(value)"
+              >
+                {{ value }}
+              </CButton>
+            </CButtonGroup>
+            <!-- Use this button to select monthly or yearly buckets -->
             <CButtonGroup class="float-right mr-3">
               <CButton
                 color="outline-secondary"
@@ -39,6 +53,7 @@
           v-if="selectedDealership"
           :dealership="selectedDealership"
           :timescale="selected"
+          :periods="selectedPeriod"
           ref="dlc"
         />
       </CCardBody>
@@ -68,16 +83,27 @@ export default {
     DealershipDD,
   },
   methods: {
+    /*
+    Both selectTimeScale and selectPeriod call the useDataSet from the child DashboardLineChart.
+    However, these need to be different methods for the sake of @click.
+    */
     selectTimeScale(choice) {
       this.selected = choice
-      this.$refs.dlc.useDataSet(choice)
+      this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
       console.log("Dashboard line chart timescale: "+choice)
+    },
+    selectPeriod(choice) {
+      this.selectedPeriod = choice
+      this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
+      console.log("Dashboard line chart period: "+choice)
     }
   },
   data() {
     return {
-      selected: null, //To be used for the line chart
+      // Defaults for selected (timescale) and selectedPeriod are here.
+      selected: "Month", //To be used for the line chart
       selectedDealership: null,
+      selectedPeriod: "All"
     };
   },
 };

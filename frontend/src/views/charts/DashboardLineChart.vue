@@ -12,7 +12,7 @@ import { CChartBar } from '@coreui/vue-chartjs'
 
 export default {
   name: 'DashboardLineChart',
-  props: ["dealership", "timescale"],
+  props: ["dealership", "timescale", "periods"],
   components: { CChartBar },
   // Data stored in the component
   data() {
@@ -79,14 +79,30 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    useDataSet(type) {
+    /*
+    This method uses Array.slice(N) with a negative integer to get the last N objects.
+    It returns a shallow copy and does not modify the original array.
+    */
+    useDataSet(type, period) {
       if (type == "Month") {
-        this.dataLabels = this.monthlyLabels
-        this.dataPoints[0].data = this.monthlyPoints
+        if (period == "All") {
+          this.dataLabels = this.monthlyLabels
+          this.dataPoints[0].data = this.monthlyPoints
+        }
+        else if (period == "Last 12") {
+          this.dataLabels = this.monthlyLabels.slice(-12)
+          this.dataPoints[0].data = this.monthlyPoints.slice(-12)
+        }
       }
       else if (type == "Year") {
-        this.dataLabels = this.yearlyLabels
-        this.dataPoints[0].data = this.yearlyPoints
+        if (period == "All") {
+          this.dataLabels = this.yearlyLabels
+          this.dataPoints[0].data = this.yearlyPoints
+        }
+        else if (period == "Last 12") {
+          this.dataLabels = this.yearlyLabels.slice(-12)
+          this.dataPoints[0].data = this.yearlyPoints.slice(-12)
+        }
       }
     },
   },
@@ -95,7 +111,7 @@ export default {
     console.log("Dashboard chart mounted -> "+`${this.dealership}`);
     setTimeout(() => {
       this.fetchSalesFromDealership(this.dealership);
-      this.useDataSet(this.timescale)
+      this.useDataSet(this.timescale, this.periods);
     }, 1)
   }
 }
