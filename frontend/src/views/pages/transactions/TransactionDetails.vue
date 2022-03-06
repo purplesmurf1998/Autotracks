@@ -216,8 +216,6 @@ export default {
     approveSale () {
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
-      // prints date & time in YYYY-MM-DD format
       axios({
           method: 'PUT',
           url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,
@@ -225,7 +223,7 @@ export default {
             'Authorization': `Bearer ${this.$store.state.auth.token}`
           },
           data: {
-            date_approved: date,
+            date_approved: date_ob,
           }
       }).then(response => {
           if (response.data.success) {
@@ -261,9 +259,8 @@ export default {
       let body = this.saleObject.vehicle;
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
       body.delivered = true;
-      body.date_delivered = date;
+      body.date_delivered = date_ob;
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${body._id}`,
