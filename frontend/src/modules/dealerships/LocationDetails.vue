@@ -2,13 +2,32 @@
   <div>
     <CCardBody>
       <CForm>
-        <CInput label="Name" horizontal size="sm" v-model="name"/>
-        <CTextarea label="Description" horizontal rows="5" v-model="description"/>
-        <CRow class="d-flex justify-content-end m-0">
-          <CButton color="success" class="mr-2" @click="saveAndClose">Save and Close</CButton>
+        <CInput label="Name" horizontal size="sm" v-model="name" />
+        <CTextarea
+          label="Description"
+          horizontal
+          rows="5"
+          v-model="description"
+        />
+        <CRow
+          class="d-flex justify-content-end m-0"
+          v-if="editingPath != zone._id"
+        >
+          <CButton color="success" class="mr-2" @click="saveAndClose"
+            >Save and Close</CButton
+          >
+          <CButton color="primary" class="mr-2" @click="editPerimter"
+            >Edit Zone Perimeter</CButton
+          >
           <CButton color="danger" @click="showConfirmDeleteModal = true"
             >Delete</CButton
           >
+        </CRow>
+        <CRow class="d-flex justify-content-end m-0" v-else>
+          <CButton color="success" class="mr-2" @click="savePath"
+            >Save and Close</CButton
+          >
+          <CButton color="secondary" @click="cancelPath">Cancel</CButton>
         </CRow>
       </CForm>
     </CCardBody>
@@ -38,32 +57,44 @@
 </template>
 
 <script>
-const axios = require('axios');
+const axios = require("axios");
 
 export default {
-  props: ["zone"],
+  props: ["zone", "editingPath"],
   data() {
     return {
       showConfirmDeleteModal: false,
-      name: '',
-      description: '',
+      name: "",
+      description: "",
     };
   },
   methods: {
+    savePath() {
+      this.$emit("save-edited-path");
+    },
+    cancelPath() {
+      this.$emit("cancel-edited-path");
+    },
+    editPerimter() {
+      this.$emit("edit-perimeter", this.zone);
+    },
     deleteLocation() {
       this.showConfirmDeleteModal = false;
       this.$emit("delete", this.zone._id);
     },
     saveAndClose() {
-      if (this.name == this.zone.name && this.description == this.zone.description) {
-        this.$emit('close');
+      if (
+        this.name == this.zone.name &&
+        this.description == this.zone.description
+      ) {
+        this.$emit("close");
         return;
-      } 
+      }
 
       const data = {
         name: this.name,
-        description: this.description
-      }
+        description: this.description,
+      };
 
       axios({
         method: "PUT",
@@ -71,19 +102,21 @@ export default {
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
-        data
-      }).then((response) => {
-        this.$emit('closeAndSave', response.data.payload);
-      }).catch((error) => {
-        console.log(error);
-        this.showErrorMessage("Unable to save the information");
-      });
-    }
+        data,
+      })
+        .then((response) => {
+          this.$emit("closeAndSave", response.data.payload);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.showErrorMessage("Unable to save the information");
+        });
+    },
   },
   mounted() {
     this.name = this.zone.name;
     this.description = this.zone.description;
-  }
+  },
 };
 </script>
 
