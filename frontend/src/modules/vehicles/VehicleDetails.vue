@@ -186,6 +186,7 @@
 
 <script>
 const axios = require("axios");
+const QRCode = require("qrcode")
 const { containsPermissions } = require("../../utils/index");
 import VehicleSell from "./SellVehicle.vue";
 import AddToVehicleList from "./AddToVehicleList.vue"
@@ -311,16 +312,24 @@ export default {
           this.showMessage("Error occured while updating vehicle location", "danger");
         });
     },
-    downloadQrCode() {
-        const url1 = "http://localhost:8080/#/inventory?vehicleSelected=" + this.vehicle._id
-        console.log(url1)
-        //Call functon that returns the img here and add it as a blob below
-        const url = window.URL.createObjectURL(new Blob(["https://i.imgur.com/lF1GKDt.jpg"]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "qrCode.png");
-        document.body.appendChild(link);
-        link.click();
+    async downloadQrCode() {
+      const url1 = "http://localhost:8080/#/inventory?vehicleSelected=" + this.vehicle._id
+      console.log(url1)
+      var src_qr = await QRCode.toDataURL(url1)
+      console.log(src_qr)
+      axios({
+        url: src_qr,
+        method:'GET',
+        responseType: 'blob'
+      }).then((response) => {
+        var fileUrl = window.URL.createObjectURL(new Blob([response.data]))
+        var fileLink = document.createElement('a')
+        fileLink.href = fileUrl
+
+        fileLink.setAttribute('download', 'qr_code.jpg')
+        document.body.appendChild(fileLink)
+        fileLink.click()
+      })
     },
     fetchDealershipUsers() {
       axios({
