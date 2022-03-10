@@ -102,6 +102,7 @@
                 @edit-perimeter="editPerimeter"
                 @cancel-edited-path="cancelEditedPath"
                 @save-edited-path="saveEditedPath"
+                @delete="deleteLocation"
               />
             </CCollapse>
           </template>
@@ -205,6 +206,22 @@ export default {
           this.showErrorMessage("Unable to create the vehicle property.");
         });
     },
+    deleteLocation(zoneid){
+           axios({
+        method: "DELETE",
+        url: `${this.$store.state.api}/locations/zones/${zoneid}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then(() => {
+          this.fetchLocationZones()
+        })
+        .catch((error) => {
+          console.log(error);
+          this.showErrorMessage("Unable to delete the vehicle property.");
+        });
+    },
     cancelEditedPath() {
       this.isEditingPerimeter = null;
       this.editedPath = [];
@@ -292,6 +309,7 @@ export default {
           this.zones.push(response.data.payload);
           this.newPath = [];
           this.addingNewZone = false;
+          this.fetchLocationZones()
         })
         .catch((error) => {
           console.log(error);
