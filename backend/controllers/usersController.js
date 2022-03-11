@@ -21,6 +21,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
         );
     }
 
+    //The below code needs to be removed. As permissions are going to get removed
     // grab the user passed in the auth token and make sure they have "Add Staff Users" permission
     const loggedUser = req.user;
     var flag = loggedUser.permissions.includes("Add Staff Users");

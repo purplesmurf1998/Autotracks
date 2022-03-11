@@ -8,6 +8,8 @@ const {
 } = require('../controllers/eventsController');
 
 // get authentication middleware
+//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
+
 const { protect, hasPermissions } = require('../middleware/auth');
 
 router.route('/dealership/:dealershipId')

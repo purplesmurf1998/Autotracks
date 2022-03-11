@@ -21,6 +21,7 @@ const {
 
 // get authentication middleware
 const { protect, hasPermissions } = require('../middleware/auth');
+//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
 
 router.route('/')
   .post(protect, hasPermissions('Add Vehicles'), createVehicle);

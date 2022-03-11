@@ -43,6 +43,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 });
 
+//To be refactored into hasRole
 exports.hasPermissions = (...permissions) => {
 
   return asyncHandler(async (req, res, next) => {
