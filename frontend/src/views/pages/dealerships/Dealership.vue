@@ -10,13 +10,13 @@
             </h2>
             <p>{{ dealership.description }}</p>
             <router-link to="/dealerships">
-              <CButton color="primary"> Back to list </CButton>
+              <CButton color="secondary"> Back to list </CButton>
             </router-link>
             <br />
             <CButton
               id="edit-dealership"
               v-if="!editingDealership"
-              color="secondary"
+              color="primary"
               class="mt-2"
               @click="setEditingDealership(true)"
               >Edit dealership details</CButton
@@ -46,6 +46,7 @@
       <dealership-vehicle-properties
         v-if="userHasPermissions('View Vehicle Properties')"
       />
+      <dealership-locations />
     </CCol>
   </div>
 </template>
@@ -54,6 +55,7 @@
 import EditDealership from "./EditDealership.vue";
 import DealershipAccounts from "../../../modules/users/DealershipAccounts.vue";
 import DealershipVehicleProperties from "../../../modules/vehicleProperties/DealershipVehicleProperties.vue";
+import DealershipLocations from "../../../modules/dealerships/DealershipLocations.vue";
 
 const axios = require("axios");
 const { containsPermissions } = require("../../../utils/index");
@@ -97,6 +99,7 @@ export default {
     "edit-dealership": EditDealership,
     "dealership-accounts": DealershipAccounts,
     "dealership-vehicle-properties": DealershipVehicleProperties,
+    "dealership-locations": DealershipLocations,
   },
 };
 </script>

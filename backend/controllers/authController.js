@@ -140,7 +140,6 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
             new ErrorResponse('User not found', 404)
         );
     }
-    console.log(req.body);
     // validate the entered password to the user password
     const passwordMatch = await user.matchPassword(req.body.currentPassword);
     if (!passwordMatch) {

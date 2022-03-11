@@ -11,52 +11,32 @@
       @click="$store.commit('toggleSidebarDesktop')"
     />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
+      <img src="../assets/polaris.svg" class="img-fluid" alt="Responsive image">
       <CIcon name="logo" height="48" alt="Logo"/>
     </CHeaderBrand>
-    <!-- <CHeaderNav class="d-md-down-none mr-auto">
-      <CHeaderNavItem class="px-3">
-        <CHeaderNavLink to="/dashboard">
-          Dashboard
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="px-3">
-        <CHeaderNavLink to="/users" exact>
-          Users
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="px-3">
-        <CHeaderNavLink>
-          Settings
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-    </CHeaderNav> -->
     <CHeaderNav class="ml-auto">
-      <!-- <CHeaderNavItem class="px-3 c-d-legacy-none">
-        <button
-          @click="() => $store.commit('toggle', 'darkMode')"
-          class="c-header-nav-btn"
-        >
-          <CIcon v-if="$store.state.darkMode" name="cil-sun"/>
-          <CIcon v-else name="cil-moon"/>
-        </button>
-      </CHeaderNavItem> -->
-      <TheHeaderDropdownNotif/>
-      <!-- <TheHeaderDropdownTasks/> -->
+      <TheHeaderDropdownNotif @notifModal="showNotifModal = true"/>
       <TheHeaderDropdownMssgs/>
       <TheHeaderDropdownAccnt class="mr-3"/>
-      <!-- <CHeaderNavItem class="px-3">
-        <button
-          class="c-header-nav-btn"
-          @click="$store.commit('toggle', 'asideShow')"
-        >
-          <CIcon size="lg" name="cil-applications-settings" class="mr-2"/>
-        </button>
-      </CHeaderNavItem> -->
     </CHeaderNav>
 
     <CSubheader class="px-3">
       <CBreadcrumbRouter class="border-0 mb-0"/>
     </CSubheader>
+    <CModal :show.sync="showNotifModal" :centered="true">
+      <notif-modal
+        v-if="showNotifModal"
+        :setNotifModal="setNotifModal"
+        @notifRead="unReadNotif = $event"
+      />
+      <template #header>
+        <h6 class="modal-title">Notifications</h6>
+        <CButtonClose @click="setNotifModal(false)" />
+      </template>
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
   </CHeader>
 </template>
 
@@ -65,14 +45,34 @@ import TheHeaderDropdownAccnt from './TheHeaderDropdownAccnt'
 import TheHeaderDropdownNotif from './TheHeaderDropdownNotif'
 import TheHeaderDropdownTasks from './TheHeaderDropdownTasks'
 import TheHeaderDropdownMssgs from './TheHeaderDropdownMssgs'
+import logo from '../assets/polaris.svg'
+import NotifModal from "./NotificationModal.vue"
+const axios = require("axios");
 
 export default {
   name: 'TheHeader',
+  data(){
+    return {
+      logo: logo
+    }
+  },
   components: {
     TheHeaderDropdownAccnt,
     TheHeaderDropdownNotif,
     TheHeaderDropdownTasks,
-    TheHeaderDropdownMssgs
+    TheHeaderDropdownMssgs,
+    "notif-modal": NotifModal,
+  },
+  data() {
+    return {
+      showNotifModal: false,
+      unReadNotif: [],
+    }
+  },
+  methods: {
+    setNotifModal(value) {
+      this.showNotifModal = value;
+    },
   }
 }
 </script>

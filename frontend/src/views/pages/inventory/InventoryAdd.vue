@@ -40,6 +40,7 @@
                   name="vin"
                   v-model="vin"
                   :required="true"
+                  id="vin"
                 />
               <div v-for="property in vehicleProperties" :key="property._id">
                 <CInput
@@ -90,9 +91,9 @@
         <!-- <CButtonClose @click="showingModal = false" /> -->
       </template>
       <template #footer>
-        <CButton @click="showingModal = false" color="success">Yes</CButton>
+        <CButton @click="showingModal = false" color="primary">Yes</CButton>
         <router-link to="/inventory"
-          ><CButton color="danger">No</CButton></router-link
+          ><CButton color="secondary">No</CButton></router-link
         >
       </template>
     </CModal>
@@ -130,6 +131,7 @@ export default {
       this.submitVehicle(properties);
     },
     resetForm() {
+      this.vin="";
       this.vehicleProperties.forEach((property) => {
         this.properties[property.key] = "";
       });
@@ -224,7 +226,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          this.$router.replace("/pages/404");
+          this.showMessage("Please select a Dealership", "danger")
         });
     },
   },

@@ -44,7 +44,7 @@
               </CListGroupItem>
             </draggable>
             <CButton
-              color="secondary"
+              color="primary"
               class="mt-3"
               id="create-vehicle-property"
               @click="

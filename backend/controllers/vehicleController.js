@@ -98,7 +98,6 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 // @route       PUT /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
 exports.updateVehicle = asyncHandler(async (req, res, next) => {
-  console.log(req);
 
   // find vehicle to update
   const vehicle = await Vehicle.findById(req.params.vehicleId);

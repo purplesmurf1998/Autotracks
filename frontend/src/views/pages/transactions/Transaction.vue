@@ -14,8 +14,8 @@
           :showMessage="showMessage"
         />
         <transaction-table
-          v-if="selectedDealership"
-          :dealership="selectedDealership"
+          v-if="selectedDealership || $store.state.auth.role != 'Administration'"
+          :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
           :showMessage="showMessage"
           ref="transactionTable"
         />
