@@ -7,7 +7,8 @@ const {
   getVehiclesDashboardV3,
   createVehicle,
   updateVehicle,
-  deleteVehicle
+  deleteVehicle,
+  getNotSoldVehicles
 } = require('../controllers/vehicleController');
 
 // get authentication middleware
@@ -18,6 +19,9 @@ router.route('/')
 
 router.route('/dealership/:dealershipId')
   .get(protect, hasPermissions('View Vehicles'), getVehicles);
+
+router.route('/dealership/:dealershipId/notSold')
+    .get(protect, hasPermissions('View Vehicles'), getNotSoldVehicles);
 
 //Add permissions  
 router.route('/dealership/:dealershipId/visual3/:property')

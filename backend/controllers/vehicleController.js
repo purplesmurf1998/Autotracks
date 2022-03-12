@@ -34,6 +34,36 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc        Get only not-sold vehicles for a specific dealership
+// @route       GET /api/v1/inventory/dealership/:dealershipId/notSold
+// @access      Private
+exports.getNotSoldVehicles = asyncHandler(async (req, res, next) => {
+
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.params.dealershipId);
+
+  // no dealership found
+  if (!dealership) {
+    return next(
+        new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+    );
+  }
+
+  let query = Vehicle.find({ dealership: req.params.dealershipId, sale: null});
+  let inventory_query = Vehicle.count({ dealership: req.params.dealershipId, delivered: { $ne: true }, sale: null });
+
+  // run query
+  const vehicles = await query;
+  const inventory_not_sold_vehicle = await inventory_query;
+
+  res.status(200).json({
+    success: true,
+    count: vehicles.length,
+    inventoryNotSoldCount: inventory_not_sold_vehicle,
+    payload: vehicles
+  });
+});
+
 // @desc        Get inventory count per vehicle property
 // @route       GET /api/v1/inventory/dealership/:dealershipId/visual3/:property
 // @access      Private
