@@ -1,6 +1,7 @@
 import Store from '../store/index.js'
 
 // Utility function for verifying if a user has certain permissions
+//Check this function later
 export function containsPermissions(...permissions) {
   let value = true;
 
