@@ -3,17 +3,15 @@ import Store from '../store/index.js'
 // Utility function for verifying if a user has certain permissions
 //Check this function later
 export function containsRoles(...roles) {
-  let permission = false;
-
+  let allowed = false;
   const userRole = Store.state.auth.role;
-
   // use the defined nested function to check each role passed in the arguments
-  roles.forEach(role => {
+  roles[0].forEach(role => {
     if (userRole == role) {
-      permission = true;
+      allowed = true;
     }
   })
-  return permission;
+  return allowed;
 }
 
 export function getFormattedProperties(properties, values) {

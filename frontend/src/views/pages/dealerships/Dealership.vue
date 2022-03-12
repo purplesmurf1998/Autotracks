@@ -10,7 +10,7 @@
             </h2>
             <p>{{ dealership.description }}</p>
             <router-link to="/dealerships">
-              <CButton color="secondary"> Back to list </CButton>
+              <CButton color="secondary" v-if="userHasRoles('Administration')"> Back to list </CButton>
             </router-link>
             <br />
             <CButton

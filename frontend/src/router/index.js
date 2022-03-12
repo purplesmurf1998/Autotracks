@@ -217,8 +217,10 @@ router.beforeEach((to, from, next) => {
 
     let authorized = false;
     to.meta.permissionsRequired.forEach(role => {
-      if (Store.state.auth.role == role)
+      if (Store.state.auth.role == role) {
+        authorized = true;
         next();
+      } 
     });
     
     if (!authorized)
