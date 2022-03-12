@@ -84,7 +84,7 @@ export default {
     };
   },
   methods: {
-    userHasROles(...roles) {
+    userHasRoles(...roles) {
       return containsRoles(roles);
     },
     setActiveStaff(user, index) {
