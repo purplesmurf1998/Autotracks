@@ -93,7 +93,7 @@
         </CRow>
         <CRow>
           <CButton
-            v-if="saleDetail['Approval Date']=='-' && disableButtons"
+            v-if="saleDetail['Approval Date']=='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="primary"
             id="approve_sale"
@@ -102,7 +102,7 @@
           Approve Sale
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-' && disableButtons"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="primary"
             id="set_delivered"
@@ -111,7 +111,7 @@
           Mark as Delivered
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="secondary"
             id="edit_sale"
@@ -120,7 +120,7 @@
           Edit
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="danger"
             id="edit_sale"
@@ -131,7 +131,7 @@
         </CRow>
         <CRow class="justify-content-center">
           <CButton
-            v-if="!disableButtons"
+            v-if="!disableButtons && userHasRoles('Administration', 'Management')"
             color="primary"
             id = "update-sale"
             @click="updateSale"
@@ -139,7 +139,7 @@
             Update
           </CButton>
           <CButton
-            v-if="!disableButtons"
+            v-if="!disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-1"
             color="secondary"
             :disabled="disableButtons"
@@ -169,6 +169,7 @@
 
 <script>
 const axios = require('axios');
+const { containsRoles } = require("../../../utils/index");
 
 export default {
   name: 'transactionDetails',
@@ -189,6 +190,9 @@ export default {
     }
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     deleteSale() {
       axios({
         method: "DELETE",
