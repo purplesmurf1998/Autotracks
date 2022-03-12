@@ -72,6 +72,7 @@ export default {
           this.yearlyPoints = this.dataPayload.formattedSalesByYear[1]
           this.dataLabels = this.dataPayload.formattedSalesByMonth[0]
           this.dataPoints[0].data = this.dataPayload.formattedSalesByMonth[1]
+          this.useDataSet(this.timescale, this.periods);
         })
         .catch((error) => {
           console.log(error);
@@ -111,7 +112,6 @@ export default {
     console.log("Dashboard chart mounted -> "+`${this.dealership}`);
     setTimeout(() => {
       this.fetchSalesFromDealership(this.dealership);
-      this.useDataSet(this.timescale, this.periods);
     }, 1)
   }
 }

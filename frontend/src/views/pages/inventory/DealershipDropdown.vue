@@ -55,6 +55,7 @@ export default {
             //Propogate the selected dealershipID to the parent component (i.e. dashboard) via sending the selectDealership event
             this.$emit('selectDealership', this.dealership);
             this.$parent.$refs.wdigetDD.fetchVehiclesInInventory(this.dealership);
+            this.$parent.$refs.dlc.fetchSalesFromDealership(this.dealership);
         }
         else {
           this.dealership = selected_val.target.value
@@ -125,7 +126,7 @@ export default {
     },
   },
   mounted() {
-    /* 
+    /*
     Get the dealership being viewed. If the user is an administrator, offer a dropdown so they can select
     which dealership to view. If not an administrator, use the dealership associated to the account.
     */
