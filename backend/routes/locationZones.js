@@ -11,16 +11,16 @@ const {
 // get authentication middleware
 //hasPermissions need to be refactored to has roles, with a possibility of a complete removal
 
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, createLocationZone);
+  .post(protect, hasRoles('Administration', 'Management'), createLocationZone);
 
 router.route('/:zoneId')
-  .delete(protect, deleteLocationZone)
-  .put(protect, updateZoneNameDescription);
+  .delete(protect, hasRoles('Administration', 'Management'), deleteLocationZone)
+  .put(protect, hasRoles('Administration', 'Management'), updateZoneNameDescription);
 
 router.route('/dealership/:dealershipId')
-  .get(protect, getLocationZones);
+  .get(protect, hasRoles('Administration', 'Management'), getLocationZones);
 
 module.exports = router;

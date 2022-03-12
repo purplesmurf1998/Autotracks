@@ -14,28 +14,25 @@ const {
   createEvent
 } = require('../controllers/eventsController');
 
-
 const {
   createHistory
 } = require('../controllers/historyController');
 
 // get authentication middleware
-const { protect, hasPermissions } = require('../middleware/auth');
-//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
+const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, hasPermissions('Add Vehicles'), createVehicle);
+  .post(protect, hasRoles('Administration', 'Management', 'Reception'), createVehicle);
 
 router.route('/dealership/:dealershipId')
-  .get(protect, hasPermissions('View Vehicles'), getVehicles);
+  .get(protect, getVehicles);
 
-//Add permissions  
 router.route('/dealership/:dealershipId/visual3/:property')
-.get(protect, getVehiclesDashboardV3);
+  .get(protect, getVehiclesDashboardV3);
 
 router.route('/vehicle/:vehicleId')
-  .get(protect, hasPermissions('View Vehicles'), getVehicle)
-  .put(protect, hasPermissions('Edit Vehicles'), createEvent, createHistory, updateVehicle)
-  .delete(protect, hasPermissions('Delete Vehicles'), createEvent, createHistory, deleteVehicle);
+  .get(protect, getVehicle)
+  .put(protect, createEvent, createHistory, updateVehicle)
+  .delete(protect, hasRoles('Administration', 'Management'), createEvent, createHistory, deleteVehicle);
 
 module.exports = router;

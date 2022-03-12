@@ -11,19 +11,17 @@ const {
 } = require('../controllers/usersController');
 
 // get authentication middleware
-//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
-
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect, hasRoles } = require('../middleware/auth');
 
 // attach methods to the proper routes
 router.route('/')
-    .get(protect, hasPermissions('View Staff Users'), getUsers)
-    .post(protect, hasPermissions('Add Staff Users'), createUser);
+    .get(protect, hasRoles('Administration', 'Management'), getUsers)
+    .post(protect, hasRoles('Administration', 'Management'), createUser);
 
 router.route('/:userId')
-    .get(protect, hasPermissions('View Staff Users'), getUser)
-    .put(protect, hasPermissions('Edit Staff Users'), updateUser)
-    .delete(protect, hasPermissions('Delete Staff Users'), deleteUser);
+    .get(protect, hasRoles('Administration', 'Management'), getUser)
+    .put(protect, hasRoles('Administration', 'Management'), updateUser)
+    .delete(protect, hasRoles('Administration', 'Management'), deleteUser);
 
 // export the router so it can be used in the server.js file
 module.exports = router;

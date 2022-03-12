@@ -12,17 +12,17 @@ const {
 
 // get authentication middleware
 //hasPermissions need to be refactored to has roles, with a possibility of a complete removal
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect, hasRoles } = require('../middleware/auth');
 
 // attach methods to the proper routes
 router.route('/')
-    .get(protect, hasPermissions('View Dealerships'), getDealerships)
-    .post(protect, hasPermissions('Add Dealerships'), createDealership);
+    .get(protect, hasRoles('Administration'), getDealerships)
+    .post(protect, hasRoles('Administration'), createDealership);
 
 router.route('/:dealershipId')
-    .get(protect, hasPermissions('View Dealerships'), getDealership)
-    .put(protect, hasPermissions('Edit Dealerships'), updateDealership)
-    .delete(protect, hasPermissions('Delete Dealerships'), deleteDealership);
+    .get(protect, hasRoles('Administration', 'Management'), getDealership)
+    .put(protect, hasRoles('Administration'), updateDealership)
+    .delete(protect, hasRoles('Administration'), deleteDealership);
 
 // export the router so it can be used in the server.js file
 module.exports = router;

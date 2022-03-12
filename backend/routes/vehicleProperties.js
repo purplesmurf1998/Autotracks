@@ -10,17 +10,15 @@ const {
 } = require('../controllers/vehiclePropertyController');
 
 // get authentication middleware
-//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
-
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, hasPermissions('Add Vehicle Property'), createVehicleProperty)
-  .get(protect, hasPermissions('View Vehicle Properties'), getVehicleProperties)
-  .put(protect, hasPermissions('Edit Vehicle Properties'), updateVehiclePropertyPositions);
+  .post(protect, hasRoles('Administration', 'Management'), createVehicleProperty)
+  .get(protect, getVehicleProperties)
+  .put(protect, hasRoles('Administration', 'Management'), updateVehiclePropertyPositions);
 
 router.route('/:propertyId')
-  .put(protect, hasPermissions('Edit Vehicle Properties'), updateVehicleProperty)
-  .delete(protect, hasPermissions('Delete Vehicle Properties'), deleteVehicleProperty);
+  .put(protect, hasRoles('Administration', 'Management'), updateVehicleProperty)
+  .delete(protect, hasRoles('Administration', 'Management'), deleteVehicleProperty);
 
 module.exports = router;

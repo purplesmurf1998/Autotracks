@@ -18,19 +18,17 @@ const {
 } = require('../controllers/historyController');
 
 // get authentication middleware
-//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
-
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, createEvent, createHistory, createSale)
+  .post(protect, hasRoles('Administration', 'Management', 'Sales Rep'), createEvent, createHistory, createSale)
 
 router.route('/:saleId')
-  .delete(protect, createHistory, deleteSale)
-  .put(protect, createEvent, createHistory, updateSale)
-  .get(protect, getSale)
+  .delete(protect, hasRoles('Administration', 'Management', 'Sales Rep'), createHistory, deleteSale)
+  .put(protect, hasRoles('Administration', 'Management', 'Sales Rep'), createEvent, createHistory, updateSale)
+  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getSale)
 
 router.route('/dealership/:dealershipId')
-  .get(protect, getSales)
+  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getSales)
 
 module.exports = router;
