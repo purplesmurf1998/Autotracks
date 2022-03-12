@@ -314,7 +314,6 @@ export default {
     async downloadQrCode() {
       const url1 = "http://localhost:8080/#/inventory?vehicleSelected=" + this.vehicle._id
       var src_qr = await QRCode.toDataURL(url1)
-      console.log(src_qr)
       axios({
         url: src_qr,
         method:'GET',
