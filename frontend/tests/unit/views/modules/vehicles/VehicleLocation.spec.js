@@ -2,7 +2,7 @@ import {createLocalVue, shallowMount} from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue-pro'
 import Vuex from 'vuex'
 
-import VehicleLocation from './../../../../../src/modules/vehicles/VehicleLocation.vue'
+import VehicleLocation from '../../../../../src/modules/vehicles/VehicleLocation.vue'
 
 const localVue = createLocalVue()
 localVue.use(CoreuiVue)

@@ -3,7 +3,7 @@
     <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
     <CRow>
       <CCol xl="6">
-        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle" :showMessage="showMessage"/>
+        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle" :showMessage="showMessage" :refreshTable="refreshTable"/>
         <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
       </CCol>
       <CCol xl="6">
@@ -21,8 +21,7 @@ import VehicleProperties from "./VehicleProperties.vue";
 import VehicleComments from "./VehicleComments.vue";
 
 export default {
-  name: 'Vehicle',
-  props: ["vehicle", "setNewVehicle"],
+  props: ["vehicle", "setNewVehicle", "refreshTable"],
   data() {
     return {
       message: null,

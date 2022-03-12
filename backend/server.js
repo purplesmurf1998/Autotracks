@@ -15,7 +15,7 @@ const errorHandler = require('./middleware/error');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { createServer } = require('http');
-const serverIo = require('./utils/serverIO');
+const IO = require('./utils/serverIO');
 
 const authenticationRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -26,7 +26,8 @@ const eventRoutes = require('./routes/events');
 const commentRoutes = require('./routes/comments');
 const saleRoutes = require('./routes/sales')
 const vehicleListRoutes = require('./routes/vehicleList');
-const historyRoutes = require('./routes/history')
+const historyRoutes = require('./routes/history');
+const locationZoneRoutes = require('./routes/locationZones');
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
@@ -42,7 +43,7 @@ const app = express();
 app.disable('x-powered-by');
 
 // connect to mongoose
-mongoose.connect(process.env.MONGODB_URL,
+mongoose.connect(process.env.NODE_ENV == 'production' ? process.env.MONGODB_PROD_URL : process.env.MONGODB_URL,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -69,6 +70,7 @@ app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/inventory/details/sale', saleRoutes);
 app.use('/api/v1/vehicle-list', vehicleListRoutes);
 app.use('/api/v1/history', historyRoutes);
+app.use('/api/v1/locations/zones', locationZoneRoutes);
 
 // mount error handler middleware
 app.use(errorHandler);
@@ -77,7 +79,7 @@ app.use(errorHandler);
 // create the server
 const httpServer = createServer(app);
 // create the server socket
-serverIo.initialize(httpServer);
+IO.getInstance().init(httpServer);
 // launch server app by listening on the PORT
 httpServer.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
@@ -91,6 +93,8 @@ httpServer.listen(PORT, () => {
 // test commit 3 for sonarcloud scan
 // test commit 4 for sonarcloud scan
 // test commit 5 for sonarcloud scan
+// test commit 6 for sonarcloud scan
+// test commit 7 for sonarcloud scan
 
 mongoose.connection.on("error", console.error.bind(console, "connection error: "));
 
@@ -99,3 +103,4 @@ var swaggerUi = require('swagger-ui-express');
 var swaggerDocument = require('./pikturr/swagger.json')
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
+module.exports = app;

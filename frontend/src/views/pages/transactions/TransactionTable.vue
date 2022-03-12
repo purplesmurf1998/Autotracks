@@ -64,6 +64,7 @@
 <script>
 const axios = require("axios");
 import transactionDetails from './TransactionDetails.vue';
+import XLSX from 'xlsx';
 
 export default {
   name: "transactionTable",
@@ -88,6 +89,7 @@ export default {
         .then((response) => {
           const payload = response.data.payload;
           const fields = [];
+          var vehicle_id = localStorage.getItem('vehicle')
           payload.forEach((sale) => {
             //Format the data when fetched
             let items = {};
@@ -99,12 +101,17 @@ export default {
             items["Request Date"] = req_date;
             let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
             items["Delivery Status"] = delivery;
-            items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];;
+            items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];
             items["Deposit"] = '$' + sale.deposit_amount + '.00';
             let approved_by_user_name = !sale.approved_by ? '-' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
             items["Manager"] = approved_by_user_name;
             let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
             items["Approval Date"] = approval_date
+            //If a transaction notification clicked, check the vehicle storage if defined and render the transaction modal
+            if (vehicle_id && vehicle_id == sale.vehicle._id) {
+              this.rowClicked(items);
+              localStorage.removeItem('vehicle');
+            }
             fields.push(items);
           });
           this.tableItems = fields;
@@ -125,13 +132,20 @@ export default {
       this.showingTransactionModal = value;
     },
     downloadTransactions(){
-      console.log("Download transactions");
+      let tableData = this.tableItems.map(item => {
+        return {...item};
+      });
+      tableData.forEach((item) => {
+        delete item['id'];
+      })
+      const data = XLSX.utils.json_to_sheet(tableData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, data, 'data');
+      XLSX.writeFile(wb,'transactions.xlsx');
     },
   },
-  components: {
-  },
   mounted() {
-      this.fetchSales(this.dealership);
+    this.fetchSales(this.dealership);
   },
   components: {
     "transaction-detail": transactionDetails,

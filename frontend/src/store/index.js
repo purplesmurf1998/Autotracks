@@ -21,6 +21,7 @@ const coreuiMutations = {
   }
 }
 
+
 export default new Vuex.Store({
   modules: {
     auth: AuthModule,

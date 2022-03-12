@@ -67,13 +67,21 @@ const UserSchema = new mongoose.Schema({
       'vehicle_approved',
       'vehicle_delivered',
       'vehicle_missing',
-      'vehicle_moved', 
-      'vehicle_found', 
-      'vehicle_created', 
+      'vehicle_moved',
+      'vehicle_found',
       'vehicle_deleted',
       'transaction_modified',
     ],
-    default: []
+    default: [
+      'vehicle_sale_pending',
+      'vehicle_approved',
+      'vehicle_delivered',
+      'vehicle_missing',
+      'vehicle_moved',
+      'vehicle_found',
+      'vehicle_deleted',
+      'transaction_modified',
+    ]
   },
   dealership: {
     type: mongoose.Schema.Types.ObjectId,

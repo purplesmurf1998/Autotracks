@@ -29,6 +29,12 @@ exports[`TheHeader.vue renders correctly 1`] = `
     target="_self"
     to="/"
   >
+    <img
+      alt="Responsive image"
+      class="img-fluid"
+      src="../assets/polaris.svg"
+    />
+     
     <cicon-stub
       alt="Logo"
       height="48"
@@ -56,5 +62,14 @@ exports[`TheHeader.vue renders correctly 1`] = `
       class="border-0 mb-0"
     />
   </csubheader-stub>
+   
+  <cmodal-stub
+    backdrop="true"
+    centered="true"
+    closeonbackdrop="true"
+    fade="true"
+  >
+    <!---->
+  </cmodal-stub>
 </cheader-stub>
 `;

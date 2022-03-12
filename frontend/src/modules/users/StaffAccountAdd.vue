@@ -97,7 +97,7 @@
         </CButton>
         <CButton
           class="ml-1"
-          color="danger"
+          color="secondary"
           :disabled="disableButtons"
           @click="setAddingStaffAccount(false)"
         >
@@ -284,6 +284,6 @@ export default {
   },
 };
 </script>
-
+-
 <style>
 </style>

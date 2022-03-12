@@ -1,0 +1,1 @@
+sudo docker run -u root -p 8080:8080 autotracks

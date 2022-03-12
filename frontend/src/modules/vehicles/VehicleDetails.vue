@@ -13,7 +13,7 @@
           </h4>
           <CDropdown
             v-if="!vehicle.delivered"
-            color="secondary"
+            color="primary"
             :offset="[0, 5]"
             toggler-text="Select an action"
           >
@@ -33,7 +33,7 @@
               class="delete"
               >Cancel Sale </CDropdownItem
             >
-            <CDropdownItem 
+            <CDropdownItem
             v-if="userHasPermissions('Edit Vehicles') && !vehicle.delivered && !!saleStatus && approved"
             @click="markDelivered"
               >Mark as Delivered</CDropdownItem
@@ -69,7 +69,7 @@
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">VIN</h6></CCol>
               <CCol class="d-flex align-items-end flex-column"
-                ><p 
+                ><p
                 class="mb-2 property-field"
                 v-text="vehicle.vin"/></CCol
               >
@@ -111,7 +111,7 @@
       :centered="true"
       title="Modal title 2"
     >
-      <vehicle-sell 
+      <vehicle-sell
         v-if="showingSoldModal"
         :showingSoldModal="showingSoldModal"
         :dealershipStaff="dealershipStaff"
@@ -119,7 +119,6 @@
         :setVehicleModal="setVehicleModal"
         :vehicle="vehicle"
         :setSaleStatus="setSaleStatus"
-        :showMessage="showMessage"
         :updateSaleStatus="updateSaleStatus"
         :sale_id="sale_id"
       />
@@ -168,10 +167,10 @@
         <h6 class="modal-title">Add vehicle to custom list</h6>
         <CButtonClose @click="showingAddToListModal = false" />
       </template>
-        <add-to-vehicle-list 
-          :vehicleId="vehicle._id" 
+        <add-to-vehicle-list
+          :vehicleId="vehicle._id"
           :closeModal="closeAddToListModal"
-          :showMessage="showMessage" 
+          :showMessage="showMessage"
           v-if="showingAddToListModal"
         />
       <template #footer>
@@ -193,7 +192,7 @@ export default {
     "vehicle-sell": VehicleSell,
     "add-to-vehicle-list": AddToVehicleList
   },
-  props: ["vehicle", "setNewVehicle", "showMessage"],
+  props: ["vehicle", "setNewVehicle", "showMessage", "refreshTable"],
   data() {
     return {
       showingSoldModal: false,
@@ -203,12 +202,12 @@ export default {
       showingAddToListModal: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
-      saleStatus: !!this.vehicle.sale ? true : false,
+      saleStatus: this.vehicle.sale ? true : false,
       updateSaleStatus: false,
       sale_id: this.vehicle.sale,
       sale: null,
       deposit: "",
-      approved: false 
+      approved: false
     };
   },
   methods: {
@@ -229,13 +228,19 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.showingDeleteModal = false;
-            this.$router.replace("/inventory");
+            this.closeModal();
+            this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
           this.$router.replace("/pages/404");
         });
+    },
+    closeModal() {
+      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      queries = {};
+      this.$router.replace({query: queries});
     },
     fetchSale() {
       axios({
@@ -294,6 +299,7 @@ export default {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
             this.showMessage("Vehicle location has been updated successfully", "success");
+            this.refreshTable();
           }
         })
         .catch((err) => {
@@ -348,7 +354,7 @@ export default {
       body.date_delivered = date;
       axios({
         method: "PUT",
-        url: `${this.$store.state.api}/inventory/vehicle/${vehicle._id}`,
+        url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -358,6 +364,7 @@ export default {
           if (response.data.success) {
             this.showMessage("Vehicle has been marked as delivered", "success");
             this.setNewVehicle(response.data.payload);
+            this.refreshTable();
           }
         })
         .catch((err) => {
@@ -373,7 +380,7 @@ export default {
       }
       else if (!this.saleStatus && !this.approved) {
         return "Not Sold";
-      } 
+      }
       else {
         return "Pending Sale Authorization";
       }
@@ -383,7 +390,7 @@ export default {
     this.fetchDealershipUsers();
   },
   mounted() {
-    if (!!this.sale_id) {
+    if (this.sale_id) {
       this.fetchSale();
     }
   }

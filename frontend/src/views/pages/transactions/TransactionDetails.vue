@@ -95,7 +95,7 @@
           <CButton
             v-if="saleDetail['Approval Date']=='-' && disableButtons"
             class="ml-3"
-            color="success"
+            color="primary"
             id="approve_sale"
             @click="approveSale"
           >
@@ -115,7 +115,7 @@
             class="ml-3"
             color="secondary"
             id="edit_sale"
-            @click="editSale"
+            @click="editSale(false)"
           >
           Edit
           </CButton>
@@ -131,7 +131,7 @@
         </CRow>
         <CRow class="justify-content-center">
           <CButton
-            v-if="!disableButtons" 
+            v-if="!disableButtons"
             color="primary"
             id = "update-sale"
             @click="updateSale"
@@ -139,11 +139,11 @@
             Update
           </CButton>
           <CButton
-            v-if="!disableButtons" 
+            v-if="!disableButtons"
             class="ml-1"
             color="secondary"
             :disabled="disableButtons"
-            @click="setTransactionModal(false)"
+            @click="editSale(true)"
           >
             Cancel
           </CButton>
@@ -158,10 +158,10 @@
         Are you sure you want to cancel this sale request?
       </p>
       <template #footer>
-        <CButton @click="showDeleteModal = false" color="danger"
-          >Cancel</CButton
-        >
-        <CButton @click="deleteSale" color="success">Confirm</CButton>
+        <CButton @click="deleteSale" color="primary">Confirm</CButton>
+        <CButton @click="showDeleteModal = false" color="secondary"
+          >Cancel</CButton>
+
       </template>
     </CModal>
   </div>
@@ -173,12 +173,12 @@ const axios = require('axios');
 export default {
   name: 'transactionDetails',
   props: [
-    "showMessage", 
-    "saleDetail", 
+    "showMessage",
+    "saleDetail",
     "setTransactionModal",
     "setNewSale",
     "dealership",
-    "fetchSales" 
+    "fetchSales"
   ],
   data() {
     return {
@@ -200,7 +200,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.showDeleteModal = false;
-            this.setTransactionModal(false);  
+            this.setTransactionModal(false);
             this.showMessage("The transaction been deleted.", "success");
             this.fetchSales(this.dealership);
           }
@@ -210,14 +210,12 @@ export default {
           this.showMessage("An error occured while deleting this transaction.", "danger");
         });
     },
-    editSale() {
-      this.disableButtons = false;
+    editSale(value) {
+      this.disableButtons = value;
     },
     approveSale () {
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
-      // prints date & time in YYYY-MM-DD format
       axios({
           method: 'PUT',
           url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,
@@ -225,7 +223,7 @@ export default {
             'Authorization': `Bearer ${this.$store.state.auth.token}`
           },
           data: {
-            date_approved: date,
+            date_approved: date_ob,
           }
       }).then(response => {
           if (response.data.success) {
@@ -261,9 +259,8 @@ export default {
       let body = this.saleObject.vehicle;
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
       body.delivered = true;
-      body.date_delivered = date;
+      body.date_delivered = date_ob;
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${body._id}`,

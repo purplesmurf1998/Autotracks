@@ -40,7 +40,7 @@
           </div>
           <div class="col-sm-auto"></div>
         </CRow>
-        <CCard>
+        <CCard v-if="tableItems.length > 0">
           <CCardHeader>
             <slot name="header"> List of registered dealerships </slot>
           </CCardHeader>
@@ -85,7 +85,7 @@
       title="Modal title 2"
       size="lg"
     >
-      <dealership-add 
+      <dealership-add
         v-if="addingDealership"
         :setAddingDealership="setAddingDealership"
       />

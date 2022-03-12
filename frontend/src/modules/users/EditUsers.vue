@@ -125,7 +125,7 @@ export default {
         "Edit Vehicle Locations",
         "Sell Vehicles",
         "Delete Vehicles",
-        "Add Vehicle Properties",
+        "Add Vehicle Property",
         "Edit Vehicle Properties",
         "View Vehicle Properties",
         "Delete Vehicle Properties",
@@ -241,7 +241,7 @@ export default {
     },
   },
   mounted() {
-    if (!!this.user) {
+    if (this.user) {
       let permissions = [];
       this.user.permissions.forEach((permission) => {
         permissions.push(permission);

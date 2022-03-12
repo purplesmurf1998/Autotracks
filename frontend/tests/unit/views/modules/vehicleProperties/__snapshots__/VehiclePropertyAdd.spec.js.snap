@@ -82,7 +82,7 @@ exports[`VehiclePropertyAdd.vue renders correctly 1`] = `
       <cbutton-stub
         activeclass="router-link-active"
         class="ml-1"
-        color="danger"
+        color="secondary"
         event="click"
         exactactiveclass="router-link-exact-active"
         routertag="a"
