@@ -2,32 +2,18 @@ import Store from '../store/index.js'
 
 // Utility function for verifying if a user has certain permissions
 //Check this function later
-export function containsPermissions(...permissions) {
-  let value = true;
+export function containsRoles(...roles) {
+  let permission = false;
 
-  const userPermissions = Store.state.auth.userPermissions;
-  //console.log(userPermissions);
-  //console.log(userPermissions);
-  // define a nested function to check each individual permission
-  // function containsPermission(permission) {
-  //   userPermissions.forEach(element => {
-  //     if (String(element).toUpperCase == String(permission).toUpperCase) {
-  //       return true;
-  //     }
-  //   });
-  //   return false;
-  // }
+  const userRole = Store.state.auth.role;
 
-  // use the defined nested function to check each permission passed in the arguments
-  permissions.forEach(permission => {
-    //console.log(permission[0]);
-    // QUESTION: 'permission' is returning as an array instead of a string, why?
-    if (!userPermissions.includes(permission[0])) {
-      value = false;
+  // use the defined nested function to check each role passed in the arguments
+  roles.forEach(role => {
+    if (userRole == role) {
+      permission = true;
     }
   })
-  //console.log(value);
-  return value;
+  return permission;
 }
 
 export function getFormattedProperties(properties, values) {

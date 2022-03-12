@@ -19,46 +19,46 @@
           >
             <CDropdownItem
               @click.native="showingSoldModal = true"
-              v-if="userHasPermissions('Edit Vehicles') && !saleStatus && !approved"
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !saleStatus && !approved"
               >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
               @click.native="updateSale()"
-              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus && !approved"
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !!saleStatus && !approved"
               >Edit Sale </CDropdownItem
             >
             <CDropdownItem
               @click.native="showingCancelSaleModal = true"
-              v-if="userHasPermissions('Edit Vehicles') && !!saleStatus && !approved"
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !!saleStatus && !approved"
               class="delete"
               >Cancel Sale </CDropdownItem
             >
             <CDropdownItem
-            v-if="userHasPermissions('Edit Vehicles') && !vehicle.delivered && !!saleStatus && approved"
+            v-if="!vehicle.delivered && !!saleStatus && approved"
             @click="markDelivered"
               >Mark as Delivered</CDropdownItem
             >
             <CDropdownDivider />
             <CDropdownItem
               @click.native="toggleVehicleMissing"
-              v-if="!vehicle.missing && userHasPermissions('Edit Vehicles')"
+              v-if="!vehicle.missing"
               >Missing / Misplaced</CDropdownItem
             >
             <CDropdownItem
               @click.native="toggleVehicleMissing"
               class="present"
-              v-if="vehicle.missing && userHasPermissions('Edit Vehicles')"
+              v-if="vehicle.missing"
               >Present / Located</CDropdownItem
             >
             <CDropdownItem
               @click.native="showingAddToListModal = true"
-              v-if="!vehicle.delivered"
+              v-if="!vehicle.delivered && userHasRoles('Administration', 'Management', 'Sales Rep')"
             >Add to list</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
               class="delete"
               @click.native="showingDeleteModal = true"
-              v-if="userHasPermissions('Delete Vehicles')"
+              v-if="userHasRoles('Administration', 'Management')"
               >Delete Vehicle</CDropdownItem
             >
           </CDropdown>
@@ -182,7 +182,7 @@
 
 <script>
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 import VehicleSell from "./SellVehicle.vue";
 import AddToVehicleList from "./AddToVehicleList.vue"
 
@@ -211,8 +211,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     closeAddToListModal() {
       this.showingAddToListModal = false;

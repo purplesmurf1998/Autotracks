@@ -40,7 +40,7 @@
         class="mr-2"
         id="edit-user-acc"
         @click="setEditingUser(true)"
-        v-if="userHasPermissions('Edit Staff Users')"
+        v-if="userHasRoles('Administration', 'Management')"
         :disabled="$store.state.auth.userId == user._id"
         >Edit account details</CButton
       >
@@ -52,7 +52,7 @@
           deletingUser = true;
         }
       "
-      v-if="userHasPermissions('Delete Staff Users')"
+      v-if="userHasRoles('Administration', 'Management')"
       >Delete staff account</CButton
     >
     <CModal :show.sync="deletingUser" :centered="true">
@@ -77,7 +77,7 @@
 
 <script>
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 
 export default {
   props: ["user", "setEditingUser"],
@@ -87,8 +87,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     removeUser() {
       axios({

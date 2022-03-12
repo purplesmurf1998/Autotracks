@@ -15,7 +15,7 @@
             <br />
             <CButton
               id="edit-dealership"
-              v-if="!editingDealership"
+              v-if="!editingDealership && userHasRoles('Administration')"
               color="primary"
               class="mt-2"
               @click="setEditingDealership(true)"
@@ -23,7 +23,7 @@
             >
           </div>
           <edit-dealership
-            v-if="editingDealership"
+            v-if="editingDealership && userHasRoles('Administration')"
             :dealership="dealership"
             :setEditingDealership="setEditingDealership"
           />
@@ -38,15 +38,19 @@
         <div class="col-md-4">
           <CAlert v-if="!$store.state.auth.createUserCompleted" color="success"
             >Begin by creating your staff by clicking the
-            <strong>"Create a staff account"</strong> button below.</CAlert
-          >
+            <strong>"Create a staff account"</strong> button below.
+          </CAlert>
         </div>
       </CRow>
-      <dealership-accounts v-if="userHasPermissions('View Staff Users')" />
-      <dealership-vehicle-properties
-        v-if="userHasPermissions('View Vehicle Properties')"
+      <dealership-accounts 
+        v-if="userHasRoles('Administration', 'Management')" 
       />
-      <dealership-locations />
+      <dealership-vehicle-properties
+        v-if="userHasRoles('Administration', 'Management')"
+      />
+      <dealership-locations 
+        v-if="userHasRoles('Administration', 'Management')"
+      />
     </CCol>
   </div>
 </template>
@@ -58,7 +62,7 @@ import DealershipVehicleProperties from "../../../modules/vehicleProperties/Deal
 import DealershipLocations from "../../../modules/dealerships/DealershipLocations.vue";
 
 const axios = require("axios");
-const { containsPermissions } = require("../../../utils/index");
+const { containsRoles } = require("../../../utils/index");
 
 export default {
   name: "Dealership",
@@ -72,8 +76,8 @@ export default {
     setEditingDealership(value) {
       this.editingDealership = value;
     },
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
   },
   beforeCreate() {

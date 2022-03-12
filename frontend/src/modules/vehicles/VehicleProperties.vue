@@ -7,7 +7,7 @@
           <CButton
             color="primary"
             @click="setEditingProperties(true)"
-            v-if="!editingProperties && userHasPermissions('Edit Vehicles') && !vehicle.delivered"
+            v-if="!editingProperties && userHasRoles('Administration', 'Management') && !vehicle.delivered"
             :disabled="!!vehicle.soldBy"
           >
             <CIcon name="cil-pen"/>&nbsp;&nbsp;Edit vehicle properties
@@ -48,7 +48,7 @@
 
 <script>
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 
 import EditVehicleProperties from "./EditVehicleProperties.vue";
 
@@ -64,8 +64,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     setEditingProperties(value) {
       this.editingProperties = value;
