@@ -53,9 +53,9 @@ export default {
   name: 'TheHeader',
   data(){
     return {
-    showNotifModal: false,
-      unReadNotif: [],
       logo: logo,
+      showNotifModal: false,
+      unReadNotif: [],
     }
   },
   components: {

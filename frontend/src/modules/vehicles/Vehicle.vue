@@ -3,8 +3,13 @@
     <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
     <CRow>
       <CCol xl="6">
-        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle" :showMessage="showMessage" :refreshTable="refreshTable"/>
-        <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
+        <vehicle-details
+          :vehicle="vehicle"
+          :setNewVehicle="setNewVehicle"
+          :showMessage="showMessage"
+          :refreshTable="refreshTable"
+        />
+        <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle" />
       </CCol>
       <CCol xl="6">
         <vehicle-location :vehicle="vehicle" />
@@ -26,15 +31,15 @@ export default {
     return {
       message: null,
       messageType: null,
-    }
+    };
   },
   methods: {
     showMessage(message, messageType) {
       this.message = message;
       this.messageType = messageType;
       setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
+        this.message = null;
+        this.messageType = null;
       }, 5000);
     },
   },
@@ -42,7 +47,7 @@ export default {
     "vehicle-details": VehicleDetails,
     "vehicle-location": VehicleLocation,
     "vehicle-properties": VehicleProperties,
-    'vehicle-comments': VehicleComments
+    "vehicle-comments": VehicleComments,
   },
 };
 </script>
