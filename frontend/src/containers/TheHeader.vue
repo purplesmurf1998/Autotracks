@@ -12,7 +12,6 @@
     />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
       <img src="../assets/autotracks_blue_crp.png" class="img-fluid header-img" alt="Responsive image">
-      <!-- <CIcon name="logo" height="48" alt="Logo"/> -->
     </CHeaderBrand>
     <CHeaderNav class="ml-auto">
       <TheHeaderDropdownNotif @notifModal="showNotifModal = true"/>
