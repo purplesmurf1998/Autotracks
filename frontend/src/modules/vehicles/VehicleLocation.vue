@@ -2,10 +2,10 @@
   <div>
     <CCard>
       <CCardBody>
-        <CRow class="m-0 d-flex justify-content-between align-items-center"
-          ><h4>Location</h4>
-          <p class="m-0">{{ vehicle.zone.name }}</p></CRow
-        >
+        <CRow class="m-0 d-flex justify-content-between align-items-center" v-if="vehicle.zone">
+          <h4>Location</h4>
+          <p class="m-0">{{ vehicle.zone.name }}</p>
+        </CRow>
         <hr />
         <GmapMap :center="center" :zoom="17" style="height: 400px">
           <GmapMarker
