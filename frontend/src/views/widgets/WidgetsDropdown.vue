@@ -34,6 +34,38 @@
         </CCardBody>
       </CCard>
     </CCol>
+    <!-- Cursed shit below -->
+    <CCol sm="6" lg="3">
+      <CWidgetDropdown
+        color="gradient-info"
+        :text="'Stale Vehicles Percentage (' + staleVehiclesCount+'/'+inventoryCount + ')'"
+        style="height:160px"
+      >
+        <template #default>
+          <CDropdown
+            color="transparent p-0"
+            placement="bottom-end"
+          >
+            <template #toggler-content>
+              <CIcon
+                name="cil-settings"
+                @click.native="fetchVehicleProperties"/>
+            </template>
+            <CDropdownItem v-for="vp in vehicleProperties"
+                           :key="vp.label"
+                           @click.native="filterVisualByProperty(vp.key, vp.label)">{{vp.label}}</CDropdownItem>
+          </CDropdown>
+        </template>
+        <template #footer>
+          <CCardBody class="d-flex align-items-center">
+            <CCol>
+              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary">{{staleVehiclesPercentage}}%</CCardTitle>
+            </CCol>
+          </CCardBody>
+        </template>
+      </CWidgetDropdown>
+    </CCol>
+    <!-- Cursed shit above -->
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-danger"
@@ -115,7 +147,7 @@ export default {
           this.inventoryCount = inventoryCount.toString();
           this.fetchVehicleProperties();
           this.fetchNotSoldVehiclesInInventory(dealership);
-          this.fetchStaleVehicles(dealership);
+          this.fetchStaleVehicles(dealership, 1);
           setTimeout(() => {
             this.filterVisualByProperty(this.property_key, this.property_label);
           }, 200);
@@ -144,10 +176,14 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    fetchStaleVehicles(dealership) {
+    fetchStaleVehicles(dealership, staleTime) {
+      console.log("[FRONTEND] staleTime is "+staleTime)
       axios({
         method: "GET",
         url: `${this.$store.state.api}/inventory/dealership/${dealership}/stale`,
+        params: {
+          staleTime: staleTime
+        },
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -155,7 +191,7 @@ export default {
         .then((response) => {
           console.log("FetchStaleVehicles response below:")
           console.log(response.data)
-          if (response.data.staleVehiclesCount.length != 0) {
+          if (response.data.staleVehiclesCount.length !== 0) {
             const staleVehiclesCount = response.data.staleVehiclesCount;
             this.staleVehiclesCount = staleVehiclesCount.toString();
           }
