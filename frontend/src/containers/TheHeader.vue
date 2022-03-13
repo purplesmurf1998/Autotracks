@@ -1,9 +1,3 @@
-<styles scoped>
-.header-img {
-     max-height: 100px;
-}
-</styles>
-
 <template>
   <CHeader with-subheader>
     <CToggler
@@ -18,7 +12,7 @@
     />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
       <img src="../assets/autotracks_blue_crp.png" class="img-fluid header-img" alt="Responsive image">
-      <CIcon name="logo" height="48" alt="Logo"/>
+      <!-- <CIcon name="logo" height="48" alt="Logo"/> -->
     </CHeaderBrand>
     <CHeaderNav class="ml-auto">
       <TheHeaderDropdownNotif @notifModal="showNotifModal = true"/>
@@ -82,3 +76,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.header-img {
+     max-height: 100px;
+}
+</style>
