@@ -72,7 +72,7 @@ exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
   // grab the dealership_ID from the body and verify that the dealership exists
   const dealership = await Dealership.findById(req.params.dealershipId);
   let staleTime = parseInt(req.query.staleTime);
-  console.log("[API] staleTime is "+staleTime);
+  //console.log("[API] staleTime is "+staleTime);
 
   // no dealership found
   if (!dealership) {
@@ -119,14 +119,21 @@ exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
     }
   ])
 
-  const stale_vehicles_count = await stale_vehicles_count_query;
-  console.log(stale_vehicles_count)
-  console.log(stale_vehicles_count[0].stale_vehicles_count)
+  const stale_vehicles_res = await stale_vehicles_count_query;
+  //(stale_vehicles_res)
+  let stale_vehicles_count = null;
+  if (stale_vehicles_res.length === 0) {
+    stale_vehicles_count = 0
+  }
+  else {
+    stale_vehicles_count = stale_vehicles_res[0].stale_vehicles_count
+  }
+  //console.log(stale_vehicles_count)
 
   // Send the result in the payload
   res.status(200).json({
     success: true,
-    staleVehiclesCount: stale_vehicles_count[0].stale_vehicles_count
+    staleVehiclesCount: stale_vehicles_count
   });
 });
 

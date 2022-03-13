@@ -22,18 +22,6 @@
         </CCardBody>
       </CCard>
     </CCol>
-    <CCol sm="6" lg="3">
-      <CCard class="text-center" color="gradient-info" textColor="white" style="height:160px">
-        <CCardBody class="d-flex align-items-center">
-          <CCol>
-            <CCardTitle class="display-3" color="gradient-secondary">{{staleVehiclesPercentage}}%</CCardTitle>
-            <CCardSubtitle>
-              Stale Vehicles Percentage, 1 month ({{staleVehiclesCount}}/{{inventoryCount}})
-            </CCardSubtitle>
-          </CCol>
-        </CCardBody>
-      </CCard>
-    </CCol>
     <!-- Cursed shit below -->
     <CCol sm="6" lg="3">
       <CWidgetDropdown
@@ -49,17 +37,19 @@
             <template #toggler-content>
               <CIcon
                 name="cil-settings"
-                @click.native="fetchVehicleProperties"/>
+                />
             </template>
-            <CDropdownItem v-for="vp in vehicleProperties"
-                           :key="vp.label"
-                           @click.native="filterVisualByProperty(vp.key, vp.label)">{{vp.label}}</CDropdownItem>
+            <CDropdownItem v-for="staleNum in [1,3,6,9,12]"
+                           :key="staleNum"
+                           @click.native="fetchStaleVehicles(dealership, staleNum)">{{staleNum}} month(s)</CDropdownItem>
           </CDropdown>
         </template>
         <template #footer>
           <CCardBody class="d-flex align-items-center">
             <CCol>
-              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary">{{staleVehiclesPercentage}}%</CCardTitle>
+              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary">
+                {{staleVehiclesPercentage}}%
+              </CCardTitle>
             </CCol>
           </CCardBody>
         </template>
@@ -177,7 +167,7 @@ export default {
         });
     },
     fetchStaleVehicles(dealership, staleTime) {
-      console.log("[FRONTEND] staleTime is "+staleTime)
+      //console.log("[FRONTEND] staleTime is "+staleTime)
       axios({
         method: "GET",
         url: `${this.$store.state.api}/inventory/dealership/${dealership}/stale`,
@@ -189,8 +179,8 @@ export default {
         },
       })
         .then((response) => {
-          console.log("FetchStaleVehicles response below:")
-          console.log(response.data)
+          //console.log("FetchStaleVehicles response below:")
+          //console.log(response.data)
           if (response.data.staleVehiclesCount.length !== 0) {
             const staleVehiclesCount = response.data.staleVehiclesCount;
             this.staleVehiclesCount = staleVehiclesCount.toString();
@@ -240,7 +230,7 @@ export default {
       })
       .then((response) => {
         const payload = response.data.payload;
-        console.log(payload);
+        //console.log(payload);
         payload.sort((a, b) => b.count - a.count);
         const fields = [];
         const values = [];
