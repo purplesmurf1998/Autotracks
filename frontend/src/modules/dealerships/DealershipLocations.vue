@@ -2,11 +2,10 @@
   <div>
     <CCard class="mt-2">
       <CCardBody>
-        <CRow>
+        <CRow class="m-0">
           <h3 class="mb-3">Dealership Zones</h3>
-          <CButton color="primary" @click="editPerimeters = true">Edit zone perimeters</CButton>
         </CRow>
-        
+
         <CRow>
           <CCol v-if="addingNewZone">
             <CForm @submit.prevent="submitNewZone" v-if="addingNewZone">
@@ -62,15 +61,16 @@
               <gmap-polygon
                 v-for="zone in zones"
                 :key="zone._id"
-                :path="zone.path"
-                :editable="editPerimeters"
+                :paths="isEditingPerimeter == zone._id ? editedPath : zone.path"
+                :editable="isEditingPerimeter && isEditingPerimeter == zone._id"
                 :visible="true"
                 :draggable="true"
                 :options="{
                   fillColor: zone.fillColor,
                   fillOpacity: 0.5,
-                  strokeWeight: 0
+                  strokeWeight: 0,
                 }"
+                @paths_changed="updatePath"
               />
               <GmapMarker
                 :key="index"
@@ -82,7 +82,7 @@
             </GmapMap>
           </CCol>
         </CRow>
-        
+
         <CDataTable
           :items="zones"
           :fields="fields"
@@ -94,11 +94,22 @@
         >
           <template #details="{ item }">
             <CCollapse :show="item._id == selectedZone" :duration="200">
-              <location-details :zone="item" @close="closeExpanded" @closeAndSave="closeExpandedAndSave"/>
+              <location-details
+                :zone="item"
+                :editingPath="editingZonePath"
+                @close="closeExpanded"
+                @closeAndSave="closeExpandedAndSave"
+                @edit-perimeter="editPerimeter"
+                @cancel-edited-path="cancelEditedPath"
+                @save-edited-path="saveEditedPath"
+                @delete="deleteLocation"
+              />
             </CCollapse>
           </template>
         </CDataTable>
-        <CButton color="primary" @click="addingNewZone = true">Add a location zone</CButton>
+        <CButton color="primary" @click="addingNewZone = true"
+          >Add a location zone</CButton
+        >
       </CCardBody>
     </CCard>
   </div>
@@ -141,7 +152,8 @@ export default {
       selectedIndex: -1,
       closeDetails: false,
       addingZone: false,
-      editPerimeters: false,
+      isEditingPerimeter: null,
+      editedPath: [],
       newPath: [],
       newZoneName: "",
       newZoneDescription: "",
@@ -163,9 +175,76 @@ export default {
       },
     };
   },
+  computed: {
+    editingZonePath() {
+      return this.isEditingPerimeter;
+    },
+  },
   methods: {
+    saveEditedPath() {
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/locations/zones/${this.isEditingPerimeter}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {
+          path: this.editedPath,
+        },
+      })
+        .then((response) => {
+          console.log(response.data.payload);
+          let temp_zones = this.zones;
+          temp_zones[this.selectedIndex] = response.data.payload;
+          this.zones = temp_zones;
+          this.selectedZone = response.data.payload;
+          this.isEditingPerimeter = null;
+          this.editedPath = [];
+        })
+        .catch((error) => {
+          console.log(error);
+          this.showErrorMessage("Unable to create the vehicle property.");
+        });
+    },
+    deleteLocation(zoneid){
+           axios({
+        method: "DELETE",
+        url: `${this.$store.state.api}/locations/zones/${zoneid}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then(() => {
+          this.fetchLocationZones()
+        })
+        .catch((error) => {
+          console.log(error);
+          this.showErrorMessage("Unable to delete the vehicle property.");
+        });
+    },
+    cancelEditedPath() {
+      this.isEditingPerimeter = null;
+      this.editedPath = [];
+    },
+    updatePath(paths) {
+      let tempPaths = [];
+      for (let i = 0; i < paths.getLength(); i++) {
+        for (let j = 0; j < paths.getAt(i).getLength(); j++) {
+          tempPaths.push({
+            lat: paths.getAt(i).getAt(j).lat(),
+            lng: paths.getAt(i).getAt(j).lng(),
+          });
+        }
+      }
+
+      this.editedPath = tempPaths;
+    },
+    editPerimeter(zone) {
+      this.isEditingPerimeter = zone._id;
+      this.editedPath = this.selectedZone.path;
+    },
     setSelectedZone(zone, index) {
-      console.log("runs second")
+      if (this.selectedIndex == index) console.log("runs second");
       if (this.closeDetails) {
         this.selectedZone = null;
         this.selectedIndex = -1;
@@ -180,7 +259,7 @@ export default {
       this.closeDetails = true;
     },
     closeExpandedAndSave(newZone) {
-      console.log("runs first")
+      console.log("runs first");
       this.fetchLocationZones();
       this.selectedZone = null;
       this.selectedIndex = -1;
@@ -230,6 +309,7 @@ export default {
           this.zones.push(response.data.payload);
           this.newPath = [];
           this.addingNewZone = false;
+          this.fetchLocationZones()
         })
         .catch((error) => {
           console.log(error);
