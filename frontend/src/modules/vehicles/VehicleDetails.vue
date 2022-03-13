@@ -31,8 +31,8 @@
               @click.native="showingCancelSaleModal = true"
               v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !!saleStatus && !approved"
               class="delete"
-              >Cancel Sale </CDropdownItem
-            >
+              >Cancel Sale
+            </CDropdownItem>
             <CDropdownItem
             v-if="!vehicle.delivered && !!saleStatus && approved"
             @click="markDelivered"
@@ -54,6 +54,14 @@
               @click.native="showingAddToListModal = true"
               v-if="!vehicle.delivered && userHasRoles('Administration', 'Management', 'Sales Rep')"
             >Add to list</CDropdownItem>
+            <CDropdownItem
+              @click.native="showingAddToZoneModel = true"
+              v-if="!vehicle.delivered"
+              >Add to zone</CDropdownItem
+            >
+            <CDropdownItem
+              @click.native="downloadQrCode"
+            >Download QR code</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
               class="delete"
@@ -69,16 +77,16 @@
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">VIN</h6></CCol>
               <CCol class="d-flex align-items-end flex-column"
-                ><p
-                class="mb-2 property-field"
-                v-text="vehicle.vin"/></CCol
-              >
+                ><p class="mb-2 property-field" v-text="vehicle.vin"
+              /></CCol>
             </CRow>
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Deposit Status</h6></CCol>
               <CCol class="d-flex align-items-end flex-column">
                 <p class="mb-2 property-field" v-if="!sale">$0.00</p>
-                <p class="mb-2 property-field" v-if="!!sale">${{sale.deposit_amount}}</p>
+                <p class="mb-2 property-field" v-if="!!sale">
+                  ${{ sale.deposit_amount }}
+                </p>
               </CCol>
             </CRow>
             <CRow class="justify-content-between ml-0 mr-0">
@@ -90,7 +98,10 @@
                 <p class="mb-2 property-field" v-if="!saleStatus && !approved">
                   {{ soldByUser }}
                 </p>
-                <p class="mb-2 property-field warning" v-if="!!saleStatus && !approved">
+                <p
+                  class="mb-2 property-field warning"
+                  v-if="!!saleStatus && !approved"
+                >
                   {{ soldByUser }}
                 </p>
               </CCol>
@@ -98,8 +109,12 @@
             <CRow class="justify-content-between ml-0 mr-0">
               <CCol><h6 class="mb-2">Delivery Status</h6></CCol>
               <CCol class="d-flex align-items-end flex-column">
-                <p class="mb-2 property-field" v-if="vehicle.delivered">Delivered</p>
-                <p class="mb-2 property-field" v-if="!vehicle.delivered">Not Delivered</p>
+                <p class="mb-2 property-field" v-if="vehicle.delivered">
+                  Delivered
+                </p>
+                <p class="mb-2 property-field" v-if="!vehicle.delivered">
+                  Not Delivered
+                </p>
               </CCol>
             </CRow>
           </CCol>
@@ -152,9 +167,7 @@
         <h6 class="modal-title">Cancel Sale Request</h6>
         <CButtonClose @click="showingCancelSaleModal = false" />
       </template>
-      <p>
-        Are you sure you want to cancel this sale request?
-      </p>
+      <p>Are you sure you want to cancel this sale request?</p>
       <template #footer>
         <CButton @click="showingCancelSaleModal = false" color="danger"
           >Cancel</CButton
@@ -167,12 +180,27 @@
         <h6 class="modal-title">Add vehicle to custom list</h6>
         <CButtonClose @click="showingAddToListModal = false" />
       </template>
-        <add-to-vehicle-list
-          :vehicleId="vehicle._id"
-          :closeModal="closeAddToListModal"
-          :showMessage="showMessage"
-          v-if="showingAddToListModal"
-        />
+      <add-to-vehicle-list
+        :vehicleId="vehicle._id"
+        :closeModal="closeAddToListModal"
+        :showMessage="showMessage"
+        v-if="showingAddToListModal"
+      />
+      <template #footer>
+        <span></span>
+      </template>
+    </CModal>
+    <CModal :show.sync="showingAddToZoneModel" :centered="true">
+      <template #header>
+        <h6 class="modal-title">Add vehicle to zone</h6>
+        <CButtonClose @click="showingAddToZoneModel = false" />
+      </template>
+      <add-to-zone
+        :vehicleId="vehicle._id"
+        :closeAddToZoneModal="closeAddToZoneModal"
+        v-if="showingAddToZoneModel"
+        @vehicle-location-updated="vehicleLocationUpdated"
+      />
       <template #footer>
         <span></span>
       </template>
@@ -183,14 +211,17 @@
 <script>
 const axios = require("axios");
 const { containsRoles } = require("../../utils/index");
+const QRCode = require("qrcode")
 import VehicleSell from "./SellVehicle.vue";
-import AddToVehicleList from "./AddToVehicleList.vue"
+import AddToVehicleList from "./AddToVehicleList.vue";
+import AddToZone from "./AddToZone.vue";
 
 export default {
   name: "VehicleDetails",
   components: {
     "vehicle-sell": VehicleSell,
-    "add-to-vehicle-list": AddToVehicleList
+    "add-to-vehicle-list": AddToVehicleList,
+    AddToZone,
   },
   props: ["vehicle", "setNewVehicle", "showMessage", "refreshTable"],
   data() {
@@ -200,6 +231,7 @@ export default {
       showingDeleteModal: false,
       showingCancelSaleModal: false,
       showingAddToListModal: false,
+      showingAddToZoneModel: false,
       dealershipStaff: null,
       selectedStaffAccount: this.$store.state.auth.userId,
       saleStatus: this.vehicle.sale ? true : false,
@@ -207,15 +239,22 @@ export default {
       sale_id: this.vehicle.sale,
       sale: null,
       deposit: "",
-      approved: false
+      approved: false,
     };
   },
   methods: {
     userHasRoles(...roles) {
       return containsRoles(roles);
     },
+    vehicleLocationUpdated(vehicle) {
+      this.setNewVehicle(vehicle);
+      this.showingAddToZoneModel = false;
+    },
     closeAddToListModal() {
       this.showingAddToListModal = false;
+    },
+    closeAddToZoneModal() {
+      this.showingAddToZoneModel = false;
     },
     deleteVehicle() {
       axios({
@@ -240,7 +279,7 @@ export default {
     closeModal() {
       let queries = JSON.parse(JSON.stringify(this.$route.query));
       queries = {};
-      this.$router.replace({query: queries});
+      this.$router.replace({ query: queries });
     },
     fetchSale() {
       axios({
@@ -280,7 +319,10 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("An error occured while canceling the sale request.", "danger");
+          this.showMessage(
+            "An error occured while canceling the sale request.",
+            "danger"
+          );
         });
     },
     toggleVehicleMissing() {
@@ -297,14 +339,37 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
-            this.showMessage("Vehicle location has been updated successfully", "success");
+            this.showMessage(
+              "Vehicle location has been updated successfully",
+              "success"
+            );
             this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("Error occured while updating vehicle location", "danger");
+          this.showMessage(
+            "Error occured while updating vehicle location",
+            "danger"
+          );
         });
+    },
+    async downloadQrCode() {
+      const url1 = "http://localhost:8080/#/inventory?vehicleSelected=" + this.vehicle._id
+      var src_qr = await QRCode.toDataURL(url1)
+      axios({
+        url: src_qr,
+        method:'GET',
+        responseType: 'blob'
+      }).then((response) => {
+        var fileUrl = window.URL.createObjectURL(new Blob([response.data]))
+        var fileLink = document.createElement('a')
+        fileLink.href = fileUrl
+
+        fileLink.setAttribute('download', 'qr_code.jpg')
+        document.body.appendChild(fileLink)
+        fileLink.click()
+      })
     },
     fetchDealershipUsers() {
       axios({
@@ -332,12 +397,12 @@ export default {
         });
     },
     setSaleStatus(value, sale) {
-      this.sale = sale
-      this.approved = !this.sale.date_approved ? false : true
+      this.sale = sale;
+      this.approved = !this.sale.date_approved ? false : true;
       this.sale_id = sale._id;
       this.saleStatus = value;
     },
-    setVehicleModal(value){
+    setVehicleModal(value) {
       this.showingSoldModal = value;
     },
     updateSale() {
@@ -348,7 +413,13 @@ export default {
       let body = this.vehicle;
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
+      let date =
+        date_ob.getFullYear() +
+        "-" +
+        date_ob.getMonth() +
+        1 +
+        "-" +
+        date_ob.getDate();
       body.delivered = true;
       body.date_delivered = date;
       axios({
@@ -368,19 +439,20 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("Error occured while updating vehicle delivery status", "danger");
+          this.showMessage(
+            "Error occured while updating vehicle delivery status",
+            "danger"
+          );
         });
     },
   },
   computed: {
     soldByUser() {
       if (this.approved) {
-        return "Sale Approved"
-      }
-      else if (!this.saleStatus && !this.approved) {
+        return "Sale Approved";
+      } else if (!this.saleStatus && !this.approved) {
         return "Not Sold";
-      }
-      else {
+      } else {
         return "Pending Sale Authorization";
       }
     },

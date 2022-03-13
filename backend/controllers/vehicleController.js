@@ -4,6 +4,8 @@ const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
 const Event = require('../models/Event');
 const Sale = require('../models/VehicleSale');
+const qr = require('qrcode')
+
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
@@ -20,7 +22,7 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
     );
   }
 
-  let query = Vehicle.find({ dealership: req.params.dealershipId });
+  let query = Vehicle.find({ dealership: req.params.dealershipId }).populate('zone');
   let inventory_query = Vehicle.count({ dealership: req.params.dealershipId, delivered: { $ne: true } });
 
   // run query
@@ -78,7 +80,7 @@ exports.getVehiclesDashboardV3 = asyncHandler(async (req, res, next) => {
 // @route       GET /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
 exports.getVehicle = asyncHandler(async (req, res, next) => {
-  let vehicle = await Vehicle.findById(req.params.vehicleId);
+  let vehicle = await Vehicle.findById(req.params.vehicleId).populate('zone');
 
   if (!vehicle) {
     return next(
@@ -97,14 +99,11 @@ exports.getVehicle = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.updateVehicle = asyncHandler(async (req, res, next) => {
 
-  // find vehicle to update
-  const vehicle = await Vehicle.findById(req.params.vehicleId);
-  
   // try to update the vehicle
   const newVehicle = await Vehicle.findByIdAndUpdate(req.params.vehicleId, req.body, {
     runValidators: true,
     new: true
-  });
+  }).populate('zone');
   // if successful, check the old properties and the new ones to see what was changed and create events accordingly
   if (!newVehicle) {
     return next(new ErrorResponse(`Vehicle with id ${req.params.vehicleId} was unable to be updated.`, 404));

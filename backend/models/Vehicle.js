@@ -35,6 +35,13 @@ const VehicleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  zone: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'LocationZone',
+    default: null
+  },
+  lat: Number,
+  lng: Number,
   on_road_since: Date,
   properties: Object,
 })
