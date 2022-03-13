@@ -71,6 +71,9 @@
               v-if="!vehicle.delivered"
               >Add to zone</CDropdownItem
             >
+            <CDropdownItem
+              @click.native="downloadQrCode"
+            >Download QR code</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
               class="delete"
@@ -219,6 +222,7 @@
 
 <script>
 const axios = require("axios");
+const QRCode = require("qrcode")
 const { containsPermissions } = require("../../utils/index");
 import VehicleSell from "./SellVehicle.vue";
 import AddToVehicleList from "./AddToVehicleList.vue";
@@ -362,6 +366,23 @@ export default {
             "danger"
           );
         });
+    },
+    async downloadQrCode() {
+      const url1 = "http://localhost:8080/#/inventory?vehicleSelected=" + this.vehicle._id
+      var src_qr = await QRCode.toDataURL(url1)
+      axios({
+        url: src_qr,
+        method:'GET',
+        responseType: 'blob'
+      }).then((response) => {
+        var fileUrl = window.URL.createObjectURL(new Blob([response.data]))
+        var fileLink = document.createElement('a')
+        fileLink.href = fileUrl
+
+        fileLink.setAttribute('download', 'qr_code.jpg')
+        document.body.appendChild(fileLink)
+        fileLink.click()
+      })
     },
     fetchDealershipUsers() {
       axios({

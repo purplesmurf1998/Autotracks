@@ -4,6 +4,8 @@ const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
 const Event = require('../models/Event');
 const Sale = require('../models/VehicleSale');
+const qr = require('qrcode')
+
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
