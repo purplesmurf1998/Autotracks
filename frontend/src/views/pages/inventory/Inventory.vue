@@ -39,7 +39,7 @@
     >
       <vehicle v-if="!!$route.query.vehicleSelected" 
       :vehicleId="$route.query.vehicleSelected" 
-      :refreshTable="$refs.inventoryTable.fetchVehicles"/>
+      :refreshTable="fetchVehicles"/>
       <template #header>
         <h6 class="modal-title">Vehicle Information Page</h6>
         <CButtonClose @click="closeModal" />
@@ -84,6 +84,9 @@ export default {
         this.message = null;
         this.messageType = null;
       }, 5000)
+    },
+    fetchVehicles() {
+      this.$refs.inventoryTable.fetchVehicles();
     },
   },
   mounted() {
