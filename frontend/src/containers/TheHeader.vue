@@ -53,7 +53,9 @@ export default {
   name: 'TheHeader',
   data(){
     return {
-      logo: logo
+      logo: logo,
+      showNotifModal: false,
+      unReadNotif: [],
     }
   },
   components: {
@@ -62,12 +64,6 @@ export default {
     TheHeaderDropdownTasks,
     TheHeaderDropdownMssgs,
     "notif-modal": NotifModal,
-  },
-  data() {
-    return {
-      showNotifModal: false,
-      unReadNotif: [],
-    }
   },
   methods: {
     setNotifModal(value) {
