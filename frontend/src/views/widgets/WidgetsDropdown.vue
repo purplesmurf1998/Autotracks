@@ -14,7 +14,7 @@
       <CCard class="text-center" color="gradient-info" textColor="white" style="height:160px">
         <CCardBody class="d-flex align-items-center">
           <CCol>
-            <CCardTitle class="display-3" color="gradient-secondary">{{soldVehiclesPercentage}}%</CCardTitle>
+            <CCardTitle class="display-3" color="gradient-warning">{{soldVehiclesPercentage}}%</CCardTitle>
             <CCardSubtitle>
               Sold Vehicles Percentage ({{inventoryCount-inventoryNotSoldCount}}/{{inventoryCount}})
             </CCardSubtitle>
@@ -23,38 +23,16 @@
       </CCard>
     </CCol>
     <CCol sm="6" lg="3">
-      <CWidgetDropdown
-        color="gradient-warning"
-        header="9.823"
-        text="Members online"
-      >
-        <template #default>
-          <CDropdown
-            color="transparent p-0"
-            placement="bottom-end"
-          >
-            <template #toggler-content>
-              <CIcon name="cil-settings"/>
-            </template>
-            <CDropdownItem>Action</CDropdownItem>
-            <CDropdownItem>Another action</CDropdownItem>
-            <CDropdownItem>Something else here...</CDropdownItem>
-            <CDropdownItem disabled>Disabled action</CDropdownItem>
-          </CDropdown>
-        </template>
-        <template #footer>
-          <CChartLineSimple
-            class="mt-3"
-            style="height:70px"
-            background-color="rgba(255,255,255,.2)"
-            :data-points="[78, 81, 80, 45, 34, 12, 40]"
-            :options="{ elements: { line: { borderWidth: 2.5 }}}"
-            point-hover-background-color="warning"
-            label="Members"
-            labels="months"
-          />
-        </template>
-      </CWidgetDropdown>
+      <CCard class="text-center" color="gradient-info" textColor="white" style="height:160px">
+        <CCardBody class="d-flex align-items-center">
+          <CCol>
+            <CCardTitle class="display-3" color="gradient-secondary">{{staleVehiclesPercentage}}%</CCardTitle>
+            <CCardSubtitle>
+              Stale Vehicles Percentage, 1 month ({{staleVehiclesCount}}/{{inventoryCount}})
+            </CCardSubtitle>
+          </CCol>
+        </CCardBody>
+      </CCard>
     </CCol>
     <CCol sm="6" lg="3">
       <CWidgetDropdown
@@ -94,7 +72,7 @@
 
 <script>
 const axios = require("axios");
-import { CChartLineSimple, CChartBarSimple } from '../charts/index.js'
+import { CChartBarSimple } from '../charts/index.js'
 
 export default {
   name: 'WidgetsDropdown',
@@ -103,6 +81,7 @@ export default {
     return {
       inventoryCount: "-1",
       inventoryNotSoldCount: "-1",
+      staleVehiclesCount: "-1",
       vehicleProperties: null,
       property_label: null,
       property_key: null,
@@ -115,6 +94,11 @@ export default {
       let invNum = parseInt(this.inventoryCount);
       let notSoldNum = parseInt(this.inventoryNotSoldCount);
       return ((invNum-notSoldNum)/invNum).toFixed(4)*100;
+    },
+    staleVehiclesPercentage() {
+      let invNum = parseInt(this.inventoryCount);
+      let staleNum = parseInt(this.staleVehiclesCount);
+      return ((staleNum)/invNum).toFixed(4)*100;
     }
   },
   methods: {
@@ -131,6 +115,7 @@ export default {
           this.inventoryCount = inventoryCount.toString();
           this.fetchVehicleProperties();
           this.fetchNotSoldVehiclesInInventory(dealership);
+          this.fetchStaleVehicles(dealership);
           setTimeout(() => {
             this.filterVisualByProperty(this.property_key, this.property_label);
           }, 200);
@@ -152,6 +137,31 @@ export default {
         .then((response) => {
           const inventoryNotSoldCount = response.data.inventoryNotSoldCount;
           this.inventoryNotSoldCount = inventoryNotSoldCount.toString();
+        })
+        .catch((error) => {
+          console.log(error);
+          //Show an error message instead of showing the 404 page
+          this.$router.replace("/pages/404");
+        });
+    },
+    fetchStaleVehicles(dealership) {
+      axios({
+        method: "GET",
+        url: `${this.$store.state.api}/inventory/dealership/${dealership}/stale`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+      })
+        .then((response) => {
+          console.log("FetchStaleVehicles response below:")
+          console.log(response.data)
+          if (response.data.staleVehiclesCount.length != 0) {
+            const staleVehiclesCount = response.data.staleVehiclesCount;
+            this.staleVehiclesCount = staleVehiclesCount.toString();
+          }
+          else {
+            this.staleVehiclesCount = 0;
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -225,7 +235,7 @@ export default {
   mounted() {
     this.fetchVehiclesInInventory(this.dealership);
   },
-  components: { CChartLineSimple, CChartBarSimple }
+  components: { CChartBarSimple }
 }
 
 </script>

@@ -64,6 +64,70 @@ exports.getNotSoldVehicles = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc        Get count of stale vehicles for a specific dealership
+// @route       GET /api/v1/inventory/dealership/:dealershipId/stale
+// @access      Private
+exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
+
+  // grab the dealership_ID from the body and verify that the dealership exists
+  const dealership = await Dealership.findById(req.params.dealershipId);
+
+  // no dealership found
+  if (!dealership) {
+    return next(
+        new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+    );
+  }
+
+  // Aggregation pipeline to find number of stale vehicles
+  let stale_vehicles_count_query = Vehicle.aggregate([
+      // Get cars that are registered to the dealership and aren't sold
+    {
+      $match: {
+        dealership: dealership._id,
+        sale: null,
+        delivered: false
+      }
+    },
+      // Filter the fields and add a new one using $dateDiff to get the elapsed time between now and the added date
+    {
+      $project: {
+        _id: 1,
+        date_added: 1,
+        months_since_added: {
+          $dateDiff: {
+            startDate: "$date_added",
+            endDate: "$$NOW",
+            unit: "month"
+          }
+        }
+      }
+    },
+      // Filter the results according to the "staleness" threshold (default 1 month)
+    {
+      $match: {
+        months_since_added: {
+          $gt: 1
+        }
+      }
+    },
+      // Count the results
+    {
+      $count: "stale_vehicles_count"
+    }
+  ])
+
+  const stale_vehicles_count = await stale_vehicles_count_query;
+  console.log(stale_vehicles_count)
+
+  // Send the result in the payload
+  res.status(200).json({
+    success: true,
+    staleVehiclesCount: stale_vehicles_count
+  });
+});
+
+
 // @desc        Get inventory count per vehicle property
 // @route       GET /api/v1/inventory/dealership/:dealershipId/visual3/:property
 // @access      Private
