@@ -19,7 +19,7 @@
       </CCol>
     </CRow>
     <hr />
-    <CRow>
+    <!-- <CRow>
       <CCol>
         <p class="text-muted mb-0">Permissions:</p>
       </CCol>
@@ -33,7 +33,7 @@
           </p></CRow
         >
       </CCol>
-    </CRow>
+    </CRow> -->
     <CRow class="d-flex justify-content-start mt-3 px-3 mb-2">
       <CButton
         color="secondary"

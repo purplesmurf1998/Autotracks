@@ -28,10 +28,9 @@
         id="role-select"
         :options="roles"
         :value.sync="role"
-        @change="setDefaultSelected"
         placeholder="Please select a role"
       />
-      <label class="mb-0">Account permissions</label>
+      <!-- <label class="mb-0">Account permissions</label>
       <hr />
       <CRow>
         <CCol>
@@ -72,7 +71,7 @@
           </CRow>
         </CCol>
       </CRow>
-      <hr />
+      <hr /> -->
       <CRow>
         <CCol>
           <label>Account Password</label>
@@ -121,33 +120,30 @@ export default {
       roles: [
         "Management",
         "Sales Rep",
-        "Sales Rep + Showroom",
-        "Sales Rep + Demoline",
-        "Sales Rep + Benefits",
         "Reception",
       ],
-      permissionsListLeft: [
-        "Add Dealerships",
-        "View Dealerships",
-        "Edit Dealerships",
-        "Delete Dealerships",
-        "Add Staff Users",
-        "View Staff Users",
-        "Edit Staff Users",
-        "Delete Staff Users",
-        "Add Vehicles",
-      ],
-      permissionsListRight: [
-        "View Vehicles",
-        "Edit Vehicles",
-        "Edit Vehicle Locations",
-        "Sell Vehicles",
-        "Delete Vehicles",
-        "Add Vehicle Properties",
-        "Edit Vehicle Properties",
-        "View Vehicle Properties",
-        "Delete Vehicle Properties",
-      ],
+      // permissionsListLeft: [
+      //   "Add Dealerships",
+      //   "View Dealerships",
+      //   "Edit Dealerships",
+      //   "Delete Dealerships",
+      //   "Add Staff Users",
+      //   "View Staff Users",
+      //   "Edit Staff Users",
+      //   "Delete Staff Users",
+      //   "Add Vehicles",
+      // ],
+      // permissionsListRight: [
+      //   "View Vehicles",
+      //   "Edit Vehicles",
+      //   "Edit Vehicle Locations",
+      //   "Sell Vehicles",
+      //   "Delete Vehicles",
+      //   "Add Vehicle Properties",
+      //   "Edit Vehicle Properties",
+      //   "View Vehicle Properties",
+      //   "Delete Vehicle Properties",
+      // ],
       first_name: "",
       last_name: "",
       email: "",
@@ -171,64 +167,64 @@ export default {
       }
       return result;
     },
-    isPermissionSelected(permission) {
-      const index = this.permissions.indexOf(permission);
-      return index >= 0;
-    },
-    togglePermissionChange(element) {
-      const checked = element.target.checked;
-      const permission = element.target.id;
+    // isPermissionSelected(permission) {
+    //   const index = this.permissions.indexOf(permission);
+    //   return index >= 0;
+    // },
+    // togglePermissionChange(element) {
+    //   const checked = element.target.checked;
+    //   const permission = element.target.id;
 
-      if (checked) {
-        // add the permission to the list
-        this.addPermission(permission);
-      } else {
-        this.removePermission(permission);
-      }
-    },
-    addPermission(permission) {
-      this.permissions.push(permission);
-    },
-    removePermission(permission) {
-      const index = this.permissions.indexOf(permission);
-      this.permissions.splice(index, 1);
-    },
-    setDefaultSelected() {
-      this.permissions = [];
-      this.permissions = this.getDefaultSelected();
-    },
-    getDefaultSelected() {
-      switch (this.role) {
-        case "Management":
-          return [
-            "View Dealerships",
-            "Add Staff Users",
-            "View Staff Users",
-            "Edit Staff Users",
-            "Delete Staff Users",
-            "View Vehicles",
-            "Edit Vehicle Locations",
-          ];
-        case "Sales Rep":
-          return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-        case "Sales Rep + Showroom":
-          return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-        case "Sales Rep + Demoline":
-          return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-        case "Sales Rep + Benefits":
-          return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-        case "Reception":
-          return [
-            "Add Vehicles",
-            "View Vehicles",
-            "Edit Vehicle Properties",
-            "Edit Vehicle Locations",
-            "Delete Vehicles",
-          ];
-        default:
-          return ["View Vehicles"];
-      }
-    },
+    //   if (checked) {
+    //     // add the permission to the list
+    //     this.addPermission(permission);
+    //   } else {
+    //     this.removePermission(permission);
+    //   }
+    // },
+    // addPermission(permission) {
+    //   this.permissions.push(permission);
+    // },
+    // removePermission(permission) {
+    //   const index = this.permissions.indexOf(permission);
+    //   this.permissions.splice(index, 1);
+    // },
+    // setDefaultSelected() {
+    //   this.permissions = [];
+    //   this.permissions = this.getDefaultSelected();
+    // },
+    // getDefaultSelected() {
+    //   switch (this.role) {
+    //     case "Management":
+    //       return [
+    //         "View Dealerships",
+    //         "Add Staff Users",
+    //         "View Staff Users",
+    //         "Edit Staff Users",
+    //         "Delete Staff Users",
+    //         "View Vehicles",
+    //         "Edit Vehicle Locations",
+    //       ];
+    //     case "Sales Rep":
+    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
+    //     case "Sales Rep + Showroom":
+    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
+    //     case "Sales Rep + Demoline":
+    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
+    //     case "Sales Rep + Benefits":
+    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
+    //     case "Reception":
+    //       return [
+    //         "Add Vehicles",
+    //         "View Vehicles",
+    //         "Edit Vehicle Properties",
+    //         "Edit Vehicle Locations",
+    //         "Delete Vehicles",
+    //       ];
+    //     default:
+    //       return ["View Vehicles"];
+    //   }
+    // },
     formIsValid() {
       return (
         this.first_name != "" &&
@@ -252,7 +248,7 @@ export default {
         email: this.email,
         role: this.role,
         dealership: this.$route.params.dealershipId,
-        permissions: this.permissions,
+        // permissions: this.permissions,
         password: this.password,
       };
 

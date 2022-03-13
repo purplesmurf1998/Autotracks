@@ -45,6 +45,7 @@
 
 <script>
 const axios = require("axios");
+const { containsRoles } = require("../utils/index");
 
 export default {
   props: ["setNotifModal"],
@@ -58,6 +59,9 @@ export default {
     };
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     setTab(tab) {
       this.tab = tab;
     },
@@ -108,6 +112,9 @@ export default {
       })
     },
     redirectPage(notif) {
+      //if the redirect should happen to the transaction page, make sure that the user has the allowed roles to view
+      if (notif.title.indexOf('Vehicle') == -1 && this.userHasRoles('Reception'))
+        return;
       localStorage.setItem('vehicle', notif.vehicle)
       var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
       if (this.$route.path == '/transactions' || this.$route.path == '/inventory')

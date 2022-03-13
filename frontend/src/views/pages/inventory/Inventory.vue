@@ -10,8 +10,15 @@
           class="mb-2">
           {{ message }}
         </CAlert>
-        <CRow class="m-0 mb-3 d-flex justify-content-between">
-          <router-link :to="`/inventory/add/${selectedDealership}`" v-if="!!selectedDealership && userHasRoles('Administration', 'Management', 'Reception')">
+        <CRow class="m-0 mb-3 d-flex justify-content-between" v-if="userHasRoles('Administration')">
+          <router-link :to="`/inventory/add/${selectedDealership}`" v-if="!!selectedDealership">
+            <CButton color="primary" id="add-new-vehicle">
+              Add vehicle(s) to the inventory
+            </CButton>
+          </router-link>
+        </CRow>
+        <CRow class="m-0 mb-3 d-flex justify-content-between" v-if="userHasRoles('Management', 'Reception')">
+          <router-link :to="`/inventory/add/${$store.state.auth.dealership}`">
             <CButton color="primary" id="add-new-vehicle">
               Add vehicle(s) to the inventory
             </CButton>

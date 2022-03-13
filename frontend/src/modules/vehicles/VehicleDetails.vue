@@ -255,7 +255,6 @@ export default {
             console.log("Success");
             this.sale = response.data.payload;
             this.approved = !this.sale.date_approved ? false : true
-            console.log(this.sale);
           }
         })
         .catch((err) => {
@@ -386,13 +385,12 @@ export default {
       }
     },
   },
-  beforeMount() {
-    this.fetchDealershipUsers();
-  },
   mounted() {
-    if (this.sale_id) {
+    if (this.userHasRoles('Administration', 'Management', 'Sales Rep'))
+      this.fetchDealershipUsers();
+
+    if (this.sale_id)
       this.fetchSale();
-    }
   }
 };
 </script>

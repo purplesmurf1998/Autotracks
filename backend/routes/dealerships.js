@@ -20,7 +20,7 @@ router.route('/')
     .post(protect, hasRoles('Administration'), createDealership);
 
 router.route('/:dealershipId')
-    .get(protect, hasRoles('Administration', 'Management'), getDealership)
+    .get(protect, getDealership)
     .put(protect, hasRoles('Administration'), updateDealership)
     .delete(protect, hasRoles('Administration'), deleteDealership);
 
