@@ -124,7 +124,7 @@ export default {
         return;
       localStorage.setItem('vehicle', notif.vehicle);
       var redirect = notif.title.indexOf('Vehicle') == -1 ? '/transactions' : '/inventory'
-      if (this.$route.path == '/transactions' || this.$route.path == '/inventory')
+      if ((this.$route.path == '/transactions' && redirect == '/transactions') || (this.$route.path == '/inventory' && redirect == '/inventory'))
         this.$router.go();
       else
         this.$router.push(redirect);
