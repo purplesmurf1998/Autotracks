@@ -20,7 +20,7 @@
               </CListGroupItem>
             </CListGroup>
             <CButton
-              color="secondary"
+              color="primary"
               class="mt-3"
               id="create-staff-acc"
               @click="

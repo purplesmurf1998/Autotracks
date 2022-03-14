@@ -14,10 +14,6 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Comment must have some content.']
   },
-  edited: {
-    type: Boolean,
-    default: false
-  },
   timestamp: {
     type: Date,
     default: Date.now

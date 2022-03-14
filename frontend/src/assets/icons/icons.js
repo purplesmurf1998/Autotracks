@@ -9,6 +9,7 @@ import {
   cibGithub,
   cibStackoverflow,
   cibYoutube,
+  cibDiscover,
   cibDribbble,
   cibInstagram,
   cibPinterest,
@@ -22,7 +23,7 @@ import {
   cibStripe,
   cibPaypal,
   cibGooglePay,
-  cibCcAmex
+  cibCcAmex,
 } from '@coreui/icons'
 import {
   cifUs,
@@ -38,6 +39,7 @@ import {
   cilAlignRight,
   cilApplicationsSettings,
   cilArrowRight,
+  cilArrowThickRight,
   cilBan,
   cilBasket,
   cilBell,
@@ -124,7 +126,8 @@ import {
   cilUserUnfollow,
   cilXCircle,
   cilWarning,
-  cibMailRu
+  cibMailRu,
+  cilAccountLogout
 } from '@coreui/icons'
 import { logo } from './logo'
 
@@ -136,6 +139,7 @@ export const iconsSet = Object.assign({}, { logo }, {
   cilAlignRight,
   cilApplicationsSettings,
   cilArrowRight,
+  cilArrowThickRight,
   cilBan,
   cilBasket,
   cilBell,
@@ -221,7 +225,8 @@ export const iconsSet = Object.assign({}, { logo }, {
   cilUserFollow,
   cilUserUnfollow,
   cilXCircle,
-  cilWarning
+  cilWarning,
+  cilAccountLogout
 }, {
   cifUs,
   cifBr,
@@ -253,5 +258,6 @@ export const iconsSet = Object.assign({}, { logo }, {
   cibStripe,
   cibPaypal,
   cibGooglePay,
-  cibCcAmex
+  cibCcAmex,
+  cibDiscover,
 })

@@ -6,17 +6,12 @@
     @update:show="(value) => $store.commit('set', ['sidebarShow', value])"
   >
     <CSidebarBrand class="d-md-down-none" to="/">
-      <CIcon
-        class="c-sidebar-brand-full"
-        name="logo"
-        size="custom-size"
-        :height="35"
-        viewBox="0 0 642 134"
-      />
+    <img src="../assets/autotracks_white_crp.png" class="img-fluid" alt="Responsive image">
       <CIcon
         class="c-sidebar-brand-minimized"
         name="logo"
-        size="custom-size"
+        :src="logo"
+        size="xl"
         :height="35"
         viewBox="0 0 110 134"
       />
@@ -31,8 +26,14 @@
 
 <script>
 import SidebarItems from './SidebarItems'
+import logo from '../assets/autotracks_white_crp.png'
 export default {
   name: 'TheSidebar',
+  data(){
+    return {
+      logo: logo
+    }
+  },
   extends: SidebarItems,
   computed: {
     show () {
@@ -44,4 +45,6 @@ export default {
   }
 }
 </script>
+
+
 

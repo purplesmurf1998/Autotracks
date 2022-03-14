@@ -12,6 +12,15 @@ const {
   getStaleVehicles
 } = require('../controllers/vehicleController');
 
+const {
+  createEvent
+} = require('../controllers/eventsController');
+
+
+const {
+  createHistory
+} = require('../controllers/historyController');
+
 // get authentication middleware
 const { protect, hasPermissions } = require('../middleware/auth');
 
@@ -33,7 +42,7 @@ router.route('/dealership/:dealershipId/visual3/:property')
 
 router.route('/vehicle/:vehicleId')
   .get(protect, hasPermissions('View Vehicles'), getVehicle)
-  .put(protect, hasPermissions('Edit Vehicles'), updateVehicle)
-  .delete(protect, hasPermissions('Delete Vehicles'), deleteVehicle);
+  .put(protect, hasPermissions('Edit Vehicles'), createEvent, createHistory, updateVehicle)
+  .delete(protect, hasPermissions('Delete Vehicles'), createEvent, createHistory, deleteVehicle);
 
 module.exports = router;

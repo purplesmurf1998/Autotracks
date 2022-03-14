@@ -40,6 +40,7 @@
                   name="vin"
                   v-model="vin"
                   :required="true"
+                  id="vin"
                 />
               <div v-for="property in vehicleProperties" :key="property._id">
                 <CInput
@@ -83,16 +84,16 @@
       </CCol>
       <CCol></CCol>
     </CRow>
-    <CModal :show.sync="showingModal" :centered="true">
+    <CModal :show.sync="showingModal" :centered="true" :closeOnBackdrop="false">
       <p>Do you wish to add another vehicle?</p>
       <template #header>
         <h6 class="modal-title">Vehicle added successfully!</h6>
-        <CButtonClose @click="showingModal = false" />
+        <!-- <CButtonClose @click="showingModal = false" /> -->
       </template>
       <template #footer>
-        <CButton @click="showingModal = false" color="success">Yes</CButton>
+        <CButton @click="showingModal = false" color="primary">Yes</CButton>
         <router-link to="/inventory"
-          ><CButton color="danger">No</CButton></router-link
+          ><CButton color="secondary">No</CButton></router-link
         >
       </template>
     </CModal>
@@ -130,6 +131,7 @@ export default {
       this.submitVehicle(properties);
     },
     resetForm() {
+      this.vin="";
       this.vehicleProperties.forEach((property) => {
         this.properties[property.key] = "";
       });
@@ -224,7 +226,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          this.$router.replace("/pages/404");
+          this.showMessage("Please select a Dealership", "danger")
         });
     },
   },

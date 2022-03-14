@@ -79,28 +79,23 @@ export default {
           {
             return this.vehicle.properties[property.key];
           }
-          break;
         case "Number":
           {
             return this.vehicle.properties[property.key];
           }
-          break;
         case "Currency":
           {
             let num = this.vehicle.properties[property.key];
             return num.toFixed(2) + "$";
           }
-          break;
         case "Date":
           {
             return this.vehicle.properties[property.key];
           }
-          break;
         case "Options":
           {
             return this.vehicle.properties[property.key];
           }
-          break;
         case "List":
           {
             let items = this.vehicle.properties[property.key];
@@ -114,7 +109,6 @@ export default {
             });
             return output.trim();
           }
-          break;
       }
     },
     fetchDealershipProperties() {
@@ -136,21 +130,6 @@ export default {
           this.$router.replace("/pages/404");
         });
     },
-    // splitVehicleProperties() {
-    //   let leftProperties = [];
-    //   let rightProperties = [];
-    //   this.vehicleProperties.forEach((property, index) => {
-    //     if (index % 2 == 0) {
-    //       // leftProperties
-    //       leftProperties.push(property);
-    //     } else {
-    //       // rightProperties
-    //       rightProperties.push(property);
-    //     }
-    //   });
-    //   this.leftProperties = leftProperties;
-    //   this.rightProperties = rightProperties;
-    // },
   },
   beforeMount() {
     this.fetchDealershipProperties();

@@ -3,11 +3,12 @@
     <DealershipDD
       :dealership="selectedDealership"
       @selectDealership="selectedDealership = $event"
+      :showSetDefault="true"
     />
       <!-- The following change event needs to be added later to update the visuals @change="$refs.inventoryTable.switchDealerships(selectedDealership)" -->
     <WidgetsDropdown
-      v-if="selectedDealership"
-      :dealership="selectedDealership"
+      v-if="selectedDealership || $store.state.auth.role != 'Administration'"
+      :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
       ref="wdigetDD"
     />
     <CCard>

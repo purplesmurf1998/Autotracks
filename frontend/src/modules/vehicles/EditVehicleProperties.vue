@@ -126,7 +126,7 @@ export default {
   mounted() {
     // get the values of the properties and add to the editedVehicle field
     const editedVehicle = {};
-    if (!!this.vehicleProperties) {
+    if (this.vehicleProperties) {
       this.vehicleProperties.forEach((property) => {
         if (property.inputType == "List") {
           let value = "";

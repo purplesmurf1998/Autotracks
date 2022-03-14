@@ -4,27 +4,28 @@
       <CCardHeader>
         <slot name="header">Inventory list of vehicles</slot>
         <!-- Download button below -->
-        <CButton 
-        @click="downloadInventory"
-        color="primary" class="float-right">
+        <CButton @click="downloadInventory" color="primary" class="float-right">
           <CIcon name="cil-cloud-download" />
         </CButton>
         <CButton
-        v-if="delivered_bool" 
-        @click="setDeliveredBool(false)"
-        color="secondary" class="float-right mr-3">
+          v-if="delivered_bool"
+          @click="setDeliveredBool(false)"
+          color="secondary"
+          class="float-right mr-3"
+        >
           Hide Delivered Vehicles
         </CButton>
         <CButton
-        v-if="!delivered_bool" 
-        @click="setDeliveredBool(true)"
-        color="secondary" class="float-right mr-3">
+          v-if="!delivered_bool"
+          @click="setDeliveredBool(true)"
+          color="secondary"
+          class="float-right mr-3"
+        >
           Show Delivered Vehicles
         </CButton>
       </CCardHeader>
       <CCardBody>
         <CDataTable
-          id="inventory-datatable"
           :fields="tableFields"
           :items="tableItems"
           :items-per-page="10"
@@ -37,23 +38,19 @@
           column-filter
         >
           <template v-for="field in tableFields" v-slot:[field.key]="item">
-            <inventory-slot :key="field.key" :item="item" :field="field"/>
+            <inventory-slot :key="field.key" :item="item" :field="field" />
           </template>
-          <!-- <template #missing="{ item }">
-            <td>
-              <CIcon name="cil-warning" class="icon" v-if="item.missing" />
-            </td>
-          </template> -->
         </CDataTable>
       </CCardBody>
     </CCard>
   </div>
 </template>
 
-<script>
+<script >
 const axios = require("axios");
-import InventorySlot from "./InventorySlot.vue"
-import Vehicle from "../vehicle/Vehicle.vue"
+import InventorySlot from "./InventorySlot.vue";
+import Vehicle from "../vehicle/Vehicle.vue";
+import XLSX from "xlsx";
 
 export default {
   name: "InventoryTable",
@@ -67,16 +64,32 @@ export default {
   },
   methods: {
     downloadInventory() {
-      console.log("Report Downloaded");
+      let tableData = this.tableItems.map((item) => {
+        return { ...item };
+      });
+      let formattedData = [];
+      tableData.forEach((item) => {
+        for (let i in item) {
+          if (Array.isArray(item[i])) item[i] = item[i].join(",");
+        }
+        delete item["_id"];
+        let vin = item["vin"];
+        let newObj = Object.assign({ vin: vin }, item);
+        formattedData.push(newObj);
+      });
+      const data = XLSX.utils.json_to_sheet(formattedData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, data, "data");
+      XLSX.writeFile(wb, "inventory.xlsx");
     },
     setDeliveredBool(value) {
-      this.delivered_bool = value
+      this.delivered_bool = value;
       this.fetchVehicleProperties();
     },
     rowClicked(vehicle) {
       let queries = JSON.parse(JSON.stringify(this.$route.query));
       queries.vehicleSelected = vehicle._id;
-      this.$router.replace({query: queries});
+      this.$router.replace({ query: queries });
     },
     switchDealerships(dealership) {
       this.dealership = dealership;
@@ -94,7 +107,7 @@ export default {
         .then((response) => {
           const payload = response.data.payload;
           const fields = [];
-          fields.push({key: "vin", label: "VIN"});
+          fields.push({ key: "vin", label: "VIN" });
           payload.forEach((property) => {
             if (property.visible) {
               fields.push(property);
@@ -128,13 +141,12 @@ export default {
             //Check if vehicle has properties
             if (!this.delivered_bool) {
               if (!vehicle.delivered) {
-                if (vehicle.properties != null)
-                { 
+                if (vehicle.properties != null) {
                   let properties = vehicle.properties;
                   properties._id = vehicle._id;
                   properties.vin = vehicle.vin;
                   if (vehicle.missing) {
-                    properties._classes = 'table-warning';
+                    properties._classes = "table-warning";
                   }
                   tableItems.push(properties);
                 }
@@ -142,13 +154,12 @@ export default {
             }
             if (this.delivered_bool) {
               if (vehicle.delivered) {
-                if (vehicle.properties != null)
-                { 
+                if (vehicle.properties != null) {
                   let properties = vehicle.properties;
                   properties._id = vehicle._id;
                   properties.vin = vehicle.vin;
                   if (vehicle.missing) {
-                    properties._classes = 'table-warning';
+                    properties._classes = "table-warning";
                   }
                   tableItems.push(properties);
                 }
@@ -167,9 +178,9 @@ export default {
     this.fetchVehicleProperties();
   },
   components: {
-    'inventory-slot': InventorySlot,
-    'vehicle': Vehicle
-  }
+    "inventory-slot": InventorySlot,
+    vehicle: Vehicle,
+  },
 };
 </script>
 
