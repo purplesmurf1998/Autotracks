@@ -57,7 +57,7 @@
         </CButton>
         <CButton
           class="ml-1"
-          color="danger"
+          color="secondary"
           :disabled="disableButtons"
           @click="setAddingVehicleProperty(false)"
         >

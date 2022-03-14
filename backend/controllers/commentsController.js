@@ -12,8 +12,6 @@ exports.getComments = asyncHandler(async (req, res, next) => {
     .sort({timestamp: -1})
     .populate('author');
 
-  
-
   res.status(200).json({
     success: true,
     payload: comments,
@@ -25,27 +23,11 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 // @route       POST /api/v1/comments/vehicle/:vehicleId
 // @access      Private
 exports.createComment = asyncHandler(async (req, res, next) => {
-  
-  const vehicle = await Vehicle.findById(req.params.vehicleId);
-
-  if (!vehicle) {
-    return next(
-      new ErrorResponse(`Vehicle not found.`, 404)
-    );
-  }
-
   let comment = await Comment.create(req.body);
-
-  // for testing, this may not be reachable. If not this check can be deleted.
-  if (!comment) {
-    return next(
-      new ErrorResponse(`Server error`, 500)
-    );
-  }
 
   comment = await comment.populate('author');
 
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     payload: comment
   });
@@ -58,24 +40,12 @@ exports.editComment = asyncHandler(async (req, res, next) => {
   
   let comment = await Comment.findById(req.params.commentId).populate('author');
 
-  if (!comment) {
-    return next(
-      new ErrorResponse(`Comment not found`, 404)
-    );
-  }
-
   const author = comment.author;
   const user = req.user;
 
   if (author._id.toString() != user._id.toString()) {
     return next(
       new ErrorResponse(`Unauthorized to make this edit.`, 401)
-    );
-  }
-
-  if (!req.body.comment) {
-    return next(
-      new ErrorResponse(`Bad request. Comment must have content.`, 400)
     );
   }
 

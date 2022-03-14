@@ -8,15 +8,19 @@ const {
   createComment
 } = require('../controllers/commentsController');
 
+const {
+  createHistory
+} = require('../controllers/historyController');
+
 // get authentication middleware
 const { protect, hasPermissions } = require('../middleware/auth');
 
 router.route('/vehicle/:vehicleId')
   .get(protect, getComments)
-  .post(protect, createComment);
+  .post(protect, createHistory, createComment);
 
 router.route('/comment/:commentId')
-  .put(protect, editComment)
-  .delete(protect, deleteComment);
+  .put(protect, createHistory, editComment)
+  .delete(protect, createHistory, deleteComment);
 
 module.exports = router;

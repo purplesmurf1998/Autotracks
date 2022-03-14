@@ -50,6 +50,12 @@ export default {
               to: "/transactions",
               icon: "cil-chart-line",
             },
+            {
+              _name: "CSidebarNavItem",
+              name: "Vehicle Lists",
+              to: "/vehicle-lists",
+              icon: "cil-list",
+            },
           ],
         },
       ];
