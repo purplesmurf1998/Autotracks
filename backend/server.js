@@ -25,6 +25,7 @@ const vehicleRoutes = require('./routes/vehicle');
 const eventRoutes = require('./routes/events');
 const commentRoutes = require('./routes/comments');
 const saleRoutes = require('./routes/sales')
+const dashboardVisualsRoutes = require('./routes/dashboardVisuals')
 const vehicleListRoutes = require('./routes/vehicleList');
 const historyRoutes = require('./routes/history');
 const locationZoneRoutes = require('./routes/locationZones');
@@ -68,6 +69,7 @@ app.use('/api/v1/inventory', vehicleRoutes);
 app.use('/api/v1/events', eventRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/inventory/details/sale', saleRoutes);
+app.use('/api/v1/dashboard-visuals/dealership/:dealershipId', dashboardVisualsRoutes);
 app.use('/api/v1/vehicle-list', vehicleListRoutes);
 app.use('/api/v1/history', historyRoutes);
 app.use('/api/v1/locations/zones', locationZoneRoutes);

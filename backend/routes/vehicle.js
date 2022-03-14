@@ -7,7 +7,9 @@ const {
   getVehiclesDashboardV3,
   createVehicle,
   updateVehicle,
-  deleteVehicle
+  deleteVehicle,
+  getNotSoldVehicles,
+  getStaleVehicles
 } = require('../controllers/vehicleController');
 
 const {
@@ -27,6 +29,13 @@ router.route('/')
 router.route('/dealership/:dealershipId')
   .get(protect, getVehicles);
 
+router.route('/dealership/:dealershipId/notSold')
+    .get(protect, getNotSoldVehicles);
+
+router.route('/dealership/:dealershipId/stale')
+    .get(protect, getStaleVehicles);
+
+//Add permissions  
 router.route('/dealership/:dealershipId/visual3/:property')
   .get(protect, getVehiclesDashboardV3);
 
