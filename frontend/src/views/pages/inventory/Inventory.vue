@@ -10,14 +10,21 @@
           class="mb-2">
           {{ message }}
         </CAlert>
-        <CRow class="m-0 mb-3 d-flex justify-content-between">
+        <CRow class="m-0 mb-3 d-flex justify-content-between" v-if="userHasRoles('Administration')">
           <router-link :to="`/inventory/add/${selectedDealership}`" v-if="!!selectedDealership">
             <CButton color="primary" id="add-new-vehicle">
               Add vehicle(s) to the inventory
             </CButton>
           </router-link>
         </CRow>
-        <CAlert color="info" v-if="!selectedDealership && $store.state.auth.role == 'Administration'">Select a dealership or <strong><router-link to="/dealerships">create one</router-link></strong> before adding/viewing the inventory</CAlert>
+        <CRow class="m-0 mb-3 d-flex justify-content-between" v-if="userHasRoles('Management', 'Reception')">
+          <router-link :to="`/inventory/add/${$store.state.auth.dealership}`">
+            <CButton color="primary" id="add-new-vehicle">
+              Add vehicle(s) to the inventory
+            </CButton>
+          </router-link>
+        </CRow>
+        <CAlert color="info" v-if="!selectedDealership && userHasRoles('Administration')">Select a dealership or <strong><router-link to="/dealerships">create one</router-link></strong> before adding/viewing the inventory</CAlert>
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
@@ -53,6 +60,8 @@
 
 <script>
 const axios = require("axios");
+const { containsRoles } = require("../../../utils/index");
+
 import InventoryTable from "./InventoryTable.vue";
 import dealershipDD from "./DealershipDropdown.vue";
 import Vehicle from "../vehicle/Vehicle.vue"
@@ -72,6 +81,9 @@ export default {
     }
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     closeModal() {
       let queries = JSON.parse(JSON.stringify(this.$route.query));
       queries = {};

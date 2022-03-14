@@ -11,26 +11,25 @@ const {
   updateVehicleList
 } = require('../controllers/vehicleListController');
 
-// get authentication middleware
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
-  .post(protect, createVehicleList);
+  .post(protect, hasRoles('Administration', 'Management', 'Sales Rep'), createVehicleList);
 
 router.route('/:vehicleListId')
-  .get(protect, getVehicleList)
+  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getVehicleList)
   .put(protect, updateVehicleList);
 
 router.route('/user/:userId/delete')
-  .post(protect, deleteVehicleLists, getVehicleLists);
+  .post(protect, hasRoles('Administration', 'Management', 'Sales Rep'), deleteVehicleLists, getVehicleLists);
 
 router.route('/user/:userId')
-  .get(protect, getVehicleLists);
+  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getVehicleLists);
 
 router.route('/:vehicleListId/add')
-  .post(protect, addVehiclesToList);
+  .post(protect, hasRoles('Administration', 'Management', 'Sales Rep'), addVehiclesToList);
 
 router.route('/:vehicleListId/delete')
-  .post(protect, deleteVehiclesFromList);
+  .post(protect, hasRoles('Administration', 'Management', 'Sales Rep'), deleteVehiclesFromList);
 
 module.exports = router;

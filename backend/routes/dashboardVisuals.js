@@ -6,7 +6,7 @@ const {
 } = require('../controllers/saleController');
 
 // get authentication middleware
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // add .get(protect, getSalesByTime) later
 router.route('/visual3')

@@ -70,7 +70,10 @@ export default {
       let formattedData = [];
       tableData.forEach((item) => {
         for (let i in item) {
-          if (Array.isArray(item[i])) item[i] = item[i].join(",");
+          if (Array.isArray(item[i])) 
+            item[i] = item[i].join(",");
+          if (i == '_classes')
+            delete item[i];
         }
         delete item["_id"];
         let vin = item["vin"];

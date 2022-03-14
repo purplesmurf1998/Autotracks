@@ -19,53 +19,41 @@
           >
             <CDropdownItem
               @click.native="showingSoldModal = true"
-              v-if="
-                userHasPermissions('Edit Vehicles') && !saleStatus && !approved
-              "
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !saleStatus && !approved"
               >Sell Vehicle</CDropdownItem
             >
             <CDropdownItem
               @click.native="updateSale()"
-              v-if="
-                userHasPermissions('Edit Vehicles') && !!saleStatus && !approved
-              "
-              >Edit Sale
-            </CDropdownItem>
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !!saleStatus && !approved"
+              >Edit Sale </CDropdownItem
+            >
             <CDropdownItem
               @click.native="showingCancelSaleModal = true"
-              v-if="
-                userHasPermissions('Edit Vehicles') && !!saleStatus && !approved
-              "
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep') && !!saleStatus && !approved"
               class="delete"
               >Cancel Sale
             </CDropdownItem>
             <CDropdownItem
-              v-if="
-                userHasPermissions('Edit Vehicles') &&
-                !vehicle.delivered &&
-                !!saleStatus &&
-                approved
-              "
-              @click="markDelivered"
+            v-if="!vehicle.delivered && !!saleStatus && approved"
+            @click="markDelivered"
               >Mark as Delivered</CDropdownItem
             >
             <CDropdownDivider />
             <CDropdownItem
               @click.native="toggleVehicleMissing"
-              v-if="!vehicle.missing && userHasPermissions('Edit Vehicles')"
+              v-if="!vehicle.missing"
               >Missing / Misplaced</CDropdownItem
             >
             <CDropdownItem
               @click.native="toggleVehicleMissing"
               class="present"
-              v-if="vehicle.missing && userHasPermissions('Edit Vehicles')"
+              v-if="vehicle.missing"
               >Present / Located</CDropdownItem
             >
             <CDropdownItem
               @click.native="showingAddToListModal = true"
-              v-if="!vehicle.delivered"
-              >Add to list</CDropdownItem
-            >
+              v-if="!vehicle.delivered && userHasRoles('Administration', 'Management', 'Sales Rep')"
+            >Add to list</CDropdownItem>
             <CDropdownItem
               @click.native="showingAddToZoneModel = true"
               v-if="!vehicle.delivered"
@@ -73,12 +61,13 @@
             >
             <CDropdownItem
               @click.native="downloadQrCode"
+              v-if="userHasRoles('Administration', 'Management', 'Sales Rep')"
             >Download QR code</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
               class="delete"
               @click.native="showingDeleteModal = true"
-              v-if="userHasPermissions('Delete Vehicles')"
+              v-if="userHasRoles('Administration', 'Management')"
               >Delete Vehicle</CDropdownItem
             >
           </CDropdown>
@@ -222,8 +211,8 @@
 
 <script>
 const axios = require("axios");
+const { containsRoles } = require("../../utils/index");
 const QRCode = require("qrcode")
-const { containsPermissions } = require("../../utils/index");
 import VehicleSell from "./SellVehicle.vue";
 import AddToVehicleList from "./AddToVehicleList.vue";
 import AddToZone from "./AddToZone.vue";
@@ -255,12 +244,12 @@ export default {
     };
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     vehicleLocationUpdated(vehicle) {
       this.setNewVehicle(vehicle);
       this.showingAddToZoneModel = false;
-    },
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
     },
     closeAddToListModal() {
       this.showingAddToListModal = false;
@@ -305,8 +294,7 @@ export default {
           if (response.data.success) {
             console.log("Success");
             this.sale = response.data.payload;
-            this.approved = !this.sale.date_approved ? false : true;
-            console.log(this.sale);
+            this.approved = !this.sale.date_approved ? false : true
           }
         })
         .catch((err) => {
@@ -470,14 +458,13 @@ export default {
       }
     },
   },
-  beforeMount() {
-    this.fetchDealershipUsers();
-  },
   mounted() {
-    if (this.sale_id) {
+    if (this.userHasRoles('Administration', 'Management', 'Sales Rep'))
+      this.fetchDealershipUsers();
+
+    if (this.sale_id)
       this.fetchSale();
-    }
-  },
+  }
 };
 </script>
 
