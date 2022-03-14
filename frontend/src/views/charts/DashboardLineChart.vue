@@ -63,9 +63,7 @@ export default {
       })
         // From this point, to ensure sync, all processing methods MUST reside in this block
         .then((response) => {
-          console.log("Sales requested successfully!")
           this.dataPayload = response.data.payload
-          console.log(this.dataPayload)
           this.monthlyLabels = this.dataPayload.formattedSalesByMonth[0]
           this.monthlyPoints = this.dataPayload.formattedSalesByMonth[1]
           this.yearlyLabels = this.dataPayload.formattedSalesByYear[0]
@@ -76,8 +74,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          // Show an error message instead of showing the 404 page
-          this.$router.replace("/pages/404");
         });
     },
     /*
@@ -109,7 +105,6 @@ export default {
   },
   // Actions to take the instant the component is loaded
   mounted() {
-    console.log("Dashboard chart mounted -> "+`${this.dealership}`);
     setTimeout(() => {
       this.fetchSalesFromDealership(this.dealership);
     }, 1)

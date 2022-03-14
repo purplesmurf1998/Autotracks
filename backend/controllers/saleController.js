@@ -213,7 +213,6 @@ function formatPoints(data, type) {
     let points = []
     let formattedPoints = [labels, points]
     let dateString = ""
-    console.log("[BACKEND] Formatting points by "+type)
     switch (type) {
         case "week": {
             console.log(data)

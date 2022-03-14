@@ -34,7 +34,7 @@ router.route('/dealership/:dealershipId/notSold')
     .get(protect, hasPermissions('View Vehicles'), getNotSoldVehicles);
 
 router.route('/dealership/:dealershipId/stale')
-    .get(getStaleVehicles);
+    .get(protect, getStaleVehicles);
 
 //Add permissions  
 router.route('/dealership/:dealershipId/visual3/:property')

@@ -10,6 +10,6 @@ const { protect, hasPermissions } = require('../middleware/auth');
 
 // add .get(protect, getSalesByTime) later
 router.route('/visual3')
-    .get(getSalesByTime)
+    .get(protect, getSalesByTime)
 
 module.exports = router;
