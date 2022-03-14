@@ -32,8 +32,8 @@ exports.createSale = asyncHandler(async (req, res, next) => {
     });
 });
 
-// @desc    Get a sale instance
-// @route   GET /api/v1/inventory/details/sale/dealership/:dealershipId'
+// @desc    Get all sale instances from a dealership
+// @route   GET /api/v1/inventory/details/sale/:dealershipId'
 // @access  Public
 exports.getSales = asyncHandler(async (req, res, next) => {    
     // grab the dealership_ID from the body and verify that the dealership exists
@@ -106,3 +106,157 @@ exports.deleteSale = asyncHandler(async (req, res, next) => {
     payload: {}
     })
 });
+
+// @desc    Returns the number of sales per time period, formatted as data points for the dashboard chart
+// @route   GET /api/v1/dashboard-visuals/dealership/:dealershipId/visual3
+// @access  Public
+exports.getSalesByTime = asyncHandler(async (req, res, next) => {
+    // grab the dealership_ID from the body and verify that the dealership exists
+    const dealership = await Dealership.findById(req.params.dealershipId);
+
+    // no dealership found
+    if (!dealership) {
+        return next(
+            new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+        );
+    }
+
+    // Get the sales from the dealership
+    const sales = await Sale.find({ dealership: req.params.dealershipId })
+        .populate('vehicle sales_rep approved_by');
+
+    // If there aren't any sales, return an error
+    if (!sales) {
+        return next(new ErrorResponse(`An error occured while fetching transactions`, 404));
+    }
+
+    /*
+    The logic will be to get all the sales from the start, then process them into 2 datasets here in the backend.
+    These datasets will be returned by the payload and saved locally in the frontend on mount.
+    */
+
+    const salesByMonth = await Sale.aggregate([
+        {
+            $match: {
+                dealership: dealership._id
+            }
+        },
+        {
+            $project: {
+                year: {$year: "$date_of_sale"},
+                month: {$month: "$date_of_sale"}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    "year": "$year",
+                    "month": "$month"
+                },
+                total: {
+                    $sum:1
+                }
+            }
+        },
+        {
+            $sort: {
+                "_id.year":1,
+                "_id.month":1
+            }
+        }
+    ])
+
+    const salesByYear = await Sale.aggregate([
+        {
+            $match: {
+                dealership: dealership._id
+            }
+        },
+        {
+            $project: {
+                year: {$year: "$date_of_sale"}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    "year": "$year"
+                },
+                total: {
+                    $sum:1
+                }
+            }
+        },
+        {
+            $sort: {
+                "_id.year":1
+            }
+        }
+    ])
+    
+    const formattedSalesByMonth = formatPoints(salesByMonth, "month")
+    const formattedSalesByYear = formatPoints(salesByYear, "year")
+    const datasets = {
+        //formattedSalesByWeek,
+        formattedSalesByMonth,
+        formattedSalesByYear
+    }
+
+    res.status(200).json({
+        success: true,
+        payload: datasets
+    })
+});
+
+function formatPoints(data, type) {
+    let labels = []
+    let points = []
+    let formattedPoints = [labels, points]
+    let dateString = ""
+    switch (type) {
+        case "week": {
+            console.log(data)
+            data.forEach(sale => {
+                console.log("[BACKEND] Sale processing:")
+                console.log(sale)
+                dateString = (
+                    sale._id.year
+                    +"-"
+                    +sale._id.month
+                    +"-"
+                    +sale._id.week
+                )
+                formattedPoints[0].push(dateString)
+                formattedPoints[1].push(sale.total)
+                dateString = ""
+            })
+        }
+        break
+        case "month": {
+            data.forEach(sale => {
+                dateString = (
+                    sale._id.year
+                    + "-"
+                    + sale._id.month
+                )
+                formattedPoints[0].push(dateString)
+                formattedPoints[1].push(sale.total)
+                dateString = ""
+            })
+        }
+        break
+        case "year": {
+            data.forEach(sale => {
+                dateString= (
+                    (sale._id.year).toString()
+                )
+                formattedPoints[0].push(dateString)
+                formattedPoints[1].push(sale.total)
+                dateString = ""
+            })
+        }
+        break
+    }
+
+    return formattedPoints
+}
