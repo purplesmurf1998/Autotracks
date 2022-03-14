@@ -208,8 +208,7 @@ exports.getSalesByTime = asyncHandler(async (req, res, next) => {
             }
         }
     ])
-
-    //const formattedSalesByWeek = formatPoints(salesByWeek, "week")
+    
     const formattedSalesByMonth = formatPoints(salesByMonth, "month")
     const formattedSalesByYear = formatPoints(salesByYear, "year")
     const datasets = {
