@@ -79,7 +79,7 @@ pipeline {
             }
             */
             echo 'Running Front end server...'
-            dir(path: 'Autotracks/frontend') {
+            dir(path: 'frontend') {
               sh 'npm run serve'
             }
             echo 'Frontend Server Deployed on port 8080'
@@ -98,14 +98,14 @@ pipeline {
               sh 'npm install --force'
             }
             echo 'Running Unit Tests...'
-            //dir(path: 'Autotracks/backend') {
+            dir(path: 'backend') {
               sh 'npm run test'
-            //}
+            }
             echo 'Running Node Tests...'
-            //dir(path: 'Autotracks/backend') {
+            dir(path: 'backend') {
               sh 'ls'
               sh 'node server'
-            //}
+            }
             echo 'Backend Server Deployed on port 5000'
           }
         }//END BACKEND STAGE
