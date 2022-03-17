@@ -12,22 +12,14 @@ pipeline {
           }
           steps {
             echo 'Building Frontend...'
-            dir(path: 'Autotracks/frontend') {
+            dir(path: 'frontend') {
               sh 'npm install --force'
-            }
-
-            echo 'Running Unit Tests...'
-            dir(path: 'Autotracks/frontend') {
-              sh 'npm run test'// sh 'npm run test:unit'
-            }
-            /*
-            echo 'Running End-To-End Tests...'
-            dir(path: 'Autotracks/frontend') {
+              echo 'Running Unit Tests...'
+              sh 'npm run test:unit'
+              echo 'Running End-To-End Tests...'
               sh 'npm run test:e2e'
+              echo 'Build & Test Complete In Front End'
             }
-            */
-            echo 'Build & Test Complete In Front End'
-          }
         }//END FRONTEND STAGE
         stage('Backend') {
           agent {
@@ -38,15 +30,12 @@ pipeline {
           }
           steps {
             echo 'Building Backend...'
-            dir(path: 'Autotracks/backend') {
+            dir(path: 'backend') {
               sh 'npm install --force'
-            }
-            echo 'Running Unit Tests...'
-            dir(path: 'Autotracks/backend') {
+              echo 'Running Unit Tests...'
               sh 'npm run test'
+              echo 'Build & Test Complete In Front End'
             }
-            echo 'Build & Test Complete In Front End'
-          }
         }//END BACKEND STAGE
       }//END PARALLEL
     }//END BUILD & TEST
@@ -63,23 +52,13 @@ pipeline {
             echo 'Building Frontend...'
             dir(path: 'frontend') {
               sh 'npm install --force'
-            }
-          echo 'Running linter...'
-            dir(path: 'frontend') {
-              echo 'Skipping Linter...'//sh 'npm run lint'
-            }
-            echo 'Running Unit Tests...'
-            dir(path: 'frontend') {
-               echo 'Skipping testing...'//sh 'npm run test'// sh 'npm run test:unit'
-            }
-            /*
-            echo 'Running End-To-End Tests...'
-            dir(path: 'Autotracks/frontend') {
+              echo 'Running linter...'
+              sh 'npm run lint'
+              echo 'Running Unit Tests...'
+              sh 'npm run test:unit'
+              echo 'Running End-To-End Tests...'
               sh 'npm run test:e2e'
-            }
-            */
-            echo 'Running Front end server...'
-            dir(path: 'frontend') {
+              echo 'Running Front end server...'
               sh 'npm run serve'
             }
             echo 'Frontend Server Deployed on port 8080'
