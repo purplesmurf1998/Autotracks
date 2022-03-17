@@ -61,15 +61,15 @@ pipeline {
           }
           steps {
             echo 'Building Frontend...'
-            dir(path: 'Autotracks/frontend') {
+            dir(path: 'frontend') {
               sh 'npm install --force'
             }
           echo 'Running linter...'
-            dir(path: 'Autotracks/frontend') {
+            dir(path: 'frontend') {
               echo 'Skipping Linter...'//sh 'npm run lint'
             }
             echo 'Running Unit Tests...'
-            dir(path: 'Autotracks/frontend') {
+            dir(path: 'frontend') {
                echo 'Skipping testing...'//sh 'npm run test'// sh 'npm run test:unit'
             }
             /*
@@ -94,15 +94,11 @@ pipeline {
           }
           steps {
             echo 'Building Backend...'
-            dir(path: 'Autotracks/backend') {
+            dir(path: 'backend') {
               sh 'npm install --force'
-            }
-            echo 'Running Unit Tests...'
-            dir(path: 'backend') {
+              echo 'Running Unit Tests...'
               echo'Skipping testing...'//sh 'npm run test'
-            }
-            echo 'Running Node Tests...'
-            dir(path: 'backend') {
+              echo 'Running Node Server...'
               sh 'ls'
               sh 'node server'
             }
