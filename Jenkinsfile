@@ -20,6 +20,7 @@ pipeline {
               sh 'npm run test:e2e'
               echo 'Build & Test Complete In Front End'
             }
+          }
         }//END FRONTEND STAGE
         stage('Backend') {
           agent {
@@ -36,6 +37,7 @@ pipeline {
               sh 'npm run test'
               echo 'Build & Test Complete In Front End'
             }
+          }
         }//END BACKEND STAGE
       }//END PARALLEL
     }//END BUILD & TEST
