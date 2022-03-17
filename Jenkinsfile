@@ -62,7 +62,7 @@ pipeline {
           steps {
             echo 'Building Frontend...'
             dir(path: 'Autotracks/frontend') {
-              sh 'npm install -g --force'
+              sh 'npm install --force'
             }
           echo 'Running linter...'
             dir(path: 'Autotracks/frontend') {
@@ -95,7 +95,7 @@ pipeline {
           steps {
             echo 'Building Backend...'
             dir(path: 'Autotracks/backend') {
-              sh 'npm install -g --force'
+              sh 'npm install --force'
             }
             echo 'Running Unit Tests...'
             dir(path: 'backend') {
