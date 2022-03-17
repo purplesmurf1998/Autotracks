@@ -18,12 +18,14 @@ pipeline {
 
             echo 'Running Unit Tests...'
             dir(path: 'Autotracks/frontend') {
-              sh 'npm run test:unit'
+              sh 'npm run test'// sh 'npm run test:unit'
             }
+            /*
             echo 'Running End-To-End Tests...'
             dir(path: 'Autotracks/frontend') {
               sh 'npm run test:e2e'
             }
+            */
             echo 'Build & Test Complete In Front End'
           }
         }//END FRONTEND STAGE
@@ -68,12 +70,14 @@ pipeline {
             }
             echo 'Running Unit Tests...'
             dir(path: 'Autotracks/frontend') {
-              sh 'npm run test:unit'
+              sh 'npm run test'// sh 'npm run test:unit'
             }
+            /*
             echo 'Running End-To-End Tests...'
             dir(path: 'Autotracks/frontend') {
               sh 'npm run test:e2e'
             }
+            */
             echo 'Running Front end server...'
             dir(path: 'Autotracks/frontend') {
               sh 'npm run serve'
