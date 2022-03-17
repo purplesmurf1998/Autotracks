@@ -98,14 +98,14 @@ pipeline {
               sh 'npm install --force'
             }
             echo 'Running Unit Tests...'
-            dir(path: 'Autotracks/backend') {
+            //dir(path: 'Autotracks/backend') {
               sh 'npm run test'
-            }
+            //}
             echo 'Running Node Tests...'
-            dir(path: 'Autotracks/backend') {
+            //dir(path: 'Autotracks/backend') {
               sh 'ls'
-              sh 'node server.js'
-            }
+              sh 'node server'
+            //}
             echo 'Backend Server Deployed on port 5000'
           }
         }//END BACKEND STAGE
