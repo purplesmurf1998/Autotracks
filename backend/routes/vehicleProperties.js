@@ -14,7 +14,7 @@ const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
   .post(protect, hasRoles('Administration', 'Management'), createVehicleProperty)
-  .get(protect, getVehicleProperties)
+  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep', 'Reception'), getVehicleProperties)
   .put(protect, hasRoles('Administration', 'Management'), updateVehiclePropertyPositions);
 
 router.route('/:propertyId')

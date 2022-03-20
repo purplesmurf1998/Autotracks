@@ -37,7 +37,7 @@ router.route('/dealership/:dealershipId/stale')
 
 //Add permissions  
 router.route('/dealership/:dealershipId/visual3/:property')
-  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getVehiclesDashboardV3);
+  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep', 'Reception'), getVehiclesDashboardV3);
 
 router.route('/vehicle/:vehicleId')
   .get(protect, getVehicle)
