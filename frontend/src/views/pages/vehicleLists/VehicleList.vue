@@ -111,6 +111,7 @@
         size="sm"
         hover
         column-filter
+        pagination
       >
         <template v-for="field in tableFields" v-slot:[field.key]="item">
           <inventory-slot :key="field.key" :item="item" :field="field" />

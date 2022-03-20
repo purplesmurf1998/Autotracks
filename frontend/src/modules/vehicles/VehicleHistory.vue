@@ -9,8 +9,9 @@
               :fields="tableFields"
               :items="tableItems"
               :striped="true"
-              :items-per-page="10"
+              :items-per-page="15"
               :fixed="true"
+              pagination
             >
               <template #author="{ item }">
                 <td>
@@ -80,5 +81,9 @@ export default {
 </script>
 
 <style>
+#scroll {
+  overflow-y: scroll;
+  max-height: 250px;
+}
 </style>
 

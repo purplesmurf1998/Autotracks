@@ -15,7 +15,7 @@
           id="transactions-datatable"
           :fields="tableFields"
           :items="tableItems"
-          :items-per-page="10"
+          :items-per-page="20"
           :fixed="true"
           :clickable-rows="true"
           @row-clicked="rowClicked"
@@ -23,15 +23,8 @@
           hover
           sorter
           column-filter
+          pagination
         >
-          <!-- <template v-for="field in tableFields" v-slot:[field.key]="item">
-            <inventory-slot :key="field.key" :item="item" :field="field"/>
-          </template> -->
-          <!-- <template #missing="{ item }">
-            <td>
-              <CIcon name="cil-warning" class="icon" v-if="item.missing" />
-            </td>
-          </template> -->
         </CDataTable>
       </CCardBody>
     </CCard>

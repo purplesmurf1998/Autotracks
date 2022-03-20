@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <CButton color="secondary" @click="$router.go(-1)" class="mb-2"
-      >Go back to the inventory</CButton
-    > -->
     <CNav fill variant="pills" class="mb-3">
       <CNavItem :active="tab == 0" @click.native="setTab(0)">
         Vehicle
@@ -48,7 +45,6 @@ export default {
       axios({
         method: "GET",
         url: `${this.$store.state.api}/inventory/vehicle/${this.$route.query.vehicleSelected}`,
-        //url: `${this.$store.state.api}/inventory/vehicle/${this.vehicleId}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },

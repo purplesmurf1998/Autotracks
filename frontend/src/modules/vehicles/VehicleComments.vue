@@ -11,32 +11,29 @@
         </CRow>
         <CCollapse :show="writingComment" :duration="400" class="mt-3">
           <CCol>
-            <!-- <CTextarea
-              placeholder="New comment"
-              rows="5"
-              v-model="newComment"
-            /> -->
             <quill-editor v-model="newComment" class="mb-3 mt-3"/>
             <CButton color="danger" class="mr-2" @click="writingComment = false">Cancel</CButton>
             <CButton color="success" @click="createNewComment">Post</CButton>
           </CCol>
         </CCollapse>
         <hr />
-        <CCol v-if="comments.length > 0">
-          <div class="pt-2" v-for="(comment, index) in comments" :key="comment._id">
-            <CRow class="ml-0 mr-0 d-flex justify-content-between">
-              <h6>{{ comment.author.first_name }}&nbsp;{{ comment.author.last_name }}</h6>
-              <p><small>{{ comment.timestamp }}</small></p>
-            </CRow>
-            <div v-html="comment.comment">
-              {{ comment.comment }}
+        <div id='scroll'>
+          <CCol v-if="comments.length > 0">
+            <div class="pt-2" v-for="(comment, index) in comments" :key="comment._id">
+              <CRow class="ml-0 mr-0 d-flex justify-content-between">
+                <h6>{{ comment.author.first_name }}&nbsp;{{ comment.author.last_name }}</h6>
+                <p><small>{{ comment.timestamp }}</small></p>
+              </CRow>
+              <div v-html="comment.comment">
+                {{ comment.comment }}
+              </div>
+              <CRow class="ml-0 mr-0 d-flex justify-content-end" v-if="comment.author._id == $store.state.auth.userId">
+                <CIcon name="cil-trash" class="mr-2 trash-comment-btn" @click.native="deleteComment(comment, index)"/>
+              </CRow>
+              <hr />
             </div>
-            <CRow class="ml-0 mr-0 d-flex justify-content-end" v-if="comment.author._id == $store.state.auth.userId">
-              <CIcon name="cil-trash" class="mr-2 trash-comment-btn" @click.native="deleteComment(comment, index)"/>
-            </CRow>
-            <hr />
-          </div>
-        </CCol>
+          </CCol>
+        </div>
       </CCardBody>
     </CCard>
     <CModal :show.sync="deletingComment" :centered="true">
@@ -183,5 +180,10 @@ export default {
 .trash-comment-btn:hover {
   color: red;
   cursor: pointer;
+}
+
+#scroll {
+  overflow-y: scroll;
+  max-height: 250px;
 }
 </style>
