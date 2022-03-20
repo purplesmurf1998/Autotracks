@@ -9,7 +9,7 @@
     <WidgetsDropdown
       v-if="selectedDealership || $store.state.auth.role != 'Administration'"
       :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
-      ref="wdigetDD"
+      ref="widgetDD"
     />
     <CCard>
       <CCardBody>

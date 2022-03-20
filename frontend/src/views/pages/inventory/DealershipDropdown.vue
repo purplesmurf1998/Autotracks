@@ -54,7 +54,7 @@ export default {
             this.dealership = selected_val.target.value
             //Propogate the selected dealershipID to the parent component (i.e. dashboard) via sending the selectDealership event
             this.$emit('selectDealership', this.dealership);
-            this.$parent.$refs.wdigetDD.fetchVehiclesInInventory(this.dealership);
+            this.$parent.$refs.widgetDD.fetchVehiclesInInventory(this.dealership);
             this.$parent.$refs.dlc.fetchSalesFromDealership(this.dealership);
         }
         else {

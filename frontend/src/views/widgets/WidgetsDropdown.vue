@@ -22,7 +22,6 @@
         </CCardBody>
       </CCard>
     </CCol>
-    <!-- Cursed shit below -->
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-info"
@@ -55,7 +54,6 @@
         </template>
       </CWidgetDropdown>
     </CCol>
-    <!-- Cursed shit above -->
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-danger"
@@ -167,7 +165,6 @@ export default {
         });
     },
     fetchStaleVehicles(dealership, staleTime) {
-      //console.log("[FRONTEND] staleTime is "+staleTime)
       axios({
         method: "GET",
         url: `${this.$store.state.api}/inventory/dealership/${dealership}/stale`,
@@ -179,8 +176,6 @@ export default {
         },
       })
         .then((response) => {
-          //console.log("FetchStaleVehicles response below:")
-          //console.log(response.data)
           if (response.data.staleVehiclesCount.length !== 0) {
             const staleVehiclesCount = response.data.staleVehiclesCount;
             this.staleVehiclesCount = staleVehiclesCount.toString();
@@ -230,7 +225,6 @@ export default {
       })
       .then((response) => {
         const payload = response.data.payload;
-        //console.log(payload);
         payload.sort((a, b) => b.count - a.count);
         const fields = [];
         const values = [];

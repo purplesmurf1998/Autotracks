@@ -1,7 +1,6 @@
 <template>
   <div class="c-app" :class="{ 'c-dark-theme': $store.state.darkMode }">
     <TheSidebar/>
-    <TheAside/>
     <CWrapper>
       <TheHeader/>
       <div class="c-body">
@@ -22,7 +21,6 @@
 import TheSidebar from './TheSidebar'
 import TheHeader from './TheHeader'
 import TheFooter from './TheFooter'
-import TheAside from './TheAside'
 
 export default {
   name: 'TheContainer',
@@ -30,7 +28,6 @@ export default {
     TheSidebar,
     TheHeader,
     TheFooter,
-    TheAside
   }
 }
 </script>

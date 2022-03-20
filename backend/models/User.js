@@ -33,30 +33,6 @@ const UserSchema = new mongoose.Schema({
     ],
     required: 'User must have a role'
   },
-  // permissions: {
-  //   type: [String],
-  //   enum: [
-  //     'Add Dealerships',
-  //     'View Dealerships',
-  //     'Edit Dealerships',
-  //     'Delete Dealerships',
-  //     'Add Staff Users',
-  //     'View Staff Users',
-  //     'Edit Staff Users',
-  //     'Delete Staff Users',
-  //     'Add Vehicles',
-  //     'View Vehicles',
-  //     'Edit Vehicles',
-  //     'Edit Vehicle Locations',
-  //     'Sell Vehicles',
-  //     'Delete Vehicles',
-  //     'Add Vehicle Property',
-  //     'Edit Vehicle Properties',
-  //     'View Vehicle Properties',
-  //     'Delete Vehicle Properties'
-  //   ],
-  //   required: 'User must have a list of permissions, even if that list is empty.'
-  // },
   subscribed_events: {
     type: [String],
     enum: [
