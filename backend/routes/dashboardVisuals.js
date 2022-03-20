@@ -6,10 +6,10 @@ const {
 } = require('../controllers/saleController');
 
 // get authentication middleware
-const { protect } = require('../middleware/auth');
+const { protect, hasRoles} = require('../middleware/auth');
 
 // add .get(protect, getSalesByTime) later
 router.route('/visual3')
-    .get(protect, getSalesByTime)
+    .get(protect, hasRoles('Administration', 'Management', 'Sales Rep', 'Reception'), getSalesByTime)
 
 module.exports = router;
