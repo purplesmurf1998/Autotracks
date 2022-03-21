@@ -27,9 +27,9 @@ router.route('/')
 router.route('/:saleId')
   .delete(protect, hasRoles('Administration', 'Management', 'Sales Rep'), createHistory, deleteSale)
   .put(protect, hasRoles('Administration', 'Management', 'Sales Rep'), createEvent, createHistory, updateSale)
-  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep', 'Reception'), getSale)
+  .get(protect, getSale)
 
 router.route('/dealership/:dealershipId')
-  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep', 'Reception'), getSales)
+  .get(protect, getSales)
 
 module.exports = router;
