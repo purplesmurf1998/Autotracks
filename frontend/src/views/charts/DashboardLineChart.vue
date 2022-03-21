@@ -31,7 +31,7 @@ export default {
       monthlyLabels: [],
       yearlyPoints: [],
       yearlyLabels: [],
-      dataPoints: [{data:[], backgroundColor: '#E55353', label: 'Sales over time'}],
+      dataPoints: [{data:[], backgroundColor: '#2982cc', label: 'Sales over time'}],
       dataLabels: ["First", "Second"],
       dataPayload: [],
       chartOptions: {
