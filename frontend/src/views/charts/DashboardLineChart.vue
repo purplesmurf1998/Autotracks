@@ -1,5 +1,5 @@
 <template>
- <CChartBar
+ <CChartBar style="height:55vh;"
    :datasets="this.dataPoints"
    :labels="this.dataLabels"
    :options="this.chartOptions"
@@ -35,6 +35,7 @@ export default {
       dataLabels: ["First", "Second"],
       dataPayload: [],
       chartOptions: {
+        maintainAspectRatio: false,
         scales: {
           xAxes: [{
             //type: "time"
