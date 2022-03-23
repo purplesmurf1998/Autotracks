@@ -8,7 +8,7 @@ const {
 } = require('../controllers/eventsController');
 
 // get authentication middleware
-const { protect, hasPermissions } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 router.route('/dealership/:dealershipId')
   .get(protect, getEvents);

@@ -6,7 +6,7 @@
     @update:show="(value) => $store.commit('set', ['sidebarShow', value])"
   >
     <CSidebarBrand class="d-md-down-none" to="/">
-    <img src="../assets/polaris2.svg" class="img-fluid" alt="Responsive image">
+    <img src="../assets/autotracks_white_crp.png" class="img-fluid" alt="Responsive image">
       <CIcon
         class="c-sidebar-brand-minimized"
         name="logo"
@@ -26,7 +26,7 @@
 
 <script>
 import SidebarItems from './SidebarItems'
-import logo from '../assets/polaris2.svg'
+import logo from '../assets/autotracks_white_crp.png'
 export default {
   name: 'TheSidebar',
   data(){

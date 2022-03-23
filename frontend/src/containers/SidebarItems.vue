@@ -20,10 +20,7 @@ export default {
             {
               _name: "CSidebarNavItem",
               _attrs: {
-                hidden:
-                  !this.$store.state.auth.userPermissions.includes(
-                    "View Dealerships"
-                  ),
+                hidden: (this.$store.state.auth.role != 'Management' && this.$store.state.auth.role != 'Administration'),
               },
               name: "Dealerships",
               to: "/dealerships",
@@ -46,12 +43,18 @@ export default {
             },
             {
               _name: "CSidebarNavItem",
+              _attrs: {
+                hidden: (this.$store.state.auth.role == 'Reception'),
+              },
               name: "Transactions",
               to: "/transactions",
               icon: "cil-chart-line",
             },
             {
               _name: "CSidebarNavItem",
+              _attrs: {
+                hidden: (this.$store.state.auth.role == 'Reception'),
+              },
               name: "Vehicle Lists",
               to: "/vehicle-lists",
               icon: "cil-list",

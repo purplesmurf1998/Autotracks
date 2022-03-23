@@ -9,7 +9,7 @@
           specified dealership. Vehicle model is defined in the dealership's
           parameters
           <router-link
-            v-if="userHasPermissions('View Dealerships')"
+            v-if="userHasRoles('Administration', 'Management')"
             :to="`/dealerships/${dealership._id}`"
             >here</router-link
           >
@@ -103,7 +103,7 @@
 <script>
 const axios = require("axios");
 const {
-  containsPermissions,
+  containsRoles,
   getFormattedProperties,
 } = require("../../../utils/index");
 import MaskedInput from "vue-text-mask";
@@ -180,8 +180,8 @@ export default {
         this.errorMessage = null;
       }, 5000);
     },
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     fetchDealership() {
       // fetch the dealership details
