@@ -39,7 +39,11 @@
           pagination
         >
           <template v-for="field in tableFields" v-slot:[field.key]="item">
-            <inventory-slot :key="field.key" :item="item" :field="field" />
+            <inventory-slot
+              :key="field.key" 
+              :item="item" 
+              :field="field" 
+            />
           </template>
         </CDataTable>
       </CCardBody>
@@ -61,6 +65,7 @@ export default {
       tableFields: [],
       tableItems: [],
       delivered_bool: false,
+      dealership_prop: this.dealership,
     };
   },
   methods: {
@@ -96,14 +101,14 @@ export default {
       this.$router.replace({ query: queries });
     },
     switchDealerships(dealership) {
-      this.dealership = dealership;
+      this.dealership_prop = dealership;
       this.fetchVehicleProperties();
       this.fetchVehicles();
     },
     fetchVehicleProperties() {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/dealerships/${this.dealership}/vehicles/properties`,
+        url: `${this.$store.state.api}/dealerships/${this.dealership_prop}/vehicles/properties`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -118,7 +123,6 @@ export default {
             }
           });
           this.tableFields = fields;
-          console.log(this.tableFields);
           if (this.tableFields.length == 1) {
             this.tableItems = [];
           } else {
@@ -127,13 +131,12 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          //this.$router.replace("/pages/404");
         });
     },
     fetchVehicles() {
       axios({
         method: "GET",
-        url: `${this.$store.state.api}/inventory/dealership/${this.dealership}`,
+        url: `${this.$store.state.api}/inventory/dealership/${this.dealership_prop}`,
         headers: {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
@@ -174,7 +177,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          //this.$router.replace("/pages/404");
         });
     },
   },

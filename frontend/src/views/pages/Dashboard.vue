@@ -1,9 +1,11 @@
 <template>
   <div>
+    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
     <DealershipDD
       :dealership="selectedDealership"
       @selectDealership="selectedDealership = $event"
       :showSetDefault="true"
+      :showMessage="showMessage"
     />
       <!-- The following change event needs to be added later to update the visuals @change="$refs.inventoryTable.switchDealerships(selectedDealership)" -->
     <WidgetsDropdown
@@ -97,14 +99,24 @@ export default {
       this.selectedPeriod = choice
       this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
       console.log("Dashboard line chart period: "+choice)
-    }
+    },
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+        this.message = null;
+        this.messageType = null;
+        }, 5000);
+    },
   },
   data() {
     return {
       // Defaults for selected (timescale) and selectedPeriod are here.
       selected: "Month", //To be used for the line chart
       selectedDealership: null,
-      selectedPeriod: "All"
+      selectedPeriod: "All",
+      message: null,
+      messageType: null,
     };
   },
 };
