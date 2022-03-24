@@ -4,8 +4,8 @@
       <CCard class="text-center" color="gradient-primary" textColor="white" style="height:160px">
         <CCardBody class="d-flex align-items-center">
           <CCol>
+            <CCardSubtitle class="mt-2">Vehicles Count</CCardSubtitle>
             <CCardTitle class="display-3" color="gradient-secondary">{{inventoryCount}}</CCardTitle>
-            <CCardSubtitle>Vehicles Count</CCardSubtitle>
           </CCol>
         </CCardBody>
       </CCard>
@@ -14,17 +14,17 @@
       <CCard class="text-center" color="gradient-info" textColor="white" style="height:160px">
         <CCardBody class="d-flex align-items-center">
           <CCol>
-            <CCardTitle class="display-3" color="gradient-warning">{{soldVehiclesPercentage}}%</CCardTitle>
-            <CCardSubtitle>
+            <CCardSubtitle class="mt-2">
               Sold Vehicles Percentage ({{inventoryCount-inventoryNotSoldCount}}/{{inventoryCount}})
             </CCardSubtitle>
+            <CCardTitle class="display-3" color="gradient-warning">{{soldVehiclesPercentage}}%</CCardTitle>
           </CCol>
         </CCardBody>
       </CCard>
     </CCol>
     <CCol sm="6" lg="3">
       <CWidgetDropdown
-        color="gradient-info"
+        color="gradient-warning"
         :text="'Stale Vehicles Percentage (' + staleVehiclesCount+'/'+inventoryCount + ')'"
         style="height:160px"
       >

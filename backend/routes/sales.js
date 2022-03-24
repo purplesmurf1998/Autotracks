@@ -30,6 +30,6 @@ router.route('/:saleId')
   .get(protect, getSale)
 
 router.route('/dealership/:dealershipId')
-  .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getSales)
+  .get(protect, getSales)
 
 module.exports = router;
