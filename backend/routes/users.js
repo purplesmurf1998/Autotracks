@@ -15,7 +15,7 @@ const { protect, hasRoles } = require('../middleware/auth');
 
 // attach methods to the proper routes
 router.route('/')
-    .get(protect, hasRoles('Administration', 'Management'), getUsers)
+    .get(protect, hasRoles('Administration', 'Management', 'Sales Rep'), getUsers)
     .post(protect, hasRoles('Administration', 'Management'), createUser);
 
 router.route('/:userId')
