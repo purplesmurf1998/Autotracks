@@ -58,10 +58,14 @@ export default {
             this.$parent.$refs.widgetDD.fetchVehiclesInInventory(this.dealership_prop);
             this.$parent.$refs.dlc.fetchSalesFromDealership(this.dealership_prop);
         }
-        else {
+        else if (current_url.indexOf('transactions') > -1) {
           this.dealership_prop = selected_val.target.value
           this.$emit('selectDealership', this.dealership_prop);
           this.$parent.$refs.transactionTable.fetchSales(this.dealership_prop);
+        }
+        else {
+          this.dealership_prop = selected_val.target.value
+          this.$emit('selectDealership', this.dealership_prop);
         }
     },
     setDefaultDealership() {

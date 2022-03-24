@@ -11,7 +11,7 @@
         required
         placeholder="Custom List Title"
       />
-      <p class="mb-0">Dealership</p>
+      <p class="mb-0" v-if="$store.state.auth.role == 'Administration'">Dealership</p>
       <dealership-dropdown
         v-if="$store.state.auth.role == 'Administration'"
         :dealership="selectedDealership"
@@ -66,15 +66,16 @@ export default {
       if (this.title == '') {
         this.showMessage('Title cannot be empty', 'danger');
         this.disableButtons = false;
-      } else if (!this.selectedDealership) {
+      } else if (!this.selectedDealership && !this.$store.state.auth.dealership) {
         this.showMessage('You must select a dealership', 'danger');
         this.disableButtons = false;
       } else {
+        let dealership = this.selectedDealership ? this.selectedDealership : this.$store.state.auth.dealership
         const list = {
           title: this.title,
           notes: this.notes,
           owner: this.$store.state.auth.userId,
-          dealership: this.selectedDealership,
+          dealership: dealership,
         };
 
         this.postVehicleList(list);
