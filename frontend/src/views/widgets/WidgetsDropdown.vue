@@ -17,7 +17,8 @@
             <CCardSubtitle class="mt-2">
               Sold Vehicles Percentage ({{inventoryCount-inventoryNotSoldCount}}/{{inventoryCount}})
             </CCardSubtitle>
-            <CCardTitle class="display-3" color="gradient-warning">{{soldVehiclesPercentage}}%</CCardTitle>
+            <CCardTitle class="display-3" color="gradient-warning" v-if="soldVehiclesPercentage">{{soldVehiclesPercentage}}%</CCardTitle>
+            <CCardTitle class="display-3" color="gradient-warning" v-if="!soldVehiclesPercentage">0%</CCardTitle>
           </CCol>
         </CCardBody>
       </CCard>
@@ -46,8 +47,11 @@
         <template #footer>
           <CCardBody class="d-flex align-items-center">
             <CCol>
-              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary">
+              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary" v-if="staleVehiclesPercentage">
                 {{staleVehiclesPercentage}}%
+              </CCardTitle>
+              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary" v-if="!staleVehiclesPercentage">
+                0%
               </CCardTitle>
             </CCol>
           </CCardBody>
