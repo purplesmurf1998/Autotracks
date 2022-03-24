@@ -79,8 +79,7 @@ export default {
         if (response.data.success) {
           var ctr = 0;
           response.data.payload.forEach((notif) => {
-            var currentDateObj = new Date(notif.timestamp);
-            notif.timestamp = currentDateObj.toString().split('GMT')[0];
+            notif.timestamp = this.formattedDate(notif.timestamp)
             this.notifications.push(notif);
             if (ctr < 5) {
               notif.className = notif.viewers.includes(this.$store.state.auth.userId) ? "none" : "background-unread"
@@ -107,8 +106,7 @@ export default {
       .then((response) => {
         if (response.data.success) { 
           response.data.payload.forEach((notif) => {
-            var currentDateObj = new Date(notif.timestamp);
-            notif.timestamp = currentDateObj.toString().split('GMT')[0];
+            notif.timestamp = this.formattedDate(notif.timestamp);
             this.unReadNotif.push(notif);
           })
           this.itemsCount = this.unReadNotif.length;
@@ -154,6 +152,14 @@ export default {
       else {
         this.redirect(notif);
       }
+    },
+    formattedDate(timestamp) {
+      var currDate = new Date(timestamp);
+      var numberOfMlSeconds = currDate.getTime();
+      var subFourHours = 4 * 60 * 60 * 1000; //GMT -4
+      var newDate = new Date(numberOfMlSeconds - subFourHours);
+      var newTime = newDate.toString().split(' GMT')[0];
+      return newTime.substring(0, newTime.indexOf(':') +3);
     },
   },
   mounted() {
