@@ -13,11 +13,16 @@ pipeline {
           steps {
             echo 'Building Frontend...'
             dir(path: 'frontend') {
+              sh 'npm cache clean'
               sh 'npm install --force'
               script{
                 try {
                   echo 'Running Unit Tests...'
                   sh 'npm run test:unit'
+                } catch (err) {
+                  echo err.getMessage()
+                }
+                try{
                   echo 'Running End-To-End Tests...'
                   sh 'npm run test:e2e'
                 } catch (err) {
@@ -38,6 +43,7 @@ pipeline {
           steps {
             echo 'Building Backend...'
             dir(path: 'backend') {
+              sh 'npm cache clean'
               sh 'npm install --force'
               script {
                 try{
@@ -65,13 +71,22 @@ pipeline {
           steps {
             echo 'Building Frontend...'
             dir(path: 'frontend') {
+              sh 'npm cache clean'
               sh 'npm install --force'
               script {
                 try {
                   echo 'Running linter...'
                   sh 'npm run lint'
+                } catch (err) {
+                  echo err.getMessage()
+                }
+                try {
                   echo 'Running Unit Tests...'
                   sh 'npm run test:unit'
+                } catch (err) {
+                  echo err.getMessage()
+                }
+                try {
                   echo 'Running End-To-End Tests...'
                   sh 'npm run test:e2e'
                 } catch (err) {
@@ -94,6 +109,7 @@ pipeline {
           steps {
             echo 'Building Backend...'
             dir(path: 'backend') {
+              sh 'npm cache clean'
               sh 'npm install --force'
               script {
                 try {
