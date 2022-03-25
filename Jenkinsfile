@@ -13,9 +13,13 @@ pipeline {
           steps {
             echo 'Building Frontend...'
             dir(path: 'frontend') {
-              sh 'npm cache clean'
-              sh 'npm install --force'
               script{
+                try {
+                  sh 'npm cache clean --force'
+                  sh 'npm install --force'
+                } catch (err) {
+                    echo err.getMessage()
+                }
                 try {
                   echo 'Running Unit Tests...'
                   sh 'npm run test:unit'
@@ -43,9 +47,13 @@ pipeline {
           steps {
             echo 'Building Backend...'
             dir(path: 'backend') {
-              sh 'npm cache clean'
-              sh 'npm install --force'
-              script {
+              script{
+                try {
+                  sh 'npm cache clean --force'
+                  sh 'npm install --force'
+                } catch (err) {
+                    echo err.getMessage()
+                }
                 try{
                   echo 'Running Unit Tests...'
                   sh 'npm run test'
@@ -71,9 +79,13 @@ pipeline {
           steps {
             echo 'Building Frontend...'
             dir(path: 'frontend') {
-              sh 'npm cache clean'
-              sh 'npm install --force'
-              script {
+              script{
+                try {
+                  sh 'npm cache clean --force'
+                  sh 'npm install --force'
+                } catch (err) {
+                    echo err.getMessage()
+                }
                 try {
                   echo 'Running linter...'
                   sh 'npm run lint'
@@ -109,9 +121,13 @@ pipeline {
           steps {
             echo 'Building Backend...'
             dir(path: 'backend') {
-              sh 'npm cache clean'
-              sh 'npm install --force'
-              script {
+              script{
+                try {
+                  sh 'npm cache clean --force'
+                  sh 'npm install --force'
+                } catch (err) {
+                    echo err.getMessage()
+                }
                 try {
                   echo 'Running Unit Tests...'
                   sh 'npm run test'
