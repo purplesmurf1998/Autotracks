@@ -107,9 +107,13 @@ pipeline {
                 } catch (err) {
                   echo err.getMessage()
                 }
+                try {
+                  echo 'Running Front end server...'
+                  sh 'npm run serve'
+                }catch (err) {
+                  echo err.getMessage()
+                }
               }
-              echo 'Running Front end server...'
-              sh 'npm run serve'
             }
             echo 'Frontend Server Deployed on port 8080'
           }
@@ -137,10 +141,14 @@ pipeline {
                 } catch (err) {
                   echo err.getMessage()
                 }
+              try {
+                echo 'Running Node Server...'
+                sh 'ls'
+                sh 'node server'
+              } catch (err) {
+                  echo err.getMessage()
+                }
               }
-              echo 'Running Node Server...'
-              sh 'ls'
-              sh 'node server'
             }
             echo 'Backend Server Deployed on port 5000'
           }
