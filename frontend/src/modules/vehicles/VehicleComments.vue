@@ -69,6 +69,8 @@
 
 <script>
 const axios = require('axios');
+const { formattedDate } = require("../../utils/index");
+
 import Vue from 'vue'
 import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
@@ -101,7 +103,7 @@ export default {
       })
         .then((response) => {
           response.data.payload.forEach(comment => {
-            comment.createdAt = this.formattedDate(comment.timestamp);
+            comment.createdAt = formattedDate(comment.timestamp);
             this.comments.push(comment);
           })
           this.commentsCount = response.data.count;
@@ -167,14 +169,6 @@ export default {
         this.postVehicleComment(body);
       }
     },
-    formattedDate(timestamp) {
-      var currDate = new Date(timestamp);
-      var numberOfMlSeconds = currDate.getTime();
-      var subFourHours = 4 * 60 * 60 * 1000; //GMT -4
-      var newDate = new Date(numberOfMlSeconds - subFourHours);
-      var newTime = newDate.toString().split(' GMT')[0];
-      return newTime.substring(0, newTime.indexOf(':') +3);
-    }
   },
   mounted() {
     // fetch the vehicle's comments

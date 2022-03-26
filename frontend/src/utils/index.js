@@ -14,6 +14,12 @@ export function containsRoles(...roles) {
   return allowed;
 }
 
+export function formattedDate(timestamp) {
+  var currDate = new Date(timestamp);
+  currDate = currDate.toString().split(' GMT')[0];
+  return currDate.substring(0, currDate.indexOf(':') +3);
+}
+
 export function getFormattedProperties(properties, values) {
   let formattedProperties = {};
   properties.forEach(property => {

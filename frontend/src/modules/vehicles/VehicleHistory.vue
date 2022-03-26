@@ -31,6 +31,8 @@
 
 <script>
 const axios = require("axios");
+const { formattedDate } = require("../../utils/index");
+
 
 export default {
   props: ["vehicle"],
@@ -58,7 +60,7 @@ export default {
   },
   methods: {
     getFormattedDate(date) {
-      return date.substring(0, 10) + ' ' + date.substring(11, 16);
+      return formattedDate(date);
     },
 
     fetchHistory() {
