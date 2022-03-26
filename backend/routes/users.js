@@ -19,8 +19,8 @@ router.route('/')
     .post(protect, hasRoles('Administration', 'Management'), createUser);
 
 router.route('/:userId')
-    .get(protect, hasRoles('Administration', 'Management'), getUser)
-    .put(protect, hasRoles('Administration', 'Management'), updateUser)
+    .get(protect, getUser)
+    .put(protect, updateUser)
     .delete(protect, hasRoles('Administration', 'Management'), deleteUser);
 
 // export the router so it can be used in the server.js file
