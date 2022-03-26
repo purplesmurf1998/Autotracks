@@ -1,7 +1,6 @@
 <template>
   <div>
     <CCol>
-      <!-- <CAlert v-if="!!errorMessage" color="danger">{{ errorMessage }}</CAlert> -->
       <CSelect
         v-if="zones"
         :value.sync="selectedIndex"
@@ -20,6 +19,8 @@
 
 <script>
 import axios from "axios";
+const { showMessage } = require("../../utils/index");
+
 export default {
   props: ["vehicleId", "closeAddToZoneModal"],
   data() {
@@ -49,9 +50,11 @@ export default {
       })
         .then((response) => {
           this.$emit("vehicle-location-updated", response.data.payload);
+          showMessage("Vehicle's location has been updated", "success");
         })
         .catch((error) => {
           console.log(error);
+          showMessage("An error occured while updating vehicle's location", "danger");
         });
     },
     fetchLocationZones() {
