@@ -20,9 +20,6 @@
             <div class="small text-muted">View vehicle sales grouped by month or year</div>
           </CCol>
           <CCol sm="7" class="d-none d-md-block">
-            <CButton color="primary" class="float-right">
-              <CIcon name="cil-cloud-download" />
-            </CButton>
             <!-- Use this button to select the number of periods to display -->
             <CButtonGroup class="float-right mr-3">
               <CButton
