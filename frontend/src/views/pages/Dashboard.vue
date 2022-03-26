@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CAlert :color="messageObj.messageType" v-if="!!messageObj.content">{{ messageObj.content }}</CAlert>
     <DealershipDD
       :dealership="selectedDealership"
       @selectDealership="selectedDealership = $event"
@@ -9,7 +10,7 @@
     <WidgetsDropdown
       v-if="selectedDealership || $store.state.auth.role != 'Administration'"
       :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
-      ref="wdigetDD"
+      ref="widgetDD"
     />
     <CCard>
       <CCardBody>
@@ -19,9 +20,6 @@
             <div class="small text-muted">View vehicle sales grouped by month or year</div>
           </CCol>
           <CCol sm="7" class="d-none d-md-block">
-            <CButton color="primary" class="float-right">
-              <CIcon name="cil-cloud-download" />
-            </CButton>
             <!-- Use this button to select the number of periods to display -->
             <CButtonGroup class="float-right mr-3">
               <CButton
@@ -68,9 +66,10 @@
 </template>
 
 <script>
-// import MainChartExample from "../charts/MainChartExample";
+
+const { message } = require("../../utils/index");
+
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
-// import WidgetsBrand from "../widgets/WidgetsBrand";
 import DealershipDD from "./inventory/DealershipDropdown.vue"
 import DashboardLineChart from "@/views/charts/DashboardLineChart";
 
@@ -97,14 +96,15 @@ export default {
       this.selectedPeriod = choice
       this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
       console.log("Dashboard line chart period: "+choice)
-    }
+    },
   },
   data() {
     return {
       // Defaults for selected (timescale) and selectedPeriod are here.
       selected: "Month", //To be used for the line chart
       selectedDealership: null,
-      selectedPeriod: "All"
+      selectedPeriod: "All",
+      messageObj: message,
     };
   },
 };

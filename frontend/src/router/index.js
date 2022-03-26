@@ -10,7 +10,6 @@ const Dashboard = () => import('@/views/pages/Dashboard')
 
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
-const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
 const Register = () => import('@/views/pages/authentication/Register')
 const ChangePassword = () => import('@/views/pages/authentication/ChangePassword')
@@ -143,11 +142,6 @@ const router = new Router({
           path: '404',
           name: 'Page404',
           component: Page404
-        },
-        {
-          path: '500',
-          name: 'Page500',
-          component: Page500
         },
         {
           path: 'login',

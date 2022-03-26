@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CCard v-if="userHasRoles('Administration', 'Management')">
+    <CCard v-if="userHasRoles('Administration', 'Management', 'Sales Rep')">
       <CCardHeader>
         <slot name="header">Table of custom vehicle lists</slot>
       </CCardHeader>

@@ -25,10 +25,6 @@ describe('Page404.vue', () => {
     const wrapper = shallowMount(Page404, { store, localVue })
     expect(wrapper.vm).toBeTruthy()
   })
-  it('is Page500', () => {
-    const wrapper = shallowMount(Page404, { store, localVue })
-    expect(wrapper.findComponent(Page404)).toBeTruthy()
-  })
   it('should render correct content', () => {
     const wrapper = shallowMount(Page404, { store, localVue })
     expect(wrapper.find('h1').text()).toMatch('404')

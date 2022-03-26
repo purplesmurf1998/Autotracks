@@ -107,7 +107,9 @@ export default {
       form: this.getEmptyForm(),
       submitted: false,
       disableButtons: false,
-      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName
+      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName,
+      message: null,
+      messageType: null,
     }
   },
   methods: {
@@ -183,12 +185,12 @@ export default {
       }
     },
     showMessage(message, messageType) {
-       this.message = message;
-       this.messageType = messageType;
-       setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
-          }, 5000);
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+        this.message = null;
+        this.messageType = null;
+        }, 5000);
     },
   }
 }
