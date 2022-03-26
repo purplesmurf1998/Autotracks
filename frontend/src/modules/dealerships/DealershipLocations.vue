@@ -192,7 +192,6 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response.data.payload);
           let temp_zones = this.zones;
           temp_zones[this.selectedIndex] = response.data.payload;
           this.zones = temp_zones;
@@ -243,7 +242,6 @@ export default {
       this.editedPath = this.selectedZone.path;
     },
     setSelectedZone(zone, index) {
-      if (this.selectedIndex == index) console.log("runs second");
       if (this.closeDetails) {
         this.selectedZone = null;
         this.selectedIndex = -1;
@@ -258,7 +256,6 @@ export default {
       this.closeDetails = true;
     },
     closeExpandedAndSave() {
-      console.log("runs first");
       this.fetchLocationZones();
       this.selectedZone = null;
       this.selectedIndex = -1;
@@ -273,10 +270,6 @@ export default {
         lng: event.latLng.lng(),
       };
       this.newPath.push(path);
-      console.log(this.newPath);
-    },
-    showRectangleInfo(event) {
-      console.log(event);
     },
     undoLastPoint() {
       if (!this.newPath.length > 0 || !this.addingNewZone) return;
@@ -303,8 +296,6 @@ export default {
         data: zone,
       })
         .then((response) => {
-          console.log(response.data.payload);
-
           this.zones.push(response.data.payload);
           this.newPath = [];
           this.addingNewZone = false;
@@ -325,7 +316,6 @@ export default {
       })
         .then((response) => {
           this.zones = response.data.payload;
-          console.log(response.data.payload);
         })
         .catch((error) => {
           console.log(error);
