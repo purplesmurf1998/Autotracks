@@ -226,7 +226,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          this.showMessage("Please select a Dealership", "danger")
         });
     },
   },

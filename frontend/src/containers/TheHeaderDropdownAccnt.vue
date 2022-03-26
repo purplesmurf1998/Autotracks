@@ -37,7 +37,7 @@
         :setSubscriptionModal="setSubscriptionModal"
       />
     <template #header>
-        <h6 class="modal-title">Account Subscriptions</h6>
+        <h6 class="modal-title">Events Subscriptions</h6>
         <CButtonClose @click="subscriptionModal = false" />
       </template>
       <template #footer>

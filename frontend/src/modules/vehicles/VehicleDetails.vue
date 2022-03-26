@@ -184,7 +184,6 @@
       <add-to-vehicle-list
         :vehicleId="vehicle._id"
         :closeModal="closeAddToListModal"
-        :showMessage="showMessage"
         v-if="showingAddToListModal"
       />
       <template #footer>
@@ -211,7 +210,7 @@
 
 <script>
 const axios = require("axios");
-const { containsRoles } = require("../../utils/index");
+const { containsRoles, showMessage } = require("../../utils/index");
 const QRCode = require("qrcode")
 import VehicleSell from "./SellVehicle.vue";
 import AddToVehicleList from "./AddToVehicleList.vue";
@@ -224,7 +223,7 @@ export default {
     "add-to-vehicle-list": AddToVehicleList,
     AddToZone,
   },
-  props: ["vehicle", "setNewVehicle", "showMessage", "refreshTable"],
+  props: ["vehicle", "setNewVehicle", "refreshTable"],
   data() {
     return {
       showingSoldModal: false,
@@ -315,12 +314,12 @@ export default {
             this.sale = null;
             this.approved = false;
             this.showingCancelSaleModal = false;
-            this.showMessage("The sale request has been canceled.", "success");
+            showMessage("The sale request has been canceled.", "success");
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage(
+          showMessage(
             "An error occured while canceling the sale request.",
             "danger"
           );
@@ -340,7 +339,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
-            this.showMessage(
+            showMessage(
               "Vehicle location has been updated successfully",
               "success"
             );
@@ -349,7 +348,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage(
+          showMessage(
             "Error occured while updating vehicle location",
             "danger"
           );
@@ -433,14 +432,14 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            this.showMessage("Vehicle has been marked as delivered", "success");
+            showMessage("Vehicle has been marked as delivered", "success");
             this.setNewVehicle(response.data.payload);
             this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage(
+          showMessage(
             "Error occured while updating vehicle delivery status",
             "danger"
           );

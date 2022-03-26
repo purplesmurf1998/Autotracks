@@ -1,7 +1,7 @@
 <template>
   <div>
-    <CAlert show :color="messageType" v-if="message" class="mb-2">{{
-      message
+    <CAlert show :color="messageObj.messageType" v-if="messageObj.content" class="mb-2">{{
+      messageObj.content
     }}</CAlert>
     <CForm @submit.prevent="submit">
       <CInput
@@ -11,7 +11,7 @@
         required
         placeholder="Custom List Title"
       />
-      <p class="mb-0">Dealership</p>
+      <p class="mb-0" v-if="$store.state.auth.role == 'Administration'">Dealership</p>
       <dealership-dropdown
         v-if="$store.state.auth.role == 'Administration'"
         :dealership="selectedDealership"
@@ -38,6 +38,8 @@
 
 <script>
 const axios = require("axios");
+const { showMessage, message} = require("../../../utils/index");
+
 import Vue from "vue";
 import VueQuillEditor from "vue-quill-editor";
 import "quill/dist/quill.core.css";
@@ -54,8 +56,7 @@ export default {
       title: "",
       notes: "",
       disableButtons: false,
-      message: null,
-      messageType: null,
+      messageObj: message,
       selectedDealership: null,
     };
   },
@@ -64,17 +65,18 @@ export default {
       this.disableButtons = true;
 
       if (this.title == '') {
-        this.showMessage('Title cannot be empty', 'danger');
+        showMessage('Title cannot be empty', 'danger');
         this.disableButtons = false;
-      } else if (!this.selectedDealership) {
-        this.showMessage('You must select a dealership', 'danger');
+      } else if (!this.selectedDealership && !this.$store.state.auth.dealership) {
+        showMessage('You must select a dealership', 'danger');
         this.disableButtons = false;
       } else {
+        let dealership = this.selectedDealership ? this.selectedDealership : this.$store.state.auth.dealership
         const list = {
           title: this.title,
           notes: this.notes,
           owner: this.$store.state.auth.userId,
-          dealership: this.selectedDealership,
+          dealership: dealership,
         };
 
         this.postVehicleList(list);
@@ -101,14 +103,6 @@ export default {
       this.disableButtons = false;
       this.title = "";
       this.notes = "";
-    },
-    showMessage(message, messageType) {
-      this.message = message;
-      this.messageType = messageType;
-      setTimeout(() => {
-        this.message = null;
-        this.messageType = null;
-      }, 5000);
     },
   },
   components: {

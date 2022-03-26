@@ -30,7 +30,7 @@
         </CCardBody>
         <CCardFooter>
           <small class="text-muted">
-            {{ dealership.created_at }}
+            {{ dealership.created_at_formatted }}
           </small>
         </CCardFooter>
       </CCard>

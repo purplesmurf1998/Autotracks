@@ -22,7 +22,7 @@
             <div class="pt-2" v-for="(comment, index) in comments" :key="comment._id">
               <CRow class="ml-0 mr-0 d-flex justify-content-between">
                 <h6>{{ comment.author.first_name }}&nbsp;{{ comment.author.last_name }}</h6>
-                <p><small>{{ comment.timestamp }}</small></p>
+                <p><small>{{ comment.createdAt }}</small></p>
               </CRow>
               <div v-html="comment.comment">
                 {{ comment.comment }}
@@ -69,6 +69,8 @@
 
 <script>
 const axios = require('axios');
+const { formattedDate } = require("../../utils/index");
+
 import Vue from 'vue'
 import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
@@ -100,7 +102,10 @@ export default {
         },
       })
         .then((response) => {
-          this.comments = response.data.payload;
+          response.data.payload.forEach(comment => {
+            comment.createdAt = formattedDate(comment.timestamp);
+            this.comments.push(comment);
+          })
           this.commentsCount = response.data.count;
         })
         .catch((err) => {
@@ -117,7 +122,6 @@ export default {
         data: body
       })
         .then((response) => {
-          console.log(response.data.payload);
           this.comments.unshift(response.data.payload)
           this.newComment = '';
           this.writingComment = false;
@@ -148,7 +152,6 @@ export default {
         });
     },
     deleteComment(target, index) {
-      console.log(target);
       this.commentBeingDeleted = target;
       this.indexBeingDeleted = index;
       this.deletingComment = true;
@@ -160,19 +163,17 @@ export default {
         comment: this.newComment
       }
 
-      console.log(this.newComment);
-
       if (this.newComment == '') {
         // show alert
       } else {
         this.postVehicleComment(body);
       }
-    }
+    },
   },
   mounted() {
     // fetch the vehicle's comments
     this.fetchVehicleComments();
-  }
+  },
 }
 </script>
 

@@ -64,7 +64,6 @@
                 :paths="isEditingPerimeter == zone._id ? editedPath : zone.path"
                 :editable="isEditingPerimeter && isEditingPerimeter == zone._id"
                 :visible="true"
-                :draggable="true"
                 :options="{
                   fillColor: zone.fillColor,
                   fillOpacity: 0.5,
