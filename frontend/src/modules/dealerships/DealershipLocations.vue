@@ -258,7 +258,7 @@ export default {
     closeExpanded() {
       this.closeDetails = true;
     },
-    closeExpandedAndSave(newZone) {
+    closeExpandedAndSave() {
       console.log("runs first");
       this.fetchLocationZones();
       this.selectedZone = null;
@@ -326,6 +326,7 @@ export default {
       })
         .then((response) => {
           this.zones = response.data.payload;
+          console.log(response.data.payload);
         })
         .catch((error) => {
           console.log(error);
