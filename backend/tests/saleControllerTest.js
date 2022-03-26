@@ -126,7 +126,7 @@ describe('Testing Sale Controller Class', () => {
     it('should return 200 when a sale is marked approved', (done) => {
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
+      let date = new Date(date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate());
       chai.request(app)
         .put("/api/v1/inventory/details/sale/" + sale_id)
         .send({
