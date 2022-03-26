@@ -27,10 +27,11 @@
 
 <script>
 const axios = require("axios");
+const { showMessage } = require("../../../utils/index");
 
 export default {
   name: "DealershipDropdown",
-  props: ["dealership", "showMessage", "showSetDefault"],
+  props: ["dealership", "showSetDefault"],
   data() {
     return {
       adminDealerships: [],
@@ -89,12 +90,12 @@ export default {
             "dealership",
             this.dealership_prop,
           ]);
-          this.showMessage(
+          showMessage(
             `${this.adminDealerships[index].label} successfully set as your default dealership`, 'success'
           );
         })
         .catch((error) => {
-          this.showMessage(
+          showMessage(
               `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`, 'danger'
             );
         });

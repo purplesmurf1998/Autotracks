@@ -38,7 +38,6 @@
         v-if="showingTransactionModal"
         :setTransactionModal="setTransactionModal"
         :saleDetail="sale"
-        :showMessage="showMessage"
         :setNewSale="setNewSale"
         :dealership="dealership"
         :fetchSales="fetchSales"
@@ -56,12 +55,13 @@
 
 <script>
 const axios = require("axios");
+const { showMessage } = require("../../../utils/index");
 import transactionDetails from './TransactionDetails.vue';
 import XLSX from 'xlsx';
 
 export default {
   name: "transactionTable",
-  props: ["dealership", "showMessage"],
+  props: ["dealership"],
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Delivery Date", "Deposit", "Manager", "Approval Date"],

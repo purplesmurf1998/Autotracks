@@ -1,11 +1,10 @@
 <template>
   <div>
-    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
+    <CAlert :color="messageObj.messageType" v-if="!!messageObj.content">{{ messageObj.content }}</CAlert>
     <DealershipDD
       :dealership="selectedDealership"
       @selectDealership="selectedDealership = $event"
       :showSetDefault="true"
-      :showMessage="showMessage"
     />
       <!-- The following change event needs to be added later to update the visuals @change="$refs.inventoryTable.switchDealerships(selectedDealership)" -->
     <WidgetsDropdown
@@ -70,9 +69,10 @@
 </template>
 
 <script>
-// import MainChartExample from "../charts/MainChartExample";
+
+const { message } = require("../../utils/index");
+
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
-// import WidgetsBrand from "../widgets/WidgetsBrand";
 import DealershipDD from "./inventory/DealershipDropdown.vue"
 import DashboardLineChart from "@/views/charts/DashboardLineChart";
 
@@ -100,14 +100,6 @@ export default {
       this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
       console.log("Dashboard line chart period: "+choice)
     },
-    showMessage(message, messageType) {
-      this.message = message;
-      this.messageType = messageType;
-      setTimeout(() => {
-        this.message = null;
-        this.messageType = null;
-        }, 5000);
-    },
   },
   data() {
     return {
@@ -115,8 +107,7 @@ export default {
       selected: "Month", //To be used for the line chart
       selectedDealership: null,
       selectedPeriod: "All",
-      message: null,
-      messageType: null,
+      messageObj: message,
     };
   },
 };
