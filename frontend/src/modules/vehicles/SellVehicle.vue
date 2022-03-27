@@ -1,5 +1,6 @@
 <template>
   <div>
+   <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
      <CForm @submit.prevent="submit">
         <CRow class="justify-content-center">
             <CCol>
@@ -56,7 +57,7 @@
         </CRow>
         <CRow class="justify-content-center">
           <CButton
-            v-if="!updateSaleStatus" 
+            v-if="!updateSaleStatus"
             color="primary"
             type="submit"
             id = "sell-vehicle"
@@ -65,7 +66,7 @@
             Create
           </CButton>
           <CButton
-            v-if="updateSaleStatus" 
+            v-if="updateSaleStatus"
             color="primary"
             id = "update-vehicle"
             :disabled="disableButtons"
@@ -73,7 +74,7 @@
           >
             Update
           </CButton>
-          <CButton 
+          <CButton
             class="ml-1"
             color="secondary"
             :disabled="disableButtons"
@@ -92,13 +93,12 @@ const axios = require('axios');
 export default {
   name: 'VehicleSell',
   props: [
-    "showMessage", 
-    "selectedStaffAccount", 
-    "dealershipStaff", 
-    "showingSoldModal", 
-    "setVehicleModal", 
-    "vehicle", 
-    "setSaleStatus", 
+    "selectedStaffAccount",
+    "dealershipStaff",
+    "showingSoldModal",
+    "setVehicleModal",
+    "vehicle",
+    "setSaleStatus",
     "updateSaleStatus",
     "sale_id",
   ],
@@ -107,7 +107,9 @@ export default {
       form: this.getEmptyForm(),
       submitted: false,
       disableButtons: false,
-      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName
+      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName,
+      message: null,
+      messageType: null,
     }
   },
   methods: {
@@ -140,7 +142,6 @@ export default {
             }
         }).catch(error => {
             console.log(error);
-            this.setVehicleModal(false);
             this.showMessage(error.response.data.error, "danger");
             this.disableButtons = false;
         })
@@ -182,6 +183,14 @@ export default {
         notes: "",
         manager: null,
       }
+    },
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+        this.message = null;
+        this.messageType = null;
+        }, 5000);
     },
   }
 }

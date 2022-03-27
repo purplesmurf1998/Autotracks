@@ -93,16 +93,16 @@
         </CRow>
         <CRow>
           <CButton
-            v-if="saleDetail['Approval Date']=='-' && disableButtons"
+            v-if="saleDetail['Approval Date']=='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
-            color="success"
+            color="primary"
             id="approve_sale"
             @click="approveSale"
           >
           Approve Sale
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-' && disableButtons"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']!='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="primary"
             id="set_delivered"
@@ -111,16 +111,16 @@
           Mark as Delivered
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="secondary"
             id="edit_sale"
-            @click="editSale"
+            @click="editSale(false)"
           >
           Edit
           </CButton>
           <CButton
-            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons"
+            v-if="saleDetail['Delivery Status']!='Delivered' && saleDetail['Approval Date']=='-' && disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-3"
             color="danger"
             id="edit_sale"
@@ -131,7 +131,7 @@
         </CRow>
         <CRow class="justify-content-center">
           <CButton
-            v-if="!disableButtons" 
+            v-if="!disableButtons && userHasRoles('Administration', 'Management')"
             color="primary"
             id = "update-sale"
             @click="updateSale"
@@ -139,11 +139,11 @@
             Update
           </CButton>
           <CButton
-            v-if="!disableButtons" 
+            v-if="!disableButtons && userHasRoles('Administration', 'Management')"
             class="ml-1"
             color="secondary"
             :disabled="disableButtons"
-            @click="setTransactionModal(false)"
+            @click="editSale(true)"
           >
             Cancel
           </CButton>
@@ -158,10 +158,10 @@
         Are you sure you want to cancel this sale request?
       </p>
       <template #footer>
-        <CButton @click="showDeleteModal = false" color="danger"
-          >Cancel</CButton
-        >
-        <CButton @click="deleteSale" color="success">Confirm</CButton>
+        <CButton @click="deleteSale" color="primary">Confirm</CButton>
+        <CButton @click="showDeleteModal = false" color="secondary"
+          >Cancel</CButton>
+
       </template>
     </CModal>
   </div>
@@ -169,16 +169,16 @@
 
 <script>
 const axios = require('axios');
+const { containsRoles, showMessage } = require("../../../utils/index");
 
 export default {
   name: 'transactionDetails',
   props: [
-    "showMessage", 
-    "saleDetail", 
+    "saleDetail",
     "setTransactionModal",
     "setNewSale",
     "dealership",
-    "fetchSales" 
+    "fetchSales"
   ],
   data() {
     return {
@@ -189,6 +189,9 @@ export default {
     }
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     deleteSale() {
       axios({
         method: "DELETE",
@@ -200,24 +203,22 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.showDeleteModal = false;
-            this.setTransactionModal(false);  
-            this.showMessage("The transaction been deleted.", "success");
+            this.setTransactionModal(false);
+            showMessage("The transaction been deleted.", "success");
             this.fetchSales(this.dealership);
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("An error occured while deleting this transaction.", "danger");
+          showMessage("An error occured while deleting this transaction.", "danger");
         });
     },
-    editSale() {
-      this.disableButtons = false;
+    editSale(value) {
+      this.disableButtons = value;
     },
     approveSale () {
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
-      // prints date & time in YYYY-MM-DD format
       axios({
           method: 'PUT',
           url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,
@@ -225,17 +226,17 @@ export default {
             'Authorization': `Bearer ${this.$store.state.auth.token}`
           },
           data: {
-            date_approved: date,
+            date_approved: date_ob,
           }
       }).then(response => {
           if (response.data.success) {
             this.fetchSales(this.dealership);
             this.setTransactionModal(false);
-            this.showMessage("The sale has been approved", "success");
+            showMessage("The sale has been approved", "success");
           }
       }).catch(error => {
           console.log(error);
-          this.showMessage(error.response.data.error, "danger");
+          showMessage(error.response.data.error, "danger");
       })
     },
     getSale() {
@@ -261,9 +262,8 @@ export default {
       let body = this.saleObject.vehicle;
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
       body.delivered = true;
-      body.date_delivered = date;
+      body.date_delivered = date_ob;
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${body._id}`,
@@ -276,12 +276,12 @@ export default {
           if (response.data.success) {
             this.fetchSales(this.dealership);
             this.setTransactionModal(false);
-            this.showMessage("Vehicle has been marked as delivered", "success");
+            showMessage("Vehicle has been marked as delivered", "success");
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("Error occured while updating vehicle delivery status", "danger");
+          showMessage("Error occured while updating vehicle delivery status", "danger");
         });
     },
     updateSale() {
@@ -297,12 +297,12 @@ export default {
           if (response.data.success) {
             this.fetchSales(this.dealership);
             this.setTransactionModal(false);
-            this.showMessage("The transaction has been updated", "success");
+            showMessage("The transaction has been updated", "success");
           }
       }).catch(error => {
           console.log(error);
           this.setTransactionModal(false);
-          this.showMessage(error.response.data.error, "danger");
+          showMessage(error.response.data.error, "danger");
       })
     },
     getEmptyForm() {

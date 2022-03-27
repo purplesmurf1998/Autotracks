@@ -43,16 +43,17 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.hasPermissions = (...permissions) => {
+//To be refactored into hasRole
+exports.hasRoles = (...roles) => {
 
   return asyncHandler(async (req, res, next) => {
     // 1. get the user passed through the request from the protect middleware
     const user = req.user;
-    // 2. verify that the user has all the necessary permissions
-    let userAllowed = true;
-    permissions.forEach(permission => {
-      if (!user.permissions.includes(permission)) {
-        userAllowed = false;
+    // 2. verify that the user has a valid role
+    let userAllowed = false;
+    roles.forEach(role => {
+      if (user.role == role) {
+        userAllowed = true;
         return;
       }
     })

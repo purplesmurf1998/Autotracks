@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CCard>
+    <CCard v-if="userHasRoles('Administration', 'Management', 'Sales Rep')">
       <CCardHeader>
         <slot name="header">Table of custom vehicle lists</slot>
       </CCardHeader>
@@ -116,6 +116,8 @@
 
 <script>
 const axios = require("axios");
+const { containsRoles } = require("../../../utils/index");
+
 import AddVehicleList from "./AddVehicleList.vue";
 import VehicleList from "./VehicleList.vue";
 import DealershipDD from "../inventory/DealershipDropdown.vue";
@@ -148,6 +150,9 @@ export default {
     },
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     updateTitle() {
       this.fetchUserVehicleLists();
     },

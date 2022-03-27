@@ -10,7 +10,6 @@ const Dashboard = () => import('@/views/pages/Dashboard')
 
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
-const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/authentication/Login')
 const Register = () => import('@/views/pages/authentication/Register')
 const ChangePassword = () => import('@/views/pages/authentication/ChangePassword')
@@ -55,7 +54,7 @@ const router = new Router({
           meta: {
             authRequired: true,
             permissionsRequired: [
-              'View Dealerships'
+              'Administration'
             ]
           },
           component: Dealerships,
@@ -66,7 +65,8 @@ const router = new Router({
           meta: {
             authRequired: true,
             permissionsRequired: [
-              'View Dealerships'
+              'Administration',
+              'Management'
             ]
           },
           component: Dealership
@@ -76,9 +76,6 @@ const router = new Router({
           name: 'Vehicle Inventory',
           meta: {
             authRequired: true,
-            permissionsRequired: [
-              'View Vehicles'
-            ]
           },
           component: Inventory,
           children: [
@@ -87,9 +84,6 @@ const router = new Router({
               name: 'Vehicle',
               meta: {
                 authRequired: true,
-                permissionsRequired: [
-                  'View Vehicles'
-                ]
               },
               component: Vehicle
             }
@@ -101,7 +95,9 @@ const router = new Router({
           meta: {
             authRequired: true,
             permissionsRequired: [
-              'Add Vehicles'
+              'Administration',
+              'Management',
+              'Reception'
             ]
           },
           component: InventoryAdd
@@ -112,7 +108,9 @@ const router = new Router({
           meta: {
             authRequired: true,
             permissionsRequired: [
-              'View Vehicles'
+              'Administration',
+              'Management',
+              'Sales Rep'
             ]
           },
           component: Transaction
@@ -122,6 +120,11 @@ const router = new Router({
           name: 'Vehicle Lists Table',
           meta: {
             authRequired: true,
+            permissionsRequired: [
+              'Administration',
+              'Management',
+              'Sales Rep'
+            ]
           },
           component: UserVehicleLists
         },
@@ -139,11 +142,6 @@ const router = new Router({
           path: '404',
           name: 'Page404',
           component: Page404
-        },
-        {
-          path: '500',
-          name: 'Page500',
-          component: Page500
         },
         {
           path: 'login',
@@ -208,24 +206,18 @@ router.beforeEach((to, from, next) => {
 
   // add the meta tag "permissionsRequired: [permissions]" to any routes needing specific permissions
   else if (to.meta.permissionsRequired) {
-    // go through the permissionsRequired list and verify they exist in the logged in user permissions
+    // go through the permissionsRequired list that contains allowed Roles, and verify that the user has a valid role
     // if not, call next(false) to cancel the request
 
-    const BreakLoop = {};
-    let authorized = true;
-    try {
-      to.meta.permissionsRequired.forEach(permission => {
-        if (!Store.state.auth.userPermissions.includes(permission)) {
-          throw BreakLoop;
-        }
-      });
-    } catch (e) {
-      authorized = false;
-    }
-    // user has the correct permissions, therefore continue with the request
-    if (authorized)
-      next();
-    else
+    let authorized = false;
+    to.meta.permissionsRequired.forEach(role => {
+      if (Store.state.auth.role == role) {
+        authorized = true;
+        next();
+      } 
+    });
+    
+    if (!authorized)
       next('/dashboard');
   }
 

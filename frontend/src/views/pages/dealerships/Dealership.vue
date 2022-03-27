@@ -10,27 +10,27 @@
             </h2>
             <p>{{ dealership.description }}</p>
             <router-link to="/dealerships">
-              <CButton color="primary"> Back to list </CButton>
+              <CButton color="secondary" v-if="userHasRoles('Administration')"> Back to list </CButton>
             </router-link>
             <br />
             <CButton
               id="edit-dealership"
-              v-if="!editingDealership"
-              color="secondary"
+              v-if="!editingDealership && userHasRoles('Administration')"
+              color="primary"
               class="mt-2"
               @click="setEditingDealership(true)"
               >Edit dealership details</CButton
             >
           </div>
           <edit-dealership
-            v-if="editingDealership"
+            v-if="editingDealership && userHasRoles('Administration')"
             :dealership="dealership"
             :setEditingDealership="setEditingDealership"
           />
         </CCardBody>
         <CCardFooter>
           <small class="text-muted">
-            {{ dealership.created_at }}
+            {{ dealership.created_at_formatted }}
           </small>
         </CCardFooter>
       </CCard>
@@ -38,13 +38,18 @@
         <div class="col-md-4">
           <CAlert v-if="!$store.state.auth.createUserCompleted" color="success"
             >Begin by creating your staff by clicking the
-            <strong>"Create a staff account"</strong> button below.</CAlert
-          >
+            <strong>"Create a staff account"</strong> button below.
+          </CAlert>
         </div>
       </CRow>
-      <dealership-accounts v-if="userHasPermissions('View Staff Users')" />
+      <dealership-accounts 
+        v-if="userHasRoles('Administration', 'Management')" 
+      />
       <dealership-vehicle-properties
-        v-if="userHasPermissions('View Vehicle Properties')"
+        v-if="userHasRoles('Administration', 'Management')"
+      />
+      <dealership-locations 
+        v-if="userHasRoles('Administration', 'Management')"
       />
     </CCol>
   </div>
@@ -54,9 +59,10 @@
 import EditDealership from "./EditDealership.vue";
 import DealershipAccounts from "../../../modules/users/DealershipAccounts.vue";
 import DealershipVehicleProperties from "../../../modules/vehicleProperties/DealershipVehicleProperties.vue";
+import DealershipLocations from "../../../modules/dealerships/DealershipLocations.vue";
 
 const axios = require("axios");
-const { containsPermissions } = require("../../../utils/index");
+const { containsRoles } = require("../../../utils/index");
 
 export default {
   name: "Dealership",
@@ -70,8 +76,8 @@ export default {
     setEditingDealership(value) {
       this.editingDealership = value;
     },
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
   },
   beforeCreate() {
@@ -97,6 +103,7 @@ export default {
     "edit-dealership": EditDealership,
     "dealership-accounts": DealershipAccounts,
     "dealership-vehicle-properties": DealershipVehicleProperties,
+    "dealership-locations": DealershipLocations,
   },
 };
 </script>

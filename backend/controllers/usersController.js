@@ -19,16 +19,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
         return next(
             new ErrorResponse('Staff users need to be associated to a dealership.', 400)
         );
-    }
-
-    // grab the user passed in the auth token and make sure they have "Add Staff Users" permission
-    const loggedUser = req.user;
-    var flag = loggedUser.permissions.includes("Add Staff Users");
-    if (!loggedUser || !flag) {
-        return next(
-            new ErrorResponse('Unauthorized to make these changes', 401)
-        );
-    }
+    }    
 
     // set the tutorials completed for staff users so they don't
     // get the notifications
@@ -39,6 +30,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 
     // create new user with the data passed in the request body
     const user = new User(body);
+    const loggedUser = req.user;
 
     // if the admin is creating their first staff account, set the tutorial flag to completed
     if (!loggedUser.createUserCompleted) {
