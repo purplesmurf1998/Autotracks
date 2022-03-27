@@ -205,7 +205,7 @@ export default {
         });
     },
     deleteLocation(zoneid){
-           axios({
+      axios({
         method: "DELETE",
         url: `${this.$store.state.api}/locations/zones/${zoneid}`,
         headers: {
@@ -263,8 +263,6 @@ export default {
     },
     mapClick(event) {
       if (!this.addingNewZone) return;
-      // if (this.newPath.length >= 4) return;
-
       const path = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),

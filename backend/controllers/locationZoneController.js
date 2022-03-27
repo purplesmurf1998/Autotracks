@@ -18,7 +18,6 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
 
   let locationBody = req.body;
   // append the center to the body
-  //locationBody.center = getPolygonCentroidSum(path);
   locationBody.center = getPolyginCentroidAvg(path);
 
   const locationZone = await LocationZone.create(locationBody);
