@@ -61,7 +61,6 @@
             >
             <CDropdownItem
               @click.native="downloadQrCode"
-              v-if="userHasRoles('Administration', 'Management', 'Sales Rep')"
             >Download QR code</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
