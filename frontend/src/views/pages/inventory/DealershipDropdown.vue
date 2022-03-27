@@ -31,7 +31,7 @@ const { showMessage } = require("../../../utils/index");
 
 export default {
   name: "DealershipDropdown",
-  props: ["dealership", "showSetDefault"],
+  props: ["dealership", "showSetDefault", "messageObj"],
   data() {
     return {
       adminDealerships: [],
@@ -90,14 +90,10 @@ export default {
             "dealership",
             this.dealership_prop,
           ]);
-          showMessage(
-            `${this.adminDealerships[index].label} successfully set as your default dealership`, 'success'
-          );
+          showMessage(`${this.adminDealerships[index].label} successfully set as your default dealership`, 'success', this.messageObj);
         })
         .catch((error) => {
-          showMessage(
-              `An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`, 'danger'
-            );
+          showMessage(`An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`, 'danger', this.messageObj);
         });
     },
     fetchAdminDealerships() {

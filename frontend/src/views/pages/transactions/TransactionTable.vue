@@ -41,6 +41,7 @@
         :setNewSale="setNewSale"
         :dealership="dealership"
         :fetchSales="fetchSales"
+        :messageObj="messageObj"
       />
       <template #header>
         <h6 class="modal-title">View Transaction Detail</h6>
@@ -61,7 +62,7 @@ import XLSX from 'xlsx';
 
 export default {
   name: "transactionTable",
-  props: ["dealership"],
+  props: ["dealership", "messageObj"],
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Delivery Date", "Deposit", "Manager", "Approval Date"],
@@ -111,7 +112,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          showMessage("An error occured while fetching transactions data", "danger");
+          showMessage("An error occured while fetching transactions data", "danger", this.messageObj);
         });
     },
     rowClicked(sale) {

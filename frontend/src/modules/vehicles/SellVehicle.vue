@@ -89,6 +89,7 @@
 
 <script>
 const axios = require('axios');
+const { showMessage } = require("../../utils/index");
 
 export default {
   name: 'VehicleSell',
@@ -101,6 +102,7 @@ export default {
     "setSaleStatus",
     "updateSaleStatus",
     "sale_id",
+    "messageObj"
   ],
   data() {
     return {
@@ -136,9 +138,9 @@ export default {
             }
         }).then(response => {
             if (response.data.success) {
+              showMessage("A sale request has been submitted", "success", this.messageObj);
               this.setVehicleModal(false);
               this.setSaleStatus(true, response.data.payload);
-              this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
             console.log(error);
@@ -166,7 +168,6 @@ export default {
             this.showMessage("The sale request has been updated", "success");
             this.setVehicleModal(false);
             this.setSaleStatus(true, response.data.payload);
-            this.showMessage("The sale request has been updated", "success");
           }
       }).catch(error => {
           console.log(error);

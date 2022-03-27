@@ -19,18 +19,13 @@ export function formattedDate(timestamp) {
   return currDate.substring(0, currDate.indexOf(':') +3);
 }
 
-export function showMessage(content, messageType) {
-  message.content = content;
-  message.messageType = messageType;
+export function showMessage(content, messageType, messageObj) {
+  messageObj.content = content;
+  messageObj.messageType = messageType;
   setTimeout(() => {
-      message.content = null;
-      message.messageType = null;
+    messageObj.content = null;
+    messageObj.messageType = null;
   }, 5000);
-}
-
-export const message = {
-  content: null,
-  messageType: null,
 }
 
 export function getFormattedProperties(properties, values) {

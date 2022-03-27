@@ -1,8 +1,5 @@
 <template>
   <div>
-    <CAlert show :color="messageObj.messageType" v-if="messageObj.content" class="mb-2">{{
-      messageObj.content
-    }}</CAlert>
     <CForm @submit.prevent="submit">
       <CInput
         label="Title"
@@ -15,6 +12,7 @@
       <dealership-dropdown
         v-if="$store.state.auth.role == 'Administration'"
         :dealership="selectedDealership"
+        :messageObj="messageObj"
         @selectDealership="selectedDealership = $event"
       />
       <p class="mb-2">Notes</p>
@@ -38,7 +36,6 @@
 
 <script>
 const axios = require("axios");
-const { showMessage, message} = require("../../../utils/index");
 
 import Vue from "vue";
 import VueQuillEditor from "vue-quill-editor";
@@ -46,41 +43,31 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import DealershipDD from "../inventory/DealershipDropdown.vue";
+import { showMessage } from '../../../utils';
 
 Vue.use(VueQuillEditor);
 
 export default {
-  props: ["finishAddingVehicleList", "closeAddListModal"],
+  props: ["finishAddingVehicleList", "closeAddListModal", "messageObj"],
   data() {
     return {
       title: "",
       notes: "",
       disableButtons: false,
-      messageObj: message,
       selectedDealership: null,
     };
   },
   methods: {
     submit() {
       this.disableButtons = true;
-
-      if (this.title == '') {
-        showMessage('Title cannot be empty', 'danger');
-        this.disableButtons = false;
-      } else if (!this.selectedDealership && !this.$store.state.auth.dealership) {
-        showMessage('You must select a dealership', 'danger');
-        this.disableButtons = false;
-      } else {
-        let dealership = this.selectedDealership ? this.selectedDealership : this.$store.state.auth.dealership
-        const list = {
-          title: this.title,
-          notes: this.notes,
-          owner: this.$store.state.auth.userId,
-          dealership: dealership,
-        };
-
-        this.postVehicleList(list);
-      }
+      let dealership = this.selectedDealership ? this.selectedDealership : this.$store.state.auth.dealership
+      const list = {
+        title: this.title,
+        notes: this.notes,
+        owner: this.$store.state.auth.userId,
+        dealership: dealership,
+      };
+      this.postVehicleList(list);
     },
     postVehicleList(data) {
       axios({
@@ -92,8 +79,9 @@ export default {
         data,
       })
         .then((response) => {
+          showMessage("Custom list has been created successfully", "success", this.messageObj);
           this.resetForm();
-          this.finishAddingVehicleList(response.data.payload);
+          this.finishAddingVehicleList(response.data.payload);    
         })
         .catch((error) => {
           console.log(error);

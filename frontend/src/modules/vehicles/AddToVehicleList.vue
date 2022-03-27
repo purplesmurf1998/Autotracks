@@ -21,7 +21,7 @@ const axios = require('axios');
 const { showMessage } = require("../../utils/index");
 
 export default {
-  props: ['vehicleId', 'closeModal'],
+  props: ['vehicleId', 'closeModal', 'messageObj'],
   data() {
     return {
       userVehicleLists: null,
@@ -59,7 +59,7 @@ export default {
           vehicles: [this.vehicleId]
         }
       }).then((response) => {
-        showMessage(`The vehicle has been added to the list "${response.data.payload.title}"`, "success");
+        showMessage(`The vehicle has been added to the list "${response.data.payload.title}"`, "success", this.messageObj);
         this.closeModal();
       }).catch((error) => {
         console.log(error);

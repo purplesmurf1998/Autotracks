@@ -7,6 +7,7 @@
           :vehicle="vehicle"
           :setNewVehicle="setNewVehicle"
           :refreshTable="refreshTable"
+          :messageObj="messageObj"
         />
         <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle" />
       </CCol>
@@ -24,13 +25,14 @@ import VehicleLocation from "./VehicleLocation.vue";
 import VehicleProperties from "./VehicleProperties.vue";
 import VehicleComments from "./VehicleComments.vue";
 
-const { message } = require("../../utils/index");
-
 export default {
   props: ["vehicle", "setNewVehicle", "refreshTable"],
   data() {
     return {
-      messageObj: message
+      messageObj: {
+        content: null,
+        messageType: null,
+      }
     };
   },
   components: {

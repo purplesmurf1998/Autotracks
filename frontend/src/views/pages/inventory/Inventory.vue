@@ -26,6 +26,7 @@
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
+          :messageObj="messageObj"
           :showSetDefault="true"
         />
         <inventory-table
@@ -56,7 +57,6 @@
 </template>
 
 <script>
-const axios = require("axios");
 const { containsRoles, message } = require("../../../utils/index");
 
 import InventoryTable from "./InventoryTable.vue";
@@ -68,7 +68,10 @@ export default {
   data() {
     return {
       selectedDealership: null,
-      messageObj: message,
+      messageObj: {
+        content: null,
+        messageType: null,
+      },
     };
   },
   computed: {

@@ -136,6 +136,7 @@
         :setSaleStatus="setSaleStatus"
         :updateSaleStatus="updateSaleStatus"
         :sale_id="sale_id"
+        :messageObj="messageObj"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
@@ -183,6 +184,7 @@
       <add-to-vehicle-list
         :vehicleId="vehicle._id"
         :closeModal="closeAddToListModal"
+        :messageObj="messageObj"
         v-if="showingAddToListModal"
       />
       <template #footer>
@@ -197,6 +199,7 @@
       <add-to-zone
         :vehicleId="vehicle._id"
         :closeAddToZoneModal="closeAddToZoneModal"
+        :messageObj="messageObj"
         v-if="showingAddToZoneModel"
         @vehicle-location-updated="vehicleLocationUpdated"
       />
@@ -222,7 +225,7 @@ export default {
     "add-to-vehicle-list": AddToVehicleList,
     AddToZone,
   },
-  props: ["vehicle", "setNewVehicle", "refreshTable"],
+  props: ["vehicle", "setNewVehicle", "refreshTable", "messageObj"],
   data() {
     return {
       showingSoldModal: false,
@@ -313,15 +316,12 @@ export default {
             this.sale = null;
             this.approved = false;
             this.showingCancelSaleModal = false;
-            showMessage("The sale request has been canceled.", "success");
+            showMessage("The sale request has been canceled.", "success", this.messageObj);
           }
         })
         .catch((err) => {
           console.log(err);
-          showMessage(
-            "An error occured while canceling the sale request.",
-            "danger"
-          );
+          showMessage("An error occured while canceling the sale request.", "danger", this.messageObj);
         });
     },
     toggleVehicleMissing() {
@@ -338,19 +338,13 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
-            showMessage(
-              "Vehicle location has been updated successfully",
-              "success"
-            );
+            showMessage("Vehicle location has been updated successfully", "success", this.messageObj);
             this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
-          showMessage(
-            "Error occured while updating vehicle location",
-            "danger"
-          );
+          showMessage("Error occured while updating vehicle location", "danger", this.messageObj);
         });
     },
     async downloadQrCode() {
@@ -431,17 +425,14 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            showMessage("Vehicle has been marked as delivered", "success");
+            showMessage("Vehicle has been marked as delivered", "success", this.messageObj);
             this.setNewVehicle(response.data.payload);
             this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
-          showMessage(
-            "Error occured while updating vehicle delivery status",
-            "danger"
-          );
+          showMessage("Error occured while updating vehicle delivery status", "danger", this.messageObj);
         });
     },
   },
