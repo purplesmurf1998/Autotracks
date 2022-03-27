@@ -15,6 +15,7 @@
         <transaction-table
           v-if="selectedDealership || $store.state.auth.role != 'Administration'"
           :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
+          :messageObj="messageObj"
           ref="transactionTable"
         />
       </CCol>
@@ -23,8 +24,6 @@
 </template>
 
 <script>
-const axios = require("axios");
-const { message } = require("../../../utils/index");
 import TransactionTable from "./TransactionTable.vue";
 import dealershipDD from "../inventory/DealershipDropdown.vue";
 
@@ -33,7 +32,10 @@ export default {
   data() {
     return {
       selectedDealership: null,
-      messageObj: message,
+      messageObj: {
+        content: null,
+        messageType: null,
+      },
     };
   },
   components: {

@@ -43,7 +43,7 @@
 
 <script>
 const axios = require('axios');
-const { message, showMessage } = require("../utils/index");
+const { showMessage } = require("../utils/index");
 
 export default {
   name: 'accountSubscriptions',
@@ -64,7 +64,10 @@ export default {
         },
         user_events: this.$store.state.auth.userEventsSubscriptions,
         new_events: [],
-        messageObj: message,
+        messageObj: {
+          content: null,
+          messageType: null,
+        },
     }
   },
   methods: {
@@ -87,29 +90,26 @@ export default {
             return true;
     },
     submitEvents() {
-        axios({
-          method: "PUT",
-          url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
-          headers: {
-            Authorization: `Bearer ${this.$store.state.auth.token}`,
-          },
-          data: {subscribed_events: this.new_events},
-        })
-        .then((response) => {
-            if (response.data.success) {
-                this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events;
-                showMessage("User account subscriptions have been updated", "success");
-                //The page must be refreshed for the new user account subscription to take palce
-                this.$router.go();
-            }
-            //Remove dead code below 
-            else
-                showMessage("An error occured while updating user account subscriptions", "danger");
-        })
-        .catch((error) => {
-            console.log(error);
-            showMessage("An error occured while updating user account subscriptions", "danger");
-        });
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {subscribed_events: this.new_events},
+      })
+      .then((response) => {
+          if (response.data.success) {
+              this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events;
+              showMessage("User account subscriptions have been updated", "success", this.messageObj);
+              //The page must be refreshed for the new user account subscription to take palce
+              this.$router.go();
+          }
+      })
+      .catch((error) => {
+          console.log(error);
+          showMessage("An error occured while updating user account subscriptions", "danger", this.messageObj);
+      });
     },
   },
   mounted() {

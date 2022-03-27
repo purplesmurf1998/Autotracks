@@ -9,8 +9,6 @@ const {
 } = require('../controllers/locationZoneController');
 
 // get authentication middleware
-//hasPermissions need to be refactored to has roles, with a possibility of a complete removal
-
 const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
@@ -18,9 +16,9 @@ router.route('/')
 
 router.route('/:zoneId')
   .delete(protect, hasRoles('Administration', 'Management'), deleteLocationZone)
-  .put(protect, hasRoles('Administration', 'Management'), updateZoneNameDescription);
+  .put(protect, updateZoneNameDescription);
 
 router.route('/dealership/:dealershipId')
-  .get(protect, hasRoles('Administration', 'Management'), getLocationZones);
+  .get(protect, getLocationZones);
 
 module.exports = router;

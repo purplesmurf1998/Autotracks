@@ -4,6 +4,7 @@
     <DealershipDD
       :dealership="selectedDealership"
       @selectDealership="selectedDealership = $event"
+      :messageObj="messageObj"
       :showSetDefault="true"
     />
       <!-- The following change event needs to be added later to update the visuals @change="$refs.inventoryTable.switchDealerships(selectedDealership)" -->
@@ -67,8 +68,6 @@
 
 <script>
 
-const { message } = require("../../utils/index");
-
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
 import DealershipDD from "./inventory/DealershipDropdown.vue"
 import DashboardLineChart from "@/views/charts/DashboardLineChart";
@@ -104,7 +103,10 @@ export default {
       selected: "Month", //To be used for the line chart
       selectedDealership: null,
       selectedPeriod: "All",
-      messageObj: message,
+      messageObj: {
+        content: null,
+        messageType: null,
+      },
     };
   },
 };

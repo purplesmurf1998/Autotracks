@@ -22,7 +22,7 @@ import axios from "axios";
 const { showMessage } = require("../../utils/index");
 
 export default {
-  props: ["vehicleId", "closeAddToZoneModal"],
+  props: ["vehicleId", "closeAddToZoneModal", "messageObj"],
   data() {
     return {
       zones: [],
@@ -50,11 +50,11 @@ export default {
       })
         .then((response) => {
           this.$emit("vehicle-location-updated", response.data.payload);
-          showMessage("Vehicle's location has been updated", "success");
+          showMessage("Vehicle's location has been updated", "success", this.messageObj);
         })
         .catch((error) => {
           console.log(error);
-          showMessage("An error occured while updating vehicle's location", "danger");
+          showMessage("An error occured while updating vehicle's location", "danger", this.messageObj);
         });
     },
     fetchLocationZones() {
