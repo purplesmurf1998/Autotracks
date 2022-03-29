@@ -31,14 +31,8 @@ exports[`TheHeader.vue renders correctly 1`] = `
   >
     <img
       alt="Responsive image"
-      class="img-fluid"
-      src="../assets/polaris.svg"
-    />
-     
-    <cicon-stub
-      alt="Logo"
-      height="48"
-      name="logo"
+      class="img-fluid header-img"
+      src="../assets/autotracks_blue_crp.png"
     />
   </cheaderbrand-stub>
    

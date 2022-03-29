@@ -39,6 +39,7 @@ const store = new Vuex.Store({
         expect(wrapper.find('#Edit Vehicles').exists())
         expect(wrapper.find('#Edit Vehicle Locations').exists())
         expect(wrapper.find('#Sell Vehicles').exists())
+        expect(wrapper.find('#Sell Vehicles').exists())
         expect(wrapper.find('#Delete Vehicles').exists())
         expect(wrapper.find('#Add Vehicle Properties').exists())
         expect(wrapper.find('#Edit Vehicle Properties').exists())
