@@ -49,10 +49,11 @@
               :fields="tableFields"
               :items="tableItems"
               :striped="true"
-              :items-per-page="10"
+              :items-per-page="20"
               :fixed="true"
               :clickable-rows="true"
               @row-clicked="clickRow"
+              pagination
             >
               <template #admin="{ item }">
                 <td>{{ item.admin.first_name }} {{ item.admin.last_name }}</td>

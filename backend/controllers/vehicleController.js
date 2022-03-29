@@ -2,10 +2,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Vehicle = require('../models/Vehicle');
 const Dealership = require('../models/Dealership');
-const Event = require('../models/Event');
 const Sale = require('../models/VehicleSale');
-const qr = require('qrcode')
-
 
 // @desc        Get all vehicles for a specific dealership
 // @route       GET /api/v1/inventory/dealership/:dealershipId?interiorColor=Black
@@ -18,7 +15,7 @@ exports.getVehicles = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
     return next(
-      new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+      new ErrorResponse(`This dealership ID ${req.params.dealershipId} does not exist. Cannot return a list of vehicls without a valid dealership.`, 404)
     );
   }
 
@@ -48,7 +45,7 @@ exports.getNotSoldVehicles = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
     return next(
-        new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+      new ErrorResponse(`This dealership ID ${req.params.dealershipId} does not exist. Cannot return a list of vehicls without a valid dealership.`, 404)
     );
   }
 
@@ -80,7 +77,7 @@ exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
     return next(
-        new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+      new ErrorResponse(`This dealership ID ${req.params.dealershipId} does not exist. Cannot return a list of vehicls without a valid dealership.`, 404)
     );
   }
 
@@ -131,8 +128,6 @@ exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
   else {
     stale_vehicles_count = stale_vehicles_res[0].stale_vehicles_count
   }
-  //console.log(stale_vehicles_count)
-
   // Send the result in the payload
   res.status(200).json({
     success: true,
@@ -152,7 +147,7 @@ exports.getVehiclesDashboardV3 = asyncHandler(async (req, res, next) => {
   // no dealership found
   if (!dealership) {
     return next(
-      new ErrorResponse(`This dealership ID ${req.params.dealershipId} with this not found. Cannot return a list of vehicls without a valid dealership.`, 404)
+      new ErrorResponse(`This dealership ID ${req.params.dealershipId} does not exist. Cannot return a list of vehicls without a valid dealership.`, 404)
     );
   }
 

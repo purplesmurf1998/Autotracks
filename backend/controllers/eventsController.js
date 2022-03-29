@@ -8,8 +8,7 @@ const Sale = require('../models/VehicleSale');
 // @access      Private
 exports.createEvent = asyncHandler(async (req, res, next) => {
   // This endpoint is used for creating new events for users
-  // 'vehicle_moved', Missing this eventType
-
+  
   var body = {};
   //Transaction API Events
   if (req.originalUrl.indexOf('/api/v1/inventory/details/sale') > -1) {
@@ -96,6 +95,18 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
           title: 'Vehicle Delivered',
           viewers: [req.user._id],
           description: `A vehicle with vin: ${vehicle.vin} has been marked delivered by ${req.user.first_name} ${req.user.last_name}`,
+        }
+      }
+      //vehicle moved
+      else if (req.body.zone) {
+        body = {
+          event_type: 'vehicle_moved',
+          dealership: vehicle.dealership,
+          vehicle: vehicle._id,
+          user: `${req.user.first_name} ${req.user.last_name}`,
+          title: 'Vehicle Moved',
+          viewers: [req.user._id],
+          description: `A vehicle with vin: ${vehicle.vin} has been moved by ${req.user.first_name} ${req.user.last_name}`,
         }
       }
       //Change the if condition later

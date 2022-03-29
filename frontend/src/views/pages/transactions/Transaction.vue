@@ -3,20 +3,19 @@
     <CRow>
       <CCol>
         <CAlert  
-          :color="messageType" 
-          v-if="message" 
+          :color="messageObj.messageType" 
+          v-if="messageObj.content" 
           class="mb-2">
-          {{ message }}
+          {{ messageObj.content }}
         </CAlert>
         <dealership-dropdown
           :dealership="selectedDealership"
           @selectDealership="selectedDealership = $event"
-          :showMessage="showMessage"
         />
         <transaction-table
           v-if="selectedDealership || $store.state.auth.role != 'Administration'"
           :dealership="selectedDealership ? selectedDealership : $store.state.auth.dealership"
-          :showMessage="showMessage"
+          :messageObj="messageObj"
           ref="transactionTable"
         />
       </CCol>
@@ -25,7 +24,6 @@
 </template>
 
 <script>
-const axios = require("axios");
 import TransactionTable from "./TransactionTable.vue";
 import dealershipDD from "../inventory/DealershipDropdown.vue";
 
@@ -34,19 +32,11 @@ export default {
   data() {
     return {
       selectedDealership: null,
-      message: null,
-      messageType: null
+      messageObj: {
+        content: null,
+        messageType: null,
+      },
     };
-  },
-  methods: {
-    showMessage(message, messageType) {
-      this.message = message;
-      this.messageType = messageType;
-      setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
-      }, 5000);
-    },
   },
   components: {
     "transaction-table": TransactionTable,

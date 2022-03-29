@@ -61,7 +61,6 @@
             >
             <CDropdownItem
               @click.native="downloadQrCode"
-              v-if="userHasRoles('Administration', 'Management', 'Sales Rep')"
             >Download QR code</CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem
@@ -137,6 +136,7 @@
         :setSaleStatus="setSaleStatus"
         :updateSaleStatus="updateSaleStatus"
         :sale_id="sale_id"
+        :messageObj="messageObj"
       />
       <template #header>
         <h6 class="modal-title">Mark the vehicle as sold</h6>
@@ -184,7 +184,7 @@
       <add-to-vehicle-list
         :vehicleId="vehicle._id"
         :closeModal="closeAddToListModal"
-        :showMessage="showMessage"
+        :messageObj="messageObj"
         v-if="showingAddToListModal"
       />
       <template #footer>
@@ -199,6 +199,7 @@
       <add-to-zone
         :vehicleId="vehicle._id"
         :closeAddToZoneModal="closeAddToZoneModal"
+        :messageObj="messageObj"
         v-if="showingAddToZoneModel"
         @vehicle-location-updated="vehicleLocationUpdated"
       />
@@ -211,7 +212,7 @@
 
 <script>
 const axios = require("axios");
-const { containsRoles } = require("../../utils/index");
+const { containsRoles, showMessage } = require("../../utils/index");
 const QRCode = require("qrcode")
 import VehicleSell from "./SellVehicle.vue";
 import AddToVehicleList from "./AddToVehicleList.vue";
@@ -224,7 +225,7 @@ export default {
     "add-to-vehicle-list": AddToVehicleList,
     AddToZone,
   },
-  props: ["vehicle", "setNewVehicle", "showMessage", "refreshTable"],
+  props: ["vehicle", "setNewVehicle", "refreshTable", "messageObj"],
   data() {
     return {
       showingSoldModal: false,
@@ -315,15 +316,12 @@ export default {
             this.sale = null;
             this.approved = false;
             this.showingCancelSaleModal = false;
-            this.showMessage("The sale request has been canceled.", "success");
+            showMessage("The sale request has been canceled.", "success", this.messageObj);
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage(
-            "An error occured while canceling the sale request.",
-            "danger"
-          );
+          showMessage("An error occured while canceling the sale request.", "danger", this.messageObj);
         });
     },
     toggleVehicleMissing() {
@@ -340,19 +338,13 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.setNewVehicle(response.data.payload);
-            this.showMessage(
-              "Vehicle location has been updated successfully",
-              "success"
-            );
+            showMessage("Vehicle location has been updated successfully", "success", this.messageObj);
             this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage(
-            "Error occured while updating vehicle location",
-            "danger"
-          );
+          showMessage("Error occured while updating vehicle location", "danger", this.messageObj);
         });
     },
     async downloadQrCode() {
@@ -433,17 +425,14 @@ export default {
       })
         .then((response) => {
           if (response.data.success) {
-            this.showMessage("Vehicle has been marked as delivered", "success");
+            showMessage("Vehicle has been marked as delivered", "success", this.messageObj);
             this.setNewVehicle(response.data.payload);
             this.refreshTable();
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage(
-            "Error occured while updating vehicle delivery status",
-            "danger"
-          );
+          showMessage("Error occured while updating vehicle delivery status", "danger", this.messageObj);
         });
     },
   },

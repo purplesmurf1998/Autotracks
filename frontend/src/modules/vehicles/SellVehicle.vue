@@ -89,6 +89,7 @@
 
 <script>
 const axios = require('axios');
+const { showMessage } = require("../../utils/index");
 
 export default {
   name: 'VehicleSell',
@@ -101,13 +102,16 @@ export default {
     "setSaleStatus",
     "updateSaleStatus",
     "sale_id",
+    "messageObj"
   ],
   data() {
     return {
       form: this.getEmptyForm(),
       submitted: false,
       disableButtons: false,
-      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName
+      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName,
+      message: null,
+      messageType: null,
     }
   },
   methods: {
@@ -134,9 +138,9 @@ export default {
             }
         }).then(response => {
             if (response.data.success) {
+              showMessage("A sale request has been submitted", "success", this.messageObj);
               this.setVehicleModal(false);
               this.setSaleStatus(true, response.data.payload);
-              this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
             console.log(error);
@@ -164,7 +168,6 @@ export default {
             this.showMessage("The sale request has been updated", "success");
             this.setVehicleModal(false);
             this.setSaleStatus(true, response.data.payload);
-            this.showMessage("The sale request has been updated", "success");
           }
       }).catch(error => {
           console.log(error);
@@ -183,12 +186,12 @@ export default {
       }
     },
     showMessage(message, messageType) {
-       this.message = message;
-       this.messageType = messageType;
-       setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
-          }, 5000);
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+        this.message = null;
+        this.messageType = null;
+        }, 5000);
     },
   }
 }

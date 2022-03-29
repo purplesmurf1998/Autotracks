@@ -121,12 +121,26 @@ describe('Testing Sale Controller Class', () => {
     });
   });
 
+  //The below test, checks if we refuse to fetch a sale given invalid sale_id
+  describe('Get Sale API Error Test (Invalid sale_id', () => {
+    it('should return 404 because of invalid sale_id', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/details/sale/61edb7f7b921821a0949db41")
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(404);
+          response.body.should.be.a('object');
+          done();
+        });
+    });
+  });
+
   //The below test, checks if we can update and mark sale as approved successfully
   describe('Update Sale API Test (Approve)', () => {
     it('should return 200 when a sale is marked approved', (done) => {
       let ts = Date.now();
       let date_ob = new Date(ts);
-      let date = date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate();
+      let date = new Date(date_ob.getFullYear() + "-" + date_ob.getMonth() + 1 + "-" + date_ob.getDate());
       chai.request(app)
         .put("/api/v1/inventory/details/sale/" + sale_id)
         .send({

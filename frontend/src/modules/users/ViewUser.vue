@@ -19,21 +19,6 @@
       </CCol>
     </CRow>
     <hr />
-    <!-- <CRow>
-      <CCol>
-        <p class="text-muted mb-0">Permissions:</p>
-      </CCol>
-      <CCol class="d-flex align-items-end flex-column">
-        <CRow
-          v-for="permission in user.permissions"
-          :key="permission"
-          class="mr-0"
-          ><p class="text-muted mb-0">
-            {{ permission }}
-          </p></CRow
-        >
-      </CCol>
-    </CRow> -->
     <CRow class="d-flex justify-content-start mt-3 px-3 mb-2">
       <CButton
         color="secondary"

@@ -64,7 +64,6 @@
                 :paths="isEditingPerimeter == zone._id ? editedPath : zone.path"
                 :editable="isEditingPerimeter && isEditingPerimeter == zone._id"
                 :visible="true"
-                :draggable="true"
                 :options="{
                   fillColor: zone.fillColor,
                   fillOpacity: 0.5,
@@ -193,7 +192,6 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response.data.payload);
           let temp_zones = this.zones;
           temp_zones[this.selectedIndex] = response.data.payload;
           this.zones = temp_zones;
@@ -207,7 +205,7 @@ export default {
         });
     },
     deleteLocation(zoneid){
-           axios({
+      axios({
         method: "DELETE",
         url: `${this.$store.state.api}/locations/zones/${zoneid}`,
         headers: {
@@ -244,7 +242,6 @@ export default {
       this.editedPath = this.selectedZone.path;
     },
     setSelectedZone(zone, index) {
-      if (this.selectedIndex == index) console.log("runs second");
       if (this.closeDetails) {
         this.selectedZone = null;
         this.selectedIndex = -1;
@@ -258,8 +255,7 @@ export default {
     closeExpanded() {
       this.closeDetails = true;
     },
-    closeExpandedAndSave(newZone) {
-      console.log("runs first");
+    closeExpandedAndSave() {
       this.fetchLocationZones();
       this.selectedZone = null;
       this.selectedIndex = -1;
@@ -267,17 +263,11 @@ export default {
     },
     mapClick(event) {
       if (!this.addingNewZone) return;
-      // if (this.newPath.length >= 4) return;
-
       const path = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
       };
       this.newPath.push(path);
-      console.log(this.newPath);
-    },
-    showRectangleInfo(event) {
-      console.log(event);
     },
     undoLastPoint() {
       if (!this.newPath.length > 0 || !this.addingNewZone) return;
@@ -304,8 +294,6 @@ export default {
         data: zone,
       })
         .then((response) => {
-          console.log(response.data.payload);
-
           this.zones.push(response.data.payload);
           this.newPath = [];
           this.addingNewZone = false;

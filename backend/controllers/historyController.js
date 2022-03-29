@@ -90,6 +90,14 @@ exports.createHistory = asyncHandler(async (req, res, next) => {
                     log: `A vehicle with vin: ${vehicle.vin} has been marked delivered by ${req.user.first_name} ${req.user.last_name}`,
                 }
             }
+            //vehicle moved
+            else if (req.body.zone) {
+                body = {
+                    vehicle: vehicle._id,
+                    author: req.user._id,
+                    log: `A vehicle with vin: ${vehicle.vin} has been moved by ${req.user.first_name} ${req.user.last_name}`,
+                } 
+            }
             else if (vehicle.missing != req.body.missing) {
                 if (req.body.missing) {
                     body = {

@@ -18,9 +18,10 @@
 
 <script>
 const axios = require('axios');
+const { showMessage } = require("../../utils/index");
 
 export default {
-  props: ['vehicleId', 'closeModal', 'showMessage'],
+  props: ['vehicleId', 'closeModal', 'messageObj'],
   data() {
     return {
       userVehicleLists: null,
@@ -48,7 +49,6 @@ export default {
       }, 5000);
     },
     addVehicleToList(vehicleListId) {
-      console.log("test");
       axios({
         method: "POST",
         url: `${this.$store.state.api}/vehicle-list/${vehicleListId}/add`,
@@ -59,7 +59,7 @@ export default {
           vehicles: [this.vehicleId]
         }
       }).then((response) => {
-        this.showMessage(`The vehicle has been added to the list "${response.data.payload.title}"`, "success");
+        showMessage(`The vehicle has been added to the list "${response.data.payload.title}"`, "success", this.messageObj);
         this.closeModal();
       }).catch((error) => {
         console.log(error);

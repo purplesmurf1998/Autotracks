@@ -15,7 +15,7 @@
           id="transactions-datatable"
           :fields="tableFields"
           :items="tableItems"
-          :items-per-page="10"
+          :items-per-page="20"
           :fixed="true"
           :clickable-rows="true"
           @row-clicked="rowClicked"
@@ -23,15 +23,8 @@
           hover
           sorter
           column-filter
+          pagination
         >
-          <!-- <template v-for="field in tableFields" v-slot:[field.key]="item">
-            <inventory-slot :key="field.key" :item="item" :field="field"/>
-          </template> -->
-          <!-- <template #missing="{ item }">
-            <td>
-              <CIcon name="cil-warning" class="icon" v-if="item.missing" />
-            </td>
-          </template> -->
         </CDataTable>
       </CCardBody>
     </CCard>
@@ -45,10 +38,10 @@
         v-if="showingTransactionModal"
         :setTransactionModal="setTransactionModal"
         :saleDetail="sale"
-        :showMessage="showMessage"
         :setNewSale="setNewSale"
         :dealership="dealership"
         :fetchSales="fetchSales"
+        :messageObj="messageObj"
       />
       <template #header>
         <h6 class="modal-title">View Transaction Detail</h6>
@@ -63,12 +56,13 @@
 
 <script>
 const axios = require("axios");
+const { showMessage } = require("../../../utils/index");
 import transactionDetails from './TransactionDetails.vue';
 import XLSX from 'xlsx';
 
 export default {
   name: "transactionTable",
-  props: ["dealership", "showMessage"],
+  props: ["dealership", "messageObj"],
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Delivery Date", "Deposit", "Manager", "Approval Date"],
@@ -118,7 +112,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          showMessage("An error occured while fetching transactions data", "danger");
+          showMessage("An error occured while fetching transactions data", "danger", this.messageObj);
         });
     },
     rowClicked(sale) {

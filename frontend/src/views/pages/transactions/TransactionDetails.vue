@@ -169,17 +169,17 @@
 
 <script>
 const axios = require('axios');
-const { containsRoles } = require("../../../utils/index");
+const { containsRoles, showMessage } = require("../../../utils/index");
 
 export default {
   name: 'transactionDetails',
   props: [
-    "showMessage",
     "saleDetail",
     "setTransactionModal",
     "setNewSale",
     "dealership",
-    "fetchSales"
+    "fetchSales",
+    "messageObj"
   ],
   data() {
     return {
@@ -205,13 +205,13 @@ export default {
           if (response.data.success) {
             this.showDeleteModal = false;
             this.setTransactionModal(false);
-            this.showMessage("The transaction been deleted.", "success");
+            showMessage("The transaction been deleted.", "success", this.messageObj);
             this.fetchSales(this.dealership);
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("An error occured while deleting this transaction.", "danger");
+          showMessage("An error occured while deleting this transaction.", "danger", this.messageObj);
         });
     },
     editSale(value) {
@@ -233,11 +233,11 @@ export default {
           if (response.data.success) {
             this.fetchSales(this.dealership);
             this.setTransactionModal(false);
-            this.showMessage("The sale has been approved", "success");
+            showMessage("The sale has been approved", "success", this.messageObj);
           }
       }).catch(error => {
           console.log(error);
-          this.showMessage(error.response.data.error, "danger");
+          showMessage(error.response.data.error, "danger", this.messageObj);
       })
     },
     getSale() {
@@ -277,12 +277,12 @@ export default {
           if (response.data.success) {
             this.fetchSales(this.dealership);
             this.setTransactionModal(false);
-            this.showMessage("Vehicle has been marked as delivered", "success");
+            showMessage("Vehicle has been marked as delivered", "success", this.messageObj);
           }
         })
         .catch((err) => {
           console.log(err);
-          this.showMessage("Error occured while updating vehicle delivery status", "danger");
+          showMessage("Error occured while updating vehicle delivery status", "danger", this.messageObj);
         });
     },
     updateSale() {
@@ -298,12 +298,12 @@ export default {
           if (response.data.success) {
             this.fetchSales(this.dealership);
             this.setTransactionModal(false);
-            this.showMessage("The transaction has been updated", "success");
+            showMessage("The transaction has been updated", "success", this.messageObj);
           }
       }).catch(error => {
           console.log(error);
           this.setTransactionModal(false);
-          this.showMessage(error.response.data.error, "danger");
+          showMessage(error.response.data.error, "danger", this.messageObj);
       })
     },
     getEmptyForm() {

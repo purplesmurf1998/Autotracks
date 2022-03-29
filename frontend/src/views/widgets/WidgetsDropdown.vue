@@ -4,8 +4,8 @@
       <CCard class="text-center" color="gradient-primary" textColor="white" style="height:160px">
         <CCardBody class="d-flex align-items-center">
           <CCol>
+            <CCardSubtitle class="mt-2">Vehicles Count</CCardSubtitle>
             <CCardTitle class="display-3" color="gradient-secondary">{{inventoryCount}}</CCardTitle>
-            <CCardSubtitle>Vehicles Count</CCardSubtitle>
           </CCol>
         </CCardBody>
       </CCard>
@@ -14,18 +14,18 @@
       <CCard class="text-center" color="gradient-info" textColor="white" style="height:160px">
         <CCardBody class="d-flex align-items-center">
           <CCol>
-            <CCardTitle class="display-3" color="gradient-warning">{{soldVehiclesPercentage}}%</CCardTitle>
-            <CCardSubtitle>
+            <CCardSubtitle class="mt-2">
               Sold Vehicles Percentage ({{inventoryCount-inventoryNotSoldCount}}/{{inventoryCount}})
             </CCardSubtitle>
+            <CCardTitle class="display-3" color="gradient-warning" v-if="soldVehiclesPercentage">{{soldVehiclesPercentage}}%</CCardTitle>
+            <CCardTitle class="display-3" color="gradient-warning" v-if="!soldVehiclesPercentage">0%</CCardTitle>
           </CCol>
         </CCardBody>
       </CCard>
     </CCol>
-    <!-- Cursed shit below -->
     <CCol sm="6" lg="3">
       <CWidgetDropdown
-        color="gradient-info"
+        color="gradient-warning"
         :text="'Stale Vehicles Percentage (' + staleVehiclesCount+'/'+inventoryCount + ')'"
         style="height:160px"
       >
@@ -47,15 +47,17 @@
         <template #footer>
           <CCardBody class="d-flex align-items-center">
             <CCol>
-              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary">
+              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary" v-if="staleVehiclesPercentage">
                 {{staleVehiclesPercentage}}%
+              </CCardTitle>
+              <CCardTitle class="display-3 d-flex justify-content-center" color="gradient-secondary" v-if="!staleVehiclesPercentage">
+                0%
               </CCardTitle>
             </CCol>
           </CCardBody>
         </template>
       </CWidgetDropdown>
     </CCol>
-    <!-- Cursed shit above -->
     <CCol sm="6" lg="3">
       <CWidgetDropdown
         color="gradient-danger"
@@ -167,7 +169,6 @@ export default {
         });
     },
     fetchStaleVehicles(dealership, staleTime) {
-      //console.log("[FRONTEND] staleTime is "+staleTime)
       axios({
         method: "GET",
         url: `${this.$store.state.api}/inventory/dealership/${dealership}/stale`,
@@ -179,8 +180,6 @@ export default {
         },
       })
         .then((response) => {
-          //console.log("FetchStaleVehicles response below:")
-          //console.log(response.data)
           if (response.data.staleVehiclesCount.length !== 0) {
             const staleVehiclesCount = response.data.staleVehiclesCount;
             this.staleVehiclesCount = staleVehiclesCount.toString();
@@ -230,7 +229,6 @@ export default {
       })
       .then((response) => {
         const payload = response.data.payload;
-        //console.log(payload);
         payload.sort((a, b) => b.count - a.count);
         const fields = [];
         const values = [];

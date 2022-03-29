@@ -1,5 +1,5 @@
 <template>
- <CChartBar
+ <CChartBar style="height:55vh;"
    :datasets="this.dataPoints"
    :labels="this.dataLabels"
    :options="this.chartOptions"
@@ -31,10 +31,11 @@ export default {
       monthlyLabels: [],
       yearlyPoints: [],
       yearlyLabels: [],
-      dataPoints: [{data:[], backgroundColor: '#E55353', label: 'Sales over time'}],
+      dataPoints: [{data:[], backgroundColor: '#2982cc', label: 'Sales over time'}],
       dataLabels: ["First", "Second"],
       dataPayload: [],
       chartOptions: {
+        maintainAspectRatio: false,
         scales: {
           xAxes: [{
             //type: "time"

@@ -45,7 +45,7 @@
 
 <script>
 const axios = require("axios");
-const { containsRoles } = require("../utils/index");
+const { containsRoles, formattedDate } = require("../utils/index");
 
 export default {
   props: ["setNotifModal"],
@@ -77,8 +77,7 @@ export default {
         .then((response) => {
             if (response.data.success) {
                 response.data.payload.forEach((notif) => {
-                    var currentDateObj = new Date(notif.timestamp);
-                    notif.timestamp = currentDateObj.toString().split('GMT')[0];
+                    notif.timestamp = formattedDate(notif.timestamp);
                     this.notifications.push(notif);
                 })
             }
@@ -101,8 +100,7 @@ export default {
         if (response.data.success) {
           this.itemsCount = 0;
           response.data.payload.forEach((notif) => {
-            var currentDateObj = new Date(notif.timestamp);
-            notif.timestamp = currentDateObj.toString().split('GMT')[0];
+            notif.timestamp = formattedDate(notif.timestamp);
             this.unReadNotif.push(notif);
           })
         }

@@ -8,7 +8,6 @@ const {
 // get authentication middleware
 const { protect } = require('../middleware/auth');
 
-// add .get(protect, getSalesByTime) later
 router.route('/visual3')
     .get(protect, getSalesByTime)
 

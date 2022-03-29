@@ -26,48 +26,6 @@
         horizontal
         :value.sync="currUser.role"
       />
-      <!-- <label class="mb-0">Account permissions</label>
-      <hr />
-      <CRow>
-        <CCol>
-          <CRow v-for="(permission, index) in permissionsListLeft" :key="index">
-            <CCol>
-              <label>{{ permission }}</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-              <CSwitch
-                :id="permission"
-                class="mr-1"
-                color="success"
-                :checked="isPermissionSelected(permission)"
-                @change.native="togglePermissionChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-        </CCol>
-        <CCol>
-          <CRow
-            v-for="(permission, index) in permissionsListRight"
-            :key="index"
-          >
-            <CCol>
-              <label>{{ permission }}</label>
-            </CCol>
-            <CCol class="d-flex justify-content-end">
-              <CSwitch
-                :id="permission"
-                class="mr-1"
-                color="success"
-                :checked="isPermissionSelected(permission)"
-                @change.native="togglePermissionChange"
-                shape="pill"
-              />
-            </CCol>
-          </CRow>
-        </CCol>
-      </CRow>
-      <hr /> -->
       <CRow class="d-flex justify-content-center mt-2">
         <CButton
           color="success"
@@ -104,36 +62,12 @@ export default {
         "Sales Rep",
         "Reception",
       ],
-      // permissionsListLeft: [
-      //   "Add Dealerships",
-      //   "View Dealerships",
-      //   "Edit Dealerships",
-      //   "Delete Dealerships",
-      //   "Add Staff Users",
-      //   "View Staff Users",
-      //   "Edit Staff Users",
-      //   "Delete Staff Users",
-      //   "Add Vehicles",
-      // ],
-      // permissionsListRight: [
-      //   "View Vehicles",
-      //   "Edit Vehicles",
-      //   "Edit Vehicle Locations",
-      //   "Sell Vehicles",
-      //   "Delete Vehicles",
-      //   "Add Vehicle Property",
-      //   "Edit Vehicle Properties",
-      //   "View Vehicle Properties",
-      //   "Delete Vehicle Properties",
-      // ],
       currUser: {
         first_name: this.user.first_name,
         last_name: this.user.last_name,
         email: this.user.email,
         role: this.user.role,
-        // permissions: null,
       },
-      // newPermissions: [],
     };
   },
   props: ["setEditingUser", "user", "updateUser", "index"],
@@ -171,64 +105,6 @@ export default {
           });
       }
     },
-    // isPermissionSelected(permission) {
-    //   const index = this.currUser.permissions.indexOf(permission);
-    //   return index >= 0;
-    // },
-    // togglePermissionChange(element) {
-    //   const checked = element.target.checked;
-    //   const permission = element.target.id;
-
-    //   if (checked) {
-    //     // add the permission to the list
-    //     this.addPermission(permission);
-    //   } else {
-    //     this.removePermission(permission);
-    //   }
-    // },
-    // addPermission(permission) {
-    //   this.currUser.permissions.push(permission);
-    // },
-    // removePermission(permission) {
-    //   const index = this.currUser.permissions.indexOf(permission);
-    //   this.currUser.permissions.splice(index, 1);
-    // },
-    // setDefaultSelected() {
-    //   this.currUser.permissions = [];
-    //   this.currUser.permissions = this.getDefaultSelected();
-    // },
-    // getDefaultSelected() {
-    //   switch (this.currUser.role) {
-    //     case "Management":
-    //       return [
-    //         "View Dealerships",
-    //         "Add Staff Users",
-    //         "View Staff Users",
-    //         "Edit Staff Users",
-    //         "Delete Staff Users",
-    //         "View Vehicles",
-    //         "Edit Vehicle Locations",
-    //       ];
-    //     case "Sales Rep":
-    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-    //     case "Sales Rep + Showroom":
-    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-    //     case "Sales Rep + Demoline":
-    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-    //     case "Sales Rep + Benefits":
-    //       return ["View Vehicles", "Edit Vehicle Locations", "Sell Vehicles"];
-    //     case "Reception":
-    //       return [
-    //         "Add Vehicles",
-    //         "View Vehicles",
-    //         "Edit Vehicle Properties",
-    //         "Edit Vehicle Locations",
-    //         "Delete Vehicles",
-    //       ];
-    //     default:
-    //       return ["View Vehicles"];
-    //   }
-    // },
     showError(message) {
       this.errorMessage = message;
       setTimeout(() => {
@@ -236,14 +112,5 @@ export default {
       }, 5000);
     },
   },
-  // mounted() {
-  //   if (this.user) {
-  //     let permissions = [];
-  //     this.user.permissions.forEach((permission) => {
-  //       permissions.push(permission);
-  //     });
-  //     this.currUser.permissions = permissions;
-  //   }
-  // },
 };
 </script>

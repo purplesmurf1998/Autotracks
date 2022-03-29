@@ -1,6 +1,7 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const LocationZone = require('../models/LocationZone');
+const Vehicle = require('../models/Vehicle');
 
 // @desc    Create a location zone
 // @route   POST /api/v1/locations/zones/
@@ -17,7 +18,6 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
 
   let locationBody = req.body;
   // append the center to the body
-  //locationBody.center = getPolygonCentroidSum(path);
   locationBody.center = getPolyginCentroidAvg(path);
 
   const locationZone = await LocationZone.create(locationBody);
@@ -32,7 +32,13 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/locations/zones/dealership/:dealershipId
 // @access  Public
 exports.getLocationZones = asyncHandler(async (req, res, next) => {
-  const locationZones = await LocationZone.find({ dealership: req.params.dealershipId });
+  let locationZones = await LocationZone.find({ dealership: req.params.dealershipId });
+
+  for (let i = 0; i < locationZones.length; i++) {
+    let vehicleCount = await Vehicle.countDocuments({ zone: locationZones[i]._id });
+    locationZones[i].vehicleCount = vehicleCount;
+    locationZones[i].save();
+  }
 
   res.status(200).json({
     success: true,

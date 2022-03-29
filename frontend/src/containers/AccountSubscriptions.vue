@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CAlert :color="messageType" v-if="message">{{ message }}</CAlert>
+    <CAlert :color="messageObj.messageType" v-if="messageObj.content">{{ messageObj.content }}</CAlert>
     <CForm @submit.prevent="submitEvents">
       <CRow>
         <CCol>
@@ -43,6 +43,7 @@
 
 <script>
 const axios = require('axios');
+const { showMessage } = require("../utils/index");
 
 export default {
   name: 'accountSubscriptions',
@@ -63,8 +64,10 @@ export default {
         },
         user_events: this.$store.state.auth.userEventsSubscriptions,
         new_events: [],
-        message: null,
-        messageType: null,
+        messageObj: {
+          content: null,
+          messageType: null,
+        },
     }
   },
   methods: {
@@ -87,36 +90,26 @@ export default {
             return true;
     },
     submitEvents() {
-        axios({
-          method: "PUT",
-          url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
-          headers: {
-            Authorization: `Bearer ${this.$store.state.auth.token}`,
-          },
-          data: {subscribed_events: this.new_events},
-        })
-        .then((response) => {
-            if (response.data.success) {
-                this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events;
-                this.showMessage("User account subscriptions have been updated", "success");
-                //The page must be refreshed for the new user account subscription to take palce
-                this.$router.go();
-            } 
-            else
-                this.showMessage("An error occured while updating user account subscriptions", "danger");
-        })
-        .catch((error) => {
-            console.log(error);
-            this.showMessage("An error occured while updating user account subscriptions", "danger");
-        });
-    },
-    showMessage(message, messageType) {
-      this.message = message;
-      this.messageType = messageType;
-      setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
-      }, 5000);
+      axios({
+        method: "PUT",
+        url: `${this.$store.state.api}/users/${this.$store.state.auth.userId}`,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.auth.token}`,
+        },
+        data: {subscribed_events: this.new_events},
+      })
+      .then((response) => {
+          if (response.data.success) {
+              this.$store.state.auth.userEventsSubscriptions = response.data.payload.subscribed_events;
+              showMessage("User account subscriptions have been updated", "success", this.messageObj);
+              //The page must be refreshed for the new user account subscription to take palce
+              this.$router.go();
+          }
+      })
+      .catch((error) => {
+          console.log(error);
+          showMessage("An error occured while updating user account subscriptions", "danger", this.messageObj);
+      });
     },
   },
   mounted() {

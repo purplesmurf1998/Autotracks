@@ -15,7 +15,6 @@
     </CHeaderBrand>
     <CHeaderNav class="ml-auto">
       <TheHeaderDropdownNotif @notifModal="showNotifModal = true"/>
-      <TheHeaderDropdownMssgs/>
       <TheHeaderDropdownAccnt class="mr-3"/>
     </CHeaderNav>
 
@@ -42,11 +41,8 @@
 <script>
 import TheHeaderDropdownAccnt from './TheHeaderDropdownAccnt'
 import TheHeaderDropdownNotif from './TheHeaderDropdownNotif'
-import TheHeaderDropdownTasks from './TheHeaderDropdownTasks'
-import TheHeaderDropdownMssgs from './TheHeaderDropdownMssgs'
 import logo from '../assets/autotracks_blue_crp.png'
 import NotifModal from "./NotificationModal.vue"
-const axios = require("axios");
 
 export default {
   name: 'TheHeader',
@@ -60,8 +56,6 @@ export default {
   components: {
     TheHeaderDropdownAccnt,
     TheHeaderDropdownNotif,
-    TheHeaderDropdownTasks,
-    TheHeaderDropdownMssgs,
     "notif-modal": NotifModal,
   },
   methods: {

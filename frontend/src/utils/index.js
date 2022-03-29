@@ -1,7 +1,6 @@
 import Store from '../store/index.js'
 
 // Utility function for verifying if a user has certain permissions
-//Check this function later
 export function containsRoles(...roles) {
   let allowed = false;
   const userRole = Store.state.auth.role;
@@ -12,6 +11,21 @@ export function containsRoles(...roles) {
     }
   })
   return allowed;
+}
+
+export function formattedDate(timestamp) {
+  var currDate = new Date(timestamp);
+  currDate = currDate.toString().split(' GMT')[0];
+  return currDate.substring(0, currDate.indexOf(':') +3);
+}
+
+export function showMessage(content, messageType, messageObj) {
+  messageObj.content = content;
+  messageObj.messageType = messageType;
+  setTimeout(() => {
+    messageObj.content = null;
+    messageObj.messageType = null;
+  }, 5000);
 }
 
 export function getFormattedProperties(properties, values) {
