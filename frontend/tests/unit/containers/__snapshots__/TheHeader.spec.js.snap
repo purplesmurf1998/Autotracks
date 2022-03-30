@@ -41,8 +41,6 @@ exports[`TheHeader.vue renders correctly 1`] = `
   >
     <theheaderdropdownnotif-stub />
      
-    <theheaderdropdownmssgs-stub />
-     
     <theheaderdropdownaccnt-stub
       class="mr-3"
     />

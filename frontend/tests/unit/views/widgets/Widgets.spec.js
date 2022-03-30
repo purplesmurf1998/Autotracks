@@ -1,24 +1,24 @@
 import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue-pro'
-import Widgets from '@/views/widgets/Widgets'
+import WidgetsDropdown from '@/views/widgets/WidgetsDropdown.vue'
 
 Vue.use(CoreuiVue)
 
-describe('Widgets.vue', () => {
+describe('WidgetsDropdown.vue', () => {
   it('has a name', () => {
-    expect(Widgets.name).toBe('Widgets')
+    expect(WidgetsDropdown.name).toBe('Widgets')
   })
   it('is Vue instance', () => {
-    const wrapper = shallowMount(Widgets)
+    const wrapper = shallowMount(WidgetsDropdown)
     expect(wrapper.vm).toBeTruthy()
   })
   it('is Widgets', () => {
-    const wrapper = shallowMount(Widgets)
-    expect(wrapper.findComponent(Widgets)).toBeTruthy()
+    const wrapper = shallowMount(WidgetsDropdown)
+    expect(wrapper.findComponent(WidgetsDropdown)).toBeTruthy()
   })
   test('renders correctly', () => {
-    const wrapper = shallowMount(Widgets)
+    const wrapper = shallowMount(WidgetsDropdown)
     expect(wrapper.element).toMatchSnapshot()
   })
 })
