@@ -20,6 +20,17 @@ exports.createSale = asyncHandler(async (req, res, next) => {
         );
     }
 
+    const {
+        deposit_amount,
+        sale_amount
+    } = req.body;
+
+    if (deposit_amount > sale_amount) {
+        return next(
+            new ErrorResponse(`Deposit amount cannot be greater than sale amount`, 400)
+        );
+    }
+
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
     //Map this created sale to the vehicle
