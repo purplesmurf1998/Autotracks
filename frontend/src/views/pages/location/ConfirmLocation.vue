@@ -54,7 +54,6 @@ export default {
     getPosition(position) {
       this.lat = position.coords.latitude;
       this.lng = position.coords.longitude;
-      console.log(position.coords.latitude);
       this.timestamp = new Date(position.timestamp);
       this.locateVehicle();
     },

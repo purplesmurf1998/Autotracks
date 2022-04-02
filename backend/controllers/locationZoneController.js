@@ -104,7 +104,6 @@ exports.isInsideZone = asyncHandler(async (req, res, next) => {
   // need the vehicleId
   // need the latitude
   // need the longited
-  console.log(req.body);
   const {
     vehicleId,
     latitude,
@@ -266,7 +265,6 @@ function isInside(polygon,n,p)
   } while (i != 0);
 
   // Return true if count is odd, false otherwise
-  console.log(count % 2);
   return (count % 2 === 1); // Same as (count%2 == 1)
 }
 

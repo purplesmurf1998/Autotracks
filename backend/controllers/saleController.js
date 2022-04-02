@@ -226,10 +226,7 @@ function formatPoints(data, type) {
     let dateString = ""
     switch (type) {
         case "week": {
-            console.log(data)
             data.forEach(sale => {
-                console.log("[BACKEND] Sale processing:")
-                console.log(sale)
                 dateString = (
                     sale._id.year
                     +"-"

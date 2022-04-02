@@ -241,7 +241,6 @@ export default {
       })
     },
     getSale() {
-      console.log(this.saleDetail);
         axios({
         method: "GET",
         url: `${this.$store.state.api}/inventory/details/sale/${this.saleDetail.id}`,

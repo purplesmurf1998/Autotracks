@@ -89,12 +89,10 @@ export default {
     selectTimeScale(choice) {
       this.selected = choice
       this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
-      console.log("Dashboard line chart timescale: "+choice)
     },
     selectPeriod(choice) {
       this.selectedPeriod = choice
       this.$refs.dlc.useDataSet(this.selected, this.selectedPeriod)
-      console.log("Dashboard line chart period: "+choice)
     },
   },
   data() {
