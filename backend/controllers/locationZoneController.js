@@ -89,12 +89,10 @@ function getPolyginCentroidAvg(path) {
   lngAverage /= path.length;
   latAverage /= path.length;
 
-  const center = {
+  return {
     lat: latAverage,
     lng: lngAverage
-  }
-
-  return center;
+  };
 }
 
 // @desc    Update a location zone name or description
