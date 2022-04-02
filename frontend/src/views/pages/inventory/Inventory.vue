@@ -57,7 +57,7 @@
 </template>
 
 <script>
-const { containsRoles, message } = require("../../../utils/index");
+const { containsRoles, } = require("../../../utils/index");
 
 import InventoryTable from "./InventoryTable.vue";
 import dealershipDD from "./DealershipDropdown.vue";

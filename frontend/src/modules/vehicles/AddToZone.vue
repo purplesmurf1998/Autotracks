@@ -33,29 +33,34 @@ export default {
   methods: {
     addVehicleToZone() {
       const zone = this.zones[this.selectedIndex];
+      if (zone) { //make sure that the zone selected is defined
+        const data = {
+          lat: zone.center.lat,
+          lng: zone.center.lng,
+          zone: zone._id,
+        };
 
-      const data = {
-        lat: zone.center.lat,
-        lng: zone.center.lng,
-        zone: zone._id,
-      };
-
-      axios({
-        method: "PUT",
-        url: `${this.$store.state.api}/inventory/vehicle/${this.vehicleId}`,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.auth.token}`,
-        },
-        data,
-      })
-        .then((response) => {
-          this.$emit("vehicle-location-updated", response.data.payload);
-          showMessage("Vehicle's location has been updated", "success", this.messageObj);
+        axios({
+          method: "PUT",
+          url: `${this.$store.state.api}/inventory/vehicle/${this.vehicleId}`,
+          headers: {
+            Authorization: `Bearer ${this.$store.state.auth.token}`,
+          },
+          data,
         })
-        .catch((error) => {
-          console.log(error);
-          showMessage("An error occured while updating vehicle's location", "danger", this.messageObj);
-        });
+          .then((response) => {
+            this.$emit("vehicle-location-updated", response.data.payload);
+            showMessage("Vehicle's location has been updated", "success", this.messageObj);
+          })
+          .catch((error) => {
+            console.log(error);
+            showMessage("An error occured while updating vehicle's location", "danger", this.messageObj);
+          });
+      }
+      else {
+        this.closeAddToZoneModal();
+        showMessage("Please select a zone to add a vehicle to it.", "danger", this.messageObj);
+      }
     },
     fetchLocationZones() {
       axios({

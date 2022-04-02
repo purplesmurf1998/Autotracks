@@ -5,7 +5,8 @@ const {
   createLocationZone,
   getLocationZones,
   deleteLocationZone,
-  updateZoneNameDescription
+  updateZoneNameDescription,
+  isInsideZone
 } = require('../controllers/locationZoneController');
 
 // get authentication middleware
@@ -13,6 +14,9 @@ const { protect, hasRoles } = require('../middleware/auth');
 
 router.route('/')
   .post(protect, hasRoles('Administration', 'Management'), createLocationZone);
+
+router.route('/locate-vehicle')
+  .post(protect, isInsideZone);
 
 router.route('/:zoneId')
   .delete(protect, hasRoles('Administration', 'Management'), deleteLocationZone)

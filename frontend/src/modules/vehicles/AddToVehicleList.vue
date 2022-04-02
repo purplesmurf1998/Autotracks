@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     validateList() {
-      console.log(this.selectedIndex);
       if (this.selectedIndex < 0) {
         this.showErrorMessage('You must select a vehicle list to add the vehicle to.');
       } else if (this.userVehicleLists[this.selectedIndex].vehicles.includes(this.vehicleId)) {

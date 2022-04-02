@@ -11,7 +11,7 @@
                 :disabled="true"
                 />
             </CCol>
-            <CCol>
+            <CCol v-if="!canUserApprove">
                 <CSelect
                 label="Select manager:"
                 :lazy="false"
@@ -63,7 +63,7 @@
             id = "sell-vehicle"
             :disabled="disableButtons"
           >
-            Create
+            {{canUserApprove ? 'Create and approve' : 'Create'}}
           </CButton>
           <CButton
             v-if="updateSaleStatus"
@@ -114,6 +114,12 @@ export default {
       messageType: null,
     }
   },
+  computed: {
+    canUserApprove() {
+      const role = this.$store.state.auth.role;
+      return role === "Administration" || role === "Management"
+    }
+  },
   methods: {
     checkIfValid () {
       return !!this.form.name && this.form.name != '';
@@ -121,6 +127,8 @@ export default {
     submit () {
         this.disableButtons = true;
         // post request to API to create the new sale instance
+        const approved_by = this.canUserApprove ? this.$store.state.auth.userId : this.form.manager;
+        const date_approved = this.canUserApprove ? Date.now() : null;
         axios({
             method: 'POST',
             url: `${this.$store.state.api}/inventory/details/sale`,
@@ -133,7 +141,8 @@ export default {
                 deposit_amount: this.form.deposit,
                 sale_amount: this.form.saleAmount,
                 sales_rep: this.$store.state.auth.userId,
-                approved_by: this.form.manager,
+                approved_by,
+                date_approved,
                 notes: this.form.notes,
             }
         }).then(response => {

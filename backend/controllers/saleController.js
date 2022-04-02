@@ -20,6 +20,17 @@ exports.createSale = asyncHandler(async (req, res, next) => {
         );
     }
 
+    const {
+        deposit_amount,
+        sale_amount
+    } = req.body;
+
+    if (deposit_amount > sale_amount) {
+        return next(
+            new ErrorResponse(`Deposit amount cannot be greater than sale amount`, 400)
+        );
+    }
+
     // create new sale object with the data passed in the request body
     const sale = await Sale.create(req.body);
     //Map this created sale to the vehicle
@@ -215,10 +226,7 @@ function formatPoints(data, type) {
     let dateString = ""
     switch (type) {
         case "week": {
-            console.log(data)
             data.forEach(sale => {
-                console.log("[BACKEND] Sale processing:")
-                console.log(sale)
                 dateString = (
                     sale._id.year
                     +"-"

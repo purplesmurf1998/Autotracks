@@ -72,7 +72,6 @@ exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
   // grab the dealership_ID from the body and verify that the dealership exists
   const dealership = await Dealership.findById(req.params.dealershipId);
   let staleTime = parseInt(req.query.staleTime);
-  //console.log("[API] staleTime is "+staleTime);
 
   // no dealership found
   if (!dealership) {
