@@ -183,7 +183,7 @@ const router = new Router({
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
 
   //If path name is null, redirect to 404 page.
   if (!to.name) {

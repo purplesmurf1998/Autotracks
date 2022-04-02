@@ -215,7 +215,7 @@ export default {
           console.log(error);
         });
     },
-    clickRow(vehicleList, index, column, e) {
+    clickRow(vehicleList, _index, _column, e) {
       if (this.deletingVehicleLists) {
         if (!["INPUT", "LABEL"].includes(e.target.tagName)) {
           this.check(vehicleList);

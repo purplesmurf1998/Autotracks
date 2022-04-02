@@ -204,7 +204,7 @@ export default {
           //this.$router.replace("/pages/404");
         });
     },
-    rowClicked(vehicle, index, column, e) {
+    rowClicked(vehicle, _index, _column, e) {
       if (!this.removingVehicles) {
         let routeData = this.$router.resolve({
           name: "Vehicle Inventory",
