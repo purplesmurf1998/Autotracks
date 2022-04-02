@@ -121,7 +121,7 @@ export default {
     };
   },
   methods: {
-    submitForm(form) {
+    submitForm(_form) {
       let properties = getFormattedProperties(
         this.vehicleProperties,
         this.properties

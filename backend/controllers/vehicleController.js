@@ -240,7 +240,7 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
 // @desc        Delete a specific vehicle
 // @route       DELETE /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
-exports.deleteVehicle = asyncHandler(async (req, res, next) => {
+exports.deleteVehicle = asyncHandler(async (req, res, _next) => {
   // find vehicle property to delete
   const vehicle = await Vehicle.findById(req.params.vehicleId);
 

@@ -140,7 +140,7 @@ export default {
           Authorization: `Bearer ${this.$store.state.auth.token}`,
         },
       })
-        .then((response) => {
+        .then((_response) => {
           this.comments.splice(this.indexBeingDeleted, 1);
           this.commentBeingDeleted = null;
           this.indexBeingDeleted = null;

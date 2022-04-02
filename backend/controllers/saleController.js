@@ -88,7 +88,7 @@ exports.getSale = asyncHandler(async (req, res, next) => {
 // @desc    Update a sale instance
 // @route   PUT /api/v1/inventory/details/sale/:saleId'
 // @access  Public
-exports.updateSale = asyncHandler(async (req, res, next) => {
+exports.updateSale = asyncHandler(async (req, res, _next) => {
     // find vehicle property to delete
     const sale = await Sale.findByIdAndUpdate(req.params.saleId, req.body, {
         runValidators: true,
@@ -104,7 +104,7 @@ exports.updateSale = asyncHandler(async (req, res, next) => {
 // @desc    Delete a sale instance
 // @route   Delete /api/v1/inventory/details/sale/:saleId'
 // @access  Public
-exports.deleteSale = asyncHandler(async (req, res, next) => {
+exports.deleteSale = asyncHandler(async (req, res, _next) => {
     //Map the sale object in the vehicle to null
     await Vehicle.updateOne({sale: req.params.saleId}, { $set: {sale: null} });
     // find vehicle property to delete

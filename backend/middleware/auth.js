@@ -4,7 +4,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const User = require('../models/User');
 
 // middleware to protect routes (check if authorized)
-exports.protect = asyncHandler(async (req, res, next) => {
+exports.protect = asyncHandler(async (req, _res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -46,7 +46,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 //To be refactored into hasRole
 exports.hasRoles = (...roles) => {
 
-  return asyncHandler(async (req, res, next) => {
+  return asyncHandler(async (req, _res, next) => {
     // 1. get the user passed through the request from the protect middleware
     const user = req.user;
     // 2. verify that the user has a valid role

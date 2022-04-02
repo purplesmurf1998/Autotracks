@@ -36,10 +36,10 @@ exports.createLocationZone = asyncHandler(async (req, res, next) => {
 exports.getLocationZones = asyncHandler(async (req, res, next) => {
   let locationZones = await LocationZone.find({ dealership: req.params.dealershipId });
 
-  for (let i = 0; i < locationZones.length; i++) {
-    let vehicleCount = await Vehicle.countDocuments({ zone: locationZones[i]._id });
-    locationZones[i].vehicleCount = vehicleCount;
-    locationZones[i].save();
+  for (const locationZone of locationZones){
+    let vehicleCount = await Vehicle.countDocuments({ zone: locationZone._id });
+    locationZone.vehicleCount = vehicleCount;
+    locationZone.save();
   }
 
   res.status(200).json({
@@ -89,12 +89,10 @@ function getPolyginCentroidAvg(path) {
   lngAverage /= path.length;
   latAverage /= path.length;
 
-  const center = {
+  return {
     lat: latAverage,
     lng: lngAverage
-  }
-
-  return center;
+  };
 }
 
 // @desc    Update a location zone name or description
