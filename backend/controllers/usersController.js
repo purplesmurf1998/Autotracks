@@ -51,7 +51,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 // @desc    Get a a list of users based on query parameters
 // @route   GET /api/v1/users
 // @access  Authenticated
-exports.getUsers = asyncHandler(async (req, res, next) => {
+exports.getUsers = asyncHandler(async (req, res, _next) => {
     // get the formatted query based on the advnaced filtering
     const query = advancedFilter(User, req.query);
 
