@@ -1,5 +1,6 @@
 <template>
   <div>
+   <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
      <CForm @submit.prevent="submit">
         <CRow class="justify-content-center">
             <CCol>
@@ -10,7 +11,7 @@
                 :disabled="true"
                 />
             </CCol>
-            <CCol>
+            <CCol v-if="!canUserApprove">
                 <CSelect
                 label="Select manager:"
                 :lazy="false"
@@ -56,16 +57,16 @@
         </CRow>
         <CRow class="justify-content-center">
           <CButton
-            v-if="!updateSaleStatus" 
+            v-if="!updateSaleStatus"
             color="primary"
             type="submit"
             id = "sell-vehicle"
             :disabled="disableButtons"
           >
-            Create
+            {{canUserApprove ? 'Create and approve' : 'Create'}}
           </CButton>
           <CButton
-            v-if="updateSaleStatus" 
+            v-if="updateSaleStatus"
             color="primary"
             id = "update-vehicle"
             :disabled="disableButtons"
@@ -73,7 +74,7 @@
           >
             Update
           </CButton>
-          <CButton 
+          <CButton
             class="ml-1"
             color="secondary"
             :disabled="disableButtons"
@@ -88,26 +89,35 @@
 
 <script>
 const axios = require('axios');
+const { showMessage } = require("../../utils/index");
 
 export default {
   name: 'VehicleSell',
   props: [
-    "showMessage", 
-    "selectedStaffAccount", 
-    "dealershipStaff", 
-    "showingSoldModal", 
-    "setVehicleModal", 
-    "vehicle", 
-    "setSaleStatus", 
+    "selectedStaffAccount",
+    "dealershipStaff",
+    "showingSoldModal",
+    "setVehicleModal",
+    "vehicle",
+    "setSaleStatus",
     "updateSaleStatus",
     "sale_id",
+    "messageObj"
   ],
   data() {
     return {
       form: this.getEmptyForm(),
       submitted: false,
       disableButtons: false,
-      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName
+      sales_rep: this.$store.state.auth.firstName + " " + this.$store.state.auth.lastName,
+      message: null,
+      messageType: null,
+    }
+  },
+  computed: {
+    canUserApprove() {
+      const role = this.$store.state.auth.role;
+      return role === "Administration" || role === "Management"
     }
   },
   methods: {
@@ -117,6 +127,8 @@ export default {
     submit () {
         this.disableButtons = true;
         // post request to API to create the new sale instance
+        const approved_by = this.canUserApprove ? this.$store.state.auth.userId : this.form.manager;
+        const date_approved = this.canUserApprove ? Date.now() : null;
         axios({
             method: 'POST',
             url: `${this.$store.state.api}/inventory/details/sale`,
@@ -129,18 +141,18 @@ export default {
                 deposit_amount: this.form.deposit,
                 sale_amount: this.form.saleAmount,
                 sales_rep: this.$store.state.auth.userId,
-                approved_by: this.form.manager,
+                approved_by,
+                date_approved,
                 notes: this.form.notes,
             }
         }).then(response => {
             if (response.data.success) {
+              showMessage("A sale request has been submitted", "success", this.messageObj);
               this.setVehicleModal(false);
               this.setSaleStatus(true, response.data.payload);
-              this.showMessage("A sale request has been submitted", "success");
             }
         }).catch(error => {
             console.log(error);
-            this.setVehicleModal(false);
             this.showMessage(error.response.data.error, "danger");
             this.disableButtons = false;
         })
@@ -165,7 +177,6 @@ export default {
             this.showMessage("The sale request has been updated", "success");
             this.setVehicleModal(false);
             this.setSaleStatus(true, response.data.payload);
-            this.showMessage("The sale request has been updated", "success");
           }
       }).catch(error => {
           console.log(error);
@@ -182,6 +193,14 @@ export default {
         notes: "",
         manager: null,
       }
+    },
+    showMessage(message, messageType) {
+      this.message = message;
+      this.messageType = messageType;
+      setTimeout(() => {
+        this.message = null;
+        this.messageType = null;
+        }, 5000);
     },
   }
 }

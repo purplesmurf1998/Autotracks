@@ -1,5 +1,3 @@
-let assert = require('assert');
-
 let app = require('../server.js');
 let chai = require('chai');
 let chaiHttp = require("chai-http");
@@ -9,7 +7,6 @@ chai.should();
 chai.use(chaiHttp);
 
 let vehicle_id = "";
-let user_id = "";
 
 //creds
 const email = "admin@account.com";
@@ -46,7 +43,8 @@ describe('Testing Vehicle Controller Class', () => {
             'dealership': '618b3bf134f07d9a91c32a1b',
             'properties': {
               'test1': 'testing',
-            }
+            },
+            'vin': '1G1PF5SC1C7142797'
         })
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
@@ -137,6 +135,62 @@ describe('Testing Vehicle Controller Class', () => {
     });
   });
 
+  //The below test checks if we can return the vehicles by property for dashboard visual 3
+  describe('Get Vehicles by Porperties Dashboard v3 API Test', () => {
+    it('should return 200 when a vehicles by properties is returned', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1b/visual3/test1")
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(200);
+          //the response data should be an array of users
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we refuse to return vehicles by property dashboard visual 3
+  describe('Get Vehicles by Porperties Dashboard v3 API Error Test (invalid dealership_id)', () => {
+    it('should return 400 because of invalid dealership_id', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1c/visual3/test1")
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(404);
+          //the response data should be an array of users
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we can return the vehicles that are not sold
+  describe('Get Vehicles that are Not Sold API Test', () => {
+    it('should return 200 when vehicles that are not sold are returned', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1b/notSold")
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(200);
+          //the response data should be an array of users
+          done();
+        });
+    });
+  });
+
+  //The below test checks if we can return the vehicles that are not sold
+  describe('Get Vehicles that are Not Sold API Error Test (invalid dealership_id)', () => {
+    it('should return 404 because of invalid dealership_id', (done) => {
+      chai.request(app)
+        .get("/api/v1/inventory/dealership/618b3bf134f07d9a91c32a1c/notSold")
+        .set('authorization', 'Bearer ' + token)
+        .end( (err, response) => {
+          response.should.have.status(404);
+          //the response data should be an array of users
+          done();
+        });
+    });
+  });
+
   //The below test checks if we can update a vehicle successfully
   describe('Update Vehicle API Test', () => {
     it('should return 200 when a vehicle is updated', (done) => {
@@ -189,7 +243,7 @@ describe('Testing Vehicle Controller Class', () => {
   describe('Delete Vehicle API Error Test (Invalid vehicle_id)', () => {
     it('should return 404 when a vehicle is deleted', (done) => {
       chai.request(app)
-        .delete("/api/v1/inventory/vehicle/" + vehicle_id)
+        .delete("/api/v1/inventory/vehicle/61de1cb50c6e80e28479d1b4")
         .set('authorization', 'Bearer ' + token)
         .end( (err, response) => {
           response.should.have.status(404);

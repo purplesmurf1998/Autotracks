@@ -21,7 +21,7 @@
               group="properties"
               @start="onDragStart"
               @end="onDragEnd"
-              :disabled="!userHasPermissions('Edit Vehicle Properties')"
+              :disabled="!userHasRoles('Administration', 'Management')"
             >
               <CListGroupItem
                 v-for="(element, index) in vehicleProperties"
@@ -44,7 +44,7 @@
               </CListGroupItem>
             </draggable>
             <CButton
-              color="secondary"
+              color="primary"
               class="mt-3"
               id="create-vehicle-property"
               @click="
@@ -53,7 +53,7 @@
                   addingVehicleProperty = true;
                 }
               "
-              v-if="userHasPermissions('Add Vehicle Property')"
+              v-if="userHasRoles('Administration', 'Management')"
             >
               Create a custom vehicle property
             </CButton>
@@ -97,7 +97,7 @@ import draggable from "vuedraggable";
 import VehiclePropertyCard from "../vehicleProperties/VehiclePropertyCard.vue";
 import VehiclePropertyAdd from "./VehiclePropertyAdd.vue";
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 
 export default {
   name: "DealershipVehicleProperties",
@@ -114,8 +114,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     onDragStart(element) {
       const property = this.vehicleProperties[element.item.id];

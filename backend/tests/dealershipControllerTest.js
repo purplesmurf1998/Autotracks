@@ -1,9 +1,6 @@
-let assert = require('assert');
-
 let app = require('../server.js');
 let chai = require('chai');
 let chaiHttp = require("chai-http");
-const { protect } = require('../middleware/auth');
 
 chai.should();
 chai.use(chaiHttp);

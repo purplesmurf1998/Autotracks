@@ -60,7 +60,7 @@
         class="mr-2"
         id="edit-user-acc"
         @click="setEditingProperty(true)"
-        v-if="userHasPermissions('Edit Vehicle Properties')"
+        v-if="userHasRoles('Administration', 'Management')"
         >Edit custom vehicle property</CButton
       >
     </CRow>
@@ -71,7 +71,7 @@
           deletingProperty = true;
         }
       "
-      v-if="userHasPermissions('Delete Vehicle Properties')"
+      v-if="userHasRoles('Administration', 'Management')"
       >Delete custom vehicle property</CButton
     >
     <CModal :show.sync="deletingProperty" :centered="true">
@@ -101,7 +101,7 @@
 
 <script>
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 
 export default {
   name: "ViewVehicleProperty",
@@ -112,8 +112,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     removeProperty() {
       axios({

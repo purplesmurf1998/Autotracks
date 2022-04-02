@@ -154,7 +154,7 @@ export default {
           password: this.adminUser.adminPassword,
         },
       })
-        .then(async (response) => {
+        .then(async () => {
           // log the user in
           const loggedInResponse = await this.$store.dispatch("login", {
             email: this.adminUser.adminEmail,

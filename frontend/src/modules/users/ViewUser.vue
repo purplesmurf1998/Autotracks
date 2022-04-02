@@ -19,28 +19,13 @@
       </CCol>
     </CRow>
     <hr />
-    <CRow>
-      <CCol>
-        <p class="text-muted mb-0">Permissions:</p>
-      </CCol>
-      <CCol class="d-flex align-items-end flex-column">
-        <CRow
-          v-for="permission in user.permissions"
-          :key="permission"
-          class="mr-0"
-          ><p class="text-muted mb-0">
-            {{ permission }}
-          </p></CRow
-        >
-      </CCol>
-    </CRow>
     <CRow class="d-flex justify-content-start mt-3 px-3 mb-2">
       <CButton
         color="secondary"
         class="mr-2"
         id="edit-user-acc"
         @click="setEditingUser(true)"
-        v-if="userHasPermissions('Edit Staff Users')"
+        v-if="userHasRoles('Administration', 'Management')"
         :disabled="$store.state.auth.userId == user._id"
         >Edit account details</CButton
       >
@@ -52,7 +37,7 @@
           deletingUser = true;
         }
       "
-      v-if="userHasPermissions('Delete Staff Users')"
+      v-if="userHasRoles('Administration', 'Management')"
       >Delete staff account</CButton
     >
     <CModal :show.sync="deletingUser" :centered="true">
@@ -77,7 +62,7 @@
 
 <script>
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 
 export default {
   props: ["user", "setEditingUser"],
@@ -87,8 +72,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     removeUser() {
       axios({

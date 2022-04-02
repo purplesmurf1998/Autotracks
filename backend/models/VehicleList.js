@@ -31,7 +31,6 @@ const VehicleListSchema = new mongoose.Schema({
 // Update the last modified field
 VehicleListSchema.pre('save', async function (next) {
   this.last_modified = new Date();
-  console.log(this.last_modified);
 });
 
 module.exports = mongoose.model('VehicleList', VehicleListSchema);
