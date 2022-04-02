@@ -5,7 +5,7 @@ const VehicleProperty = require('../models/VehicleProperty')
 // @desc        Get all vehicle property models for a specific dealership
 // @route       GET /api/v1/dealerships/:dealershipId/vehicles/properties
 // @access      Private
-exports.getVehicleProperties = asyncHandler(async (req, res, next) => {
+exports.getVehicleProperties = asyncHandler(async (req, res, _next) => {
   let query = VehicleProperty.find({ dealership: req.params.dealershipId });
   // sort results
   if (req.query.sort) {
@@ -27,7 +27,7 @@ exports.getVehicleProperties = asyncHandler(async (req, res, next) => {
 // @desc        Create a new vehicle property model
 // @route       POST /api/v1/dealerships/:dealershipId/vehicles/properties
 // @access      Private
-exports.createVehicleProperty = asyncHandler(async (req, res, next) => {
+exports.createVehicleProperty = asyncHandler(async (req, res, _next) => {
   const newProperty = req.body;
 
   const numProperties = await VehicleProperty.find({ dealership: req.params.dealershipId });

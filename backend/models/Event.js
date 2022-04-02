@@ -55,7 +55,7 @@ const EventSchema = new mongoose.Schema({
   }
 });
 
-EventSchema.post('save', async function (next) {
+EventSchema.post('save', async function (_next) {
   // socket.io emits the event type to the dealership's room so that
   // every running frontend inside the room gets a notification
 

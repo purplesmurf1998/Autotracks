@@ -8,7 +8,7 @@ const asyncHandler = require('../middleware/async');
 // @desc    Create a vehicle list
 // @route   POST /api/v1/vehicle-list
 // @access  Private
-exports.createVehicleList = asyncHandler(async (req, res, next) => {
+exports.createVehicleList = asyncHandler(async (req, res, _next) => {
 
   // create the list passed in the request body and let mongoose apply the proper validations
   const vehicleList = await VehicleList.create(req.body);
@@ -68,7 +68,7 @@ exports.updateVehicleList = asyncHandler(async (req, res, next) => {
 // @desc    Get a all vehicle lists for a specific user
 // @route   GET /api/v1/vehicle-list/user/:userId
 // @access  Private
-exports.getVehicleLists = asyncHandler(async (req, res, next) => {
+exports.getVehicleLists = asyncHandler(async (req, res, _next) => {
   // find the vehicle list owned by the provided userId
   const vehicleList = await VehicleList.find({ owner: req.params.userId }).populate('dealership');
 
@@ -83,7 +83,7 @@ exports.getVehicleLists = asyncHandler(async (req, res, next) => {
 // @desc    Delete one or more vehicle lists
 // @route   POST /api/v1/vehicle-list/user/:userId/delete
 // @access  Private
-exports.deleteVehicleLists = asyncHandler(async (req, res, next) => {
+exports.deleteVehicleLists = asyncHandler(async (req, _res, next) => {
 
   // find the vehicle list owned by the provided userId
   const vehicleLists = req.body.vehicleLists;
