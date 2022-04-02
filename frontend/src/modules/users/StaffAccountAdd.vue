@@ -117,7 +117,7 @@ export default {
         this.errorMessage = null;
       }, 5000);
     },
-    submitForm(form) {
+    submitForm(_form) {
 
       // create the data to be passed
       const data = {
