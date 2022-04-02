@@ -180,7 +180,7 @@ export default {
           }
       }).catch(error => {
           console.log(error);
-          this.showMessage(error.response.data.error, "dangerous");
+          this.showMessage(error.response.data.error, "danger");
           this.disableButtons = false;
       })
     },
