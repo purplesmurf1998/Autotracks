@@ -109,7 +109,7 @@ exports.deleteSale = asyncHandler(async (req, res, _next) => {
     await Vehicle.updateOne({sale: req.params.saleId}, { $set: {sale: null} });
     // find vehicle property to delete
     const sale = await Sale.findById(req.params.saleId);
-    //TODO: Delete anything related to the vehicle. This can be done in the Vehicle model using middleware.
+    
     sale.remove();
 
     res.status(200).json({

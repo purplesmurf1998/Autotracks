@@ -65,7 +65,6 @@ EventSchema.post('save', async function (_next) {
   // subscribed to the event type to alert them of the new event for those
   // that are subscribed but aren't connected
 
-  // TODO: code that sends an email
 });
 
 const Event = mongoose.model('Event', EventSchema);

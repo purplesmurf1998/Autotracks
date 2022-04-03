@@ -88,8 +88,8 @@ exports.deleteVehicleLists = asyncHandler(async (req, _res, next) => {
   // find the vehicle list owned by the provided userId
   const vehicleLists = req.body.vehicleLists;
 
-  for (let i = 0; i < vehicleLists.length; i++) {
-    await VehicleList.findByIdAndDelete(vehicleLists[i]);
+  for (const list of vehicleLists) {
+    await VehicleList.findByIdAndDelete(list);
   }
 
   // go to next controller
@@ -109,14 +109,13 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
   }
 
   const vehicleIds = req.body.vehicles;
-  const newVehicles = [];
   let oldVehicles = vehicleList.vehicles;
 
 
   // get all the vehicle objects ids from the provided string ids
   // must use for loop since forEach doesn't work properly with await clauses
-  for (let i = 0; i < vehicleIds.length; i++) {
-    let newVehicle = await Vehicle.findById(vehicleIds[i]);
+  for (const id of vehicleIds) {
+    let newVehicle = await Vehicle.findById(id);
 
     if (!newVehicle) {
       return next(

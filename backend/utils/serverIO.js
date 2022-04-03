@@ -49,9 +49,6 @@ class ServerIO {
 
           // join every room inside the rooms array
           this.subscribe({ socket, rooms });
-          // rooms.forEach(room => {
-          //   socket.join(room);
-          // })
         }
       }
       socket.emit("connected", "Connected to server socket");
