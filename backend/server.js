@@ -32,7 +32,9 @@ const locationZoneRoutes = require('./routes/locationZones');
 
 // load in environment variables from config.env
 // this lets us access env. variables by using proccess.env.[VARIABLE_NAME]
-dotenv.config({ path: './config/config.env' });
+if (process.env.NODE_ENV != 'production') {
+  dotenv.config({ path: './config/config.env' });
+}
 
 // set up PORT number from env. variables, 5000 by default
 const PORT = process.env.PORT || 5000;

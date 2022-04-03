@@ -16,7 +16,7 @@ export default {
     this.$store.dispatch("verify");
   },
   created() {
-    const socket = io("http://localhost:5000", {
+    const socket = io(this.$store.state.nakedApi, {
       extraHeaders: {
         user_id: this.$store.state.auth.userId,
       },

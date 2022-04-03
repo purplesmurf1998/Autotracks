@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import AuthModule from './modules/auth/index.js'
 import EventsModule from './modules/events/index.js'
 Vue.use(Vuex)
+const apiUrl = process.env.NODE_ENV == 'development' ? process.env.VUE_APP_DEV_API_URL : process.env.VUE_APP_PROD_API_URL;
 
 const coreuiMutations = {
   toggleSidebarDesktop (state) {
@@ -32,7 +33,8 @@ export default new Vuex.Store({
     sidebarMinimize: false,
     asideShow: false,
     darkMode: false,
-    api: 'http://localhost:5000/api/v1'
+    api: apiUrl + '/api/v1',
+    nakedApi: apiUrl
   },
   mutations: coreuiMutations
 })
