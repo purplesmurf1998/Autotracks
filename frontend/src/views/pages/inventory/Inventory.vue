@@ -84,8 +84,7 @@ export default {
       return containsRoles(roles);
     },
     closeModal() {
-      let queries = JSON.parse(JSON.stringify(this.$route.query));
-      queries = {};
+      const queries = {};
       this.$router.replace({query: queries});
     },
     fetchVehicles() {

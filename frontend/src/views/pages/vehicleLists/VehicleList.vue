@@ -171,8 +171,8 @@ export default {
           filter: false,
         });
       } else {
-        for (let i = 0; i < this.tableItems.length; i++) {
-          this.$set(this.tableItems[i], "_selected", false);
+        for (const item of this.tableItems) {
+          this.$set(item, "_selected", false);
         }
         this.removingVehicles = false;
         this.tableFields.splice(0, 1);
@@ -201,7 +201,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          //this.$router.replace("/pages/404");
         });
     },
     rowClicked(vehicle, _index, _column, e) {
@@ -291,7 +290,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          //this.$router.replace("/pages/404");
         });
     },
     saveTitle() {
