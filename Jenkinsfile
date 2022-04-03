@@ -137,7 +137,8 @@ pipeline {
         aborted { 
             // Executed only if stage is aborted
             echo 'Server aborted, declaring build as success...'
-            currentBuild.result = 'SUCCESS'
+            //currentBuild.result = 'SUCCESS'
+            exit 0
         }
     }
 }
