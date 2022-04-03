@@ -2,6 +2,9 @@ pipeline {
   options {
       timeout(time: 3, unit: 'MINUTES') 
   }
+  parameters {
+      booleanParam(defaultValue: true, description: 'Execute pipeline?', name: 'shouldBuild')
+   }
   agent none
   stages {
     stage('Build & Test') {
