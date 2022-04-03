@@ -90,32 +90,15 @@ pipeline {
                     echo err.getMessage()
                 }
                 try {
-                  echo 'Running linter...'
-                  sh 'npm run lint'
-                } catch (err) {
-                  echo err.getMessage()
-                }
-                try {
-                  echo 'Running Unit Tests...'
-                  sh 'npm run test:unit'
-                } catch (err) {
-                  echo err.getMessage()
-                }
-                try {
-                  echo 'Running End-To-End Tests...'
-                  sh 'npm run test:e2e'
-                } catch (err) {
-                  echo err.getMessage()
-                }
-                try {
                   echo 'Running Front end server...'
                   sh 'npm run serve'
                 }catch (err) {
                   echo err.getMessage()
                   currentBuild.result = 'SUCCESS'
-                  return 
+                  return 0
                 }
               }
+              exit 0
             }
             echo 'Frontend Server Deployed on port 8080'
           }
@@ -137,12 +120,6 @@ pipeline {
                 } catch (err) {
                     echo err.getMessage()
                 }
-                try {
-                  echo 'Running Unit Tests...'
-                  sh 'npm run test'
-                } catch (err) {
-                  echo err.getMessage()
-                }
               try {
                 echo 'Running Node Server...'
                 sh 'ls'
@@ -150,9 +127,10 @@ pipeline {
               } catch (err) {
                   echo err.getMessage()
                   currentBuild.result = 'SUCCESS'
-                  return 
+                  return 0
                 }
               }
+              exit 0
             }
             echo 'Backend Server Deployed on port 5000'
           }
