@@ -92,7 +92,7 @@ pipeline {
                 try {
                   echo 'Running Front end server...'
                   sh 'npm run serve'
-                }catch (err) {
+                }catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                   echo err.getMessage()
                 }
               }
@@ -121,7 +121,7 @@ pipeline {
                 echo 'Running Node Server...'
                 sh 'ls'
                 sh 'node server'
-              } catch (err) {
+              } catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                   echo err.getMessage()
                 }
               }
