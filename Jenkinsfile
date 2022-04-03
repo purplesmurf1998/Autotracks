@@ -112,6 +112,8 @@ pipeline {
                   sh 'npm run serve'
                 }catch (err) {
                   echo err.getMessage()
+                  currentBuild.result = 'SUCCESS'
+                  return 
                 }
               }
             }
@@ -147,6 +149,8 @@ pipeline {
                 sh 'node server'
               } catch (err) {
                   echo err.getMessage()
+                  currentBuild.result = 'SUCCESS'
+                  return 
                 }
               }
             }
