@@ -6,6 +6,7 @@
         :value.sync="selectedIndex"
         placeholder="Select a zone"
         :options="options"
+        id="zoneSelectDropdown"
       />
       <CRow class="d-flex justify-content-center">
         <CButton color="primary" class="mr-2" @click="addVehicleToZone"
