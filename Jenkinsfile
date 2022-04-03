@@ -94,11 +94,8 @@ pipeline {
                   sh 'npm run serve'
                 }catch (err) {
                   echo err.getMessage()
-                  currentBuild.result = 'SUCCESS'
-                  return 0
                 }
               }
-              exit 0
             }
             echo 'Frontend Server Deployed on port 8080'
           }
@@ -126,11 +123,8 @@ pipeline {
                 sh 'node server'
               } catch (err) {
                   echo err.getMessage()
-                  currentBuild.result = 'SUCCESS'
-                  return 0
                 }
               }
-              exit 0
             }
             echo 'Backend Server Deployed on port 5000'
           }
@@ -139,4 +133,10 @@ pipeline {
     }//END Deploy & Serve
 
   }
+  post { 
+        aborted { 
+            // Executed only if stage is aborted
+            currentBuild.result = 'SUCCESS'
+        }
+    }
 }
