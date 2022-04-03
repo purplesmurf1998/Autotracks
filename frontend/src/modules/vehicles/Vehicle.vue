@@ -1,10 +1,15 @@
 <template>
   <div>
-    <CAlert :color="messageType" v-if="!!message">{{ message }}</CAlert>
+    <CAlert :color="messageObj.messageType" v-if="!!messageObj.content">{{ messageObj.content }}</CAlert>
     <CRow>
       <CCol xl="6">
-        <vehicle-details :vehicle="vehicle" :setNewVehicle="setNewVehicle" :showMessage="showMessage" :refreshTable="refreshTable"/>
-        <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle"/>
+        <vehicle-details
+          :vehicle="vehicle"
+          :setNewVehicle="setNewVehicle"
+          :refreshTable="refreshTable"
+          :messageObj="messageObj"
+        />
+        <vehicle-properties :vehicle="vehicle" :setNewVehicle="setNewVehicle" />
       </CCol>
       <CCol xl="6">
         <vehicle-location :vehicle="vehicle" />
@@ -24,25 +29,17 @@ export default {
   props: ["vehicle", "setNewVehicle", "refreshTable"],
   data() {
     return {
-      message: null,
-      messageType: null,
-    }
-  },
-  methods: {
-    showMessage(message, messageType) {
-      this.message = message;
-      this.messageType = messageType;
-      setTimeout(() => {
-          this.message = null;
-          this.messageType = null;
-      }, 5000);
-    },
+      messageObj: {
+        content: null,
+        messageType: null,
+      }
+    };
   },
   components: {
     "vehicle-details": VehicleDetails,
     "vehicle-location": VehicleLocation,
     "vehicle-properties": VehicleProperties,
-    'vehicle-comments': VehicleComments
+    "vehicle-comments": VehicleComments,
   },
 };
 </script>

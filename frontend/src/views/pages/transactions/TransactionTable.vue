@@ -15,7 +15,7 @@
           id="transactions-datatable"
           :fields="tableFields"
           :items="tableItems"
-          :items-per-page="10"
+          :items-per-page="20"
           :fixed="true"
           :clickable-rows="true"
           @row-clicked="rowClicked"
@@ -23,15 +23,8 @@
           hover
           sorter
           column-filter
+          pagination
         >
-          <!-- <template v-for="field in tableFields" v-slot:[field.key]="item">
-            <inventory-slot :key="field.key" :item="item" :field="field"/>
-          </template> -->
-          <!-- <template #missing="{ item }">
-            <td>
-              <CIcon name="cil-warning" class="icon" v-if="item.missing" />
-            </td>
-          </template> -->
         </CDataTable>
       </CCardBody>
     </CCard>
@@ -45,10 +38,10 @@
         v-if="showingTransactionModal"
         :setTransactionModal="setTransactionModal"
         :saleDetail="sale"
-        :showMessage="showMessage"
         :setNewSale="setNewSale"
         :dealership="dealership"
         :fetchSales="fetchSales"
+        :messageObj="messageObj"
       />
       <template #header>
         <h6 class="modal-title">View Transaction Detail</h6>
@@ -63,12 +56,13 @@
 
 <script>
 const axios = require("axios");
+const { showMessage } = require("../../../utils/index");
 import transactionDetails from './TransactionDetails.vue';
 import XLSX from 'xlsx';
 
 export default {
   name: "transactionTable",
-  props: ["dealership", "showMessage"],
+  props: ["dealership", "messageObj"],
   data() {
     return {
       tableFields: ["vin", "Sales Rep", "Request Date", "Delivery Status", "Delivery Date", "Deposit", "Manager", "Approval Date"],
@@ -89,6 +83,7 @@ export default {
         .then((response) => {
           const payload = response.data.payload;
           const fields = [];
+          var vehicle_id = localStorage.getItem('vehicle')
           payload.forEach((sale) => {
             //Format the data when fetched
             let items = {};
@@ -100,19 +95,24 @@ export default {
             items["Request Date"] = req_date;
             let delivery = sale.vehicle.delivered ? 'Delivered' : 'Not Delivered'
             items["Delivery Status"] = delivery;
-            items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];;
+            items["Delivery Date"] = !sale.vehicle.date_delivered ? '-' : sale.vehicle.date_delivered.split('T')[0];
             items["Deposit"] = '$' + sale.deposit_amount + '.00';
             let approved_by_user_name = !sale.approved_by ? '-' : sale.approved_by.first_name + ' ' + sale.approved_by.last_name;
             items["Manager"] = approved_by_user_name;
             let approval_date = !sale.date_approved ? '-' : sale.date_approved.split('T')[0];
             items["Approval Date"] = approval_date
+            //If a transaction notification clicked, check the vehicle storage if defined and render the transaction modal
+            if (vehicle_id && vehicle_id == sale.vehicle._id) {
+              this.rowClicked(items);
+              localStorage.removeItem('vehicle');
+            }
             fields.push(items);
           });
           this.tableItems = fields;
         })
         .catch((error) => {
           console.log(error);
-          showMessage("An error occured while fetching transactions data", "danger");
+          showMessage("An error occured while fetching transactions data", "danger", this.messageObj);
         });
     },
     rowClicked(sale) {

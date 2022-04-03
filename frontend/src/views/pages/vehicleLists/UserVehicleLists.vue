@@ -1,6 +1,9 @@
 <template>
   <div>
-    <CCard>
+    <CAlert show :color="messageObj.messageType" v-if="messageObj.content" class="mb-2">{{
+      messageObj.content
+    }}</CAlert>
+    <CCard v-if="userHasRoles('Administration', 'Management', 'Sales Rep')">
       <CCardHeader>
         <slot name="header">Table of custom vehicle lists</slot>
       </CCardHeader>
@@ -88,7 +91,11 @@
       </template>
     </CModal>
     <CModal :show.sync="addingVehicleList" :centered="true" size="lg">
-      <add-vehicle-list :finishAddingVehicleList="finishAddingVehicleList" :closeAddListModal="closeAddListModal" v-if="addingVehicleList"/>
+      <add-vehicle-list 
+      :finishAddingVehicleList="finishAddingVehicleList" 
+      :closeAddListModal="closeAddListModal"
+      :messageObj="messageObj" 
+      v-if="addingVehicleList"/>
       <template #header>
         <h6 class="modal-title">Creating a custom vehicle list!</h6>
         <CButtonClose @click="addingVehicleList = false" />
@@ -116,9 +123,10 @@
 
 <script>
 const axios = require("axios");
+const { containsRoles } = require("../../../utils/index");
+
 import AddVehicleList from "./AddVehicleList.vue";
 import VehicleList from "./VehicleList.vue";
-import DealershipDD from "../inventory/DealershipDropdown.vue";
 
 export default {
   data() {
@@ -140,6 +148,10 @@ export default {
       tableItems: [],
       deletingVehicleLists: false,
       addingVehicleList: false,
+      messageObj: {
+        content: null,
+        messageType: null,
+      },
     };
   },
   computed: {
@@ -148,6 +160,9 @@ export default {
     },
   },
   methods: {
+    userHasRoles(...roles) {
+      return containsRoles(roles);
+    },
     updateTitle() {
       this.fetchUserVehicleLists();
     },
@@ -200,7 +215,7 @@ export default {
           console.log(error);
         });
     },
-    clickRow(vehicleList, index, column, e) {
+    clickRow(vehicleList, _index, _column, e) {
       if (this.deletingVehicleLists) {
         if (!["INPUT", "LABEL"].includes(e.target.tagName)) {
           this.check(vehicleList);
@@ -293,7 +308,6 @@ export default {
   components: {
     AddVehicleList,
     VehicleList,
-    "dealership-dropdown": DealershipDD,
   },
 };
 </script>

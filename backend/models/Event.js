@@ -27,6 +27,11 @@ const EventSchema = new mongoose.Schema({
     ref: 'Vehicle',
     required: [true, 'An event must be associated to a vehicle.']
   },
+  //User first and last name that initiated the event
+  user: {
+    type: String,
+    required: [true, 'An event must be associated to a user.']
+  },
   // title of the event / main label
   title: {
     type: String,
@@ -50,7 +55,7 @@ const EventSchema = new mongoose.Schema({
   }
 });
 
-EventSchema.post('save', async function (next) {
+EventSchema.post('save', async function (_next) {
   // socket.io emits the event type to the dealership's room so that
   // every running frontend inside the room gets a notification
 

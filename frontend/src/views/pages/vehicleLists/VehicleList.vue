@@ -111,6 +111,7 @@
         size="sm"
         hover
         column-filter
+        pagination
       >
         <template v-for="field in tableFields" v-slot:[field.key]="item">
           <inventory-slot :key="field.key" :item="item" :field="field" />
@@ -203,7 +204,7 @@ export default {
           //this.$router.replace("/pages/404");
         });
     },
-    rowClicked(vehicle, index, column, e) {
+    rowClicked(vehicle, _index, _column, e) {
       if (!this.removingVehicles) {
         let routeData = this.$router.resolve({
           name: "Vehicle Inventory",

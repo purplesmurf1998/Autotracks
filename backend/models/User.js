@@ -29,36 +29,9 @@ const UserSchema = new mongoose.Schema({
       "Administration",
       "Management",
       "Sales Rep",
-      "Sales Rep + Showroom",
-      "Sales Rep + Demoline",
-      "Sales Rep + Benefits",
       "Reception"
     ],
     required: 'User must have a role'
-  },
-  permissions: {
-    type: [String],
-    enum: [
-      'Add Dealerships',
-      'View Dealerships',
-      'Edit Dealerships',
-      'Delete Dealerships',
-      'Add Staff Users',
-      'View Staff Users',
-      'Edit Staff Users',
-      'Delete Staff Users',
-      'Add Vehicles',
-      'View Vehicles',
-      'Edit Vehicles',
-      'Edit Vehicle Locations',
-      'Sell Vehicles',
-      'Delete Vehicles',
-      'Add Vehicle Property',
-      'Edit Vehicle Properties',
-      'View Vehicle Properties',
-      'Delete Vehicle Properties'
-    ],
-    required: 'User must have a list of permissions, even if that list is empty.'
   },
   subscribed_events: {
     type: [String],
@@ -72,7 +45,16 @@ const UserSchema = new mongoose.Schema({
       'vehicle_deleted',
       'transaction_modified',
     ],
-    default: []
+    default: [
+      'vehicle_sale_pending',
+      'vehicle_approved',
+      'vehicle_delivered',
+      'vehicle_missing',
+      'vehicle_moved',
+      'vehicle_found',
+      'vehicle_deleted',
+      'transaction_modified',
+    ]
   },
   dealership: {
     type: mongoose.Schema.Types.ObjectId,
@@ -102,7 +84,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Encrypt password using bcrypt
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function (_next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 })

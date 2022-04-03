@@ -20,7 +20,7 @@
               </CListGroupItem>
             </CListGroup>
             <CButton
-              color="secondary"
+              color="primary"
               class="mt-3"
               id="create-staff-acc"
               @click="
@@ -29,7 +29,7 @@
                   addingStaffAccount = true;
                 }
               "
-              v-if="userHasPermissions('Add Staff Users')"
+              v-if="userHasRoles('Administration', 'Management')"
             >
               Create a staff account
             </CButton>
@@ -70,7 +70,7 @@
 import StaffAccountAdd from "../users/StaffAccountAdd.vue";
 import UserCard from "../users/UserCard.vue";
 const axios = require("axios");
-const { containsPermissions } = require("../../utils/index");
+const { containsRoles } = require("../../utils/index");
 
 export default {
   name: "DealershipAccounts",
@@ -84,8 +84,8 @@ export default {
     };
   },
   methods: {
-    userHasPermissions(...permissions) {
-      return containsPermissions(permissions);
+    userHasRoles(...roles) {
+      return containsRoles(roles);
     },
     setActiveStaff(user, index) {
       this.selectedStaffAccount = user;

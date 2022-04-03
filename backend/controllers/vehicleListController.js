@@ -8,17 +8,10 @@ const asyncHandler = require('../middleware/async');
 // @desc    Create a vehicle list
 // @route   POST /api/v1/vehicle-list
 // @access  Private
-exports.createVehicleList = asyncHandler(async (req, res, next) => {
+exports.createVehicleList = asyncHandler(async (req, res, _next) => {
 
   // create the list passed in the request body and let mongoose apply the proper validations
   const vehicleList = await VehicleList.create(req.body);
-
-  if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
-    return next(
-      new ErrorResponse(`User not found.`, 404)
-    );
-  }
 
   // send response
   res.status(201).json({
@@ -36,9 +29,8 @@ exports.getVehicleList = asyncHandler(async (req, res, next) => {
   const vehicleList = await VehicleList.findById(req.params.vehicleListId).populate('vehicles');
 
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
-      new ErrorResponse(`User not found.`, 404)
+      new ErrorResponse(`Vehicle list not found.`, 404)
     );
   }
 
@@ -61,9 +53,8 @@ exports.updateVehicleList = asyncHandler(async (req, res, next) => {
   }).populate('vehicles');
 
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
-      new ErrorResponse(`User not found.`, 404)
+      new ErrorResponse(`Vehicle list not found.`, 404)
     );
   }
 
@@ -77,8 +68,7 @@ exports.updateVehicleList = asyncHandler(async (req, res, next) => {
 // @desc    Get a all vehicle lists for a specific user
 // @route   GET /api/v1/vehicle-list/user/:userId
 // @access  Private
-exports.getVehicleLists = asyncHandler(async (req, res, next) => {
-  console.log(req);
+exports.getVehicleLists = asyncHandler(async (req, res, _next) => {
   // find the vehicle list owned by the provided userId
   const vehicleList = await VehicleList.find({ owner: req.params.userId }).populate('dealership');
 
@@ -93,7 +83,7 @@ exports.getVehicleLists = asyncHandler(async (req, res, next) => {
 // @desc    Delete one or more vehicle lists
 // @route   POST /api/v1/vehicle-list/user/:userId/delete
 // @access  Private
-exports.deleteVehicleLists = asyncHandler(async (req, res, next) => {
+exports.deleteVehicleLists = asyncHandler(async (req, _res, next) => {
 
   // find the vehicle list owned by the provided userId
   const vehicleLists = req.body.vehicleLists;
@@ -107,15 +97,12 @@ exports.deleteVehicleLists = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Add a vehicle to the list
-// @route   POST /api/v1/vehicle-list/add/:vehicleListId
+// @route   POST /api/v1/vehicle-list/:vehicleListId/add
 // @access  Private
 exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
-
   // find the vehicle list owned by the provided userId
   const vehicleList = await VehicleList.findById(req.params.vehicleListId);
-
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
       new ErrorResponse(`Vehicle list not found.`, 404)
     );
@@ -130,7 +117,6 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
   // must use for loop since forEach doesn't work properly with await clauses
   for (let i = 0; i < vehicleIds.length; i++) {
     let newVehicle = await Vehicle.findById(vehicleIds[i]);
-    console.log(newVehicle._id);
 
     if (!newVehicle) {
       return next(
@@ -140,7 +126,6 @@ exports.addVehiclesToList = asyncHandler(async (req, res, next) => {
 
     // only add the vehicle if it's not already on the list
     if (oldVehicles.findIndex(vehicle => {
-      console.log(vehicle);
       return vehicle.toString() == newVehicle._id.toString();
     }) == -1) {
       oldVehicles.push(newVehicle._id);
@@ -167,7 +152,6 @@ exports.deleteVehiclesFromList = asyncHandler(async (req, res, next) => {
   const vehicleList = await VehicleList.findById(req.params.vehicleListId);
 
   if (!vehicleList) {
-    // something went wront...validate with Abdul if this check ever runs
     return next(
       new ErrorResponse(`Vehicle list not found.`, 404)
     );
