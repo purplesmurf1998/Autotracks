@@ -89,11 +89,10 @@ pipeline {
                 } catch (err) {
                     echo err.getMessage()
                 }
-                try {
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                   echo 'Running Front end server...'
                   sh 'npm run serve'
-                }catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                  echo err.getMessage()
+               
                 }
               }
             }
@@ -117,12 +116,12 @@ pipeline {
                 } catch (err) {
                     echo err.getMessage()
                 }
-              try {
+               catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                 echo 'Running Node Server...'
                 sh 'ls'
                 sh 'node server'
-              } catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                  echo err.getMessage()
+              
+               
                 }
               }
             }
