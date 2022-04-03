@@ -48,6 +48,7 @@ pipeline {
           steps {
             dir(path: 'Autotracks/frontend') {
               echo 'This will be deployment area'
+              echo 'minor edit to pass check'
             }
 
           }
