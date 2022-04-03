@@ -122,7 +122,6 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.vehicleProperties = response.data.payload;
-            //this.splitVehicleProperties();
           }
         })
         .catch((err) => {

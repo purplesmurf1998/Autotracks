@@ -14,7 +14,6 @@ const advancedFilter = asyncHandler(async (model, query) => {
 
   // convert into a json string so we can replace some parts if needed
   let queryStr = JSON.stringify(reqQuery);
-
   // convert the operators into mongoose operators ex. gt->$gt
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in|ne)\b/g, match => `$${match}`);
   queryResponse = model.find(JSON.parse(queryStr).query);

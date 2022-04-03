@@ -23,6 +23,7 @@
               />
               <CButton
                 color="secondary"
+                class="mr-2"
                 @click="
                   () => {
                     newPath = [];
@@ -31,9 +32,11 @@
                 "
                 >Cancel</CButton
               >
-              <CButton color="primary" type="submit">Add Zone</CButton>
+              <CButton color="primary" type="submit" class="mr-2">Add Zone</CButton>
               <CButton color="danger" @click="undoLastPoint">Undo</CButton>
             </CForm>
+            <h6 class="mt-2">Click on the map to start adding points. Each points will connect and form the perimeter of the zone with the area of the zone in red.</h6>
+            <h6 class="mt-2">You may use the points in between to define the zone with greater precision.</h6>
           </CCol>
           <CCol>
             <GmapMap
@@ -52,14 +55,14 @@
               <gmap-polygon
                 v-if="newPath.length > 0"
                 ref="polygonRef"
-                :path="newPath"
-                :editable="false"
+                :paths="newPath"
+                :editable="true"
                 :visible="true"
-                :options="{ fillColor: 'red', fillOpacity: 0.5 }"
-                @click="mapClick"
+                :options="{ fillColor: 'red', fillOpacity: 0.5, strokeWeight: 0.0 }"
+                @paths_changed="updateNewPath"
               />
               <gmap-polygon
-                v-for="zone in zones"
+                v-for="(zone, index) in zones"
                 :key="zone._id"
                 :paths="isEditingPerimeter == zone._id ? editedPath : zone.path"
                 :editable="isEditingPerimeter && isEditingPerimeter == zone._id"
@@ -70,6 +73,7 @@
                   strokeWeight: 0,
                 }"
                 @paths_changed="updatePath"
+                @click="setSelectedZone(zone, index)"
               />
               <GmapMarker
                 :key="index"
@@ -180,6 +184,20 @@ export default {
     },
   },
   methods: {
+    updateNewPath(paths) {
+      console.log(paths);
+      let tempPaths = [];
+      for (let i = 0; i < paths.getLength(); i++) {
+        for (let j = 0; j < paths.getAt(i).getLength(); j++) {
+          tempPaths.push({
+            lat: paths.getAt(i).getAt(j).lat(),
+            lng: paths.getAt(i).getAt(j).lng(),
+          });
+        }
+      }
+
+      this.newPath = tempPaths;
+    },
     saveEditedPath() {
       axios({
         method: "PUT",
@@ -333,6 +351,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

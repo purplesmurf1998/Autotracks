@@ -84,7 +84,7 @@ export default {
           dealership: this.dealership_prop,
         },
       })
-        .then((response) => {
+        .then((_response) => {
           this.defaultAdminDealership = this.dealership_prop;
           this.$store.commit("setProperty", [
             "dealership",
@@ -92,7 +92,7 @@ export default {
           ]);
           showMessage(`${this.adminDealerships[index].label} successfully set as your default dealership`, 'success', this.messageObj);
         })
-        .catch((error) => {
+        .catch((_error) => {
           showMessage(`An error occured while attempting to set ${this.adminDealerships[index].label} as your default dealership`, 'danger', this.messageObj);
         });
     },

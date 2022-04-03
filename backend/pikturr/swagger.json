@@ -49,6 +49,12 @@
     },
     {
       "name": "Vehicle Sales"
+    },
+    {
+      "name": "Zones"
+    },
+    {
+      "name": "Dashboard Visuals"
     }
   ],
   "paths": {
@@ -402,7 +408,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODA5ODYsImV4cCI6MTY0NjA3Mjk4Nn0.dEhQFdg5wq_daS4rgrzfpkAB5DNhv9diHnhdzxTDO5o"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkwNzcsImV4cCI6MTY1MTU0MTA3N30.QVn9AwuIK7MRYHtxFcrVLQSGI2sxwOAs6fbqEJAHWFc"
           }
         ],
         "responses": {
@@ -723,7 +729,7 @@
         }
       }
     },
-    "/api/v1/inventory/dealership/61b93a6567cca570f603427d": {
+    "/api/v1/inventory/dealership/62425d90f09b6355be74ea1d": {
       "get": {
         "tags": [
           "Vehicles"
@@ -736,7 +742,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDMxNTIyNDUsImV4cCI6MTY0NTc0NDI0NX0.BIpLeycE2FDunHMe1ewWRTm9VADBgfVbMCHmKDvkL0s"
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkzNzIsImV4cCI6MTY1MTU0MTM3Mn0.fEBzPHWp_POhJ5afhomfi5kaMh_WVPGtbxo2wnlhB8o"
           }
         ],
         "responses": {
@@ -1495,6 +1501,227 @@
               "type": "string"
             },
             "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDM0ODE2NjYsImV4cCI6MTY0NjA3MzY2Nn0.zW7J_sV6OrrtHP3U2QfsILGf965B44milvSly7bDGZk"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/locations/zones": {
+      "post": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "Create Zone",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "dealership": "62425d90f09b6355be74ea1d",
+                  "name": "Test Zone",
+                  "description": "Testing zone creation",
+                  "path": [
+                    {
+                      "lat": 45.431294177144146,
+                      "lng": -73.48123928010942
+                    },
+                    {
+                      "lat": 45.432009438198406,
+                      "lng": -73.4802093118477
+                    },
+                    {
+                      "lat": 45.43165557333608,
+                      "lng": -73.4792544454384
+                    },
+                    {
+                      "lat": 45.431068303349036,
+                      "lng": -73.4796514123726
+                    },
+                    {
+                      "lat": 45.431068303349036,
+                      "lng": -73.4802093118477
+                    },
+                    {
+                      "lat": 45.43096289526865,
+                      "lng": -73.48073502481462
+                    }
+                  ],
+                  "fillColor": "blue"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkwNzcsImV4cCI6MTY1MTU0MTA3N30.QVn9AwuIK7MRYHtxFcrVLQSGI2sxwOAs6fbqEJAHWFc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/locations/zones/dealership/62425d90f09b6355be74ea1d": {
+      "get": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "Get Zones",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkzNzIsImV4cCI6MTY1MTU0MTM3Mn0.fEBzPHWp_POhJ5afhomfi5kaMh_WVPGtbxo2wnlhB8o"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/locations/zones/6244494051aa06fb22482333": {
+      "put": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "Update Zone",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Changing Zone Name"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkzNzIsImV4cCI6MTY1MTU0MTM3Mn0.fEBzPHWp_POhJ5afhomfi5kaMh_WVPGtbxo2wnlhB8o"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "Delete Zone",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkzNzIsImV4cCI6MTY1MTU0MTM3Mn0.fEBzPHWp_POhJ5afhomfi5kaMh_WVPGtbxo2wnlhB8o"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/locations/zones/locate-vehicle": {
+      "post": {
+        "tags": [
+          "Zones"
+        ],
+        "summary": "Locate Vehicle",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "vehicleId": "624448d851aa06fb224822f7",
+                  "latitude": 45.431294177144146,
+                  "longitude": -73.48123928010942
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkzNzIsImV4cCI6MTY1MTU0MTM3Mn0.fEBzPHWp_POhJ5afhomfi5kaMh_WVPGtbxo2wnlhB8o"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard-visuals/dealership/62425d90f09b6355be74ea1d/visual3": {
+      "get": {
+        "tags": [
+          "Dashboard Visuals"
+        ],
+        "summary": "Get Sales By Time",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWE3YjlkMjUzMmU5MTk4YjI0ZjNhODgiLCJpYXQiOjE2NDg5NDkzNzIsImV4cCI6MTY1MTU0MTM3Mn0.fEBzPHWp_POhJ5afhomfi5kaMh_WVPGtbxo2wnlhB8o"
           }
         ],
         "responses": {

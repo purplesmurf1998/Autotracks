@@ -29,6 +29,9 @@ const Transaction = () => import('@/views/pages/transactions/Transaction')
 // Views - Pages - VehicleLists
 const UserVehicleLists = () => import('@/views/pages/vehicleLists/UserVehicleLists.vue')
 
+// Views - Pages - Location
+const ConfirmLocation = () => import('@/views/pages/location/ConfirmLocation.vue')
+
 Vue.use(Router)
 
 const router = new Router({
@@ -168,11 +171,19 @@ const router = new Router({
           component: ChangePassword
         }
       ]
+    },
+    {
+      path: '/location/vehicle/:vehicleId',
+      name: 'Location',
+      component: ConfirmLocation,
+      meta: {
+        authRequired: true
+      }
     }
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
 
   //If path name is null, redirect to 404 page.
   if (!to.name) {

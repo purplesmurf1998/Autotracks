@@ -72,7 +72,6 @@ exports.getStaleVehicles = asyncHandler(async (req, res, next) => {
   // grab the dealership_ID from the body and verify that the dealership exists
   const dealership = await Dealership.findById(req.params.dealershipId);
   let staleTime = parseInt(req.query.staleTime);
-  //console.log("[API] staleTime is "+staleTime);
 
   // no dealership found
   if (!dealership) {
@@ -157,14 +156,14 @@ exports.getVehiclesDashboardV3 = asyncHandler(async (req, res, next) => {
   let query = Vehicle.find({ dealership: req.params.dealershipId, delivered: { $ne: true } }).distinct('properties.' + prop);
   let results = await query;
 
-  end_results = [];
-  for (let i = 0; i < results.length; i++) {
+  let end_results = [];
+  for (const result of results) {
     let filter = { dealership: req.params.dealershipId, delivered: { $ne: true } };
-    filter['properties.' + prop] = results[i];
+    filter['properties.' + prop] = result;
     let query2 = Vehicle.count(filter);
     let value_count = await query2;
     let prop_object = {};
-    prop_object.value = results[i];
+    prop_object.value = result;
     prop_object.count = value_count;
     end_results.push(prop_object);
   }
@@ -241,7 +240,7 @@ exports.createVehicle = asyncHandler(async (req, res, next) => {
 // @desc        Delete a specific vehicle
 // @route       DELETE /api/v1/inventory/vehicle/:vehicleId
 // @access      Private
-exports.deleteVehicle = asyncHandler(async (req, res, next) => {
+exports.deleteVehicle = asyncHandler(async (req, res, _next) => {
   // find vehicle property to delete
   const vehicle = await Vehicle.findById(req.params.vehicleId);
 
@@ -250,7 +249,6 @@ exports.deleteVehicle = asyncHandler(async (req, res, next) => {
     const sale = await Sale.findById(vehicle.sale);
     sale.remove();
   }
-  //TODO: Delete anything related to the vehicle. This can be done in the Vehicle model using middleware.
   vehicle.remove();
 
   res.status(200).json({

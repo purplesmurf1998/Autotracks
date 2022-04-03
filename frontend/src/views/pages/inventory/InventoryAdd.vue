@@ -88,7 +88,6 @@
       <p>Do you wish to add another vehicle?</p>
       <template #header>
         <h6 class="modal-title">Vehicle added successfully!</h6>
-        <!-- <CButtonClose @click="showingModal = false" /> -->
       </template>
       <template #footer>
         <CButton @click="showingModal = false" color="primary">Yes</CButton>
@@ -106,7 +105,6 @@ const {
   containsRoles,
   getFormattedProperties,
 } = require("../../../utils/index");
-import MaskedInput from "vue-text-mask";
 
 export default {
   name: "InventoryAdd",
@@ -121,7 +119,7 @@ export default {
     };
   },
   methods: {
-    submitForm(form) {
+    submitForm() {
       let properties = getFormattedProperties(
         this.vehicleProperties,
         this.properties
@@ -228,9 +226,6 @@ export default {
           console.log(error);
         });
     },
-  },
-  components: {
-    MaskedInput,
   },
   mounted() {
     this.fetchDealership();

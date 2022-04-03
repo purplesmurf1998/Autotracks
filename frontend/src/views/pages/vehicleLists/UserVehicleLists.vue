@@ -182,13 +182,11 @@ export default {
         "December",
       ];
 
-      const formattedDate =
-        months[parseInt(date.substring(5, 7)) - 1] +
+      return months[parseInt(date.substring(5, 7)) - 1] +
         " " +
         date.substring(8, 10) +
         ", " +
         date.substring(0, 4);
-      return formattedDate;
     },
     finishAddingVehicleList() {
       this.addingVehicleList = false;
@@ -215,7 +213,7 @@ export default {
           console.log(error);
         });
     },
-    clickRow(vehicleList, index, column, e) {
+    clickRow(vehicleList, _index, _column, e) {
       if (this.deletingVehicleLists) {
         if (!["INPUT", "LABEL"].includes(e.target.tagName)) {
           this.check(vehicleList);
@@ -233,8 +231,8 @@ export default {
     setDeletingList(val) {
       if (!val) {
         // clear the selected lists
-        for (let i = 0; i < this.tableItems.length; i++) {
-          this.$set(this.tableItems[i], "_selected", false);
+        for (const item of this.tableItems) {
+          this.$set(item, "_selected", false);
         }
         // remove the checkbox column
         this.tableFields.splice(0, 1);
@@ -254,7 +252,7 @@ export default {
     applyAction() {
       // get the selected items
       const selectedItems = this.tableItems.filter(
-        (item) => item._selected == true
+        (item) => item._selected
       );
       // map just to get the vehicle list ids
       const selectedIds = selectedItems.map((item) => {
@@ -286,8 +284,7 @@ export default {
         });
     },
     closeModal() {
-      let queries = JSON.parse(JSON.stringify(this.$route.query));
-      queries = {};
+      const queries = {};
       this.$router.replace({ query: queries });
     },
     closeAddListModal() {

@@ -279,8 +279,7 @@ export default {
         });
     },
     closeModal() {
-      let queries = JSON.parse(JSON.stringify(this.$route.query));
-      queries = {};
+      const queries = {};
       this.$router.replace({ query: queries });
     },
     fetchSale() {
@@ -404,17 +403,8 @@ export default {
     },
     markDelivered() {
       let body = this.vehicle;
-      let ts = Date.now();
-      let date_ob = new Date(ts);
-      let date =
-        date_ob.getFullYear() +
-        "-" +
-        date_ob.getMonth() +
-        1 +
-        "-" +
-        date_ob.getDate();
       body.delivered = true;
-      body.date_delivered = date;
+      body.date_delivered = Date.now();
       axios({
         method: "PUT",
         url: `${this.$store.state.api}/inventory/vehicle/${this.vehicle._id}`,
