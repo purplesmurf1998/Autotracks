@@ -1,7 +1,8 @@
+import Store from '../../index'
 export default {
     async login(context, payload) {
         // login user and set user in the store
-        const response = await fetch('http://localhost:5000/api/v1/auth/signin', {
+        const response = await fetch(`${Store.state.api}/auth/signin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -61,7 +62,7 @@ export default {
         // if there is a token
         if (token) {
             // verify the token is valid
-            const response = await fetch('http://localhost:5000/api/v1/auth/verify', {
+            const response = await fetch(`${Store.state.api}/auth/verify`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

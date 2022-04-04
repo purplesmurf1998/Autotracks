@@ -10,7 +10,7 @@ class ServerIO {
   init(httpServer) {
     this.io = new Server(httpServer, {
       cors: {
-        origin: ["http://localhost:8080", "http://localhost:8081"]
+        origin: "*"
       }
     })
     // start the socket
